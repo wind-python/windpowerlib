@@ -78,9 +78,9 @@ http://matplotlib.org/users/installing.html
 
 Example
 ~~~~~~~~~~~~~~~~~~~~~~~~
-Download the example file and execute it:
+Download the .csv data and the example file and execute it:
 
-Path missing!
+https://github.com/wind-python/windpowerlib/tree/master/example
 
 
 Basic Usage
