@@ -76,8 +76,9 @@ Matplotlib can be installed using pip3 but some Linux users reported that it is 
 
 http://matplotlib.org/users/installing.html
 
+
 Example
-~~~~~~~~~~~~~~~~~~~~~~~~
+========
 Download the .csv data and the example file and execute it:
 
 https://github.com/wind-python/windpowerlib/tree/master/example
