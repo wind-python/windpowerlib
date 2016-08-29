@@ -1,4 +1,4 @@
-Welcome to oemof's feedinlib documentation!
+Welcome to the windpowerlib documentation!
 ===========================================
 
 Contents:
