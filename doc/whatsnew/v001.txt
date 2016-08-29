@@ -1,0 +1,9 @@
+v0.0.1 (August 29, 2016)
++++++++++++++++++++++++++
+
+The wind part of the feedinlib was transferd to the winpowerlib.
+
+Contributors
+############
+
+ * Uwe Krien

@@ -61,7 +61,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+doc/_build/
 
 # PyBuilder
 target/
@@ -82,8 +82,9 @@ celerybeat-schedule
 venv/
 ENV/
 
-# Spyder project settings
+# IDEs
 .spyderproject
+.idea/
 
 # Rope project settings
 .ropeproject
