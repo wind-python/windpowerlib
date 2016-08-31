@@ -24,4 +24,4 @@ Other changes
 Contributors
 ############
 
- * ...
+ * name
