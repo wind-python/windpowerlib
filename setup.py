@@ -6,10 +6,6 @@
 import sys
 from setuptools import setup
 
-# check python version.
-if not sys.version_info[:2] in ((2, 7), (3, 3), (3, 4)):
-    sys.exit('%s requires Python 2.7, 3.3, or 3.4' % 'feedinlib')
-
 setup(name='windpowerlib',
       version='0.0.2dev',
       description='Creating time series from wind power plants.',
