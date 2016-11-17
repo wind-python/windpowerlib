@@ -1,27 +1,15 @@
-v0.0.3 ()
+v0.0.2 ()
 +++++++++++++++++++++++++
-
-New features
-############
-
-
-Documentation
-#############
-
-
-Testing
-####### 
-
-
-Bug fixes
-#########
 
 
 Other changes
 #############
-
+Allow installation of windpowerlib for python versions >3.4
+Import requests package instead of urllib5
 
 Contributors
 ############
 
- * name
+ * Uwe Krien
+ * Stephen Bosch
+ * Birgit Schachler
