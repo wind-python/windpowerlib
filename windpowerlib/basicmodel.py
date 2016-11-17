@@ -3,7 +3,7 @@ import sys
 import logging
 import numpy as np
 import pandas as pd
-from urllib.request import urlretrieve
+import requests
 
 
 class SimpleWindTurbine:
@@ -326,7 +326,9 @@ def read_wpp_data(**kwargs):
     if not os.path.exists(cp_path):
         os.makedirs(cp_path)
     if not os.path.isfile(filepath + suffix):
-        urlretrieve(url + suffix, filepath + suffix)
+        req = requests.get(url + suffix)
+        with open(filepath + suffix, 'wb') as fout:
+            fout.write(req.content)
         logging.info('Copying cp_values from {0} to {1}'.format(
             url, filepath + suffix))
     logging.debug('Retrieving cp values from {0}'.format(
@@ -339,7 +341,9 @@ def read_wpp_data(**kwargs):
         logging.debug('Retrieving cp values from {0}'.format(
             filename + suffix))
         if not os.path.isfile(filename + suffix):
-            urlretrieve(url + suffix, filename + suffix)
+            req = requests.get(url + suffix)
+            with open(filename + suffix, 'wb') as fout:
+                fout.write(req.content)
             logging.info('Copying cp_values from {0} to {1}'.format(
                 url, filename + suffix))
         df = pd.read_csv(filename + suffix, index_col=0)

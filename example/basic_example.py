@@ -4,7 +4,7 @@
 import pandas as pd
 import logging
 import os
-from urllib.request import urlretrieve
+import requests
 
 try:
     from matplotlib import pyplot as plt
@@ -44,8 +44,9 @@ def download_file(filename, url):
     if not os.path.isfile(filename):
         logging.info('Copying weather data from {0} to {1}'.format(
             url, filename))
-        urlretrieve(url, filename)
-
+        req = requests.get(url)
+        with open(filename, 'wb') as fout:
+            fout.write(req.content)
 
 def fetch_example_files():
     basic_path = os.path.join(os.path.expanduser("~"), '.oemof')
