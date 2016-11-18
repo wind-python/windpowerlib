@@ -1,0 +1,27 @@
+v0.0.4 ()
++++++++++++++++++++++++++
+
+New features
+############
+
+
+Documentation
+#############
+
+
+Testing
+####### 
+
+
+Bug fixes
+#########
+
+
+Other changes
+#############
+
+
+Contributors
+############
+
+ * name
