@@ -7,7 +7,7 @@ import sys
 from setuptools import setup
 
 setup(name='windpowerlib',
-      version='0.0.2',
+      version='0.0.3',
       description='Creating time series from wind power plants.',
       url='http://github.com/wind-python/windpowerlib',
       author='oemof developing group',
