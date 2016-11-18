@@ -13,3 +13,7 @@ Contributors
  * Uwe Krien
  * Stephen Bosch
  * Birgit Schachler
+
+Comment
+#######
+Release of v0.0.2 has been skipped due to a mistake in the release process.
