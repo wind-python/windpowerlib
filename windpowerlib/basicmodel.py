@@ -3,7 +3,6 @@ import sys
 import logging
 import numpy as np
 import pandas as pd
-import requests
 
 
 class SimpleWindTurbine:
@@ -293,7 +292,7 @@ def read_wpp_data(**kwargs):
     r"""
     Fetch cp values from a file or download it from a server.
 
-    The files are located in the ~/.oemof folder.
+    The files are located in the data folder of the package root.
 
     Returns
     -------
@@ -303,50 +302,21 @@ def read_wpp_data(**kwargs):
 
     Other Parameters
     ----------------
-    cp_path : string, optional
-        Path where the cp file is stored. Default: $HOME/.windpower
+    datapath : string, optional
+        Path where the cp file is stored. Default: '$PACKAGE_ROOT/data'
     filename : string, optional
-        Filename of the cp file without suffix. The suffix of the file should be
-        csv or hf5.
-    url : string, optional
-        URL from where the cp file is loaded if not present
+        Filename of the cp file.
 
-    Notes
-    -----
-    The files can be downloaded from
-    http://vernetzen.uni-flensburg.de/~git/
     """
-    default_cp_path = os.path.join(os.path.expanduser("~"), '.windpower')
-    cp_path = kwargs.get('cp_path', default_cp_path)
-    filename = kwargs.get('filename', 'cp_values')
-    filepath = os.path.join(cp_path, filename)
-    url = kwargs.get(
-        'url', 'http://vernetzen.uni-flensburg.de/~git/cp_values')
-    suffix = '.hf5'
-    if not os.path.exists(cp_path):
-        os.makedirs(cp_path)
-    if not os.path.isfile(filepath + suffix):
-        req = requests.get(url + suffix)
-        with open(filepath + suffix, 'wb') as fout:
-            fout.write(req.content)
-        logging.info('Copying cp_values from {0} to {1}'.format(
-            url, filepath + suffix))
-    logging.debug('Retrieving cp values from {0}'.format(
-        filename + suffix))
-    try:
-        df = pd.read_hdf(filepath + suffix, 'cp')
-    except ValueError:
-        suffix = '.csv'
-        logging.info('Failed loading cp values from hdf file, trying csv.')
-        logging.debug('Retrieving cp values from {0}'.format(
-            filename + suffix))
-        if not os.path.isfile(filename + suffix):
-            req = requests.get(url + suffix)
-            with open(filename + suffix, 'wb') as fout:
-                fout.write(req.content)
-            logging.info('Copying cp_values from {0} to {1}'.format(
-                url, filename + suffix))
-        df = pd.read_csv(filename + suffix, index_col=0)
+    if 'datapath' not in kwargs:
+        kwargs['datapath'] = os.path.join(os.path.dirname(__file__), 'data')
+
+    if 'filename' not in kwargs:
+        kwargs['filename'] = 'cp_values.csv'
+
+    cp_file = os.path.join(kwargs['datapath'], kwargs['filename'])
+
+    df = pd.read_csv(cp_file, index_col=0)
     return df
 
 
@@ -367,7 +337,7 @@ def get_wind_pp_types(print_out=True):
     (91, 2)
     >>> print(valid_types_df.iloc[5])
     rli_anlagen_id    DEWIND D8 2000
-    p_nenn                    2000.0
+    p_nenn                      2000
     Name: 5, dtype: object
     """
     df = read_wpp_data()
