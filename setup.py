@@ -3,7 +3,7 @@
 @author: uwe
 """
 
-import sys
+import os
 from setuptools import setup
 
 setup(name='windpowerlib',
@@ -14,6 +14,8 @@ setup(name='windpowerlib',
       author_email='mail',
       license=None,
       packages=['windpowerlib'],
+      package_data={
+            'windpowerlib': [os.path.join('data', '*.csv')]},
       zip_safe=False,
       install_requires=['numpy >= 1.7.0',
                         'pandas >= 0.13.1',
