@@ -1,0 +1,29 @@
+v0.0.4 ()
++++++++++++++++++++++++++
+
+New features
+############
+
+* cp-values database file is now part of the repository and will be installed using pip/setup.py. The former download server was down due to technical problems and it might be safer not to be reliant on an external server.
+
+
+Documentation
+#############
+
+
+Testing
+####### 
+
+
+Bug fixes
+#########
+
+
+Other changes
+#############
+
+
+Contributors
+############
+
+ * Uwe Krien
