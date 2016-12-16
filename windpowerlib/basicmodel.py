@@ -145,7 +145,8 @@ class SimpleWindTurbine:
 
         Notes
         -----
-        The following equation is used for the logarithmic wind profile [20]_:
+        The following equation is used for the logarithmic wind profile [20],
+        [25]_:
 
         .. math:: v_{wind,hub}=v_{wind,data}\cdot\frac{\ln\left(\frac{h_{hub}}
             {z_{0}}\right)}{\ln\left(\frac{h_{data}}{z_{0}}\right)}
@@ -162,6 +163,8 @@ class SimpleWindTurbine:
         ----------
         .. [20] Gasch R., Twele J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
                 Vieweg + Teubner, 2010, page 129
+        .. [25] Hau, E. Windkraftanlagen - Grundlagen, Technik, Einsatz, 
+                Wirtschaftlichkeit Springer-Verlag, 2008, p. 515
 
         See Also
         --------
@@ -260,7 +263,7 @@ class SimpleWindTurbine:
         Notes
         -----
         The following equation is used for the power output :math:`P_{wpp}`
-        [21]_:
+        [21],[26]_:
 
         .. math:: P_{wpp}=\frac{1}{8}\cdot\rho_{air,hub}\cdot d_{rotor}^{2}
             \cdot\pi\cdot v_{wind}^{3}\cdot cp\left(v_{wind}\right)
@@ -274,6 +277,8 @@ class SimpleWindTurbine:
         ----------
         .. [21] Gasch R., Twele J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
                 Vieweg + Teubner, 2010, pages 35ff, 208
+        .. [26] Hau, E. Windkraftanlagen - Grundlagen, Technik, Einsatz, 
+                Wirtschaftlichkeit Springer-Verlag, 2008, p. 542
         """
         if self.h_hub is None:
             logging.error("Attribute h_hub (hub height) is missing.")
