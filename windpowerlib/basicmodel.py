@@ -89,12 +89,13 @@ class SimpleWindTurbine:
           * Temperature gradient of -6.5 K/km
           * Pressure gradient of -1/8 hPa/m
 
-        The following equations are used [22]_:
-
+        The following equations are used:
+        [22]_:
         .. math:: T_{hub}=T_{air, data}-0.0065\cdot\left(h_{hub}-h_{T,data}
             \right)
-        .. math:: p_{hub}=\left(p_{data}/100-\left(h_{hub}-h_{p,data}\right)
-            *\frac{1}{8}\right)/\left(2.8706\cdot T_{hub}\right)
+        [23],[24]_: 
+        .. math:: \rho_{hub}=\left(p_{data}/100-\left(h_{hub}-h_{p,data}\right)
+           \cdot\frac{1}{8}\right)\cdot \frac{\rho_0 T_0\cdot 100}{p_0 T_{hub}}
 
         with T: temperature [K], h: height [m], p: pressure [Pa]
 
@@ -103,7 +104,13 @@ class SimpleWindTurbine:
         References
         ----------
         .. [22] ICAO-Standardatmosphäre (ISA).
-            http://www.deutscher-wetterdienst.de/lexikon/download.php?file=Standardatmosphaere.pdf
+            http://www.dwd.de/DE/service/lexikon/begriffe/S/Standardatmosphaere
+                _pdf.pdf?__blob=publicationFile&v=3
+        .. [23] Hau, E. Windkraftanlagen - Grundlagen, Technik, Einsatz, 
+                Wirtschaftlichkeit Springer-Verlag, 2008, p. 560
+        .. [24] Weitere Erläuterungen zur Druckgradientkraft
+            http://www.dwd.de/DE/service/lexikon/begriffe/D/Druckgradient_pdf.
+                pdf?__blob=publicationFile&v=4
 
         See Also
         --------
@@ -116,7 +123,7 @@ class SimpleWindTurbine:
         return (
             weather.pressure / 100 -
             (self.h_hub - h_pressure_data) * 1 / 8
-            ) / (2.8706 * temperature_hub)
+            ) * 1.225 * 288.15 * 100 /(1.0133*10**5* temperature_hub)
 
     def v_wind_hub(self, weather, data_height):
         r"""
@@ -284,7 +291,6 @@ class SimpleWindTurbine:
                                  index=weather.index,
                                  name='feedin_wind_pp')
         p_wpp_series.index.names = ['']
-
         return p_wpp_series.clip(upper=(float(self.nominal_power)))
 
 
