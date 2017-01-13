@@ -160,8 +160,8 @@ class SimpleWindTurbine(object):
                          str(data_height['temp_air']) + ' m and ' +
                          str(kwargs['data_height_2']['temp_air']) + ' m.')
         else:
-            raise ValueError('invalid temperature_model. model must ' +
-                             'be one of the following: gradient, ...')
+            sys.exit('invalid temperature_model in class SimpleWindTurbine; ' +
+                     'model must be one of the following: gradient, interpol')
 
         # Calculation of density in kg/m³ at hub height according to the
         # chosen model.
@@ -180,8 +180,9 @@ class SimpleWindTurbine(object):
                          'the ideal gas equation and a pressure ' +
                          'gradient of -1/8 hPa/m.')
         else:
-            raise ValueError('invalid rho_model. model must ' +
-                             'be one of the following: barometric, ...')
+            sys.exit('invalid rho_model in class SimpleWindTurbine; model ' +
+                     'must be one of the following: barometric, ideal_gas')
+
         return rho_hub
 
     def v_wind_hub(self, weather, data_height, **kwargs):
@@ -416,9 +417,9 @@ class SimpleWindTurbine(object):
             logging.info('For the calculation of the power output of ' +
                          str(self.wind_conv_type) + ' a power curve was used.')
         else:
-            raise ValueError('invalid tp_output_model. model must ' +
-                             'be one of the following: cp_values, ...')
-
+            sys.exit('invalid tp_output_model in class SimpleWindTurbine; ' +
+                     'model must be one of the following: cp_values, ' +
+                     'p_values')
         p_wpp_series = pd.Series(data=p_wpp,
                                  index=weather.index,
                                  name='feedin_wind_pp')
