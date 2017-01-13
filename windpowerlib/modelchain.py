@@ -129,7 +129,8 @@ class SimpleWindTurbine(object):
     def rho_hub(self, weather, data_height, **kwargs):
         r"""
         Calculates the density of air in kg/m³ at hub height and the
-        temperature T at hub height.
+        temperature T at hub height if their measurement or model height is not
+        the same as hub height.
             (temperature in K, height in m, pressure in Pa)
 
         Parameters
@@ -159,9 +160,14 @@ class SimpleWindTurbine(object):
         rho_hub : pandas.Series
             density of air in kg/m³ at hub height
         """
+        # Check if temperature data is at hub height.
+        if data_height['temp_air'] == self.h_hub:
+            T_hub = weather.temp_air
+            logging.info('The temperature was given at hub height of ' + str(
+                         self.wind_conv_type) + '.')
         # Calculation of temperature in K at hub height according to the
         # chosen model.
-        if self.temperature_model == 'gradient':
+        elif self.temperature_model == 'gradient':
             T_hub = density.temperature_gradient(weather, data_height,
                                                  self.h_hub)
             logging.info('The temperature at hub height of ' + str(
@@ -262,9 +268,14 @@ class SimpleWindTurbine(object):
                     'data of a height of ' + str(data_height) + ' m and an ' +
                     'obstacle height of ' + str(obstacle_height) + ' m.')
 
+        # Check if wind speed data is at hub height.
+        if data_height['v_wind'] == self.h_hub:
+            v_wind = weather.v_wind
+            logging.info('The wind speed was given at hub height of ' + str(
+                         self.wind_conv_type) + '.')
         # Calculation of wind speed in m/s at hub height according to the
         # chosen model.
-        if self.wind_model == 'logarithmic':
+        elif self.wind_model == 'logarithmic':
             v_wind = wind_speed.logarithmic_wind_profile(self.h_hub,
                                                          weather, data_height,
                                                          self.obstacle_height)
