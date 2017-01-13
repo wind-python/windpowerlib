@@ -451,23 +451,24 @@ class SimpleWindTurbine(object):
         if self.tp_output_model == 'cp_values':
             if self.cp_values is None or self.nominal_power is None:
                 wpp_data = self.fetch_wpp_data()
-            if self.cp_values is None:
-                self.cp_values = wpp_data[0]
-            if self.nominal_power is None:
-                self.nominal_power = wpp_data[1]
+                if self.cp_values is None:
+                    self.cp_values = wpp_data[0]
+                if self.nominal_power is None:
+                    self.nominal_power = wpp_data[1]
             p_wpp = power_output.tpo_through_cp(
                 weather, data_height, v_wind, rho_hub, self.d_rotor,
                 self.cp_series(v_wind))
             logging.info('For the calculation of the power output of ' +
                          str(self.wind_conv_type) + ' a cp curve was used.')
+
         elif self.tp_output_model == 'p_values':
             if self.p_values is None or self.nominal_power is None:
                 wpp_data = self.fetch_wpp_data(data_name='P',
                                                filename='P_values.csv')
-            if self.p_values is None:
-                self.p_values = wpp_data[0]
-            if self.nominal_power is None:
-                self.nominal_power = wpp_data[1]
+                if self.p_values is None:
+                    self.p_values = wpp_data[0]
+                if self.nominal_power is None:
+                    self.nominal_power = wpp_data[1]
             p_wpp = power_output.tpo_through_P(self.p_values, v_wind)
             logging.info('For the calculation of the power output of ' +
                          str(self.wind_conv_type) + ' a power curve was used.')
