@@ -174,19 +174,28 @@ class SimpleWindTurbine(object):
                          self.wind_conv_type) + ' was calculated with a ' +
                          'linear temperature gradient of -6.5 K/km.')
         elif self.temperature_model == 'interpolation':
-            T_hub = density.temperature_interpol(
-                weather, kwargs['weather_2'], data_height,
-                kwargs['data_height_2'], self.h_hub)
-            if self.h_hub > data_height['temp_air'] and self.h_hub > kwargs[
-                    'data_height_2']['temp_air']:
-                string = 'extrapolation with'
+            if kwargs.get('data_height_2') is None:
+                sys.exit('There exists only one data height specification. ' +
+                         'Add a second one or change temperature_model to ' +
+                         'gradient.')
+            elif kwargs.get('weather_2') is None:
+                sys.exit('There exists only one weather data set. Add a ' +
+                         'second one or change temperature_model to gradient.')
             else:
-                string = 'interpolation between'
-            logging.info('The temperature at hub height of ' + str(
-                         self.wind_conv_type) + ' was calculated with an ' +
-                         string + ' the temperatures measured at ' +
-                         str(data_height['temp_air']) + ' m and ' +
-                         str(kwargs['data_height_2']['temp_air']) + ' m.')
+                T_hub = density.temperature_interpol(
+                    weather, kwargs['weather_2'], data_height,
+                    kwargs['data_height_2'], self.h_hub)
+                # String for logging info
+                if (self.h_hub > data_height['temp_air'] and
+                        self.h_hub > kwargs['data_height_2']['temp_air']):
+                    string = 'an extrapolation with'
+                else:
+                    string = 'an interpolation between'
+                logging.info('The temperature at hub height of ' + str(
+                             self.wind_conv_type) + ' was calculated with ' +
+                             string + ' the temperatures measured at ' +
+                             str(data_height['temp_air']) + ' m and ' +
+                             str(kwargs['data_height_2']['temp_air']) + ' m.')
         else:
             sys.exit('invalid temperature_model in class SimpleWindTurbine; ' +
                      'model must be one of the following: gradient, interpol')
