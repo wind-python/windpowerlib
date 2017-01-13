@@ -40,12 +40,22 @@ exampledata = {
 enerconE126 = {
     'h_hub': 135,
     'd_rotor': 127,
-    'wind_conv_type': 'ENERCON E 126 7500'}
+    'wind_conv_type': 'ENERCON E 126 7500',
+    'obstacle_height': 0,
+    'wind_model': 'logarithmic',
+    'rho_model': 'barometric',
+    'temperature_model': 'gradient',
+    'tp_output_model': 'cp_values'}
 
 vestasV90 = {
     'h_hub': 105,
     'd_rotor': 90,
-    'wind_conv_type': 'VESTAS V 90 3000'}
+    'wind_conv_type': 'VESTAS V 90 3000',
+    'obstacle_height': 0,
+    'wind_model': 'logarithmic_closest',
+    'rho_model': 'ideal_gas',
+    'temperature_model': 'gradient',
+    'tp_output_model': 'cp_values'}
 
 
 def ready_example_data(filename, datetime_column='Unnamed: 0'):
