@@ -418,11 +418,9 @@ class SimpleWindTurbine(object):
             Electrical power of the wind turbine
         """
         if self.h_hub is None:
-            logging.error("Attribute h_hub (hub height) is missing.")
-            exit(0)
+            sys.exit('Attribute h_hub (hub height) is missing.')
         if self.d_rotor is None:
-            logging.error("Attribute d_rotor (diameter of rotor) is missing.")
-            exit(0)
+            sys.exit('Attribute d_rotor (diameter of rotor) is missing.')
 
         # Calculation of parameters needed for power output
         v_wind = self.v_wind_hub(weather, data_height, **kwargs)
