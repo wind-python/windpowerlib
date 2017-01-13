@@ -20,10 +20,10 @@ def tpo_through_cp(weather, data_height, v_wind, rho_hub, d_rotor, cp_series):
 
     Parameters
     ----------
-    weather : feedinlib.weather.FeedinWeather object
-        Instance of the feedinlib weather object (see class
-        :py:class:`FeedinWeather<feedinlib.weather.FeedinWeather>` for more
-        details)
+    weather : DataFrame or Dictionary
+            Containing columns or keys with the timeseries for Temperature
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
     data_height : dictionary
         Containing the heights of the weather measurements or weather
         model in meters with the keys of the data parameter
@@ -35,9 +35,6 @@ def tpo_through_cp(weather, data_height, v_wind, rho_hub, d_rotor, cp_series):
         diameter of rotor in m
     cp_series : numpy.array
         cp values
-
-
-    # TODO Move the following parameters to a better place :-)
 
     Returns
     -------

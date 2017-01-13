@@ -6,7 +6,7 @@ Created on Mon Jan  2 11:07:52 2017
 """
 
 """
-The ``wind_speed`` module contains methods
+The ``wind_speed`` module contains a method
 to calculate the wind_speed at hub height of a wind turbine.
 """
 
@@ -23,11 +23,13 @@ def logarithmic_wind_profile(h_hub, weather, data_height, obstacle_height):
     h_hub : float
         hub height of wind turbine in m
     weather : DataFrame or Dictionary
-        Containing columns or keys with the timeseries for wind speed
-        (v_wind) and roughness length (z0).
+            Containing columns or keys with the timeseries for Temperature
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
     data_height : DataFrame or Dictionary
-        Containing columns or keys with the height of the measurement or
-        model data for temperature (temp_air) and pressure (pressure).
+            Containing columns or keys with the height of the measurement or
+            model data for temperature (temp_air), wind speed (v_wind)
+            and pressure (pressure).
     obstacle_height : float
         height of obstacles in m in the surroundings of the wind turbine,
         put obstacle_height to zero for wide spread obstacles

@@ -146,14 +146,14 @@ class SimpleWindTurbine(object):
 
         Other parameters
         ----------------
-        data_height_2 : dictionary
-            Containing the heights of the weather measurements or weather
-            model in meters with the keys of the data parameter for a second
-            data height
         weather_2 : DataFrame or Dictionary
             Containing columns or keys with the timeseries for Temperature
             (temp_air), pressure (pressure), wind speed (v_wind) and
             roughness length (z0)
+        data_height_2 : dictionary
+            Containing the heights of the weather measurements or weather
+            model in meters with the keys of the data parameter for a second
+            data height
 
         Returns
         -------
@@ -244,14 +244,14 @@ class SimpleWindTurbine(object):
 
         Other parameters
         ----------------
-        data_height_2 : dictionary
-            Containing the heights of the weather measurements or weather
-            model in meters with the keys of the data parameter for a second
-            data height
         weather_2 : DataFrame or Dictionary
             Containing columns or keys with the timeseries for Temperature
             (temp_air), pressure (pressure), wind speed (v_wind) and
             roughness length (z0)
+        data_height_2 : dictionary
+            Containing the heights of the weather measurements or weather
+            model in meters with the keys of the data parameter for a second
+            data height
 
         Returns
         -------
@@ -262,6 +262,7 @@ class SimpleWindTurbine(object):
         def v_logging(wind_conv_type, data_height, obstacle_height):
             r"""
             Produces a string for the logging info.
+
             Parameters
             ----------
             wind_conv_type : string
@@ -333,7 +334,7 @@ class SimpleWindTurbine(object):
 
     def fetch_wpp_data(self, **kwargs):
         r"""
-        Fetch data of the requested wind converter.
+        Fetches data of the requested wind converter.
 
         Returns
         -------
@@ -416,9 +417,10 @@ class SimpleWindTurbine(object):
             Containing columns or keys with the timeseries for Temperature
             (temp_air), pressure (pressure), wind speed (v_wind) and
             roughness length (z0)
-        data_height : dictionary
-            Containing the heights of the weather measurements or weather
-            model in meters with the keys of the data parameter
+        data_height : DataFrame or Dictionary
+            Containing columns or keys with the height of the measurement or
+            model data for temperature (temp_air), wind speed (v_wind)
+            and pressure (pressure).
 
         Other parameters
         ----------------
@@ -482,7 +484,7 @@ class SimpleWindTurbine(object):
 
 def read_wpp_data(**kwargs):
     r"""
-    Fetch cp or P values from a file or download it from a server.
+    Fetches cp or P values from a file or downloads it from a server.
 
     The files are located in the data folder of the package root.
 
