@@ -39,6 +39,9 @@ class SimpleWindTurbine(object):
     wind_model : string
         Chooses the model for calculating the wind speed at hub height,
         Used in v_wind_hub
+        Used in v_wind_hub;
+        Possibilities: 'logarithmic', 'logarithmic_closest' (the weather data
+            set messured closest to hub height is used.)
     rho_model : string
         Chooses the model for calculating the density of air at hub height,
         Used in rho_hub
@@ -191,6 +194,29 @@ class SimpleWindTurbine(object):
             v_wind = wind_speed.logarithmic_wind_profile(self.h_hub,
                                                          weather, data_height,
                                                          self.obstacle_height)
+        elif self.wind_model == 'logarithmic_closest':
+            if kwargs.get('data_height_2') is None:
+                sys.exit('There exists only one data height specification. ' +
+                         'Add a second one or change wind_model to ' +
+                         'logarithmic.')
+            elif kwargs.get('weather_2') is None:
+                sys.exit('There exists only one weather data set. Add a ' +
+                         'second one or change wind_model to logarithmic.')
+            else:
+                h_v_2 = kwargs['data_height_2']['v_wind']
+                h_v_1 = data_height['v_wind']
+                if abs(h_v_1 - self.h_hub) <= abs(h_v_2 - self.h_hub):
+                    v_wind = wind_speed.logarithmic_wind_profile(
+                        self.h_hub, weather, data_height, self.obstacle_height)
+                else:
+                    v_wind = wind_speed.logarithmic_wind_profile(
+                        self.h_hub, kwargs['weather_2'],
+                        kwargs['data_height_2'],
+                        self.obstacle_height)
+        else:
+            sys.exit('invalid wind_model in class SimpleWindTurbine; model ' +
+                     ' must be one of the following: logarithmic, ' +
+                     'logarithmic_closest')
         return v_wind
 
     def fetch_wpp_data(self, **kwargs):
