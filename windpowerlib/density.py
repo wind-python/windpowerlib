@@ -214,5 +214,5 @@ def rho_ideal_gas(weather, data_height, h_hub, T_hub):
     """
     R_s = 287.058
     h_pressure_data = data_height['pressure']
-    p_hub = weather.pressure / 100 - (h_hub - h_pressure_data) * 1 / 8
+    p_hub = (weather.pressure / 100 - (h_hub - h_pressure_data) * 1 / 8) * 100
     return p_hub / (R_s * T_hub)
