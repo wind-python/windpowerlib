@@ -36,6 +36,8 @@ class SimpleWindTurbine(object):
     nominal_power : float
         The nominal output of the wind power plant.
     obstacle_height : float
+            height of obstacles in m in the surroundings of the wind turbine,
+            put obstacle_height to zero for wide spread obstacles
     wind_model : string
         Chooses the model for calculating the wind speed at hub height,
         Used in v_wind_hub
@@ -97,6 +99,7 @@ class SimpleWindTurbine(object):
         self.cp_values = cp_values
         self.nominal_power = nominal_power
         self.p_values = p_values
+        self.obstacle_height = obstacle_height
 
         # call models
         self.wind_model = wind_model
