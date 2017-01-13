@@ -42,6 +42,7 @@ class SimpleWindTurbine(object):
     rho_model : string
         Chooses the model for calculating the density of air at hub height,
         Used in rho_hub
+        Possibilities:'barometric', 'ideal_gas'
     temperature_model : string
         Chooses the model for calculating the temperature at hub height,
         Used in rho_hub
@@ -151,6 +152,9 @@ class SimpleWindTurbine(object):
         if self.rho_model == 'barometric':
             rho_hub = density.rho_barometric(weather, data_height,
                                              self.h_hub, T_hub)
+        elif self.rho_model == 'ideal_gas':
+            rho_hub = density.rho_ideal_gas(weather, data_height,
+                                            self.h_hub, T_hub)
         else:
             raise ValueError('invalid rho_model. model must ' +
                              'be one of the following: barometric, ...')

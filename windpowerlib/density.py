@@ -129,3 +129,46 @@ def rho_barometric(weather, data_height, h_hub, T_hub):
     h_pressure_data = data_height['pressure']
     return (weather.pressure / 100 - (h_hub - h_pressure_data)
             * 1 / 8) * 1.225 * 288.15 * 100 / (1.0133 * 10**5 * T_hub)
+
+
+def rho_ideal_gas(weather, data_height, h_hub, T_hub):
+    r"""
+    Calculates the density of air in kg/m³ at hub height using the ideal gas
+    equation. This fuction is carried out when the parameter 'rho_model'
+    of an object of the class SimpleWindTurbine is 'ideal_gas'.
+
+    Parameters
+    ----------
+    weather : DataFrame or Dictionary
+        Containing columns or keys with the timeseries for Temperature
+        (temp_air) and pressure (pressure).
+    data_height : DataFrame or Dictionary
+        Containing columns or keys with the height of the measurement or
+        model data for temperature (temp_air) and pressure (pressure).
+    h_hub : float
+        hub height of wind turbine in m
+    T_hub : pandas.Series
+        temperature in K at hub height
+
+    Returns
+    -------
+    pandas.Series
+        density of air in kg/m³ at hub height
+
+    Notes
+    -----
+    The following equation is used []_:
+    .. math:: \rho_{hub}=p_{hub}/ (R_s T_{hub})
+
+    with T: temperature [K], h: height [m], p: pressure [Pa]
+
+    ToDo: Check the equation and add references.
+
+    References
+    ----------
+    .. []
+    """
+    R_s = 287.058  # J/(kg*k), specific gas constant of dry air
+    h_pressure_data = data_height['pressure']
+    p_hub = weather.pressure / 100 - (h_hub - h_pressure_data) * 1 / 8
+    return p_hub / (R_s * T_hub)
