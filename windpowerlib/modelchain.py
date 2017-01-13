@@ -76,6 +76,7 @@ class SimpleWindTurbine(object):
 
     def __init__(self, wind_conv_type=None, h_hub=None, d_rotor=None,
                  cp_values=None, nominal_power=None,
+                 obstacle_height=0,
                  wind_model='logarithmic',
                  rho_model='barometric',
                  temperature_model='gradient',
@@ -161,7 +162,8 @@ class SimpleWindTurbine(object):
         # chosen model.
         if self.wind_model == 'logarithmic':
             v_wind = wind_speed.logarithmic_wind_profile(self.h_hub,
-                                                         weather, data_height)
+                                                         weather, data_height,
+                                                         self.obstacle_height)
         return v_wind
 
     def fetch_wpp_data(self, **kwargs):
