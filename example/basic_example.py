@@ -26,6 +26,16 @@ coastDat2 = {
     'v_wind': 10,
     'Z0': 0}
 
+# Specification of a second weather data set Exampledata for interpolation
+# (example data)
+exampledata = {
+    'dhi': 0,
+    'dirhi': 0,
+    'pressure': 0,
+    'temp_air': 10,
+    'v_wind': 80,
+    'Z0': 0}
+
 # Specifications of the wind turbines
 enerconE126 = {
     'h_hub': 135,
@@ -46,6 +56,7 @@ def ready_example_data(filename, datetime_column='Unnamed: 0'):
 
 # Loading weather data
 weather_df = ready_example_data('weather.csv')
+weather_df_2 = ready_example_data('weather_other_height.csv')
 
 e126 = modelchain.SimpleWindTurbine(**enerconE126)
 v90 = modelchain.SimpleWindTurbine(**vestasV90)
@@ -62,6 +73,12 @@ if plt:
         legend=True, label='Enercon E126')
     v90.turbine_power_output(weather=weather_df, data_height=coastDat2).plot(
         legend=True, label='Vestas V90')
+    e126.turbine_power_output(
+        weather=weather_df, weather_2=weather_df_2, data_height=coastDat2,
+        data_height_2=exampledata).plot(legend=True, label='Enercon E126')
+    v90.turbine_power_output(
+        weather=weather_df, weather_2=weather_df_2, data_height=coastDat2,
+        data_height_2=exampledata).plot(legend=True, label='Vestas V90')
     plt.show()
 else:
     print(v90.turbine_power_output(weather=weather_df, data_height=coastDat2))

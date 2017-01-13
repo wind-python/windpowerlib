@@ -35,6 +35,7 @@ class SimpleWindTurbine(object):
         The index should be the wind speed and a column should be named 'cp'.
     nominal_power : float
         The nominal output of the wind power plant.
+    obstacle_height : float
     wind_model : string
         Chooses the model for calculating the wind speed at hub height,
         Used in v_wind_hub
@@ -101,7 +102,7 @@ class SimpleWindTurbine(object):
             if nominal_power is None:
                 self.nominal_power = wpp_data[1]
 
-    def rho_hub(self, weather, data_height):
+    def rho_hub(self, weather, data_height, **kwargs):
         r"""
         Calculates the density of air in kg/m³ at hub height and the
         temperature T at hub height.
@@ -116,6 +117,16 @@ class SimpleWindTurbine(object):
             Containing columns or keys with the height of the measurement or
             model data for temperature (temp_air) and pressure (pressure).
 
+        Other parameters
+        ----------------
+        data_height_2 : dictionary
+            Containing the heights of the weather measurements or weather
+            model in meters with the keys of the data parameter for a second
+            data height
+        weather_2 : DataFrame or Dictionary
+            Containing columns or keys with the timeseries for Temperature
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
         Returns
         -------
         rho_hub : pandas.Series
@@ -140,7 +151,7 @@ class SimpleWindTurbine(object):
                              'be one of the following: barometric, ...')
         return rho_hub
 
-    def v_wind_hub(self, weather, data_height):
+    def v_wind_hub(self, weather, data_height, **kwargs):
         r"""
         Calculates the wind speed in m/s at hub height.
 
@@ -153,6 +164,16 @@ class SimpleWindTurbine(object):
             Containing columns or keys with the height of the measurement or
             model data for temperature (temp_air) and pressure (pressure).
 
+        Other parameters
+        ----------------
+        data_height_2 : dictionary
+            Containing the heights of the weather measurements or weather
+            model in meters with the keys of the data parameter for a second
+            data height
+        weather_2 : DataFrame or Dictionary
+            Containing columns or keys with the timeseries for Temperature
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
         Returns
         -------
         v_wind : pandas.Series
@@ -236,7 +257,7 @@ class SimpleWindTurbine(object):
         v_wind[v_wind > v_max] = v_max
         return np.interp(v_wind, self.cp_values.index, self.cp_values.cp)
 
-    def turbine_power_output(self, weather, data_height):
+    def turbine_power_output(self, weather, data_height, **kwargs):
         r"""
         Calculates the power output in W of one wind turbine.
 
@@ -250,7 +271,16 @@ class SimpleWindTurbine(object):
             Containing the heights of the weather measurements or weather
             model in meters with the keys of the data parameter
 
-        # TODO Move the following parameters to a better place :-)
+        Other parameters
+        ----------------
+        data_height_2 : dictionary
+            Containing the heights of the weather measurements or weather
+            model in meters with the keys of the data parameter for a second
+            data height
+        weather_2 : DataFrame or Dictionary
+            Containing columns or keys with the timeseries for Temperature
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
 
         Returns
         -------
@@ -285,8 +315,8 @@ class SimpleWindTurbine(object):
             exit(0)
 
         # Calculation of parameters needed for power output
-        v_wind = self.v_wind_hub(weather, data_height)
-        rho_hub = self.rho_hub(weather, data_height)
+        v_wind = self.v_wind_hub(weather, data_height, **kwargs)
+        rho_hub = self.rho_hub(weather, data_height, **kwargs)
 
         # Calculation of turbine power output according to the chosen model.
         if self.tp_output_model == 'cp_values':
