@@ -20,14 +20,14 @@ def logarithmic_wind_profile(h_hub, weather, data_height, obstacle_height):
 
     Parameters
     ----------
+    h_hub : float
+        hub height of wind turbine in m
     weather : DataFrame or Dictionary
         Containing columns or keys with the timeseries for wind speed
         (v_wind) and roughness length (z0).
     data_height : DataFrame or Dictionary
         Containing columns or keys with the height of the measurement or
         model data for temperature (temp_air) and pressure (pressure).
-    h_hub : float
-        hub height of wind turbine in m
     obstacle_height : float
         height of obstacles in m in the surroundings of the wind turbine,
         put obstacle_height to zero for wide spread obstacles

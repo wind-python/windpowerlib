@@ -15,6 +15,8 @@ import numpy as np
 def tpo_through_cp(weather, data_height, v_wind, rho_hub, d_rotor, cp_series):
     r"""
     Calculates the power output in W of one wind turbine using cp values.
+    This fuction is carried out when the parameter 'tp_output_model' of an
+    object of the class SimpleWindTurbine is 'cp_values'.
 
     Parameters
     ----------
@@ -32,7 +34,7 @@ def tpo_through_cp(weather, data_height, v_wind, rho_hub, d_rotor, cp_series):
     d_rotor : float
         diameter of rotor in m
     cp_series : numpy.array
-        cp values, wind converter type, installed capacity
+        cp values
 
 
     # TODO Move the following parameters to a better place :-)

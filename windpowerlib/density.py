@@ -14,16 +14,23 @@ to calculate density (and temperature) at hub height of a wind turbine.
 def temperature_gradient(weather, data_height, h_hub):
     r"""
     Calculates the temperature T at hub height assuming a linear temperature
-    gradient of -6.5 K/km.
+    gradient of -6.5 K/km. This fuction is carried out when the parameter
+    'temperature_model' of an object of the class SimpleWindTurbine is
+    'temperature_gradient'.
 
     Parameters
     ----------
     weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for Temperature
-            (temp_air) and pressure (pressure).
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
     data_height : DataFrame or Dictionary
             Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air) and pressure (pressure).
+            model data for temperature (temp_air), wind speed (v_wind)
+            and pressure (pressure).
+    h_hub : float
+        height of the hub of the wind turbine
+
     Returns
     -------
     pandas.Series
@@ -61,10 +68,20 @@ def temperature_interpol(weather, weather_2, data_height, data_height_2,
     ----------
     weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for Temperature
-            (temp_air) and pressure (pressure).
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
+    weather_2 : DataFrame or Dictionary
+            Containing columns or keys with the timeseries for Temperature
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
     data_height : DataFrame or Dictionary
             Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air) and pressure (pressure).
+            model data for temperature (temp_air), wind speed (v_wind)
+            and pressure (pressure).
+    data_height_2 : dictionary
+            Containing the heights of the weather measurements or weather
+            model in meters with the keys of the data parameter for a second
+            data height
     h_hub : float
         height of the hub of the wind turbine
 
@@ -84,17 +101,21 @@ def temperature_interpol(weather, weather_2, data_height, data_height_2,
 
 def rho_barometric(weather, data_height, h_hub, T_hub):
     r"""
-    Calculates the density of air in kg/m³ at hub height.
-    (temperature in K, height in m, pressure in Pa)
+    Calculates the density of air in kg/m³ at hub height. This fuction is
+    carried out when the parameter 'rho_model' of an object of the class
+    SimpleWindTurbine is 'barometric'.
+
 
     Parameters
     ----------
     weather : DataFrame or Dictionary
-        Containing columns or keys with the timeseries for Temperature
-        (temp_air) and pressure (pressure).
+            Containing columns or keys with the timeseries for Temperature
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
     data_height : DataFrame or Dictionary
-        Containing columns or keys with the height of the measurement or
-        model data for temperature (temp_air) and pressure (pressure).
+            Containing columns or keys with the height of the measurement or
+            model data for temperature (temp_air), wind speed (v_wind)
+            and pressure (pressure).
     h_hub : float
         hub height of wind turbine in m
     T_hub : pandas.Series
@@ -140,11 +161,13 @@ def rho_ideal_gas(weather, data_height, h_hub, T_hub):
     Parameters
     ----------
     weather : DataFrame or Dictionary
-        Containing columns or keys with the timeseries for Temperature
-        (temp_air) and pressure (pressure).
+            Containing columns or keys with the timeseries for Temperature
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
     data_height : DataFrame or Dictionary
-        Containing columns or keys with the height of the measurement or
-        model data for temperature (temp_air) and pressure (pressure).
+            Containing columns or keys with the height of the measurement or
+            model data for temperature (temp_air), wind speed (v_wind)
+            and pressure (pressure).
     h_hub : float
         hub height of wind turbine in m
     T_hub : pandas.Series

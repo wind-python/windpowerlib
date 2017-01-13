@@ -40,7 +40,6 @@ class SimpleWindTurbine(object):
             put obstacle_height to zero for wide spread obstacles
     wind_model : string
         Chooses the model for calculating the wind speed at hub height,
-        Used in v_wind_hub
         Used in v_wind_hub;
         Possibilities: 'logarithmic', 'logarithmic_closest' (the weather data
             set messured closest to hub height is used.)
@@ -72,6 +71,26 @@ class SimpleWindTurbine(object):
         The index should be the wind speed and a column should be named 'P'.
     nominal_power : float
         The nominal output of the wind power plant.
+    obstacle_height : float
+            height of obstacles in m in the surroundings of the wind turbine,
+            put obstacle_height to zero for wide spread obstacles
+    wind_model : string
+        Chooses the model for calculating the wind speed at hub height,
+        Used in v_wind_hub;
+        Possibilities: 'logarithmic', 'logarithmic_closest' (the weather data
+            set messured closest to hub height is used.)
+    rho_model : string
+        Chooses the model for calculating the density of air at hub height,
+        Used in rho_hub
+        Possibilities:'barometric', 'ideal_gas'
+    temperature_model : string
+        Chooses the model for calculating the temperature at hub height,
+        Used in rho_hub
+        Possibilities: 'gradient', 'interpolation'
+    tp_output_model : string
+        Chooses the model for calculating the turbine power output,
+        Used in turbine_power_output
+        Possibilities: 'cp_values', 'p_values'
 
     Examples
     --------
@@ -117,10 +136,12 @@ class SimpleWindTurbine(object):
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for Temperature
-            (temp_air) and pressure (pressure).
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
         data_height : DataFrame or Dictionary
             Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air) and pressure (pressure).
+            model data for temperature (temp_air), wind speed (v_wind)
+            and pressure (pressure).
 
         Other parameters
         ----------------
@@ -132,6 +153,7 @@ class SimpleWindTurbine(object):
             Containing columns or keys with the timeseries for Temperature
             (temp_air), pressure (pressure), wind speed (v_wind) and
             roughness length (z0)
+
         Returns
         -------
         rho_hub : pandas.Series
@@ -192,11 +214,13 @@ class SimpleWindTurbine(object):
         Parameters
         ----------
         weather : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for wind speed
-            (v_wind) and roughness length (z0).
+            Containing columns or keys with the timeseries for Temperature
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
         data_height : DataFrame or Dictionary
             Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air) and pressure (pressure).
+            model data for temperature (temp_air), wind speed (v_wind)
+            and pressure (pressure).
 
         Other parameters
         ----------------
@@ -208,6 +232,7 @@ class SimpleWindTurbine(object):
             Containing columns or keys with the timeseries for Temperature
             (temp_air), pressure (pressure), wind speed (v_wind) and
             roughness length (z0)
+
         Returns
         -------
         v_wind : pandas.Series
@@ -338,7 +363,7 @@ class SimpleWindTurbine(object):
         Returns
         -------
         numpy.array
-            cp values, wind converter type, installed capacity
+            cp values
 
         >>> import numpy
         >>> from windpowerlib import modelchain
@@ -357,10 +382,10 @@ class SimpleWindTurbine(object):
 
         Parameters
         ----------
-        weather : feedinlib.weather.FeedinWeather object
-            Instance of the feedinlib weather object (see class
-            :py:class:`FeedinWeather<feedinlib.weather.FeedinWeather>` for more
-            details)
+        weather : DataFrame or Dictionary
+            Containing columns or keys with the timeseries for Temperature
+            (temp_air), pressure (pressure), wind speed (v_wind) and
+            roughness length (z0)
         data_height : dictionary
             Containing the heights of the weather measurements or weather
             model in meters with the keys of the data parameter
