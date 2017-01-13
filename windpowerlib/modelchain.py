@@ -181,6 +181,11 @@ class SimpleWindTurbine(object):
             elif kwargs.get('weather_2') is None:
                 sys.exit('There exists only one weather data set. Add a ' +
                          'second one or change temperature_model to gradient.')
+            # Check if temperature data of second data set is at hub height.
+            elif kwargs['data_height_2']['temp_air'] == self.h_hub:
+                T_hub = kwargs['weather_2'].temp_air
+                logging.info('The temperature was given at hub height of ' +
+                             str(self.wind_conv_type) + '.')
             else:
                 T_hub = density.temperature_interpol(
                     weather, kwargs['weather_2'], data_height,
@@ -298,6 +303,11 @@ class SimpleWindTurbine(object):
             elif kwargs.get('weather_2') is None:
                 sys.exit('There exists only one weather data set. Add a ' +
                          'second one or change wind_model to logarithmic.')
+            # Check if wind speed of second data set is at hub height.
+            elif kwargs['data_height_2']['v_wind'] == self.h_hub:
+                v_wind = kwargs['weather_2'].v_wind
+                logging.info('The wind speed was given at hub height of ' +
+                             str(self.wind_conv_type) + '.')
             else:
                 h_v_2 = kwargs['data_height_2']['v_wind']
                 h_v_1 = data_height['v_wind']
