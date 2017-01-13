@@ -174,11 +174,11 @@ class SimpleWindTurbine(object):
                          self.wind_conv_type) + ' was calculated with a ' +
                          'linear temperature gradient of -6.5 K/km.')
         elif self.temperature_model == 'interpolation':
-            if kwargs.get('data_height_2') is None:
+            if 'data_height_2' not in kwargs:
                 sys.exit('There exists only one data height specification. ' +
                          'Add a second one or change temperature_model to ' +
                          'gradient.')
-            elif kwargs.get('weather_2') is None:
+            elif 'weather_2' not in kwargs:
                 sys.exit('There exists only one weather data set. Add a ' +
                          'second one or change temperature_model to gradient.')
             # Check if temperature data of second data set is at hub height.
@@ -297,11 +297,11 @@ class SimpleWindTurbine(object):
             logging.info(v_logging(self.wind_conv_type, data_height['v_wind'],
                                    self.obstacle_height))
         elif self.wind_model == 'logarithmic_closest':
-            if kwargs.get('data_height_2') is None:
+            if 'data_height_2' not in kwargs:
                 sys.exit('There exists only one data height specification. ' +
                          'Add a second one or change wind_model to ' +
                          'logarithmic.')
-            elif kwargs.get('weather_2') is None:
+            elif 'weather_2' not in kwargs:
                 sys.exit('There exists only one weather data set. Add a ' +
                          'second one or change wind_model to logarithmic.')
             # Check if wind speed of second data set is at hub height.
