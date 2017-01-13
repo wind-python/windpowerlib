@@ -9,7 +9,7 @@ try:
 except ImportError:
     plt = None
 
-from windpowerlib import basicmodel
+from windpowerlib import modelchain
 
 # Feel free to remove or change these lines
 # import warnings
