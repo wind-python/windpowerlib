@@ -64,3 +64,31 @@ def tpo_through_cp(weather, data_height, v_wind, rho_hub, d_rotor, cp_series):
     """
     return (rho_hub / 2) * (((d_rotor / 2) ** 2)
                             * np.pi) * np.power(v_wind, 3) * cp_series
+
+
+def tpo_through_P(p_values, v_wind):
+    r"""
+    Interpolates the P value as a function of the wind velocity between
+    data obtained from the power curve of the specified wind turbine type.
+    This fuction is carried out when the parameter 'tp_output_model' of an
+    object of the class SimpleWindTurbine is 'p_values'.
+
+    Parameters
+    ----------
+    p_values : pandas.DataFrame
+        P values
+    v_wind : pandas.Series
+        wind speed [m/s] at hub height as time series
+
+    Returns
+    -------
+    numpy.array
+        Electrical power of the wind turbine
+
+    Note
+    ----
+    See also cp_series in modelchain
+    """
+    v_max = p_values.index.max()
+    v_wind[v_wind > v_max] = v_max
+    return np.interp(v_wind, p_values.index, p_values.P)

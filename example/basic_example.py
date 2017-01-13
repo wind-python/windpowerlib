@@ -62,17 +62,6 @@ e126 = modelchain.SimpleWindTurbine(**enerconE126)
 v90 = modelchain.SimpleWindTurbine(**vestasV90)
 
 if plt:
-    e126.cp_values.plot(style='*')
-    plt.show()
-else:
-    print("The cp value at a wind speed of 5 m/s: {0}".format(
-        e126.cp_values.cp[5.0]))
-
-if plt:
-    e126.turbine_power_output(weather=weather_df, data_height=coastDat2).plot(
-        legend=True, label='Enercon E126')
-    v90.turbine_power_output(weather=weather_df, data_height=coastDat2).plot(
-        legend=True, label='Vestas V90')
     e126.turbine_power_output(
         weather=weather_df, weather_2=weather_df_2, data_height=coastDat2,
         data_height_2=exampledata).plot(legend=True, label='Enercon E126')
@@ -83,4 +72,18 @@ if plt:
 else:
     print(v90.turbine_power_output(weather=weather_df, data_height=coastDat2))
 
+if plt:
+    if e126.cp_values is not None:
+        e126.cp_values.plot(style='*')
+        plt.show()
+    if e126.p_values is not None:
+        e126.p_values.plot(style='*')
+        plt.show()
+else:
+    if e126.cp_values is not None:
+        print("The cp value at a wind speed of 5 m/s: {0}".format(
+            e126.cp_values.cp[5.0]))
+    if e126.p_values is not None:
+        print("The p value at a wind speed of 5 m/s: {0}".format(
+            e126.p_values.P[5.0]))
 logging.info('Done!')

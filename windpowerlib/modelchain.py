@@ -50,6 +50,7 @@ class SimpleWindTurbine(object):
     tp_output_model : string
         Chooses the model for calculating the turbine power output,
         Used in turbine_power_output
+        Possibilities: 'cp_values', 'p_values'
 
     Attributes
     ----------
@@ -62,6 +63,8 @@ class SimpleWindTurbine(object):
         Diameter of the rotor.
     cp_values : pandas.DataFrame
         The index should be the wind speed and a column should be named 'cp'.
+    p_values : pandas.DataFrame
+        The index should be the wind speed and a column should be named 'P'.
     nominal_power : float
         The nominal output of the wind power plant.
 
@@ -78,7 +81,7 @@ class SimpleWindTurbine(object):
     """
 
     def __init__(self, wind_conv_type=None, h_hub=None, d_rotor=None,
-                 cp_values=None, nominal_power=None,
+                 cp_values=None, p_values=None, nominal_power=None,
                  obstacle_height=0,
                  wind_model='logarithmic',
                  rho_model='barometric',
@@ -90,19 +93,13 @@ class SimpleWindTurbine(object):
         self.wind_conv_type = wind_conv_type
         self.cp_values = cp_values
         self.nominal_power = nominal_power
+        self.p_values = p_values
 
         # call models
         self.wind_model = wind_model
         self.rho_model = rho_model
         self.temperature_model = temperature_model
         self.tp_output_model = tp_output_model
-
-        if cp_values is None or nominal_power is None:
-            wpp_data = self.fetch_wpp_data()
-            if cp_values is None:
-                self.cp_values = wpp_data[0]
-            if nominal_power is None:
-                self.nominal_power = wpp_data[1]
 
     def rho_hub(self, weather, data_height, **kwargs):
         r"""
@@ -203,11 +200,13 @@ class SimpleWindTurbine(object):
         Returns
         -------
         tuple with pandas.DataFrame and float
-            cp values and the nominal power of the requested wind converter
+            cp or P values and the nominal power
+            of the requested wind converter
 
-        Note
-        ----
-        cp_df can be a power curve as well TODO: change the variable names
+        Other parameters
+        ----------------
+        data_name : string
+            name of the data for display in data frame (e.g. 'cp' or 'P')
 
         Examples
         --------
@@ -218,6 +217,9 @@ class SimpleWindTurbine(object):
         >>> print(e126.nominal_power)
         7500000.0
         """
+        if 'data_name' not in kwargs:
+            kwargs['data_name'] = 'cp'
+
         df = read_wpp_data(**kwargs)
         wpp_df = df[df.rli_anlagen_id == self.wind_conv_type]
         if wpp_df.shape[0] == 0:
@@ -227,18 +229,18 @@ class SimpleWindTurbine(object):
             sys.exit('Cannot find the wind converter typ: {0}'.format(
                 self.wind_conv_type))
         ncols = ['rli_anlagen_id', 'p_nenn', 'source', 'modificationtimestamp']
-        cp_data = np.array([0, 0])
+        data = np.array([0, 0])
         for col in wpp_df.keys():
             if col not in ncols:
                 if wpp_df[col].iloc[0] is not None and not np.isnan(
                         float(wpp_df[col].iloc[0])):
-                    cp_data = np.vstack((cp_data, np.array(
+                    data = np.vstack((data, np.array(
                         [float(col), float(wpp_df[col])])))
-        cp_data = np.delete(cp_data, 0, 0)
-        cp_df = pd.DataFrame(cp_data, columns=['v_wind', 'cp'])
-        cp_df.set_index('v_wind', drop=True, inplace=True)
+        data = np.delete(data, 0, 0)
+        df = pd.DataFrame(data, columns=['v_wind', kwargs['data_name']])
+        df.set_index('v_wind', drop=True, inplace=True)
         nominal_power = wpp_df['p_nenn'].iloc[0] * 1000
-        return cp_df, nominal_power
+        return df, nominal_power
 
     def cp_series(self, v_wind):
         r"""
@@ -295,26 +297,6 @@ class SimpleWindTurbine(object):
         -------
         pandas.Series
             Electrical power of the wind turbine
-
-        Notes
-        -----
-        The following equation is used for the power output :math:`P_{wpp}`
-        [21],[26]_:
-
-        .. math:: P_{wpp}=\frac{1}{8}\cdot\rho_{air,hub}\cdot d_{rotor}^{2}
-            \cdot\pi\cdot v_{wind}^{3}\cdot cp\left(v_{wind}\right)
-
-        with:
-            v: wind speed [m/s], d: diameter [m], :math:`\rho`: density [kg/m³]
-
-        ToDo: Check the equation and add references.
-
-        References
-        ----------
-        .. [21] Gasch R., Twele J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
-                Vieweg + Teubner, 2010, pages 35ff, 208
-        .. [26] Hau, E. Windkraftanlagen - Grundlagen, Technik, Einsatz,
-                Wirtschaftlichkeit Springer-Verlag, 2008, p. 542
         """
         if self.h_hub is None:
             logging.error("Attribute h_hub (hub height) is missing.")
@@ -329,9 +311,24 @@ class SimpleWindTurbine(object):
 
         # Calculation of turbine power output according to the chosen model.
         if self.tp_output_model == 'cp_values':
+            if self.cp_values is None or self.nominal_power is None:
+                wpp_data = self.fetch_wpp_data()
+            if self.cp_values is None:
+                self.cp_values = wpp_data[0]
+            if self.nominal_power is None:
+                self.nominal_power = wpp_data[1]
             p_wpp = power_output.tpo_through_cp(
                 weather, data_height, v_wind, rho_hub, self.d_rotor,
                 self.cp_series(v_wind))
+        elif self.tp_output_model == 'p_values':
+            if self.p_values is None or self.nominal_power is None:
+                wpp_data = self.fetch_wpp_data(data_name='P',
+                                               filename='P_values.csv')
+            if self.p_values is None:
+                self.p_values = wpp_data[0]
+            if self.nominal_power is None:
+                self.nominal_power = wpp_data[1]
+            p_wpp = power_output.tpo_through_P(self.p_values, v_wind)
         else:
             raise ValueError('invalid tp_output_model. model must ' +
                              'be one of the following: cp_values, ...')
@@ -345,22 +342,22 @@ class SimpleWindTurbine(object):
 
 def read_wpp_data(**kwargs):
     r"""
-    Fetch cp values from a file or download it from a server.
+    Fetch cp or P values from a file or download it from a server.
 
     The files are located in the data folder of the package root.
 
     Returns
     -------
     pandas.DataFrame
-        cp values, wind converter type, installed capacity or the full
+        cp or P values, wind converter type, installed capacity or the full
         table if the given wind converter cannot be found in the table.
 
     Other Parameters
     ----------------
     datapath : string, optional
-        Path where the cp file is stored. Default: '$PACKAGE_ROOT/data'
+        Path where the cp or P file is stored. Default: '$PACKAGE_ROOT/data'
     filename : string, optional
-        Filename of the cp file.
+        Filename of the cp or P file.
 
     """
     if 'datapath' not in kwargs:
@@ -369,9 +366,9 @@ def read_wpp_data(**kwargs):
     if 'filename' not in kwargs:
         kwargs['filename'] = 'cp_values.csv'
 
-    cp_file = os.path.join(kwargs['datapath'], kwargs['filename'])
+    file = os.path.join(kwargs['datapath'], kwargs['filename'])
 
-    df = pd.read_csv(cp_file, index_col=0)
+    df = pd.read_csv(file, index_col=0)
     return df
 
 
