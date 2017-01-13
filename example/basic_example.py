@@ -47,8 +47,8 @@ def ready_example_data(filename, datetime_column='Unnamed: 0'):
 # Loading weather data
 weather_df = ready_example_data('weather.csv')
 
-e126 = basicmodel.SimpleWindTurbine(**enerconE126)
-v90 = basicmodel.SimpleWindTurbine(**vestasV90)
+e126 = modelchain.SimpleWindTurbine(**enerconE126)
+v90 = modelchain.SimpleWindTurbine(**vestasV90)
 
 if plt:
     e126.cp_values.plot(style='*')
