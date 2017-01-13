@@ -43,16 +43,12 @@ def tpo_through_cp(weather, data_height, v_wind, rho_hub, d_rotor, cp_series):
 
     Notes
     -----
-    The following equation is used for the power output :math:`P_{wpp}`
-    [21],[26]_:
-
+    The following equation is used for the power output [21],[26]_:
     .. math:: P_{wpp}=\frac{1}{8}\cdot\rho_{air,hub}\cdot d_{rotor}^{2}
         \cdot\pi\cdot v_{wind}^{3}\cdot cp\left(v_{wind}\right)
 
     with:
         v: wind speed [m/s], d: diameter [m], :math:`\rho`: density [kg/m³]
-
-    ToDo: Check the equation and add references.
 
     References
     ----------
@@ -86,7 +82,7 @@ def tpo_through_P(p_values, v_wind):
 
     Note
     ----
-    See also cp_series in modelchain
+    See also cp_series in the module modelchain
     """
     v_max = p_values.index.max()
     v_wind[v_wind > v_max] = v_max

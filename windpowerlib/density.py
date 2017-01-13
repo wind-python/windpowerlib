@@ -44,13 +44,17 @@ def temperature_gradient(weather, data_height, h_hub):
     The following equation is used [22]_:
     .. math:: T_{hub}=T_{air, data}-0.0065\cdot\left(h_{hub}-h_{T,data}\right)
 
+    with:
+        T: temperature [K], h: height [m]
+
+    :math:`h_{data}` is the height in which the temperature is measured.
+    (height in m, temperature in K)
+
     References
     ----------
     .. [22] ICAO-Standardatmosphäre (ISA).
         http://www.dwd.de/DE/service/lexikon/begriffe/S/Standardatmosphaere
                 _pdf.pdf?__blob=publicationFile&v=3
-
-    todo: check parameters and references
     """
     h_temperature_data = data_height['temp_air']
     return weather.temp_air - 0.0065 * (h_hub - h_temperature_data)
@@ -90,8 +94,19 @@ def temperature_interpol(weather, weather_2, data_height, data_height_2,
     pandas.Series
         temperature T in K at hub height
 
-        TODO formula
+    Notes
+    -----
+    Assumptions:
+        * linear temperature gradient
 
+    Linear interpolation of the temperature is used:
+    .. math:: T_{hub} = (T_2 - T_1) / (h_2 - h_1) * (h_{hub} - h_1) + T_1
+
+    with:
+        T: temperature [K], h: height [m]
+
+    :math:`h_{data}` is the height in which the temperature is measured.
+    (height in m, temperature in K)
     """
     h_data_1 = data_height['temp_air']
     h_data_2 = data_height_2['temp_air']
@@ -135,9 +150,13 @@ def rho_barometric(weather, data_height, h_hub, T_hub):
     .. math:: \rho_{hub}=\left(p_{data}/100-\left(h_{hub}-h_{p,data}\right)
        \cdot\frac{1}{8}\right)\cdot \frac{\rho_0 T_0\cdot 100}{p_0 T_{hub}}
 
-    with T: temperature [K], h: height [m], p: pressure [Pa]
+    with:
+        T: temperature [K], h: height [m], :math:`\rho`: density [kg/m³],
+        p: pressure [Pa]
 
-    ToDo: Check the equation and add references.
+    :math:`h_{data}` is the height in which the temperature is measured.
+    (height in m)
+    :math:`p_0` is the ambient air pressure.
 
     References
     ----------
@@ -183,15 +202,17 @@ def rho_ideal_gas(weather, data_height, h_hub, T_hub):
     The following equation is used []_:
     .. math:: \rho_{hub}=p_{hub}/ (R_s T_{hub})
 
-    with T: temperature [K], h: height [m], p: pressure [Pa]
+    with:
+        T: temperature [K], :math:`\rho`: density [kg/m³], p: pressure [Pa]
+        :math:`R_s`: specific gas constant  of dry air [J/(kg*k)]
 
-    ToDo: Check the equation and add references.
+    ToDo: Check equation and add references
 
     References
     ----------
     .. []
     """
-    R_s = 287.058  # J/(kg*k), specific gas constant of dry air
+    R_s = 287.058
     h_pressure_data = data_height['pressure']
     p_hub = weather.pressure / 100 - (h_hub - h_pressure_data) * 1 / 8
     return p_hub / (R_s * T_hub)
