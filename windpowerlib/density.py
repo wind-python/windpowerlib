@@ -48,7 +48,38 @@ def temperature_gradient(weather, data_height, h_hub):
     h_temperature_data = data_height['temp_air']
     return weather.temp_air - 0.0065 * (h_hub - h_temperature_data)
 
-#def temperature_hub_interpol:
+
+def temperature_interpol(weather, weather_2, data_height, data_height_2,
+                         h_hub):
+    r"""
+    Calculates the temperature T at hub height using an interpolation or
+    extrapolation. This fuction is carried out when the parameter
+    'temperature_model' of an object of the class SimpleWindTurbine is
+    'interpolation'.
+
+    Parameters
+    ----------
+    weather : DataFrame or Dictionary
+            Containing columns or keys with the timeseries for Temperature
+            (temp_air) and pressure (pressure).
+    data_height : DataFrame or Dictionary
+            Containing columns or keys with the height of the measurement or
+            model data for temperature (temp_air) and pressure (pressure).
+    h_hub : float
+        height of the hub of the wind turbine
+
+    Returns
+    -------
+    pandas.Series
+        temperature T in K at hub height
+
+        TODO formula
+
+    """
+    h_data_1 = data_height['temp_air']
+    h_data_2 = data_height_2['temp_air']
+    return (weather_2.temp_air - weather.temp_air) / (h_data_2 - h_data_1) * (
+        h_hub - h_data_1) + weather.temp_air
 
 
 def rho_barometric(weather, data_height, h_hub, T_hub):

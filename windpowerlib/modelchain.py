@@ -45,6 +45,7 @@ class SimpleWindTurbine(object):
     temperature_model : string
         Chooses the model for calculating the temperature at hub height,
         Used in rho_hub
+        Possibilities: 'gradient', 'interpolation'
     tp_output_model : string
         Chooses the model for calculating the turbine power output,
         Used in turbine_power_output
@@ -137,6 +138,10 @@ class SimpleWindTurbine(object):
         if self.temperature_model == 'gradient':
             T_hub = density.temperature_gradient(weather, data_height,
                                                  self.h_hub)
+        elif self.temperature_model == 'interpolation':
+            T_hub = density.temperature_interpol(
+                weather, kwargs['weather_2'], data_height,
+                kwargs['data_height_2'], self.h_hub)
         else:
             raise ValueError('invalid temperature_model. model must ' +
                              'be one of the following: gradient, ...')
