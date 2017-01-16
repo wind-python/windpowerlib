@@ -66,6 +66,10 @@ def logarithmic_wind_profile(h_hub, weather, data_height, obstacle_height):
     .. [27] Quaschning V.: "Regenerative Energiesysteme". München, Hanser
             Verlag, 2011, p. 245
     """
+    if 0.7 * obstacle_height > data_height['v_wind']:
+        sys.exit('To take an obstacle height of ' + str(obstacle_height) +
+                 ' m into consideration wind speed data of a higher height' +
+                 ' is needed.')
     return (weather.v_wind * np.log(
             (h_hub - 0.7 * obstacle_height) / weather.z0) / np.log(
             (data_height['v_wind'] - 0.7 * obstacle_height) / weather.z0))
