@@ -11,6 +11,7 @@ to calculate the wind_speed at hub height of a wind turbine.
 """
 
 import numpy as np
+import sys
 
 
 def logarithmic_wind_profile(h_hub, weather, data_height, obstacle_height):
