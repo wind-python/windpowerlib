@@ -80,20 +80,31 @@ if plt:
         data_height_2=exampledata).plot(legend=True, label='Vestas V90')
     plt.show()
 else:
-    print(v90.turbine_power_output(weather=weather_df, data_height=coastDat2))
+    print(e126.turbine_power_output(
+        weather=weather_df, weather_2=weather_df_2, data_height=coastDat2,
+        data_height_2=exampledata))
+    print(v90.turbine_power_output(
+        weather=weather_df, weather_2=weather_df_2, data_height=coastDat2,
+        data_height_2=exampledata))
 
 if plt:
     if e126.cp_values is not None:
-        e126.cp_values.plot(style='*')
+        e126.cp_values.plot(style='*', title='Enercon E126')
         plt.show()
     if e126.p_values is not None:
-        e126.p_values.plot(style='*')
+        e126.p_values.plot(style='*', title='Enercon E126')
+        plt.show()
+    if v90.cp_values is not None:
+        v90.cp_values.plot(style='*', title='Vestas V90')
+        plt.show()
+    if v90.p_values is not None:
+        v90.p_values.plot(style='*', title='Vestas V90')
         plt.show()
 else:
     if e126.cp_values is not None:
         print("The cp value at a wind speed of 5 m/s: {0}".format(
             e126.cp_values.cp[5.0]))
     if e126.p_values is not None:
-        print("The p value at a wind speed of 5 m/s: {0}".format(
+        print("The P value at a wind speed of 5 m/s: {0}".format(
             e126.p_values.P[5.0]))
 logging.info('Done!')
