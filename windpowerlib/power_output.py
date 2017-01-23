@@ -87,3 +87,56 @@ def tpo_through_P(p_values, v_wind):
     v_max = p_values.index.max()
     v_wind[v_wind > v_max] = v_max
     return np.interp(v_wind, p_values.index, p_values.P)
+
+
+def Interpolate_P_curve(v_wind, rho_hub, p_values):
+    r"""
+    Interpolates density corrected power curve.
+
+    Parameters
+    ----------
+    v_wind : pandas.Series
+        wind speed [m/s] at hub height as time series
+    rho_hub : pandas.Series
+        density of air in kg/m³ at hub height
+    p_values : pandas.DataFrame
+        P values
+
+    Returns
+    -------
+    numpy.array
+        Electrical power of the wind turbine
+
+    Notes
+    -----
+    The following equation is used [28], [29], [30]_:
+    .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}
+                       {\rho_{site}}\right)^{p(v)}
+
+    with:
+        .. math:: p=\begin{cases}
+                      \frac{1}{3} & v_{std} \leq 7.5\text{ m/s}\\
+                      \frac{1}{15}\cdot v_{std}-\frac{1}{6} & 7.5
+                      \text{ m/s}<v_{std}<12.5\text{ m/s}\\
+                      \frac{2}{3} & \geq 12.5 \text{ m/s}
+                    \end{cases},
+        v: wind speed [m/s], :math:`\rho`: density [kg/m³]
+
+    :math:`v_{std}` is the standard wind speed in power curve
+
+    References
+    ----------
+    .. [28] Svenningsen, L.: "Power Curve Air Density Correction And Other
+            Power Curve Options in WindPRO". 1st edition, Aalborg,
+            EMD International A/S , 2010, p. 4
+    .. [29] Svenningsen, L.: "Proposal of an Improved Power Curve Correction".
+            EMD International A/S , 2010
+    .. [30] Biank, M.: "Methodology, Implementation and Validation of a
+            Variable Scale Simulation Model for Windpower based on the
+            Georeferenced Installation Register of Germany". Master's Thesis
+            at RLI, 2014, p. 13
+    """
+    return [(np.interp(v_wind[i], p_values.index *
+            (1.225 / rho_hub[i])**(np.interp(p_values.index, [7.5, 12.5],
+                                             [1/3, 2/3])),
+            p_values.P, left=0, right=0)) for i in range(len(v_wind))]

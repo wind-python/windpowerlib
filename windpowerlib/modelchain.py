@@ -54,7 +54,7 @@ class SimpleWindTurbine(object):
     tp_output_model : string
         Chooses the model for calculating the turbine power output,
         Used in turbine_power_output
-        Possibilities: 'cp_values', 'p_values'
+        Possibilities: 'cp_values', 'p_values', 'P_curve_correction'
 
     Attributes
     ----------
@@ -460,8 +460,8 @@ class SimpleWindTurbine(object):
                 self.cp_series(v_wind))
             logging.debug('For the calculation of the power output of ' +
                           str(self.wind_conv_type) + ' a cp curve was used.')
-
-        elif self.tp_output_model == 'p_values':
+        elif (self.tp_output_model == 'p_values' or
+              self.tp_output_model == 'P_curve_correction'):
             if self.p_values is None or self.nominal_power is None:
                 wpp_data = self.fetch_wpp_data(data_name='P',
                                                filename='P_values.csv')
@@ -469,10 +469,18 @@ class SimpleWindTurbine(object):
                     self.p_values = wpp_data[0]*1000
                 if self.nominal_power is None:
                     self.nominal_power = wpp_data[1]
-            p_wpp = power_output.tpo_through_P(self.p_values, v_wind)
-            logging.debug('For the calculation of the power output of ' +
-                          str(self.wind_conv_type) + ' a power curve was used.'
-                          )
+            if self.tp_output_model == 'p_values':
+                p_wpp = power_output.tpo_through_P(self.p_values, v_wind)
+                logging.debug('For the calculation of the power output of ' +
+                              str(self.wind_conv_type) + ' a power curve ' +
+                              'was used.')
+            if self.tp_output_model == 'P_curve_correction':
+                p_wpp = power_output.Interpolate_P_curve(v_wind, rho_hub,
+                                                         self.p_values)
+                logging.debug('For the calculation of the power output of ' +
+                              str(self.wind_conv_type) + ' the power curve ' +
+                              'was corrected by an interpolation of the ' +
+                              'density corrected power curve.')
         else:
             sys.exit('invalid tp_output_model in class SimpleWindTurbine; ' +
                      'model must be one of the following: cp_values, ' +

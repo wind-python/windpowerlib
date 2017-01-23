@@ -55,7 +55,7 @@ vestasV90 = {
     'wind_model': 'logarithmic_closest',
     'rho_model': 'ideal_gas',
     'temperature_model': 'interpolation',
-    'tp_output_model': 'p_values'}
+    'tp_output_model': 'P_curve_correction'}
 
 
 def ready_example_data(filename, datetime_column='Unnamed: 0'):
