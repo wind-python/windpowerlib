@@ -54,8 +54,8 @@ vestasV90 = {
     'obstacle_height': 0,
     'wind_model': 'logarithmic_closest',
     'rho_model': 'ideal_gas',
-    'temperature_model': 'gradient',
-    'tp_output_model': 'cp_values'}
+    'temperature_model': 'interpolation',
+    'tp_output_model': 'p_values'}
 
 
 def ready_example_data(filename, datetime_column='Unnamed: 0'):
