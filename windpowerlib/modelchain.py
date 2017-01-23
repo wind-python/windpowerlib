@@ -466,7 +466,7 @@ class SimpleWindTurbine(object):
                 wpp_data = self.fetch_wpp_data(data_name='P',
                                                filename='P_values.csv')
                 if self.p_values is None:
-                    self.p_values = wpp_data[0]
+                    self.p_values = wpp_data[0]*1000
                 if self.nominal_power is None:
                     self.nominal_power = wpp_data[1]
             p_wpp = power_output.tpo_through_P(self.p_values, v_wind)
