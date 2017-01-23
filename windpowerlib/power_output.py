@@ -38,7 +38,7 @@ def tpo_through_cp(weather, data_height, v_wind, rho_hub, d_rotor, cp_series):
 
     Returns
     -------
-    pandas.Series
+    pandas.Series or numpy.array
         Electrical power of the wind turbine
 
     Notes
@@ -109,7 +109,8 @@ def Interpolate_P_curve(v_wind, rho_hub, p_values):
 
     Notes
     -----
-    The following equation is used [28], [29], [30]_:
+    The following equation is used for the wind speed at site
+    [28], [29], [30]_:
     .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}
                        {\rho_{site}}\right)^{p(v)}
 
