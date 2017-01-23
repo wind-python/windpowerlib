@@ -49,7 +49,7 @@ def logarithmic_wind_profile(h_hub, weather, data_height, obstacle_height):
 
     with:
         v: wind speed [m/s], h: height [m], z0: roughness length [m]
-        d: includes obstacle height [d = 0.7 * obstacle_height] [m]
+        d: includes obstacle height (d = 0.7 * obstacle_height) [m]
 
     For  d = 0 it results in the following equation [20], [25]_:
     .. math:: v_{wind,hub}=v_{wind,data}\cdot\frac{\ln\left(\frac{h_{hub}}
