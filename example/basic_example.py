@@ -45,7 +45,9 @@ enerconE126 = {
     'wind_model': 'logarithmic',
     'rho_model': 'barometric',
     'temperature_model': 'gradient',
-    'tp_output_model': 'cp_values'}
+    'tp_output_model': 'p_values',
+    'density_corr': False}
+
 
 vestasV90 = {
     'h_hub': 105,
@@ -55,7 +57,8 @@ vestasV90 = {
     'wind_model': 'logarithmic_closest',
     'rho_model': 'ideal_gas',
     'temperature_model': 'interpolation',
-    'tp_output_model': 'P_curve_correction'}
+    'tp_output_model': 'cp_values',
+    'density_corr': False}
 
 
 def ready_example_data(filename, datetime_column='Unnamed: 0'):

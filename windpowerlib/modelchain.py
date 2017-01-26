@@ -55,6 +55,8 @@ class SimpleWindTurbine(object):
         Chooses the model for calculating the turbine power output,
         Used in turbine_power_output
         Possibilities: 'cp_values', 'p_values', 'P_curve_correction'
+    density_corr : boolean
+        if True -> density corrected power curve
 
     Attributes
     ----------
@@ -91,6 +93,8 @@ class SimpleWindTurbine(object):
         Chooses the model for calculating the turbine power output,
         Used in turbine_power_output
         Possibilities: 'cp_values', 'p_values'
+    density_corr : boolean
+        if True -> density corrected power curve
 
     Examples
     --------
@@ -110,7 +114,8 @@ class SimpleWindTurbine(object):
                  wind_model='logarithmic',
                  rho_model='barometric',
                  temperature_model='gradient',
-                 tp_output_model='cp_values'):
+                 tp_output_model='cp_values',
+                 density_corr=False):
 
         self.h_hub = h_hub
         self.d_rotor = d_rotor
@@ -125,6 +130,7 @@ class SimpleWindTurbine(object):
         self.rho_model = rho_model
         self.temperature_model = temperature_model
         self.tp_output_model = tp_output_model
+        self.density_corr = density_corr
 
     def rho_hub(self, weather, data_height, **kwargs):
         r"""
@@ -449,19 +455,36 @@ class SimpleWindTurbine(object):
 
         # Calculation of turbine power output according to the chosen model.
         if self.tp_output_model == 'cp_values':
+            # get cp values and/or nominal power
             if self.cp_values is None or self.nominal_power is None:
                 wpp_data = self.fetch_wpp_data()
                 if self.cp_values is None:
                     self.cp_values = wpp_data[0]
                 if self.nominal_power is None:
                     self.nominal_power = wpp_data[1]
-            p_wpp = power_output.tpo_through_cp(
-                weather, data_height, v_wind, rho_hub, self.d_rotor,
-                self.cp_series(v_wind))
+            if self.density_corr is False:
+                p_wpp = power_output.tpo_through_cp(
+                    weather, data_height, v_wind, rho_hub, self.d_rotor,
+                    self.cp_series(v_wind))
+            elif self.density_corr is True:
+                rho_0 = 1.225  # density of air in kg/m³
+                # get P curve from cp values
+                p_curve = power_output.tpo_through_cp(
+                    weather, data_height, self.cp_values.index, rho_0,
+                    self.d_rotor, self.cp_values.cp)
+                p_df = pd.DataFrame(data=p_curve, index=self.cp_values.index)
+                p_df.columns = ['P']
+                # density correction of P and electrical time series
+                p_wpp = power_output.Interpolate_P_curve(v_wind, rho_hub,
+                                                         p_df)
+            else:
+                sys.exit('invalid value of density_corr; must be True or ' +
+                         'False')
             logging.debug('For the calculation of the power output of ' +
                           str(self.wind_conv_type) + ' a cp curve was used.')
-        elif (self.tp_output_model == 'p_values' or
-              self.tp_output_model == 'P_curve_correction'):
+
+        elif self.tp_output_model == 'p_values':
+            # get P values and/or nominal power
             if self.p_values is None or self.nominal_power is None:
                 wpp_data = self.fetch_wpp_data(data_name='P',
                                                filename='P_values.csv')
@@ -469,12 +492,12 @@ class SimpleWindTurbine(object):
                     self.p_values = wpp_data[0]*1000
                 if self.nominal_power is None:
                     self.nominal_power = wpp_data[1]
-            if self.tp_output_model == 'p_values':
+            if self.density_corr is False:
                 p_wpp = power_output.tpo_through_P(self.p_values, v_wind)
                 logging.debug('For the calculation of the power output of ' +
                               str(self.wind_conv_type) + ' a power curve ' +
                               'was used.')
-            if self.tp_output_model == 'P_curve_correction':
+            if self.density_corr is True:
                 p_wpp = power_output.Interpolate_P_curve(v_wind, rho_hub,
                                                          self.p_values)
                 logging.debug('For the calculation of the power output of ' +
