@@ -466,6 +466,9 @@ class SimpleWindTurbine(object):
                 p_wpp = power_output.tpo_through_cp(
                     weather, data_height, v_wind, rho_hub, self.d_rotor,
                     self.cp_series(v_wind))
+                logging.debug('For the calculation of the power output of ' +
+                              str(self.wind_conv_type) + ' a cp curve was ' +
+                              'used.')
             elif self.density_corr is True:
                 rho_0 = 1.225  # density of air in kg/m³
                 # get P curve from cp values
@@ -477,11 +480,13 @@ class SimpleWindTurbine(object):
                 # density correction of P and electrical time series
                 p_wpp = power_output.Interpolate_P_curve(v_wind, rho_hub,
                                                          p_df)
+                logging.debug('For the calculation of the power output of ' +
+                              str(self.wind_conv_type) + ' the power curve ' +
+                              'was calculated out of cp values. There was ' +
+                              'made a density correction of the power curve.')
             else:
                 sys.exit('invalid value of density_corr; must be True or ' +
                          'False')
-            logging.debug('For the calculation of the power output of ' +
-                          str(self.wind_conv_type) + ' a cp curve was used.')
 
         elif self.tp_output_model == 'p_values':
             # get P values and/or nominal power
@@ -501,8 +506,7 @@ class SimpleWindTurbine(object):
                 p_wpp = power_output.Interpolate_P_curve(v_wind, rho_hub,
                                                          self.p_values)
                 logging.debug('For the calculation of the power output of ' +
-                              str(self.wind_conv_type) + ' the power curve ' +
-                              'was corrected by an interpolation of the ' +
+                              str(self.wind_conv_type) + ' there was used a ' +
                               'density corrected power curve.')
         else:
             sys.exit('invalid tp_output_model in class SimpleWindTurbine; ' +
