@@ -57,7 +57,7 @@ def temperature_gradient(weather, data_height, h_hub):
                 _pdf.pdf?__blob=publicationFile&v=3
     """
     h_temperature_data = data_height['temp_air']
-    return weather.temp_air - 0.0065 * (h_hub - h_temperature_data)
+    return weather['temp_air'] - 0.0065 * (h_hub - h_temperature_data)
 
 
 def temperature_interpol(weather, weather_2, data_height, data_height_2,
@@ -110,8 +110,8 @@ def temperature_interpol(weather, weather_2, data_height, data_height_2,
     """
     h_data_1 = data_height['temp_air']
     h_data_2 = data_height_2['temp_air']
-    return (weather_2.temp_air - weather.temp_air) / (h_data_2 - h_data_1) * (
-        h_hub - h_data_1) + weather.temp_air
+    return ((weather_2['temp_air'] - weather['temp_air']) /
+            (h_data_2 - h_data_1) * (h_hub - h_data_1) + weather['temp_air'])
 
 
 def rho_barometric(weather, data_height, h_hub, T_hub):
@@ -167,8 +167,8 @@ def rho_barometric(weather, data_height, h_hub, T_hub):
             pdf?__blob=publicationFile&v=4
     """
     h_pressure_data = data_height['pressure']
-    return (weather.pressure / 100 - (h_hub - h_pressure_data)
-            * 1 / 8) * 1.225 * 288.15 * 100 / (1.0133 * 10**5 * T_hub)
+    return (weather['pressure'] / 100 - (h_hub - h_pressure_data)
+            * 1 / 8) * 1.225 * 288.15 * 100 / (101330 * T_hub)
 
 
 def rho_ideal_gas(weather, data_height, h_hub, T_hub):
@@ -214,5 +214,6 @@ def rho_ideal_gas(weather, data_height, h_hub, T_hub):
     """
     R_s = 287.058
     h_pressure_data = data_height['pressure']
-    p_hub = (weather.pressure / 100 - (h_hub - h_pressure_data) * 1 / 8) * 100
+    p_hub = (weather['pressure'] / 100 - (h_hub - h_pressure_data) *
+             1 / 8) * 100
     return p_hub / (R_s * T_hub)

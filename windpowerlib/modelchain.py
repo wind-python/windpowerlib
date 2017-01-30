@@ -168,7 +168,7 @@ class SimpleWindTurbine(object):
         """
         # Check if temperature data is at hub height.
         if data_height['temp_air'] == self.h_hub:
-            T_hub = weather.temp_air
+            T_hub = weather['temp_air']
             logging.debug('The temperature was given at hub height of ' + str(
                           self.wind_conv_type) + '.')
         # Calculation of temperature in K at hub height according to the
@@ -189,7 +189,7 @@ class SimpleWindTurbine(object):
                          'second one or change temperature_model to gradient.')
             # Check if temperature data of second data set is at hub height.
             elif kwargs['data_height_2']['temp_air'] == self.h_hub:
-                T_hub = kwargs['weather_2'].temp_air
+                T_hub = kwargs['weather_2']['temp_air']
                 logging.debug('The temperature was given at hub height of ' +
                               str(self.wind_conv_type) + '.')
             else:
