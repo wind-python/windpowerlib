@@ -204,7 +204,7 @@ def rho_ideal_gas(weather, data_height, h_hub, T_hub):
 
     with:
         T: temperature [K], :math:`\rho`: density [kg/m³], p: pressure [Pa]
-        :math:`R_s`: specific gas constant  of dry air [J/(kg*k)]
+        :math:`R_s`: specific gas constant  of dry air [J/(kg*K)]
 
     ToDo: Check equation and add references
 
