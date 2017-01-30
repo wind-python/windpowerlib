@@ -291,7 +291,7 @@ class SimpleWindTurbine(object):
 
         # Check if wind speed data is at hub height.
         if data_height['v_wind'] == self.h_hub:
-            v_wind = weather.v_wind
+            v_wind = weather['v_wind']
             logging.debug('The wind speed was given at hub height of ' + str(
                           self.wind_conv_type) + '.')
         # Calculation of wind speed in m/s at hub height according to the
@@ -312,7 +312,7 @@ class SimpleWindTurbine(object):
                          'second one or change wind_model to logarithmic.')
             # Check if wind speed of second data set is at hub height.
             elif kwargs['data_height_2']['v_wind'] == self.h_hub:
-                v_wind = kwargs['weather_2'].v_wind
+                v_wind = kwargs['weather_2']['v_wind']
                 logging.debug('The wind speed was given at hub height of ' +
                               str(self.wind_conv_type) + '.')
             else:
