@@ -14,7 +14,7 @@ import numpy as np
 import sys
 
 
-def logarithmic_wind_profile(h_hub, weather, data_height, obstacle_height):
+def logarithmic_wind_profile(h_hub, weather, data_height, obstacle_height=0):
     r"""
     Calculates the wind speed in m/s at hub height using the logarithmic height
     equation.
