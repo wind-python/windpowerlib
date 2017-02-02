@@ -56,8 +56,7 @@ def temperature_gradient(weather, data_height, h_hub):
         http://www.dwd.de/DE/service/lexikon/begriffe/S/Standardatmosphaere
                 _pdf.pdf?__blob=publicationFile&v=3
     """
-    h_temperature_data = data_height['temp_air']
-    return weather['temp_air'] - 0.0065 * (h_hub - h_temperature_data)
+    return weather['temp_air'] - 0.0065 * (h_hub - data_height['temp_air'])
 
 
 def temperature_interpol(weather, weather_2, data_height, data_height_2,
