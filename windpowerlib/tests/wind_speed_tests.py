@@ -34,10 +34,8 @@ class Wind_speed_Tests:
     def test_logarithmic_wind_profile(self):
         v_wind_hub_1_exp = 7.7413652271940308
         v_wind_hub_2_exp = 13.549252811030639
-        eq_(logarithmic_wind_profile(**self.test_turbine_1), v_wind_hub_1_exp,
-            'Failed to calulate wind speed.')
-        eq_(logarithmic_wind_profile(**self.test_turbine_2), v_wind_hub_2_exp,
-            'Failed to calulate wind speed.')
+        eq_(logarithmic_wind_profile(**self.test_turbine_1), v_wind_hub_1_exp)
+        eq_(logarithmic_wind_profile(**self.test_turbine_2), v_wind_hub_2_exp)
 
     @raises(ValueError)
     def test_raises_value_error(self):
