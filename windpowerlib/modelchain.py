@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jan  2 10:30:27 2017
-
-@author: RL-INSTITUT\sabine.haas
-"""
+"""The ``modelchain`` module contains functions and classes of the
+windpowerlib. This module makes it easy to get started with the windpowerlib
+and demonstrates standard ways to use the library.
 
 """
-The ``modelchain`` module contains functions and classes of the windpowerlib.
-This module makes it easy to get started with windpowerlib and demonstrates
-standard ways to use the library.
-"""
+
+__copyright__ = "Copyright oemof developer group"
+__license__ = "GPLv3"
+__author__ = "author1, author2"
 
 import os
 import sys

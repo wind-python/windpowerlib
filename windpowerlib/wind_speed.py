@@ -1,14 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jan  2 11:07:52 2017
-
-@author: RL-INSTITUT\sabine.haas
-"""
+"""The ``wind_speed`` module contains methods to calculate the wind_speed at
+hub height of a wind turbine.
 
 """
-The ``wind_speed`` module contains a method
-to calculate the wind_speed at hub height of a wind turbine.
-"""
+
+__copyright__ = "Copyright oemof developer group"
+__license__ = "GPLv3"
+__author__ = "author1, author2"
 
 import numpy as np
 import sys

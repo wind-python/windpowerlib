@@ -1,5 +1,10 @@
-#!/usr/bin/python3
-# -*- coding: utf-8
+"""The ``basic_example`` module shows a simple usage of the windpowerlib.
+
+"""
+
+__copyright__ = "Copyright oemof developer group"
+__license__ = "GPLv3"
+__author__ = "author1, author2"
 
 import pandas as pd
 import logging

@@ -1,14 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jan  2 13:26:19 2017
-
-@author: RL-INSTITUT\sabine.haas
-"""
+"""The ``density`` module contains methods to calculate the density and
+temperature at hub height of a wind turbine.
 
 """
-The ``density`` module contains methods
-to calculate density (and temperature) at hub height of a wind turbine.
-"""
+
+__copyright__ = "Copyright oemof developer group"
+__license__ = "GPLv3"
+__author__ = "author1, author2"
 
 
 def temperature_gradient(weather, data_height, h_hub):

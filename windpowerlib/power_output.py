@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jan  2 16:22:35 2017
-
-@author: RL-INSTITUT\sabine.haas
-"""
+"""The ``power_output`` module contains methods to calculate the power output of
+a wind turbine.
 
 """
-The ``power_output`` module contains methods
-to calculate the power output of a wind turbine.
-"""
+
+__copyright__ = "Copyright oemof developer group"
+__license__ = "GPLv3"
+__author__ = "author1, author2"
+
 import numpy as np
 
 
