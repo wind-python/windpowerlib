@@ -1,5 +1,5 @@
-"""The ``power_output`` module contains methods to calculate the power output of
-a wind turbine.
+"""The ``power_output`` module contains methods to calculate the power output
+of a wind turbine.
 
 """
 
@@ -12,30 +12,32 @@ import numpy as np
 
 def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
     r"""
-    Calculates the power output in W of one wind turbine using cp values.
-    This fuction is carried out when the parameter 'tp_output_model' of an
-    object of the class SimpleWindTurbine is 'cp_values'.
+    Calculates the power output of one wind turbine using cp values.
+
+    This fuction is carried out when the parameter `tp_output_model` of an
+    object of the class WindTurbine is 'cp_values'.
 
     Parameters
     ----------
-    v_wind : pandas.Series
-        wind speed [m/s] at hub height as time series
-    rho_hub : pandas.Series
-        density of air in kg/m³ at hub height
+    v_wind : pandas.Series or array
+        wind speed time series at hub height in m/s
+    rho_hub : pandas.Series or array
+        density of air at hub height in kg/m³
     d_rotor : float
         diameter of rotor in m
-    cp_series : numpy.array
-        cp values
+    cp_series : pandas.Series or array
+        cp (power coefficient) values for the wind speed time series
+        see also modelchain.cp_series()
 
     Returns
     -------
-    pandas.Series or numpy.array
-        Electrical power of the wind turbine
+    pandas.Series or array
+        electrical power output of the wind turbine in W
 
     Notes
     -----
     The following equation is used for the power output [21],[26]_:
-    .. math:: P_{wpp}=\frac{1}{8}\cdot\rho_{air,hub}\cdot d_{rotor}^{2}
+    .. math:: p _{wpp}=\frac{1}{8}\cdot\rho_{hub}\cdot d_{rotor}^{2}
         \cdot\pi\cdot v_{wind}^{3}\cdot cp\left(v_{wind}\right)
 
     with:
@@ -54,49 +56,56 @@ def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
 
 def tpo_through_P(p_values, v_wind):
     r"""
-    Interpolates the P value as a function of the wind velocity between
-    data obtained from the power curve of the specified wind turbine type.
+    Converts power curve to power output of wind turbine.
+
+    Interpolates the values of the power curve as a function of the wind speed
+    between data obtained from the power curve of the specified wind turbine
+    type.
     This fuction is carried out when the parameter 'tp_output_model' of an
-    object of the class SimpleWindTurbine is 'p_values'.
+    object of the class WindTurbine is 'p_values'.
 
     Parameters
     ----------
     p_values : pandas.DataFrame
-        P values
-    v_wind : pandas.Series
-        wind speed [m/s] at hub height as time series
+        power curve of the wind turbine
+        the indices are the corresponding wind speeds of the power curve, the
+        power values containing column is called 'P'
+    v_wind : pandas.Series or array
+        wind speed time series at hub height in m/s
 
     Returns
     -------
-    numpy.array
-        Electrical power of the wind turbine
+    array
+        electrical power of the wind turbine
 
     Note
     ----
-    See also cp_series in the module modelchain
+    See also cp_series() in the module modelchain
     """
     v_max = p_values.index.max()
     v_wind[v_wind > v_max] = v_max
     return np.interp(v_wind, p_values.index, p_values.P)
 
 
-def Interpolate_P_curve(v_wind, rho_hub, p_values):
+def interpolate_P_curve(v_wind, rho_hub, p_values):
     r"""
     Interpolates density corrected power curve.
 
     Parameters
     ----------
-    v_wind : pandas.Series
-        wind speed [m/s] at hub height as time series
-    rho_hub : pandas.Series
-        density of air in kg/m³ at hub height
+    v_wind : pandas.Series or array
+        wind speed time series at hub height in m/s
+    rho_hub : pandas.Series or array
+        density of air at hub height in kg/m³
     p_values : pandas.DataFrame
-        P values
+        power curve of the wind turbine
+        the indices are the corresponding wind speeds of the power curve, the
+        power values containing column is called 'P'
 
     Returns
     -------
     numpy.array
-        Electrical power of the wind turbine
+        electrical power of the wind turbine
 
     Notes
     -----
@@ -114,7 +123,10 @@ def Interpolate_P_curve(v_wind, rho_hub, p_values):
                     \end{cases},
         v: wind speed [m/s], :math:`\rho`: density [kg/m³]
 
-    :math:`v_{std}` is the standard wind speed in power curve
+    :math:`v_{std}` is the standard wind speed in the power curve
+    (:math:`v_{std}`, :math:`P_{std}`)
+    :math:`v_{site}` is density corrected wind speed for the power curve
+    (:math:`v_{site}`, :math:`P_{std}`)
 
     References
     ----------

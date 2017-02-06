@@ -39,7 +39,7 @@ class SimpleWindTurbine(object):
         Chooses the model for calculating the wind speed at hub height,
         Used in v_wind_hub;
         Possibilities: 'logarithmic', 'logarithmic_closest' (the weather data
-            set messured closest to hub height is used.)
+            set measured closest to hub height is used.)
     rho_model : string
         Chooses the model for calculating the density of air at hub height,
         Used in rho_hub
@@ -77,7 +77,7 @@ class SimpleWindTurbine(object):
         Chooses the model for calculating the wind speed at hub height,
         Used in v_wind_hub;
         Possibilities: 'logarithmic', 'logarithmic_closest' (the weather data
-            set messured closest to hub height is used.)
+            set measured closest to hub height is used.)
     rho_model : string
         Chooses the model for calculating the density of air at hub height,
         Used in rho_hub
@@ -131,36 +131,34 @@ class SimpleWindTurbine(object):
 
     def rho_hub(self, weather, data_height, **kwargs):
         r"""
-        Calculates the density of air in kg/m³ at hub height and the
-        temperature T at hub height if their measurement or model height is not
-        the same as hub height.
-            (temperature in K, height in m, pressure in Pa)
+        Calculates the density of air at hub height.
+
+        Within the function the temperature at hub height is calculated as
+        well if its measurement or model height is not the same as hub
+        height.
+
 
         Parameters
         ----------
         weather : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for Temperature
-            (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0)
+            Containing columns or keys with the timeseries for temperature
+            (temp_air) and pressure (pressure)
         data_height : DataFrame or Dictionary
             Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air), wind speed (v_wind)
-            and pressure (pressure).
+            model data for temperature (temp_air) and pressure (pressure)
 
         Other parameters
         ----------------
         weather_2 : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for Temperature
-            (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0)
+            Containing columns or keys with the timeseries for temperature
+            (temp_air) and pressure (pressure)
         data_height_2 : dictionary
-            Containing the heights of the weather measurements or weather
-            model in meters with the keys of the data parameter for a second
-            data height
+            Containing columns or keys with the height of the measurement or
+            model data for temperature (temp_air) and pressure (pressure)
 
         Returns
         -------
-        rho_hub : pandas.Series
+        rho_hub : pandas.Series or array
             density of air in kg/m³ at hub height
         """
         # Check if temperature data is at hub height.
@@ -240,13 +238,11 @@ class SimpleWindTurbine(object):
         Parameters
         ----------
         weather : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for Temperature
-            (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0)
+            Containing columns or keys with the timeseries for wind speed
+            (v_wind) and roughness length (z0)
         data_height : DataFrame or Dictionary
             Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air), wind speed (v_wind)
-            and pressure (pressure).
+            model data for wind speed (v_wind) and roughness length (z0)
 
         Other parameters
         ----------------
@@ -261,7 +257,7 @@ class SimpleWindTurbine(object):
 
         Returns
         -------
-        v_wind : pandas.Series
+        v_wind : pandas.Series or array
             wind speed [m/s] at hub height as time series
         """
         # Function for string for logging debug
@@ -390,18 +386,21 @@ class SimpleWindTurbine(object):
 
     def cp_series(self, v_wind):
         r"""
-        Interpolates the cp value as a function of the wind velocity between
-        data obtained from the power curve of the specified wind turbine type.
+        Converts the curve of the power coefficient to a time series.
+
+        Interpolates the power coefficient as a function of the wind speed
+        between data obtained from the cp curve of the specified wind turbine
+        type.
 
         Parameters
         ----------
-        v_wind : pandas.Series or numpy.array
-            Wind speed at hub height [m/s]
+        v_wind : pandas.Series or array
+            wind speed at hub height in m/s
 
         Returns
         -------
         numpy.array
-            cp values
+            cp values for the wind speed time series
 
         >>> import numpy
         >>> from windpowerlib import modelchain
