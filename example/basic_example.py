@@ -63,7 +63,7 @@ vestasV90 = {
     'rho_model': 'ideal_gas',
     'temperature_model': 'interpolation',
     'tp_output_model': 'cp_values',
-    'density_corr': False}
+    'density_corr': True}
 
 
 def ready_example_data(filename, datetime_column='Unnamed: 0'):
@@ -76,8 +76,8 @@ def ready_example_data(filename, datetime_column='Unnamed: 0'):
 weather_df = ready_example_data('weather.csv')
 weather_df_2 = ready_example_data('weather_other_height.csv')
 
-e126 = modelchain.SimpleWindTurbine(**enerconE126)
-v90 = modelchain.SimpleWindTurbine(**vestasV90)
+e126 = modelchain.Modelchain(**enerconE126)
+v90 = modelchain.Modelchain(**vestasV90)
 
 if plt:
     e126.turbine_power_output(

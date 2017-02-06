@@ -16,7 +16,7 @@ import pandas as pd
 from windpowerlib import wind_speed, density, power_output
 
 
-class SimpleWindTurbine(object):
+class Modelchain(object):
     r"""Model to determine the output of a wind turbine
 
     Parameters
