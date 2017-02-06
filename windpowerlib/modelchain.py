@@ -420,7 +420,7 @@ class SimpleWindTurbine(object):
         Parameters
         ----------
         weather : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for Temperature
+            Containing columns or keys with the timeseries for temperature
             (temp_air), pressure (pressure), wind speed (v_wind) and
             roughness length (z0)
         data_height : DataFrame or Dictionary
@@ -520,9 +520,7 @@ class SimpleWindTurbine(object):
 
 def read_wpp_data(**kwargs):
     r"""
-    Fetches cp or P values from a file or downloads it from a server.
-
-    The files are located in the data folder of the package root.
+    Fetches cp or P values from a file.
 
     Returns
     -------
@@ -535,7 +533,7 @@ def read_wpp_data(**kwargs):
     datapath : string, optional
         Path where the cp or P file is stored. Default: '$PACKAGE_ROOT/data'
     filename : string, optional
-        Filename of the cp or P file.
+        Filename of the cp or P file. Default: 'cp_values.csv'
 
     """
     if 'datapath' not in kwargs:

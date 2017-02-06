@@ -14,7 +14,7 @@ def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
     r"""
     Calculates the power output of one wind turbine using cp values.
 
-    This fuction is carried out when the parameter `tp_output_model` of an
+    This function is carried out when the parameter `tp_output_model` of an
     object of the class WindTurbine is 'cp_values'.
 
     Parameters
@@ -61,7 +61,7 @@ def tpo_through_P(p_values, v_wind):
     Interpolates the values of the power curve as a function of the wind speed
     between data obtained from the power curve of the specified wind turbine
     type.
-    This fuction is carried out when the parameter 'tp_output_model' of an
+    This function is carried out when the parameter 'tp_output_model' of an
     object of the class WindTurbine is 'p_values'.
 
     Parameters
