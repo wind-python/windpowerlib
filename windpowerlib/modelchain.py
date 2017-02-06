@@ -24,7 +24,7 @@ class SimpleWindTurbine(object):
     wind_conv_type : string
         Name of the wind converter type. Use get_wind_pp_types() to see a list
         of all possible wind converters.
-    h_hub : float
+    hub_height : float
         Height of the hub of the wind turbine.
     d_rotor : float
         Diameter of the rotor.
@@ -60,7 +60,7 @@ class SimpleWindTurbine(object):
     wind_conv_type : string
         Name of the wind converter type. Use get_wind_pp_types() to see a list
         of all possible wind converters.
-    h_hub : float
+    hub_height : float
         Height of the hub of the wind turbine.
     d_rotor : float
         Diameter of the rotor.
@@ -97,7 +97,7 @@ class SimpleWindTurbine(object):
     --------
     >>> from windpowerlib import modelchain
     >>> enerconE126 = {
-    ...    'h_hub': 135,
+    ...    'hub_height': 135,
     ...    'd_rotor': 127,
     ...    'wind_conv_type': 'ENERCON E 126 7500'}
     >>> e126 = modelchain.SimpleWindTurbine(**enerconE126)
@@ -105,7 +105,7 @@ class SimpleWindTurbine(object):
     127
     """
 
-    def __init__(self, wind_conv_type=None, h_hub=None, d_rotor=None,
+    def __init__(self, wind_conv_type=None, hub_height=None, d_rotor=None,
                  cp_values=None, p_values=None, nominal_power=None,
                  obstacle_height=0,
                  wind_model='logarithmic',
@@ -114,7 +114,7 @@ class SimpleWindTurbine(object):
                  tp_output_model='cp_values',
                  density_corr=False):
 
-        self.h_hub = h_hub
+        self.hub_height = hub_height
         self.d_rotor = d_rotor
         self.wind_conv_type = wind_conv_type
         self.cp_values = cp_values
@@ -162,7 +162,7 @@ class SimpleWindTurbine(object):
             density of air in kg/m³ at hub height
         """
         # Check if temperature data is at hub height.
-        if data_height['temp_air'] == self.h_hub:
+        if data_height['temp_air'] == self.hub_height:
             T_hub = weather['temp_air']
             logging.debug('The temperature was given at hub height of ' + str(
                           self.wind_conv_type) + '.')
@@ -170,7 +170,7 @@ class SimpleWindTurbine(object):
         # chosen model.
         elif self.temperature_model == 'gradient':
             T_hub = density.temperature_gradient(
-                weather['temp_air'], data_height['temp_air'], self.h_hub)
+                weather['temp_air'], data_height['temp_air'], self.hub_height)
             logging.debug('The temperature at hub height of ' + str(
                           self.wind_conv_type) + ' was calculated with a ' +
                           'linear temperature gradient of -6.5 K/km.')
@@ -183,7 +183,7 @@ class SimpleWindTurbine(object):
                 sys.exit('There exists only one weather data set. Add a ' +
                          'second one or change temperature_model to gradient.')
             # Check if temperature data of second data set is at hub height.
-            elif kwargs['data_height_2']['temp_air'] == self.h_hub:
+            elif kwargs['data_height_2']['temp_air'] == self.hub_height:
                 T_hub = kwargs['weather_2']['temp_air']
                 logging.debug('The temperature was given at hub height of ' +
                               str(self.wind_conv_type) + '.')
@@ -191,10 +191,10 @@ class SimpleWindTurbine(object):
                 T_hub = density.temperature_interpol(
                     weather['temp_air'], kwargs['weather_2']['temp_air'],
                     data_height['temp_air'],
-                    kwargs['data_height_2']['temp_air'], self.h_hub)
+                    kwargs['data_height_2']['temp_air'], self.hub_height)
                 # String for logging debug
-                if (self.h_hub > data_height['temp_air'] and
-                        self.h_hub > kwargs['data_height_2']['temp_air']):
+                if (self.hub_height > data_height['temp_air'] and
+                        self.hub_height > kwargs['data_height_2']['temp_air']):
                     string = 'an extrapolation with'
                 else:
                     string = 'an interpolation between'
@@ -212,7 +212,7 @@ class SimpleWindTurbine(object):
         if self.rho_model == 'barometric':
             rho_hub = density.rho_barometric(weather['pressure'],
                                              data_height['pressure'],
-                                             self.h_hub, T_hub)
+                                             self.hub_height, T_hub)
             logging.debug('The density at hub height of ' + str(
                           self.wind_conv_type) + ' was calculated with ' +
                           'the barometric height equation and a pressure ' +
@@ -220,7 +220,7 @@ class SimpleWindTurbine(object):
         elif self.rho_model == 'ideal_gas':
             rho_hub = density.rho_ideal_gas(weather['pressure'],
                                             data_height['pressure'],
-                                            self.h_hub, T_hub)
+                                            self.hub_height, T_hub)
             logging.debug('The density at hub height of ' + str(
                           self.wind_conv_type) + ' was calculated with ' +
                           'the ideal gas equation and a pressure ' +
@@ -286,7 +286,7 @@ class SimpleWindTurbine(object):
                     'obstacle height of ' + str(obstacle_height) + ' m.')
 
         # Check if wind speed data is at hub height.
-        if data_height['v_wind'] == self.h_hub:
+        if data_height['v_wind'] == self.hub_height:
             v_wind = weather['v_wind']
             logging.debug('The wind speed was given at hub height of ' + str(
                           self.wind_conv_type) + '.')
@@ -294,7 +294,7 @@ class SimpleWindTurbine(object):
         # chosen model.
         elif self.wind_model == 'logarithmic':
             v_wind = wind_speed.logarithmic_wind_profile(
-                weather['v_wind'], data_height['v_wind'], self.h_hub,
+                weather['v_wind'], data_height['v_wind'], self.hub_height,
                 weather['z0'], self.obstacle_height)
             logging.debug(v_logging(self.wind_conv_type, data_height['v_wind'],
                                     self.obstacle_height))
@@ -307,16 +307,16 @@ class SimpleWindTurbine(object):
                 sys.exit('There exists only one weather data set. Add a ' +
                          'second one or change wind_model to logarithmic.')
             # Check if wind speed of second data set is at hub height.
-            elif kwargs['data_height_2']['v_wind'] == self.h_hub:
+            elif kwargs['data_height_2']['v_wind'] == self.hub_height:
                 v_wind = kwargs['weather_2']['v_wind']
                 logging.debug('The wind speed was given at hub height of ' +
                               str(self.wind_conv_type) + '.')
             else:
                 h_v_2 = kwargs['data_height_2']['v_wind']
                 h_v_1 = data_height['v_wind']
-                if abs(h_v_1 - self.h_hub) <= abs(h_v_2 - self.h_hub):
+                if abs(h_v_1 - self.hub_height) <= abs(h_v_2 - self.hub_height):
                     v_wind = wind_speed.logarithmic_wind_profile(
-                        weather['v_wind'], data_height['v_wind'], self.h_hub,
+                        weather['v_wind'], data_height['v_wind'], self.hub_height,
                         weather['z0'], self.obstacle_height)
                     logging.debug(v_logging(self.wind_conv_type,
                                             data_height['v_wind'],
@@ -324,7 +324,7 @@ class SimpleWindTurbine(object):
                 else:
                     v_wind = wind_speed.logarithmic_wind_profile(
                         kwargs['weather_2']['v_wind'],
-                        kwargs['data_height_2']['v_wind'], self.h_hub,
+                        kwargs['data_height_2']['v_wind'], self.hub_height,
                         kwargs['weather_2']['z0'], self.obstacle_height)
                     logging.debug(v_logging(self.wind_conv_type,
                                   kwargs['data_height_2']['v_wind'],
@@ -444,8 +444,8 @@ class SimpleWindTurbine(object):
         pandas.Series
             Electrical power of the wind turbine
         """
-        if self.h_hub is None:
-            sys.exit('Attribute h_hub (hub height) is missing.')
+        if self.hub_height is None:
+            sys.exit('Attribute hub_height (hub height) is missing.')
         if self.d_rotor is None:
             sys.exit('Attribute d_rotor (diameter of rotor) is missing.')
 

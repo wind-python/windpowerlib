@@ -43,7 +43,7 @@ exampledata = {
 
 # Specifications of the wind turbines
 enerconE126 = {
-    'h_hub': 135,
+    'hub_height': 135,
     'd_rotor': 127,
     'wind_conv_type': 'ENERCON E 126 7500',
     'obstacle_height': 0,
@@ -55,7 +55,7 @@ enerconE126 = {
 
 
 vestasV90 = {
-    'h_hub': 105,
+    'hub_height': 105,
     'd_rotor': 90,
     'wind_conv_type': 'VESTAS V 90 3000',
     'obstacle_height': 0,
