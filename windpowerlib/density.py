@@ -8,7 +8,7 @@ __license__ = "GPLv3"
 __author__ = "author1, author2"
 
 
-def temperature_gradient(temp_air, temp_height, h_hub):
+def temperature_gradient(temp_air, temp_height, hub_height):
     r"""
     Calculates the temperature at hub height by a linear gradient.
 
@@ -21,9 +21,9 @@ def temperature_gradient(temp_air, temp_height, h_hub):
     temp_air : pandas.Series or array
         air temperature time series in K
     temp_height : float
-        height in m for which the corresponding parameter in temp_air applies
+        height in m for which the parameter `temp_air` applies
         of the measurement or model data for temperature in m
-    h_hub : float
+    hub_height : float
         height of the hub of the wind turbine in m
 
     Returns
@@ -51,11 +51,11 @@ def temperature_gradient(temp_air, temp_height, h_hub):
         http://www.dwd.de/DE/service/lexikon/begriffe/S/Standardatmosphaere
                 _pdf.pdf?__blob=publicationFile&v=3
     """
-    return temp_air - 0.0065 * (h_hub - temp_height)
+    return temp_air - 0.0065 * (hub_height - temp_height)
 
 
 def temperature_interpol(temp_air_1, temp_air_2, temp_height_1, temp_height_2,
-                         h_hub):
+                         hub_height):
     r"""
     Calculates the temperature at hub height by inter- or extrapolation.
 
@@ -69,10 +69,10 @@ def temperature_interpol(temp_air_1, temp_air_2, temp_height_1, temp_height_2,
     temp_air_2 : pandas.Series or array
         second air temperature time series for interpolation
     temp_height_1 : float
-        height for which the corresponding parameter in `temp_air_1` applies
+        height for which the parameter `temp_air_1` applies
     temp_height_2 : float
-        height for which the corresponding parameter in `temp_air_2` applies
-    h_hub : float
+        height for which the parameter `temp_air_2` applies
+    hub_height : float
         height of the hub of the wind turbine
 
     Returns
@@ -92,10 +92,10 @@ def temperature_interpol(temp_air_1, temp_air_2, temp_height_1, temp_height_2,
         T: temperature, h: height
     """
     return ((temp_air_2 - temp_air_1) / (temp_height_2 - temp_height_1) *
-            (h_hub - temp_height_1) + temp_air_1)
+            (hub_height - temp_height_1) + temp_air_1)
 
 
-def rho_barometric(pressure, pressure_height, h_hub, T_hub):
+def rho_barometric(pressure, pressure_height, hub_height, T_hub):
     r"""
     Calculates the density of air at hub height by barometric height equation.
 
@@ -107,8 +107,8 @@ def rho_barometric(pressure, pressure_height, h_hub, T_hub):
     pressure : pandas.Series or array
         pressure time series in Pa
     pressure_height : float
-        height in m for which the corresponding parameter in `pressure` applies
-    h_hub : float
+        height in m for which the parameter `pressure` applies
+    hub_height : float
         hub height of wind turbine in m
     T_hub : pandas.Series or array
         temperature at hub height in K
@@ -144,11 +144,11 @@ def rho_barometric(pressure, pressure_height, h_hub, T_hub):
         http://www.dwd.de/DE/service/lexikon/begriffe/D/Druckgradient_pdf.
             pdf?__blob=publicationFile&v=4
     """
-    return ((pressure / 100 - (h_hub - pressure_height) * 1 / 8) * 1.225 *
+    return ((pressure / 100 - (hub_height - pressure_height) * 1 / 8) * 1.225 *
             288.15 * 100 / (101330 * T_hub))
 
 
-def rho_ideal_gas(pressure, pressure_height, h_hub, T_hub):
+def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
     r"""
     Calculates the density of air in kg/m³ at hub height using the ideal gas
     equation. This fuction is carried out when the parameter 'rho_model'
@@ -159,8 +159,8 @@ def rho_ideal_gas(pressure, pressure_height, h_hub, T_hub):
     pressure : pandas.Series or array
         pressure time series in Pa
     pressure_height : float
-        height in m for which the corresponding parameter in `pressure` applies
-    h_hub : float
+        height in m for which the parameter `pressure` applies
+    hub_height : float
         hub height of wind turbine in m
     T_hub : pandas.Series or array
         temperature at hub height in K
@@ -186,5 +186,5 @@ def rho_ideal_gas(pressure, pressure_height, h_hub, T_hub):
 
     ToDo: Check equation and add references for ideal gas equation
     """
-    return ((pressure / 100 - (h_hub - pressure_height) * 1 / 8) * 100 /
+    return ((pressure / 100 - (hub_height - pressure_height) * 1 / 8) * 100 /
             (287.058 * T_hub))

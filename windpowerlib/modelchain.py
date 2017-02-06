@@ -16,7 +16,7 @@ import pandas as pd
 from windpowerlib import wind_speed, density, power_output
 
 
-class SimpleWindTurbine(object):
+class Modelchain(object):
     r"""Model to determine the output of a wind turbine
 
     Parameters
@@ -24,7 +24,7 @@ class SimpleWindTurbine(object):
     wind_conv_type : string
         Name of the wind converter type. Use get_wind_pp_types() to see a list
         of all possible wind converters.
-    h_hub : float
+    hub_height : float
         Height of the hub of the wind turbine.
     d_rotor : float
         Diameter of the rotor.
@@ -60,7 +60,7 @@ class SimpleWindTurbine(object):
     wind_conv_type : string
         Name of the wind converter type. Use get_wind_pp_types() to see a list
         of all possible wind converters.
-    h_hub : float
+    hub_height : float
         Height of the hub of the wind turbine.
     d_rotor : float
         Diameter of the rotor.
@@ -97,7 +97,7 @@ class SimpleWindTurbine(object):
     --------
     >>> from windpowerlib import modelchain
     >>> enerconE126 = {
-    ...    'h_hub': 135,
+    ...    'hub_height': 135,
     ...    'd_rotor': 127,
     ...    'wind_conv_type': 'ENERCON E 126 7500'}
     >>> e126 = modelchain.SimpleWindTurbine(**enerconE126)
@@ -105,7 +105,7 @@ class SimpleWindTurbine(object):
     127
     """
 
-    def __init__(self, wind_conv_type=None, h_hub=None, d_rotor=None,
+    def __init__(self, wind_conv_type=None, hub_height=None, d_rotor=None,
                  cp_values=None, p_values=None, nominal_power=None,
                  obstacle_height=0,
                  wind_model='logarithmic',
@@ -114,7 +114,7 @@ class SimpleWindTurbine(object):
                  tp_output_model='cp_values',
                  density_corr=False):
 
-        self.h_hub = h_hub
+        self.hub_height = hub_height
         self.d_rotor = d_rotor
         self.wind_conv_type = wind_conv_type
         self.cp_values = cp_values
@@ -134,18 +134,16 @@ class SimpleWindTurbine(object):
         Calculates the density of air at hub height.
 
         Within the function the temperature at hub height is calculated as
-        well if its measurement or model height is not the same as hub
-        height.
-
+        well if it is not given at hub height.
 
         Parameters
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for temperature
             (temp_air) and pressure (pressure)
-        data_height : DataFrame or Dictionary
-            Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air) and pressure (pressure)
+                data_height : DataFrame or Dictionary
+            Containing columns or keys with the heights for which the
+            corresponding parameters in `weather` apply
 
         Other parameters
         ----------------
@@ -162,78 +160,62 @@ class SimpleWindTurbine(object):
             density of air in kg/m³ at hub height
         """
         # Check if temperature data is at hub height.
-        if data_height['temp_air'] == self.h_hub:
+        if data_height['temp_air'] == self.hub_height:
+            logging.debug('Using given temperature (at hub height).')
             T_hub = weather['temp_air']
-            logging.debug('The temperature was given at hub height of ' + str(
-                          self.wind_conv_type) + '.')
         # Calculation of temperature in K at hub height according to the
         # chosen model.
         elif self.temperature_model == 'gradient':
+            logging.debug('Calculating temperature with gradient.')
             T_hub = density.temperature_gradient(
-                weather['temp_air'], data_height['temp_air'], self.h_hub)
-            logging.debug('The temperature at hub height of ' + str(
-                          self.wind_conv_type) + ' was calculated with a ' +
-                          'linear temperature gradient of -6.5 K/km.')
+                weather['temp_air'], data_height['temp_air'], self.hub_height)
         elif self.temperature_model == 'interpolation':
-            if 'data_height_2' not in kwargs:
-                sys.exit('There exists only one data height specification. ' +
-                         'Add a second one or change temperature_model to ' +
-                         'gradient.')
-            elif 'weather_2' not in kwargs:
-                sys.exit('There exists only one weather data set. Add a ' +
-                         'second one or change temperature_model to gradient.')
+            if 'data_height_2' not in kwargs or 'weather_2' not in kwargs:
+                logging.info('One weather data set or data height set is ' +
+                             'missing. It was calculated with a temperature ' +
+                             'gradient.')
+                T_hub = density.temperature_gradient(
+                    weather['temp_air'], data_height['temp_air'],
+                    self.hub_height)
             # Check if temperature data of second data set is at hub height.
-            elif kwargs['data_height_2']['temp_air'] == self.h_hub:
+            elif kwargs['data_height_2']['temp_air'] == self.hub_height:
+                logging.debug('Using given temperature (at hub height).')
                 T_hub = kwargs['weather_2']['temp_air']
-                logging.debug('The temperature was given at hub height of ' +
-                              str(self.wind_conv_type) + '.')
             else:
+                logging.debug('Calculating temperature with interpolation.')
                 T_hub = density.temperature_interpol(
                     weather['temp_air'], kwargs['weather_2']['temp_air'],
                     data_height['temp_air'],
-                    kwargs['data_height_2']['temp_air'], self.h_hub)
-                # String for logging debug
-                if (self.h_hub > data_height['temp_air'] and
-                        self.h_hub > kwargs['data_height_2']['temp_air']):
-                    string = 'an extrapolation with'
-                else:
-                    string = 'an interpolation between'
-                logging.debug('The temperature at hub height of ' + str(
-                              self.wind_conv_type) + ' was calculated with ' +
-                              string + ' the temperatures measured at ' +
-                              str(data_height['temp_air']) + ' m and ' +
-                              str(kwargs['data_height_2']['temp_air']) + ' m.')
+                    kwargs['data_height_2']['temp_air'], self.hub_height)
         else:
-            sys.exit('invalid temperature_model in class SimpleWindTurbine; ' +
-                     'model must be one of the following: gradient, interpol')
+            logging.info('wrong value: `temperature_model` must be gradient ' +
+                         'or interpolation. It was calculated with gradient.')
+            T_hub = density.temperature_gradient(
+                weather['temp_air'], data_height['temp_air'], self.hub_height)
 
         # Calculation of density in kg/m³ at hub height according to the
         # chosen model.
         if self.rho_model == 'barometric':
+            logging.debug('Calculating density with barometric height eq.')
             rho_hub = density.rho_barometric(weather['pressure'],
                                              data_height['pressure'],
-                                             self.h_hub, T_hub)
-            logging.debug('The density at hub height of ' + str(
-                          self.wind_conv_type) + ' was calculated with ' +
-                          'the barometric height equation and a pressure ' +
-                          'gradient of -1/8 hPa/m.')
+                                             self.hub_height, T_hub)
         elif self.rho_model == 'ideal_gas':
+            logging.debug('Calculating density with ideal gas equation.')
             rho_hub = density.rho_ideal_gas(weather['pressure'],
                                             data_height['pressure'],
-                                            self.h_hub, T_hub)
-            logging.debug('The density at hub height of ' + str(
-                          self.wind_conv_type) + ' was calculated with ' +
-                          'the ideal gas equation and a pressure ' +
-                          'gradient of -1/8 hPa/m.')
+                                            self.hub_height, T_hub)
         else:
-            sys.exit('invalid rho_model in class SimpleWindTurbine; model ' +
-                     'must be one of the following: barometric, ideal_gas')
-
+            logging.info('wrong value: `rho_model` must be barometric ' +
+                         'or ideal_gas. It was calculated with barometric.')
+            rho_hub = density.rho_barometric(weather['pressure'],
+                                             data_height['pressure'],
+                                             self.hub_height, T_hub)
         return rho_hub
 
     def v_wind_hub(self, weather, data_height, **kwargs):
         r"""
-        Calculates the wind speed in m/s at hub height.
+        Calculates the wind speed at hub height.
 
         Parameters
         ----------
@@ -241,8 +223,8 @@ class SimpleWindTurbine(object):
             Containing columns or keys with the timeseries for wind speed
             (v_wind) and roughness length (z0)
         data_height : DataFrame or Dictionary
-            Containing columns or keys with the height of the measurement or
-            model data for wind speed (v_wind) and roughness length (z0)
+            Containing columns or keys with the heights for which the
+            corresponding parameters in `weather` apply
 
         Other parameters
         ----------------
@@ -260,79 +242,50 @@ class SimpleWindTurbine(object):
         v_wind : pandas.Series or array
             wind speed [m/s] at hub height as time series
         """
-        # Function for string for logging debug
-        def v_logging(wind_conv_type, data_height, obstacle_height):
-            r"""
-            Produces a string for the logging debug.
-
-            Parameters
-            ----------
-            wind_conv_type : string
-                name of wind converter type
-            data_height : float
-                height of the wind speed data in m
-            obstacle_height : float
-                height of the surrounding obstacles in m
-
-            Returns
-            -------
-            string
-                string for logging debug
-            """
-            return ('The wind speed at hub height of ' + str(
-                    wind_conv_type) + ' was calculated with ' +
-                    'the logarithmic height equation using wind speed ' +
-                    'data of a height of ' + str(data_height) + ' m and an ' +
-                    'obstacle height of ' + str(obstacle_height) + ' m.')
-
         # Check if wind speed data is at hub height.
-        if data_height['v_wind'] == self.h_hub:
+        if data_height['v_wind'] == self.hub_height:
+            logging.debug('Using given wind speed (at hub height).')
             v_wind = weather['v_wind']
-            logging.debug('The wind speed was given at hub height of ' + str(
-                          self.wind_conv_type) + '.')
         # Calculation of wind speed in m/s at hub height according to the
         # chosen model.
         elif self.wind_model == 'logarithmic':
+            logging.debug('Calculating v_wind with logarithmic wind profile.')
             v_wind = wind_speed.logarithmic_wind_profile(
-                weather['v_wind'], data_height['v_wind'], self.h_hub,
+                weather['v_wind'], data_height['v_wind'], self.hub_height,
                 weather['z0'], self.obstacle_height)
-            logging.debug(v_logging(self.wind_conv_type, data_height['v_wind'],
-                                    self.obstacle_height))
         elif self.wind_model == 'logarithmic_closest':
-            if 'data_height_2' not in kwargs:
-                sys.exit('There exists only one data height specification. ' +
-                         'Add a second one or change wind_model to ' +
-                         'logarithmic.')
-            elif 'weather_2' not in kwargs:
-                sys.exit('There exists only one weather data set. Add a ' +
-                         'second one or change wind_model to logarithmic.')
+            if 'data_height_2' not in kwargs or 'weather_2' not in kwargs:
+                logging.info('One weather data set or data height set is ' +
+                             'missing. It was calculated with one data set.')
+                v_wind = wind_speed.logarithmic_wind_profile(
+                    weather['v_wind'], data_height['v_wind'], self.hub_height,
+                    weather['z0'], self.obstacle_height)
             # Check if wind speed of second data set is at hub height.
-            elif kwargs['data_height_2']['v_wind'] == self.h_hub:
+            elif kwargs['data_height_2']['v_wind'] == self.hub_height:
+                logging.debug('Using given wind speed (at hub height).')
                 v_wind = kwargs['weather_2']['v_wind']
-                logging.debug('The wind speed was given at hub height of ' +
-                              str(self.wind_conv_type) + '.')
             else:
+                logging.debug('Calculating v_wind with logarithmic wind ' +
+                              'profile.')
                 h_v_2 = kwargs['data_height_2']['v_wind']
                 h_v_1 = data_height['v_wind']
-                if abs(h_v_1 - self.h_hub) <= abs(h_v_2 - self.h_hub):
+                if (abs(h_v_1 - self.hub_height) <=
+                        abs(h_v_2 - self.hub_height)):
                     v_wind = wind_speed.logarithmic_wind_profile(
-                        weather['v_wind'], data_height['v_wind'], self.h_hub,
-                        weather['z0'], self.obstacle_height)
-                    logging.debug(v_logging(self.wind_conv_type,
-                                            data_height['v_wind'],
-                                            self.obstacle_height))
+                        weather['v_wind'], data_height['v_wind'],
+                        self.hub_height, weather['z0'], self.obstacle_height)
                 else:
                     v_wind = wind_speed.logarithmic_wind_profile(
                         kwargs['weather_2']['v_wind'],
-                        kwargs['data_height_2']['v_wind'], self.h_hub,
+                        kwargs['data_height_2']['v_wind'], self.hub_height,
                         kwargs['weather_2']['z0'], self.obstacle_height)
-                    logging.debug(v_logging(self.wind_conv_type,
-                                  kwargs['data_height_2']['v_wind'],
-                                  self.obstacle_height))
         else:
-            sys.exit('invalid wind_model in class SimpleWindTurbine; model ' +
-                     ' must be one of the following: logarithmic, ' +
-                     'logarithmic_closest')
+            logging.info('wrong value: `wind_model` must be logarithmic or' +
+                         'logarithmic_closest. It was calculated with ' +
+                         'logarithmic.')
+            v_wind = wind_speed.logarithmic_wind_profile(
+                weather['v_wind'], data_height['v_wind'], self.hub_height,
+                weather['z0'], self.obstacle_height)
         return v_wind
 
     def fetch_wpp_data(self, **kwargs):
@@ -366,7 +319,7 @@ class SimpleWindTurbine(object):
         wpp_df = df[df.rli_anlagen_id == self.wind_conv_type]
         if wpp_df.shape[0] == 0:
             pd.set_option('display.max_rows', len(df))
-            logging.debug('Possible types: \n{0}'.format(df.rli_anlagen_id))
+            logging.info('Possible types: \n{0}'.format(df.rli_anlagen_id))
             pd.reset_option('display.max_rows')
             sys.exit('Cannot find the wind converter typ: {0}'.format(
                 self.wind_conv_type))
@@ -424,9 +377,8 @@ class SimpleWindTurbine(object):
             (temp_air), pressure (pressure), wind speed (v_wind) and
             roughness length (z0)
         data_height : DataFrame or Dictionary
-            Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air), wind speed (v_wind)
-            and pressure (pressure).
+            Containing columns or keys with the heights for which the
+            corresponding parameters in `weather` apply
 
         Other parameters
         ----------------
@@ -444,8 +396,8 @@ class SimpleWindTurbine(object):
         pandas.Series
             Electrical power of the wind turbine
         """
-        if self.h_hub is None:
-            sys.exit('Attribute h_hub (hub height) is missing.')
+        if self.hub_height is None:
+            sys.exit('Attribute hub_height (hub height) is missing.')
         if self.d_rotor is None:
             sys.exit('Attribute d_rotor (diameter of rotor) is missing.')
 
@@ -463,29 +415,26 @@ class SimpleWindTurbine(object):
                 if self.nominal_power is None:
                     self.nominal_power = wpp_data[1]
             if self.density_corr is False:
+                logging.debug('Calculating power output with cp curve.')
                 p_wpp = power_output.tpo_through_cp(
                     v_wind, rho_hub, self.d_rotor, self.cp_series(v_wind))
-                logging.debug('For the calculation of the power output of ' +
-                              str(self.wind_conv_type) + ' a cp curve was ' +
-                              'used.')
             elif self.density_corr is True:
-                rho_0 = 1.225  # density of air in kg/m³
-                # get P curve from cp values
+                logging.debug('Calculating power output with density ' +
+                              'corrected cp curve.')
+                # get P curve from cp values with ambient density = 1.225 kg/m³
                 p_curve = power_output.tpo_through_cp(
-                    self.cp_values.index, rho_0, self.d_rotor,
+                    self.cp_values.index, 1.225, self.d_rotor,
                     self.cp_values.cp)
                 p_df = pd.DataFrame(data=p_curve, index=self.cp_values.index)
                 p_df.columns = ['P']
                 # density correction of P and electrical time series
                 p_wpp = power_output.interpolate_P_curve(v_wind, rho_hub,
                                                          p_df)
-                logging.debug('For the calculation of the power output of ' +
-                              str(self.wind_conv_type) + ' the power curve ' +
-                              'was calculated out of cp values. There was ' +
-                              'made a density correction of the power curve.')
             else:
-                sys.exit('invalid value of density_corr; must be True or ' +
-                         'False')
+                logging.info('wrong value: `density_corr` must be True or ' +
+                             'False. It was calculated with the value False.')
+                p_wpp = power_output.tpo_through_cp(
+                    v_wind, rho_hub, self.d_rotor, self.cp_series(v_wind))
 
         elif self.tp_output_model == 'p_values':
             # get P values and/or nominal power
@@ -497,20 +446,25 @@ class SimpleWindTurbine(object):
                 if self.nominal_power is None:
                     self.nominal_power = wpp_data[1]
             if self.density_corr is False:
+                logging.debug('Calculating power output with power curve.')
                 p_wpp = power_output.tpo_through_P(self.p_values, v_wind)
-                logging.debug('For the calculation of the power output of ' +
-                              str(self.wind_conv_type) + ' a power curve ' +
-                              'was used.')
             if self.density_corr is True:
+                logging.debug('Calculating power output with density ' +
+                              'corrected power curve.')
                 p_wpp = power_output.interpolate_P_curve(v_wind, rho_hub,
                                                          self.p_values)
-                logging.debug('For the calculation of the power output of ' +
-                              str(self.wind_conv_type) + ' there was used a ' +
-                              'density corrected power curve.')
         else:
-            sys.exit('invalid tp_output_model in class SimpleWindTurbine; ' +
-                     'model must be one of the following: cp_values, ' +
-                     'p_values')
+            logging.info('wrong value: `tp_output_model` must be cp_values ' +
+                         'or p_values. It was calculated with cp_values and ' +
+                         'without density correction.')
+            if self.cp_values is None or self.nominal_power is None:
+                wpp_data = self.fetch_wpp_data()
+                if self.cp_values is None:
+                    self.cp_values = wpp_data[0]
+                if self.nominal_power is None:
+                    self.nominal_power = wpp_data[1]
+            p_wpp = power_output.tpo_through_cp(v_wind, rho_hub, self.d_rotor,
+                                                self.cp_series(v_wind))
         p_wpp_series = pd.Series(data=p_wpp,
                                  index=weather.index,
                                  name='feedin_wind_pp')

@@ -10,7 +10,7 @@ __author__ = "author1, author2"
 import numpy as np
 
 
-def logarithmic_wind_profile(v_wind, v_wind_height, h_hub, z_0,
+def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
                              obstacle_height=0):
     r"""
     Calculates the wind speed at hub height.
@@ -23,8 +23,8 @@ def logarithmic_wind_profile(v_wind, v_wind_height, h_hub, z_0,
     v_wind : pandas.Series or array
         wind speed time series
     v_wind_height : float
-        height for which the corresponding parameter in `v_wind` applies
-    h_hub : float
+        height for which the parameter `v_wind` applies
+    hub_height : float
         hub height of wind turbine
     z_0 : pandas.Series or array or float
         roughness length
@@ -55,8 +55,8 @@ def logarithmic_wind_profile(v_wind, v_wind_height, h_hub, z_0,
     :math:`h_{data}` is the height in which the wind speed
     :math:`v_{wind,data}` is measured.
 
-    `v_wind_height`, `z_0`, `h_hub` and `obstacle_height` have to be of the
-    same unit.
+    `v_wind_height`, `z_0`, `hub_height` and `obstacle_height` have to be of
+    the same unit.
 
     References
     ----------
@@ -71,5 +71,5 @@ def logarithmic_wind_profile(v_wind, v_wind_height, h_hub, z_0,
         raise ValueError('To take an obstacle height of ' +
                          str(obstacle_height) + ' m into consideration wind ' +
                          'speed data of a higher height is needed.')
-    return (v_wind * np.log((h_hub - 0.7 * obstacle_height) / z_0) /
+    return (v_wind * np.log((hub_height - 0.7 * obstacle_height) / z_0) /
             np.log((v_wind_height - 0.7 * obstacle_height) / z_0))
