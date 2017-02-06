@@ -23,14 +23,6 @@ class Density_and_Temperature_Tests:
                             'pressure': 0}
         self.weather_2 = {'temp_air': 266}
         self.data_height_2 = {'temp_air': 10}
-        self.test_turbine_1 = {'h_hub': 100,
-                               'data_height': self.data_height,
-                               'weather': self.weather}
-        self.test_turbine_2 = {'h_hub': 100,
-                               'data_height': self.data_height,
-                               'weather': self.weather,
-                               'data_height_2': self.data_height_2,
-                               'weather_2': self.weather_2}
 
     def setup(self):
         self.windturbine = SimpleWindTurbine()
