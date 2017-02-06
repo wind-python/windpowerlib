@@ -8,7 +8,6 @@ __license__ = "GPLv3"
 __author__ = "author1, author2"
 
 import numpy as np
-import sys
 
 
 def logarithmic_wind_profile(v_wind, v_wind_height, h_hub, z_0,

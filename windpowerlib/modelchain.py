@@ -13,7 +13,7 @@ import sys
 import logging
 import numpy as np
 import pandas as pd
-from windpowerlib import (wind_speed, density, power_output)
+from windpowerlib import wind_speed, density, power_output
 
 
 class SimpleWindTurbine(object):
