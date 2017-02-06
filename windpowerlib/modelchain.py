@@ -171,8 +171,8 @@ class SimpleWindTurbine(object):
         # Calculation of temperature in K at hub height according to the
         # chosen model.
         elif self.temperature_model == 'gradient':
-            T_hub = density.temperature_gradient(weather, data_height,
-                                                 self.h_hub)
+            T_hub = density.temperature_gradient(
+                weather['temp_air'], data_height['temp_air'], self.h_hub)
             logging.debug('The temperature at hub height of ' + str(
                           self.wind_conv_type) + ' was calculated with a ' +
                           'linear temperature gradient of -6.5 K/km.')
@@ -191,8 +191,9 @@ class SimpleWindTurbine(object):
                               str(self.wind_conv_type) + '.')
             else:
                 T_hub = density.temperature_interpol(
-                    weather, kwargs['weather_2'], data_height,
-                    kwargs['data_height_2'], self.h_hub)
+                    weather['temp_air'], kwargs['weather_2']['temp_air'],
+                    data_height['temp_air'],
+                    kwargs['data_height_2']['temp_air'], self.h_hub)
                 # String for logging debug
                 if (self.h_hub > data_height['temp_air'] and
                         self.h_hub > kwargs['data_height_2']['temp_air']):
@@ -211,14 +212,16 @@ class SimpleWindTurbine(object):
         # Calculation of density in kg/m³ at hub height according to the
         # chosen model.
         if self.rho_model == 'barometric':
-            rho_hub = density.rho_barometric(weather, data_height,
+            rho_hub = density.rho_barometric(weather['pressure'],
+                                             data_height['pressure'],
                                              self.h_hub, T_hub)
             logging.debug('The density at hub height of ' + str(
                           self.wind_conv_type) + ' was calculated with ' +
                           'the barometric height equation and a pressure ' +
                           'gradient of -1/8 hPa/m.')
         elif self.rho_model == 'ideal_gas':
-            rho_hub = density.rho_ideal_gas(weather, data_height,
+            rho_hub = density.rho_ideal_gas(weather['pressure'],
+                                            data_height['pressure'],
                                             self.h_hub, T_hub)
             logging.debug('The density at hub height of ' + str(
                           self.wind_conv_type) + ' was calculated with ' +

@@ -37,20 +37,25 @@ class Density_and_Temperature_Tests:
 
     def test_temperature_gradient(self):
         T_hub_exp = 266.363
-        eq_(temperature_gradient(**self.test_turbine_1), T_hub_exp)
+        eq_(temperature_gradient(self.weather['temp_air'],
+                                 self.data_height['temp_air'],
+                                 self.h_hub), T_hub_exp)
 
     def test_temperature_interpol(self):
         T_hub_exp = 254.75
-        eq_(temperature_interpol(**self.test_turbine_2), T_hub_exp)
+        eq_(temperature_interpol(
+            self.weather['temp_air'], self.weather_2['temp_air'],
+            self.data_height['temp_air'], self.data_height_2['temp_air'],
+            self.h_hub), T_hub_exp)
 
     def test_rho_barometric(self):
         rho_exp = 1.303053361499916
-        eq_(rho_barometric(self.test_turbine_1['weather'],
-                           self.test_turbine_1['data_height'],
-                           self.test_turbine_1['h_hub'], 267.0), rho_exp)
+        eq_(rho_barometric(self.weather['pressure'],
+                           self.data_height['pressure'], self.h_hub, 267.0),
+            rho_exp)
 
     def test_rho_ideal_gas(self):
         rho_exp = 1.3030943935092734
-        eq_(rho_ideal_gas(self.test_turbine_1['weather'],
-                          self.test_turbine_1['data_height'],
-                          self.test_turbine_1['h_hub'], 267.0), rho_exp)
+        eq_(rho_ideal_gas(self.weather['pressure'],
+                          self.data_height['pressure'], self.h_hub, 267.0),
+            rho_exp)
