@@ -21,7 +21,7 @@ def temperature_gradient(temp_air, temp_height, hub_height):
     temp_air : pandas.Series or array
         air temperature time series in K
     temp_height : float
-        height in m for which the corresponding parameter in temp_air applies
+        height in m for which the parameter `temp_air` applies
         of the measurement or model data for temperature in m
     hub_height : float
         height of the hub of the wind turbine in m
@@ -69,9 +69,9 @@ def temperature_interpol(temp_air_1, temp_air_2, temp_height_1, temp_height_2,
     temp_air_2 : pandas.Series or array
         second air temperature time series for interpolation
     temp_height_1 : float
-        height for which the corresponding parameter in `temp_air_1` applies
+        height for which the parameter `temp_air_1` applies
     temp_height_2 : float
-        height for which the corresponding parameter in `temp_air_2` applies
+        height for which the parameter `temp_air_2` applies
     hub_height : float
         height of the hub of the wind turbine
 
@@ -107,7 +107,7 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
     pressure : pandas.Series or array
         pressure time series in Pa
     pressure_height : float
-        height in m for which the corresponding parameter in `pressure` applies
+        height in m for which the parameter `pressure` applies
     hub_height : float
         hub height of wind turbine in m
     T_hub : pandas.Series or array
@@ -159,7 +159,7 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
     pressure : pandas.Series or array
         pressure time series in Pa
     pressure_height : float
-        height in m for which the corresponding parameter in `pressure` applies
+        height in m for which the parameter `pressure` applies
     hub_height : float
         hub height of wind turbine in m
     T_hub : pandas.Series or array

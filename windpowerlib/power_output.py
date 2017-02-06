@@ -31,7 +31,7 @@ def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
 
     Returns
     -------
-    pandas.Series or array
+    pandas.Series
         electrical power output of the wind turbine in W
 
     Notes

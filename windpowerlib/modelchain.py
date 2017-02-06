@@ -134,18 +134,16 @@ class SimpleWindTurbine(object):
         Calculates the density of air at hub height.
 
         Within the function the temperature at hub height is calculated as
-        well if its measurement or model height is not the same as hub
-        height.
-
+        well if it is not given at hub height.
 
         Parameters
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for temperature
             (temp_air) and pressure (pressure)
-        data_height : DataFrame or Dictionary
-            Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air) and pressure (pressure)
+                data_height : DataFrame or Dictionary
+            Containing columns or keys with the heights for which the
+            corresponding parameters in `weather` apply
 
         Other parameters
         ----------------
@@ -217,7 +215,7 @@ class SimpleWindTurbine(object):
 
     def v_wind_hub(self, weather, data_height, **kwargs):
         r"""
-        Calculates the wind speed in m/s at hub height.
+        Calculates the wind speed at hub height.
 
         Parameters
         ----------
@@ -225,8 +223,8 @@ class SimpleWindTurbine(object):
             Containing columns or keys with the timeseries for wind speed
             (v_wind) and roughness length (z0)
         data_height : DataFrame or Dictionary
-            Containing columns or keys with the height of the measurement or
-            model data for wind speed (v_wind) and roughness length (z0)
+            Containing columns or keys with the heights for which the
+            corresponding parameters in `weather` apply
 
         Other parameters
         ----------------
@@ -379,9 +377,8 @@ class SimpleWindTurbine(object):
             (temp_air), pressure (pressure), wind speed (v_wind) and
             roughness length (z0)
         data_height : DataFrame or Dictionary
-            Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air), wind speed (v_wind)
-            and pressure (pressure).
+            Containing columns or keys with the heights for which the
+            corresponding parameters in `weather` apply
 
         Other parameters
         ----------------

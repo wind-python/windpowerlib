@@ -23,7 +23,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
     v_wind : pandas.Series or array
         wind speed time series
     v_wind_height : float
-        height for which the corresponding parameter in `v_wind` applies
+        height for which the parameter `v_wind` applies
     hub_height : float
         hub height of wind turbine
     z_0 : pandas.Series or array or float
