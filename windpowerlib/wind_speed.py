@@ -55,8 +55,8 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
     :math:`h_{data}` is the height in which the wind speed
     :math:`v_{wind,data}` is measured.
 
-    `v_wind_height`, `z_0`, `hub_height` and `obstacle_height` have to be of the
-    same unit.
+    `v_wind_height`, `z_0`, `hub_height` and `obstacle_height` have to be of
+    the same unit.
 
     References
     ----------

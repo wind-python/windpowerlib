@@ -314,10 +314,11 @@ class SimpleWindTurbine(object):
             else:
                 h_v_2 = kwargs['data_height_2']['v_wind']
                 h_v_1 = data_height['v_wind']
-                if abs(h_v_1 - self.hub_height) <= abs(h_v_2 - self.hub_height):
+                if (abs(h_v_1 - self.hub_height) <=
+                        abs(h_v_2 - self.hub_height)):
                     v_wind = wind_speed.logarithmic_wind_profile(
-                        weather['v_wind'], data_height['v_wind'], self.hub_height,
-                        weather['z0'], self.obstacle_height)
+                        weather['v_wind'], data_height['v_wind'],
+                        self.hub_height, weather['z0'], self.obstacle_height)
                     logging.debug(v_logging(self.wind_conv_type,
                                             data_height['v_wind'],
                                             self.obstacle_height))
