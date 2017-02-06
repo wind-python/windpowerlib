@@ -11,7 +11,8 @@ import numpy as np
 import sys
 
 
-def logarithmic_wind_profile(h_hub, weather, data_height, obstacle_height=0):
+def logarithmic_wind_profile(v_wind, v_wind_height, h_hub, z_0,
+                             obstacle_height=0):
     r"""
     Calculates the wind speed in m/s at hub height using the logarithmic height
     equation.
@@ -64,10 +65,9 @@ def logarithmic_wind_profile(h_hub, weather, data_height, obstacle_height=0):
     .. [27] Quaschning V.: "Regenerative Energiesysteme". München, Hanser
             Verlag, 2011, p. 245
     """
-    if 0.7 * obstacle_height > data_height['v_wind']:
-        sys.exit('To take an obstacle height of ' + str(obstacle_height) +
-                 ' m into consideration wind speed data of a higher height' +
-                 ' is needed.')
-    return (weather['v_wind'] * np.log(
-            (h_hub - 0.7 * obstacle_height) / weather['z0']) / np.log(
-            (data_height['v_wind'] - 0.7 * obstacle_height) / weather['z0']))
+    if 0.7 * obstacle_height > v_wind_height:
+        raise ValueError('To take an obstacle height of ' +
+                         str(obstacle_height) + ' m into consideration wind ' +
+                         'speed data of a higher height is needed.')
+    return (v_wind * np.log((h_hub - 0.7 * obstacle_height) / z_0) /
+            np.log((v_wind_height - 0.7 * obstacle_height) / z_0))

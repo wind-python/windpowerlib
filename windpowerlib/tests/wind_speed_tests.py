@@ -15,18 +15,16 @@ class Wind_speed_Tests:
 
     @classmethod
     def setUpClass(self):
-        self.h_hub = 100
-        self.weather = {'v_wind': 5.0,
-                        'z0': 0.15}
-        self.data_height = {'v_wind': 10}
-        self.test_turbine_1 = {'h_hub': 100,
-                               'obstacle_height': 0,
-                               'data_height': self.data_height,
-                               'weather': self.weather}
-        self.test_turbine_2 = {'h_hub': 100,
-                               'obstacle_height': 12,
-                               'data_height': self.data_height,
-                               'weather': self.weather}
+        self.test_turbine_1 = {'v_wind': 5.0,
+                               'z_0': 0.15,
+                               'h_hub': 100,
+                               'v_wind_height': 10,
+                               'obstacle_height': 0}
+        self.test_turbine_2 = {'v_wind': 5.0,
+                               'z_0': 0.15,
+                               'h_hub': 100,
+                               'v_wind_height': 10,
+                               'obstacle_height': 12}
 
     def setup(self):
         self.windturbine = SimpleWindTurbine()

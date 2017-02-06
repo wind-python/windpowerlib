@@ -320,7 +320,8 @@ class SimpleWindTurbine(object):
                 h_v_1 = data_height['v_wind']
                 if abs(h_v_1 - self.h_hub) <= abs(h_v_2 - self.h_hub):
                     v_wind = wind_speed.logarithmic_wind_profile(
-                        self.h_hub, weather, data_height, self.obstacle_height)
+                        weather['v_wind'], data_height['v_wind'], self.h_hub,
+                        weather['z0'], self.obstacle_height)
                     logging.debug(v_logging(self.wind_conv_type,
                                             data_height['v_wind'],
                                             self.obstacle_height))
@@ -477,7 +478,7 @@ class SimpleWindTurbine(object):
                 p_df = pd.DataFrame(data=p_curve, index=self.cp_values.index)
                 p_df.columns = ['P']
                 # density correction of P and electrical time series
-                p_wpp = power_output.Interpolate_P_curve(v_wind, rho_hub,
+                p_wpp = power_output.interpolate_P_curve(v_wind, rho_hub,
                                                          p_df)
                 logging.debug('For the calculation of the power output of ' +
                               str(self.wind_conv_type) + ' the power curve ' +
@@ -502,7 +503,7 @@ class SimpleWindTurbine(object):
                               str(self.wind_conv_type) + ' a power curve ' +
                               'was used.')
             if self.density_corr is True:
-                p_wpp = power_output.Interpolate_P_curve(v_wind, rho_hub,
+                p_wpp = power_output.interpolate_P_curve(v_wind, rho_hub,
                                                          self.p_values)
                 logging.debug('For the calculation of the power output of ' +
                               str(self.wind_conv_type) + ' there was used a ' +
