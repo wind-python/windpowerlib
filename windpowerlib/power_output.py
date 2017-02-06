@@ -50,8 +50,8 @@ def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
     .. [26] Hau, E. Windkraftanlagen - Grundlagen, Technik, Einsatz,
             Wirtschaftlichkeit Springer-Verlag, 2008, p. 542
     """
-    return (rho_hub / 2) * (((d_rotor / 2) ** 2)
-                            * np.pi) * np.power(v_wind, 3) * cp_series
+    return (1 / 8 * rho_hub * d_rotor ** 2 * np.pi * np.power(v_wind, 3) *
+            cp_series)
 
 
 def tpo_through_P(p_values, v_wind):
