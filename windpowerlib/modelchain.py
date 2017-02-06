@@ -419,13 +419,11 @@ class SimpleWindTurbine(object):
                               str(self.wind_conv_type) + ' a cp curve was ' +
                               'used.')
             elif self.density_corr is True:
-                rho_0 = 1.225  # density of air in kg/m³
-                # get P curve from cp values
                 logging.debug('Calculating power output with density ' +
                               'corrected cp curve.')
                 # get P curve from cp values with ambient density = 1.225 kg/m³
                 p_curve = power_output.tpo_through_cp(
-                    self.cp_values.index, rho_0, self.d_rotor,
+                    self.cp_values.index, 1.225, self.d_rotor,
                     self.cp_values.cp)
                 p_df = pd.DataFrame(data=p_curve, index=self.cp_values.index)
                 p_df.columns = ['P']
