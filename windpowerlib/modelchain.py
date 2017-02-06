@@ -297,9 +297,9 @@ class SimpleWindTurbine(object):
         # Calculation of wind speed in m/s at hub height according to the
         # chosen model.
         elif self.wind_model == 'logarithmic':
-            v_wind = wind_speed.logarithmic_wind_profile(self.h_hub,
-                                                         weather, data_height,
-                                                         self.obstacle_height)
+            v_wind = wind_speed.logarithmic_wind_profile(
+                weather['v_wind'], data_height['v_wind'], self.h_hub,
+                weather['z0'], self.obstacle_height)
             logging.debug(v_logging(self.wind_conv_type, data_height['v_wind'],
                                     self.obstacle_height))
         elif self.wind_model == 'logarithmic_closest':
@@ -326,9 +326,9 @@ class SimpleWindTurbine(object):
                                             self.obstacle_height))
                 else:
                     v_wind = wind_speed.logarithmic_wind_profile(
-                        self.h_hub, kwargs['weather_2'],
-                        kwargs['data_height_2'],
-                        self.obstacle_height)
+                        kwargs['weather_2']['v_wind'],
+                        kwargs['data_height_2']['v_wind'], self.h_hub,
+                        kwargs['weather_2']['z0'], self.obstacle_height)
                     logging.debug(v_logging(self.wind_conv_type,
                                   kwargs['data_height_2']['v_wind'],
                                   self.obstacle_height))
@@ -464,8 +464,7 @@ class SimpleWindTurbine(object):
                     self.nominal_power = wpp_data[1]
             if self.density_corr is False:
                 p_wpp = power_output.tpo_through_cp(
-                    weather, data_height, v_wind, rho_hub, self.d_rotor,
-                    self.cp_series(v_wind))
+                    v_wind, rho_hub, self.d_rotor, self.cp_series(v_wind))
                 logging.debug('For the calculation of the power output of ' +
                               str(self.wind_conv_type) + ' a cp curve was ' +
                               'used.')
@@ -473,8 +472,8 @@ class SimpleWindTurbine(object):
                 rho_0 = 1.225  # density of air in kg/m³
                 # get P curve from cp values
                 p_curve = power_output.tpo_through_cp(
-                    weather, data_height, self.cp_values.index, rho_0,
-                    self.d_rotor, self.cp_values.cp)
+                    self.cp_values.index, rho_0, self.d_rotor,
+                    self.cp_values.cp)
                 p_df = pd.DataFrame(data=p_curve, index=self.cp_values.index)
                 p_df.columns = ['P']
                 # density correction of P and electrical time series

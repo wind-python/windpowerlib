@@ -10,7 +10,7 @@ __author__ = "author1, author2"
 import numpy as np
 
 
-def tpo_through_cp(weather, data_height, v_wind, rho_hub, d_rotor, cp_series):
+def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
     r"""
     Calculates the power output in W of one wind turbine using cp values.
     This fuction is carried out when the parameter 'tp_output_model' of an
@@ -18,13 +18,6 @@ def tpo_through_cp(weather, data_height, v_wind, rho_hub, d_rotor, cp_series):
 
     Parameters
     ----------
-    weather : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for Temperature
-            (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0)
-    data_height : dictionary
-        Containing the heights of the weather measurements or weather
-        model in meters with the keys of the data parameter
     v_wind : pandas.Series
         wind speed [m/s] at hub height as time series
     rho_hub : pandas.Series
