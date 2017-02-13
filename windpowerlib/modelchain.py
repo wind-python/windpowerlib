@@ -9,7 +9,6 @@ __license__ = "GPLv3"
 __author__ = "author1, author2"
 
 import os
-import sys
 import logging
 import numpy as np
 import pandas as pd
@@ -21,92 +20,92 @@ class Modelchain(object):
 
     Parameters
     ----------
-    wind_conv_type : string
-        Name of the wind converter type. Use get_wind_pp_types() to see a list
-        of all possible wind converters.
-    hub_height : float
-        Height of the hub of the wind turbine.
-    d_rotor : float
-        Diameter of the rotor.
-    cp_values : pandas.DataFrame
-        The index should be the wind speed and a column should be named 'cp'.
-    nominal_power : float
-        The nominal output of the wind power plant.
-    obstacle_height : float
-            height of obstacles in m in the surroundings of the wind turbine,
-            put obstacle_height to zero for wide spread obstacles
-    wind_model : string
-        Chooses the model for calculating the wind speed at hub height,
-        Used in v_wind_hub;
-        Possibilities: 'logarithmic', 'logarithmic_closest' (the weather data
-            set measured closest to hub height is used.)
-    rho_model : string
-        Chooses the model for calculating the density of air at hub height,
-        Used in rho_hub
-        Possibilities:'barometric', 'ideal_gas'
-    temperature_model : string
-        Chooses the model for calculating the temperature at hub height,
-        Used in rho_hub
-        Possibilities: 'gradient', 'interpolation'
-    tp_output_model : string
-        Chooses the model for calculating the turbine power output,
-        Used in turbine_power_output
-        Possibilities: 'cp_values', 'p_values', 'P_curve_correction'
-    density_corr : boolean
-        if True -> density corrected power curve
+    wind_turbine : list or tuple of objects of the class WindTurbine
+        Objects contain attributes `turbine_name`, `hub_height`, `d_rotor`,
+        `cp_values` or/and `p_values` and `nominal_power`.
+        If only one object exists it is an item of a list.
+    obstacle_height : float, optional
+        Height of obstacles in the surroundings of the wind turbine. Put
+        obstacle_height to zero for wide spread obstacles. Default: 0
+    wind_model : string, optional
+        Chooses the model for calculating the wind speed at hub height.
+        Used in v_wind_hub.
+        Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
+            set measured closest to hub height is used.).
+    rho_model : string, optional
+        Chooses the model for calculating the density of air at hub height.
+        Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
+    temperature_model : string, optional
+        Chooses the model for calculating the temperature at hub height.
+        Used in rho_hub. Possibilities: 'gradient', 'interpolation'.
+    tp_output_model : string, optional
+        Chooses the model for calculating the turbine power output.
+        Used in turbine_power_output.
+        Possibilities: 'cp_values', 'p_values', 'P_curve_correction'.
+    density_corr : boolean, optional
+        If the parameter is True the density corrected power curve is used for
+        the calculation of the turbine power output. Default: False
 
     Attributes
     ----------
-    wind_conv_type : string
-        Name of the wind converter type. Use get_wind_pp_types() to see a list
-        of all possible wind converters.
+    wind_turbine : list or tuple of objects of the class WindTurbine
+        Objects contain attributes `turbine_name`, `hub_height`, `d_rotor`,
+        `cp_values` or/and `p_values` and `nominal_power`.
+        If only one object exists it is an item of a list.
+    obstacle_height : float, optional
+        Height of obstacles in the surroundings of the wind turbine. Put
+        obstacle_height to zero for wide spread obstacles. Default: 0
     hub_height : float
-        Height of the hub of the wind turbine.
+        Hub height of the wind turbine.
     d_rotor : float
         Diameter of the rotor.
     cp_values : pandas.DataFrame
-        The index should be the wind speed and a column should be named 'cp'.
+        Curve of the power coefficient of the wind turbine.
+        The indices are the corresponding wind speeds of the power coefficient
+        curve, the power coefficient values containing column is called 'cp'.
     p_values : pandas.DataFrame
-        The index should be the wind speed and a column should be named 'P'.
+        Power curve of the wind turbine.
+        The indices are the corresponding wind speeds of the power curve, the
+        power values containing column is called 'P'.
     nominal_power : float
         The nominal output of the wind power plant.
-    obstacle_height : float
-            height of obstacles in m in the surroundings of the wind turbine,
-            put obstacle_height to zero for wide spread obstacles
-    wind_model : string
-        Chooses the model for calculating the wind speed at hub height,
-        Used in v_wind_hub;
-        Possibilities: 'logarithmic', 'logarithmic_closest' (the weather data
-            set measured closest to hub height is used.)
-    rho_model : string
-        Chooses the model for calculating the density of air at hub height,
-        Used in rho_hub
-        Possibilities:'barometric', 'ideal_gas'
-    temperature_model : string
-        Chooses the model for calculating the temperature at hub height,
-        Used in rho_hub
-        Possibilities: 'gradient', 'interpolation'
-    tp_output_model : string
-        Chooses the model for calculating the turbine power output,
-        Used in turbine_power_output
-        Possibilities: 'cp_values', 'p_values'
-    density_corr : boolean
-        if True -> density corrected power curve
+    wind_model : string, optional
+        Chooses the model for calculating the wind speed at hub height.
+        Used in v_wind_hub.
+        Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
+            set measured closest to hub height is used.).
+    rho_model : string, optional
+        Chooses the model for calculating the density of air at hub height.
+        Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
+    temperature_model : string, optional
+        Chooses the model for calculating the temperature at hub height.
+        Used in rho_hub. Possibilities: 'gradient', 'interpolation'.
+    tp_output_model : string, optional
+        Chooses the model for calculating the turbine power output.
+        Used in turbine_power_output.
+        Possibilities: 'cp_values', 'p_values', 'P_curve_correction'.
+    density_corr : boolean, optional
+        If the parameter is True the density corrected power curve is used for
+        the calculation of the turbine power output. Default: False
 
     Examples
     --------
     >>> from windpowerlib import modelchain
+    >>> from windpowerlib import wind_turbine
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'd_rotor': 127,
     ...    'wind_conv_type': 'ENERCON E 126 7500'}
-    >>> e126 = modelchain.SimpleWindTurbine(**enerconE126)
+    >>> e126 = wind_turbine.WindTurbine(**enerconE126)
+    >>> modelchain_data = {'rho_model': 'ideal_gas',
+    ...    'temperature_model': 'interpolation'}
+    >>> e126_md = modelchain.Modelchain(e126, **modelchain_data)
     >>> print(e126.d_rotor)
     127
+
     """
 
-    def __init__(self, wind_conv_type=None, hub_height=None, d_rotor=None,
-                 cp_values=None, p_values=None, nominal_power=None,
+    def __init__(self, wind_turbine,
                  obstacle_height=0,
                  wind_model='logarithmic',
                  rho_model='barometric',
@@ -114,13 +113,15 @@ class Modelchain(object):
                  tp_output_model='cp_values',
                  density_corr=False):
 
-        self.hub_height = hub_height
-        self.d_rotor = d_rotor
-        self.wind_conv_type = wind_conv_type
-        self.cp_values = cp_values
-        self.nominal_power = nominal_power
-        self.p_values = p_values
+        self.wind_turbine = wind_turbine
         self.obstacle_height = obstacle_height
+
+        # attributes
+        self.hub_height = wind_turbine.hub_height
+        self.d_rotor = wind_turbine.d_rotor
+        self.cp_values = wind_turbine.cp_values
+        self.p_values = wind_turbine.p_values
+        self.nominal_power = wind_turbine.nominal_power
 
         # call models
         self.wind_model = wind_model
@@ -140,24 +141,25 @@ class Modelchain(object):
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for temperature
-            (temp_air) and pressure (pressure)
-                data_height : DataFrame or Dictionary
+            (temp_air) and pressure (pressure).
+        data_height : DataFrame or Dictionary
             Containing columns or keys with the heights for which the
-            corresponding parameters in `weather` apply
+            corresponding parameters in `weather` apply.
 
         Other parameters
         ----------------
         weather_2 : DataFrame or Dictionary
             Containing columns or keys with the timeseries for temperature
-            (temp_air) and pressure (pressure)
+            (temp_air) and pressure (pressure).
         data_height_2 : dictionary
             Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air) and pressure (pressure)
+            model data for temperature (temp_air) and pressure (pressure).
 
         Returns
         -------
         rho_hub : pandas.Series or array
-            density of air in kg/m³ at hub height
+            Density of air in kg/m³ at hub height.
+
         """
         # Check if temperature data is at hub height.
         if data_height['temp_air'] == self.hub_height:
@@ -221,26 +223,25 @@ class Modelchain(object):
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for wind speed
-            (v_wind) and roughness length (z0)
+            (v_wind) and roughness length (z0).
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights for which the
-            corresponding parameters in `weather` apply
+            corresponding parameters in `weather` apply.
 
         Other parameters
         ----------------
         weather_2 : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for Temperature
-            (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0)
+            Containing columns or keys with the timeseries for wind speed
+            (v_wind) and roughness length (z0).
         data_height_2 : dictionary
-            Containing the heights of the weather measurements or weather
-            model in meters with the keys of the data parameter for a second
-            data height
+            Containing columns or keys with the heights for which the
+            corresponding parameters in `weather_2` apply.
 
         Returns
         -------
         v_wind : pandas.Series or array
-            wind speed [m/s] at hub height as time series
+            Wind speed [m/s] at hub height as time series.
+
         """
         # Check if wind speed data is at hub height.
         if data_height['v_wind'] == self.hub_height:
@@ -288,55 +289,6 @@ class Modelchain(object):
                 weather['z0'], self.obstacle_height)
         return v_wind
 
-    def fetch_wpp_data(self, **kwargs):
-        r"""
-        Fetches data of the requested wind converter.
-
-        Returns
-        -------
-        tuple with pandas.DataFrame and float
-            cp or P values and the nominal power
-            of the requested wind converter
-
-        Other parameters
-        ----------------
-        data_name : string
-            name of the data for display in data frame (e.g. 'cp' or 'P')
-
-        Examples
-        --------
-        >>> from windpowerlib import modelchain
-        >>> e126 = modelchain.SimpleWindTurbine('ENERCON E 126 7500')
-        >>> print(e126.cp_values.cp[5.0])
-        0.423
-        >>> print(e126.nominal_power)
-        7500000.0
-        """
-        if 'data_name' not in kwargs:
-            kwargs['data_name'] = 'cp'
-
-        df = read_wpp_data(**kwargs)
-        wpp_df = df[df.rli_anlagen_id == self.wind_conv_type]
-        if wpp_df.shape[0] == 0:
-            pd.set_option('display.max_rows', len(df))
-            logging.info('Possible types: \n{0}'.format(df.rli_anlagen_id))
-            pd.reset_option('display.max_rows')
-            sys.exit('Cannot find the wind converter typ: {0}'.format(
-                self.wind_conv_type))
-        ncols = ['rli_anlagen_id', 'p_nenn', 'source', 'modificationtimestamp']
-        data = np.array([0, 0])
-        for col in wpp_df.keys():
-            if col not in ncols:
-                if wpp_df[col].iloc[0] is not None and not np.isnan(
-                        float(wpp_df[col].iloc[0])):
-                    data = np.vstack((data, np.array(
-                        [float(col), float(wpp_df[col])])))
-        data = np.delete(data, 0, 0)
-        df = pd.DataFrame(data, columns=['v_wind', kwargs['data_name']])
-        df.set_index('v_wind', drop=True, inplace=True)
-        nominal_power = wpp_df['p_nenn'].iloc[0] * 1000
-        return df, nominal_power
-
     def cp_series(self, v_wind):
         r"""
         Converts the curve of the power coefficient to a time series.
@@ -348,19 +300,20 @@ class Modelchain(object):
         Parameters
         ----------
         v_wind : pandas.Series or array
-            wind speed at hub height in m/s
+            Wind speed at hub height in m/s.
 
         Returns
         -------
         numpy.array
-            cp values for the wind speed time series
+            Cp values for the wind speed time series.
 
         >>> import numpy
         >>> from windpowerlib import modelchain
-        >>> e126 = modelchain.SimpleWindTurbine('ENERCON E 126 7500')
+        >>> e126 = modelchain.Modelchain('ENERCON E 126 7500')
         >>> v_wind = numpy.array([1,2,3,4,5,6,7,8])
         >>> print(e126.cp_series(v_wind))
         [ 0.     0.     0.191  0.352  0.423  0.453  0.47   0.478]
+
         """
         v_max = self.cp_values.index.max()
         v_wind[v_wind > v_max] = v_max
@@ -375,45 +328,33 @@ class Modelchain(object):
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for temperature
             (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0)
+            roughness length (z0).
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights for which the
-            corresponding parameters in `weather` apply
+            corresponding parameters in `weather` apply.
 
         Other parameters
         ----------------
-        data_height_2 : dictionary
-            Containing the heights of the weather measurements or weather
-            model in meters with the keys of the data parameter for a second
-            data height
         weather_2 : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for Temperature
+            Containing columns or keys with the timeseries Temperature
             (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0)
+            roughness length (z0).
+        data_height_2 : dictionary
+            Containing columns or keys with the heights for which the
+            corresponding parameters in `weather_2` apply.
 
         Returns
         -------
         pandas.Series
-            Electrical power of the wind turbine
-        """
-        if self.hub_height is None:
-            sys.exit('Attribute hub_height (hub height) is missing.')
-        if self.d_rotor is None:
-            sys.exit('Attribute d_rotor (diameter of rotor) is missing.')
+            Electrical power of the wind turbine.
 
+        """
         # Calculation of parameters needed for power output
         v_wind = self.v_wind_hub(weather, data_height, **kwargs)
         rho_hub = self.rho_hub(weather, data_height, **kwargs)
 
         # Calculation of turbine power output according to the chosen model.
         if self.tp_output_model == 'cp_values':
-            # get cp values and/or nominal power
-            if self.cp_values is None or self.nominal_power is None:
-                wpp_data = self.fetch_wpp_data()
-                if self.cp_values is None:
-                    self.cp_values = wpp_data[0]
-                if self.nominal_power is None:
-                    self.nominal_power = wpp_data[1]
             if self.density_corr is False:
                 logging.debug('Calculating power output with cp curve.')
                 p_wpp = power_output.tpo_through_cp(
@@ -437,14 +378,6 @@ class Modelchain(object):
                     v_wind, rho_hub, self.d_rotor, self.cp_series(v_wind))
 
         elif self.tp_output_model == 'p_values':
-            # get P values and/or nominal power
-            if self.p_values is None or self.nominal_power is None:
-                wpp_data = self.fetch_wpp_data(data_name='P',
-                                               filename='P_values.csv')
-                if self.p_values is None:
-                    self.p_values = wpp_data[0]*1000
-                if self.nominal_power is None:
-                    self.nominal_power = wpp_data[1]
             if self.density_corr is False:
                 logging.debug('Calculating power output with power curve.')
                 p_wpp = power_output.tpo_through_P(self.p_values, v_wind)
@@ -457,12 +390,6 @@ class Modelchain(object):
             logging.info('wrong value: `tp_output_model` must be cp_values ' +
                          'or p_values. It was calculated with cp_values and ' +
                          'without density correction.')
-            if self.cp_values is None or self.nominal_power is None:
-                wpp_data = self.fetch_wpp_data()
-                if self.cp_values is None:
-                    self.cp_values = wpp_data[0]
-                if self.nominal_power is None:
-                    self.nominal_power = wpp_data[1]
             p_wpp = power_output.tpo_through_cp(v_wind, rho_hub, self.d_rotor,
                                                 self.cp_series(v_wind))
         p_wpp_series = pd.Series(data=p_wpp,
@@ -471,61 +398,64 @@ class Modelchain(object):
         p_wpp_series.index.names = ['']
         return p_wpp_series.clip(upper=(float(self.nominal_power)))
 
+    def read_weather_data(self, filename, datetime_column='Unnamed: 0',
+                          **kwargs):
+        r"""
+        Fetches weather data from a file.
 
-def read_wpp_data(**kwargs):
-    r"""
-    Fetches cp or P values from a file.
+        The files are located in the example folder of the windpowerlib.
 
-    Returns
-    -------
-    pandas.DataFrame
-        cp or P values, wind converter type, installed capacity or the full
-        table if the given wind converter cannot be found in the table.
+        Parameters
+        ----------
+        filename : string
+            Filename of the weather data file.
+        datetime_column : string
+            Name of the datetime column of the weather DataFrame.
 
-    Other Parameters
-    ----------------
-    datapath : string, optional
-        Path where the cp or P file is stored. Default: '$PACKAGE_ROOT/data'
-    filename : string, optional
-        Filename of the cp or P file. Default: 'cp_values.csv'
+        Other Parameters
+        ----------------
+        datapath : string, optional
+            Path where the weather data file is stored.
+            Default: 'windpowerlib/example'.
 
-    """
-    if 'datapath' not in kwargs:
-        kwargs['datapath'] = os.path.join(os.path.dirname(__file__), 'data')
+        Returns
+        -------
+        pandas.DataFrame
+            Contains weather data time series.
 
-    if 'filename' not in kwargs:
-        kwargs['filename'] = 'cp_values.csv'
+        """
+        if 'datapath' not in kwargs:
+            kwargs['datapath'] = os.path.join(os.path.split(
+                os.path.dirname(__file__))[0], 'example')
 
-    file = os.path.join(kwargs['datapath'], kwargs['filename'])
+        file = os.path.join(kwargs['datapath'], filename)
+        df = pd.read_csv(file)
+        return df.set_index(pd.to_datetime(df[datetime_column])).tz_localize(
+            'UTC').tz_convert('Europe/Berlin').drop(datetime_column, 1)
 
-    df = pd.read_csv(file, index_col=0)
-    return df
+    def run_model(self, data_heights):
+        r"""
+        Runs the model.
 
+        To run the model first a weather data set is read from a file.
 
-def get_wind_pp_types(print_out=True):
-    r"""
-    Get the names of all possible wind converter types.
+        Parameters
+        ----------
+        data_heights : list or tuple of DataFrames or Dictionaries
+            Contain columns or keys with the heights for which the
+            corresponding parameters in of the weather data set apply.
 
-    Parameters
-    ----------
-    print_out : boolean (default: True)
-        Directly prints the list of types if set to True.
+        Returns
+        -------
+        self
 
-    Examples
-    --------
-    >>> from windpowerlib import modelchain
-    >>> valid_types_df = modelchain.get_wind_pp_types(print_out=False)
-    >>> valid_types_df.shape
-    (91, 2)
-    >>> print(valid_types_df.iloc[5])
-    rli_anlagen_id    DEWIND D8 2000
-    p_nenn                      2000
-    Name: 5, dtype: object
-    """
-    df = read_wpp_data()
+        """
+        # Loading weather data
+        weather_df = self.read_weather_data('weather.csv')
+        weather_df_2 = self.read_weather_data('weather_other_height.csv')
 
-    if print_out:
-        pd.set_option('display.max_rows', len(df))
-        print(df[['rli_anlagen_id', 'p_nenn']])
-        pd.reset_option('display.max_rows')
-    return df[['rli_anlagen_id', 'p_nenn']]
+        self.wind_turbine.power_output = self.turbine_power_output(
+            weather=weather_df, weather_2=weather_df_2,
+            data_height=data_heights[0], data_height_2=data_heights[1])
+
+        return self

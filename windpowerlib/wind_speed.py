@@ -21,21 +21,21 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
     Parameters
     ----------
     v_wind : pandas.Series or array
-        wind speed time series
+        Wind speed time series.
     v_wind_height : float
-        height for which the parameter `v_wind` applies
+        Height for which the parameter `v_wind` applies.
     hub_height : float
-        hub height of wind turbine
+        Hub height of wind turbine.
     z_0 : pandas.Series or array or float
-        roughness length
-    obstacle_height : float
-        height of obstacles in the surroundings of the wind turbine;
-        put obstacle_height to zero for wide spread obstacles
+        Roughness length.
+    obstacle_height : float, optional
+        Height of obstacles in the surroundings of the wind turbine. Put
+        obstacle_height to zero for wide spread obstacles. Default: 0
 
     Returns
     -------
     pandas.Series or array
-        wind speed at hub height as time series
+        Wind speed at hub height as time series.
 
     Notes
     -----
@@ -66,6 +66,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
             Wirtschaftlichkeit Springer-Verlag, 2008, p. 515
     .. [27] Quaschning V.: "Regenerative Energiesysteme". München, Hanser
             Verlag, 2011, p. 245
+
     """
     if 0.7 * obstacle_height > v_wind_height:
         raise ValueError('To take an obstacle height of ' +
