@@ -29,7 +29,13 @@ class Modelchain(object):
     d_rotor : float
         Diameter of the rotor.
     cp_values : pandas.DataFrame
-        The index should be the wind speed and a column should be named 'cp'.
+        curve of the power coefficient of the wind turbine
+        The column containing the cp values is named 'cp' and the indices are
+        the corresponding wind speeds.
+    p_values : pandas.DataFrame
+        power curve of the wind turbine
+        The column containing the p values is named 'P' and the indices are
+        the corresponding wind speeds.
     nominal_power : float
         The nominal output of the wind power plant.
     obstacle_height : float
@@ -65,9 +71,13 @@ class Modelchain(object):
     d_rotor : float
         Diameter of the rotor.
     cp_values : pandas.DataFrame
-        The index should be the wind speed and a column should be named 'cp'.
+        curve of the power coefficient of the wind turbine
+        The column containing the cp values is named 'cp' and the indices are
+        the corresponding wind speeds.
     p_values : pandas.DataFrame
-        The index should be the wind speed and a column should be named 'P'.
+        power curve of the wind turbine
+        The column containing the p values is named 'P' and the indices are
+        the corresponding wind speeds.
     nominal_power : float
         The nominal output of the wind power plant.
     obstacle_height : float
@@ -100,7 +110,7 @@ class Modelchain(object):
     ...    'hub_height': 135,
     ...    'd_rotor': 127,
     ...    'wind_conv_type': 'ENERCON E 126 7500'}
-    >>> e126 = modelchain.SimpleWindTurbine(**enerconE126)
+    >>> e126 = modelchain.Modelchain(**enerconE126)
     >>> print(e126.d_rotor)
     127
     """
@@ -301,12 +311,12 @@ class Modelchain(object):
         Other parameters
         ----------------
         data_name : string
-            name of the data for display in data frame (e.g. 'cp' or 'P')
+            name of the data for display in data frame ('cp' or 'P')
 
         Examples
         --------
         >>> from windpowerlib import modelchain
-        >>> e126 = modelchain.SimpleWindTurbine('ENERCON E 126 7500')
+        >>> e126 = modelchain.Modelchain('ENERCON E 126 7500')
         >>> print(e126.cp_values.cp[5.0])
         0.423
         >>> print(e126.nominal_power)
@@ -357,7 +367,7 @@ class Modelchain(object):
 
         >>> import numpy
         >>> from windpowerlib import modelchain
-        >>> e126 = modelchain.SimpleWindTurbine('ENERCON E 126 7500')
+        >>> e126 = modelchain.Modelchain('ENERCON E 126 7500')
         >>> v_wind = numpy.array([1,2,3,4,5,6,7,8])
         >>> print(e126.cp_series(v_wind))
         [ 0.     0.     0.191  0.352  0.423  0.453  0.47   0.478]
