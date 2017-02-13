@@ -28,13 +28,13 @@ class WindTurbine(object):
     d_rotor : float
         Diameter of the rotor.
     cp_values : pandas.DataFrame
-        curve of the power coefficient of the wind turbine
-        The column containing the cp values is named 'cp' and the indices are
-        the corresponding wind speeds.
+        Curve of the power coefficient of the wind turbine.
+        The indices are the corresponding wind speeds of the power coefficient
+        curve, the power coefficient values containing column is called 'cp'.
     p_values : pandas.DataFrame
-        power curve of the wind turbine
-        The column containing the p values is named 'P' and the indices are
-        the corresponding wind speeds.
+        Power curve of the wind turbine.
+        The indices are the corresponding wind speeds of the power curve, the
+        power values containing column is called 'P'.
     nominal_power : float
         The nominal output of the wind power plant.
 
@@ -48,13 +48,13 @@ class WindTurbine(object):
     d_rotor : float
         Diameter of the rotor.
     cp_values : pandas.DataFrame
-        curve of the power coefficient of the wind turbine
-        The column containing the cp values is named 'cp' and the indices are
-        the corresponding wind speeds.
+        Curve of the power coefficient of the wind turbine.
+        The indices are the corresponding wind speeds of the power coefficient
+        curve, the power coefficient values containing column is called 'cp'.
     p_values : pandas.DataFrame
-        power curve of the wind turbine
-        The column containing the p values is named 'P' and the indices are
-        the corresponding wind speeds.
+        Power curve of the wind turbine.
+        The indices are the corresponding wind speeds of the power curve, the
+        power values containing column is called 'P'.
     nominal_power : float
         The nominal output of the wind power plant.
 
@@ -68,6 +68,7 @@ class WindTurbine(object):
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> print(e126.d_rotor)
     127
+
     """
 
     def __init__(self, turbine_name, hub_height, d_rotor, cp_values=None,
@@ -117,7 +118,7 @@ class WindTurbine(object):
 
         Returns
         -------
-        tuple with pandas.DataFrame and float
+        tuple of pandas.DataFrame and float
             Cp or P values and the nominal power
             of the requested wind converter.
 
@@ -129,6 +130,7 @@ class WindTurbine(object):
         0.423
         >>> print(e126.nominal_power)
         7500000.0
+
         """
         if 'data_name' not in kwargs:
             kwargs['data_name'] = 'cp'
@@ -206,6 +208,7 @@ def get_wind_pp_types(print_out=True):
     rli_anlagen_id    DEWIND D8 2000
     p_nenn                      2000
     Name: 5, dtype: object
+
     """
     df = read_wpp_data()
 

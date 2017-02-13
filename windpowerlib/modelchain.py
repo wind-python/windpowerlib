@@ -21,74 +21,72 @@ class Modelchain(object):
     Parameters
     ----------
     wind_turbine : list or tuple of objects of the class WindTurbine
-        objects contain attributes `turbine_name`, `hub_height`, `d_rotor`,
-        `cp_values` or/and `p_values` and `nominal_power`
-        If only one object exists it is still an item of a list.
-    obstacle_height : float
-            height of obstacles in m in the surroundings of the wind turbine,
-            put obstacle_height to zero for wide spread obstacles
-    wind_model : string
-        Chooses the model for calculating the wind speed at hub height,
-        Used in v_wind_hub;
-        Possibilities: 'logarithmic', 'logarithmic_closest' (the weather data
-            set measured closest to hub height is used.)
-    rho_model : string
-        Chooses the model for calculating the density of air at hub height,
-        Used in rho_hub
-        Possibilities:'barometric', 'ideal_gas'
-    temperature_model : string
-        Chooses the model for calculating the temperature at hub height,
-        Used in rho_hub
-        Possibilities: 'gradient', 'interpolation'
-    tp_output_model : string
-        Chooses the model for calculating the turbine power output,
-        Used in turbine_power_output
-        Possibilities: 'cp_values', 'p_values', 'P_curve_correction'
-    density_corr : boolean
-        if True -> density corrected power curve
+        Objects contain attributes `turbine_name`, `hub_height`, `d_rotor`,
+        `cp_values` or/and `p_values` and `nominal_power`.
+        If only one object exists it is an item of a list.
+    obstacle_height : float, optional
+        Height of obstacles in the surroundings of the wind turbine. Put
+        obstacle_height to zero for wide spread obstacles. Default: 0
+    wind_model : string, optional
+        Chooses the model for calculating the wind speed at hub height.
+        Used in v_wind_hub.
+        Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
+            set measured closest to hub height is used.).
+    rho_model : string, optional
+        Chooses the model for calculating the density of air at hub height.
+        Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
+    temperature_model : string, optional
+        Chooses the model for calculating the temperature at hub height.
+        Used in rho_hub. Possibilities: 'gradient', 'interpolation'.
+    tp_output_model : string, optional
+        Chooses the model for calculating the turbine power output.
+        Used in turbine_power_output.
+        Possibilities: 'cp_values', 'p_values', 'P_curve_correction'.
+    density_corr : boolean, optional
+        If the parameter is True the density corrected power curve is used for
+        the calculation of the turbine power output. Default: False
 
     Attributes
     ----------
-    wind_turbine : object or tuple of objects of the class WindTurbine
-        objects contain attributes `turbine_name`, `hub_height`, `d_rotor`,
-        `cp_values` or/and `p_values` and `nominal_power`
-        If only one object exists it is still an item of a list.
-    obstacle_height : float
-        height of obstacles in m in the surroundings of the wind turbine,
-        put obstacle_height to zero for wide spread obstacles
+    wind_turbine : list or tuple of objects of the class WindTurbine
+        Objects contain attributes `turbine_name`, `hub_height`, `d_rotor`,
+        `cp_values` or/and `p_values` and `nominal_power`.
+        If only one object exists it is an item of a list.
+    obstacle_height : float, optional
+        Height of obstacles in the surroundings of the wind turbine. Put
+        obstacle_height to zero for wide spread obstacles. Default: 0
     hub_height : float
-        Height of the hub of the wind turbine.
+        Hub height of the wind turbine.
     d_rotor : float
         Diameter of the rotor.
     cp_values : pandas.DataFrame
-        curve of the power coefficient of the wind turbine
-        The column containing the cp values is named 'cp' and the indices are
-        the corresponding wind speeds.
+        Curve of the power coefficient of the wind turbine.
+        The indices are the corresponding wind speeds of the power coefficient
+        curve, the power coefficient values containing column is called 'cp'.
     p_values : pandas.DataFrame
-        power curve of the wind turbine
-        The column containing the p values is named 'P' and the indices are
-        the corresponding wind speeds.
+        Power curve of the wind turbine.
+        The indices are the corresponding wind speeds of the power curve, the
+        power values containing column is called 'P'.
     nominal_power : float
         The nominal output of the wind power plant.
-    wind_model : string
-        Chooses the model for calculating the wind speed at hub height,
-        Used in v_wind_hub;
-        Possibilities: 'logarithmic', 'logarithmic_closest' (the weather data
-            set measured closest to hub height is used.)
-    rho_model : string
-        Chooses the model for calculating the density of air at hub height,
-        Used in rho_hub
-        Possibilities:'barometric', 'ideal_gas'
-    temperature_model : string
-        Chooses the model for calculating the temperature at hub height,
-        Used in rho_hub
-        Possibilities: 'gradient', 'interpolation'
-    tp_output_model : string
-        Chooses the model for calculating the turbine power output,
-        Used in turbine_power_output
-        Possibilities: 'cp_values', 'p_values'
-    density_corr : boolean
-        if True -> density corrected power curve
+    wind_model : string, optional
+        Chooses the model for calculating the wind speed at hub height.
+        Used in v_wind_hub.
+        Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
+            set measured closest to hub height is used.).
+    rho_model : string, optional
+        Chooses the model for calculating the density of air at hub height.
+        Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
+    temperature_model : string, optional
+        Chooses the model for calculating the temperature at hub height.
+        Used in rho_hub. Possibilities: 'gradient', 'interpolation'.
+    tp_output_model : string, optional
+        Chooses the model for calculating the turbine power output.
+        Used in turbine_power_output.
+        Possibilities: 'cp_values', 'p_values', 'P_curve_correction'.
+    density_corr : boolean, optional
+        If the parameter is True the density corrected power curve is used for
+        the calculation of the turbine power output. Default: False
 
     Examples
     --------
@@ -104,6 +102,7 @@ class Modelchain(object):
     >>> e126_md = modelchain.Modelchain(e126, **modelchain_data)
     >>> print(e126.d_rotor)
     127
+
     """
 
     def __init__(self, wind_turbine,
@@ -142,24 +141,25 @@ class Modelchain(object):
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for temperature
-            (temp_air) and pressure (pressure)
-                data_height : DataFrame or Dictionary
+            (temp_air) and pressure (pressure).
+        data_height : DataFrame or Dictionary
             Containing columns or keys with the heights for which the
-            corresponding parameters in `weather` apply
+            corresponding parameters in `weather` apply.
 
         Other parameters
         ----------------
         weather_2 : DataFrame or Dictionary
             Containing columns or keys with the timeseries for temperature
-            (temp_air) and pressure (pressure)
+            (temp_air) and pressure (pressure).
         data_height_2 : dictionary
             Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air) and pressure (pressure)
+            model data for temperature (temp_air) and pressure (pressure).
 
         Returns
         -------
         rho_hub : pandas.Series or array
-            density of air in kg/m³ at hub height
+            Density of air in kg/m³ at hub height.
+
         """
         # Check if temperature data is at hub height.
         if data_height['temp_air'] == self.hub_height:
@@ -223,26 +223,25 @@ class Modelchain(object):
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for wind speed
-            (v_wind) and roughness length (z0)
+            (v_wind) and roughness length (z0).
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights for which the
-            corresponding parameters in `weather` apply
+            corresponding parameters in `weather` apply.
 
         Other parameters
         ----------------
         weather_2 : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for Temperature
-            (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0)
+            Containing columns or keys with the timeseries for wind speed
+            (v_wind) and roughness length (z0).
         data_height_2 : dictionary
-            Containing the heights of the weather measurements or weather
-            model in meters with the keys of the data parameter for a second
-            data height
+            Containing columns or keys with the heights for which the
+            corresponding parameters in `weather_2` apply.
 
         Returns
         -------
         v_wind : pandas.Series or array
-            wind speed [m/s] at hub height as time series
+            Wind speed [m/s] at hub height as time series.
+
         """
         # Check if wind speed data is at hub height.
         if data_height['v_wind'] == self.hub_height:
@@ -301,12 +300,12 @@ class Modelchain(object):
         Parameters
         ----------
         v_wind : pandas.Series or array
-            wind speed at hub height in m/s
+            Wind speed at hub height in m/s.
 
         Returns
         -------
         numpy.array
-            cp values for the wind speed time series
+            Cp values for the wind speed time series.
 
         >>> import numpy
         >>> from windpowerlib import modelchain
@@ -314,6 +313,7 @@ class Modelchain(object):
         >>> v_wind = numpy.array([1,2,3,4,5,6,7,8])
         >>> print(e126.cp_series(v_wind))
         [ 0.     0.     0.191  0.352  0.423  0.453  0.47   0.478]
+
         """
         v_max = self.cp_values.index.max()
         v_wind[v_wind > v_max] = v_max
@@ -328,26 +328,26 @@ class Modelchain(object):
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for Temperature
             (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0)
+            roughness length (z0).
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights for which the
-            corresponding parameters in `weather` apply
+            corresponding parameters in `weather` apply.
 
         Other parameters
         ----------------
-        data_height_2 : dictionary
-            Containing the heights of the weather measurements or weather
-            model in meters with the keys of the data parameter for a second
-            data height
         weather_2 : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for Temperature
+            Containing columns or keys with the timeseries Temperature
             (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0)
+            roughness length (z0).
+        data_height_2 : dictionary
+            Containing columns or keys with the heights for which the
+            corresponding parameters in `weather_2` apply.
 
         Returns
         -------
         pandas.Series
-            Electrical power of the wind turbine
+            Electrical power of the wind turbine.
+
         """
 
         # Calculation of parameters needed for power output

@@ -20,19 +20,19 @@ def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
     Parameters
     ----------
     v_wind : pandas.Series or array
-        wind speed time series at hub height in m/s
+        Wind speed time series at hub height in m/s.
     rho_hub : pandas.Series or array
-        density of air at hub height in kg/m³
+        Density of air at hub height in kg/m³.
     d_rotor : float
-        diameter of rotor in m
+        Diameter of rotor in m.
     cp_series : pandas.Series or array
-        cp (power coefficient) values for the wind speed time series
-        see also modelchain.cp_series()
+        Cp (power coefficient) values for the wind speed time series.
+        See also modelchain.cp_series().
 
     Returns
     -------
     pandas.Series
-        electrical power output of the wind turbine in W
+        Electrical power output of the wind turbine in W.
 
     Notes
     -----
@@ -49,6 +49,7 @@ def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
             Vieweg + Teubner, 2010, pages 35ff, 208
     .. [26] Hau, E. Windkraftanlagen - Grundlagen, Technik, Einsatz,
             Wirtschaftlichkeit Springer-Verlag, 2008, p. 542
+
     """
     return (1 / 8 * rho_hub * d_rotor ** 2 * np.pi * np.power(v_wind, 3) *
             cp_series)
@@ -67,20 +68,21 @@ def tpo_through_P(p_values, v_wind):
     Parameters
     ----------
     p_values : pandas.DataFrame
-        power curve of the wind turbine
-        the indices are the corresponding wind speeds of the power curve, the
-        power values containing column is called 'P'
+        Power curve of the wind turbine
+        The indices are the corresponding wind speeds of the power curve, the
+        power values containing column is called 'P'.
     v_wind : pandas.Series or array
-        wind speed time series at hub height in m/s
+        Wind speed time series at hub height in m/s.
 
     Returns
     -------
     array
-        electrical power of the wind turbine
+        Electrical power of the wind turbine.
 
     Note
     ----
-    See also cp_series() in the module modelchain
+    See also cp_series() in the module modelchain.
+
     """
     v_max = p_values.index.max()
     v_wind[v_wind > v_max] = v_max
@@ -94,18 +96,18 @@ def interpolate_P_curve(v_wind, rho_hub, p_values):
     Parameters
     ----------
     v_wind : pandas.Series or array
-        wind speed time series at hub height in m/s
+        Wind speed time series at hub height in m/s.
     rho_hub : pandas.Series or array
-        density of air at hub height in kg/m³
+        Density of air at hub height in kg/m³.
     p_values : pandas.DataFrame
-        power curve of the wind turbine
-        the indices are the corresponding wind speeds of the power curve, the
-        power values containing column is called 'P'
+        Power curve of the wind turbine.
+        The indices are the corresponding wind speeds of the power curve, the
+        power values containing column is called 'P'.
 
     Returns
     -------
     numpy.array
-        electrical power of the wind turbine
+        Electrical power of the wind turbine.
 
     Notes
     -----
@@ -124,9 +126,9 @@ def interpolate_P_curve(v_wind, rho_hub, p_values):
         v: wind speed [m/s], :math:`\rho`: density [kg/m³]
 
     :math:`v_{std}` is the standard wind speed in the power curve
-    (:math:`v_{std}`, :math:`P_{std}`)
-    :math:`v_{site}` is density corrected wind speed for the power curve
-    (:math:`v_{site}`, :math:`P_{std}`)
+    (:math:`v_{std}`, :math:`P_{std}`).
+    :math:`v_{site}` is the density corrected wind speed for the power curve
+    (:math:`v_{site}`, :math:`P_{std}`).
 
     References
     ----------
@@ -139,6 +141,7 @@ def interpolate_P_curve(v_wind, rho_hub, p_values):
             Variable Scale Simulation Model for Windpower based on the
             Georeferenced Installation Register of Germany". Master's Thesis
             at RLI, 2014, p. 13
+
     """
     return [(np.interp(v_wind[i], p_values.index *
             (1.225 / rho_hub[i])**(np.interp(p_values.index, [7.5, 12.5],
