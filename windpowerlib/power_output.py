@@ -16,7 +16,7 @@ def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
     Calculates the power output of one wind turbine using cp time series.
 
     This fuction is carried out when the parameter `tp_output_model` of an
-    object of the class WindTurbine is 'cp_values'.
+    object of the class WindTurbine is 'cp_values' and `density_corr` is False.
 
     Parameters
     ----------
@@ -63,8 +63,8 @@ def tpo_through_P(p_values, v_wind):
     Interpolates the values of the power curve as a function of the wind speed
     between data obtained from the power curve of the specified wind turbine
     type.
-    This fuction is carried out when the parameter 'tp_output_model' of an
-    object of the class WindTurbine is 'p_values'.
+    This fuction is carried out when the parameter `tp_output_model` of an
+    object of the class WindTurbine is 'p_values' and `density_corr` is False.
 
     Parameters
     ----------
@@ -102,6 +102,9 @@ def tpo_through_P(p_values, v_wind):
 def interpolate_P_curve(v_wind, rho_hub, p_values):
     r"""
     Interpolates density corrected power curve.
+
+    This fuction is carried out when the parameter `density_corr` of an
+    object of the class WindTurbine is True.
 
     Parameters
     ----------
