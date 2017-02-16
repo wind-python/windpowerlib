@@ -31,7 +31,7 @@ class Modelchain(object):
         Chooses the model for calculating the wind speed at hub height.
         Used in v_wind_hub.
         Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
-            set measured closest to hub height is used.).
+            set measured closest to hub height is used.), 'hellman'.
     rho_model : string, optional
         Chooses the model for calculating the density of air at hub height.
         Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
@@ -73,7 +73,7 @@ class Modelchain(object):
         Chooses the model for calculating the wind speed at hub height.
         Used in v_wind_hub.
         Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
-            set measured closest to hub height is used.).
+            set measured closest to hub height is used.), 'hellman'.
     rho_model : string, optional
         Chooses the model for calculating the density of air at hub height.
         Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
@@ -130,7 +130,7 @@ class Modelchain(object):
         self.tp_output_model = tp_output_model
         self.density_corr = density_corr
 
-    def rho_hub(self, weather, data_height, **kwargs):
+    def rho_hub(self, weather, data_height):
         r"""
         Calculates the density of air at hub height.
 
@@ -141,19 +141,11 @@ class Modelchain(object):
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for temperature
-            (temp_air) and pressure (pressure).
+            (temp_air) and pressure (pressure). Optional temperature at
+            different height (temp_air_2) for interpolation.
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights for which the
             corresponding parameters in `weather` apply.
-
-        Other parameters
-        ----------------
-        weather_2 : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for temperature
-            (temp_air) and pressure (pressure).
-        data_height_2 : dictionary
-            Containing columns or keys with the height of the measurement or
-            model data for temperature (temp_air) and pressure (pressure).
 
         Returns
         -------
@@ -172,23 +164,22 @@ class Modelchain(object):
             T_hub = density.temperature_gradient(
                 weather['temp_air'], data_height['temp_air'], self.hub_height)
         elif self.temperature_model == 'interpolation':
-            if 'data_height_2' not in kwargs or 'weather_2' not in kwargs:
-                logging.info('One weather data set or data height set is ' +
-                             'missing. It was calculated with a temperature ' +
-                             'gradient.')
+            if 'temp_air_2' not in weather or 'temp_air_2' not in data_height:
+                logging.info('One temperature or data height is missing. It ' +
+                             'was calculated with a temperature gradient.')
                 T_hub = density.temperature_gradient(
                     weather['temp_air'], data_height['temp_air'],
                     self.hub_height)
             # Check if temperature data of second data set is at hub height.
-            elif kwargs['data_height_2']['temp_air'] == self.hub_height:
+            elif data_height['temp_air_2'] == self.hub_height:
                 logging.debug('Using given temperature (at hub height).')
-                T_hub = kwargs['weather_2']['temp_air']
+                T_hub = weather['temp_air_2']
             else:
                 logging.debug('Calculating temperature with interpolation.')
                 T_hub = density.temperature_interpol(
-                    weather['temp_air'], kwargs['weather_2']['temp_air'],
-                    data_height['temp_air'],
-                    kwargs['data_height_2']['temp_air'], self.hub_height)
+                    weather['temp_air'], weather['temp_air_2'],
+                    data_height['temp_air'], data_height['temp_air_2'],
+                    self.hub_height)
         else:
             logging.info('wrong value: `temperature_model` must be gradient ' +
                          'or interpolation. It was calculated with gradient.')
@@ -215,7 +206,7 @@ class Modelchain(object):
                                              self.hub_height, T_hub)
         return rho_hub
 
-    def v_wind_hub(self, weather, data_height, **kwargs):
+    def v_wind_hub(self, weather, data_height):
         r"""
         Calculates the wind speed at hub height.
 
@@ -223,19 +214,11 @@ class Modelchain(object):
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for wind speed
-            (v_wind) and roughness length (z0).
+            (v_wind) and roughness length (z0). Optional wind speed at
+            different height (v_wind_2) for interpolation.
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights for which the
             corresponding parameters in `weather` apply.
-
-        Other parameters
-        ----------------
-        weather_2 : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for wind speed
-            (v_wind) and roughness length (z0).
-        data_height_2 : dictionary
-            Containing columns or keys with the heights for which the
-            corresponding parameters in `weather_2` apply.
 
         Returns
         -------
@@ -255,35 +238,37 @@ class Modelchain(object):
                 weather['v_wind'], data_height['v_wind'], self.hub_height,
                 weather['z0'], self.obstacle_height)
         elif self.wind_model == 'logarithmic_closest':
-            if 'data_height_2' not in kwargs or 'weather_2' not in kwargs:
-                logging.info('One weather data set or data height set is ' +
+            if 'v_wind_2' not in weather or 'v_wind_2' not in data_height:
+                logging.info('One wind speed time series or data height is ' +
                              'missing. It was calculated with one data set.')
                 v_wind = wind_speed.logarithmic_wind_profile(
                     weather['v_wind'], data_height['v_wind'], self.hub_height,
                     weather['z0'], self.obstacle_height)
             # Check if wind speed of second data set is at hub height.
-            elif kwargs['data_height_2']['v_wind'] == self.hub_height:
+            elif data_height['v_wind_2'] == self.hub_height:
                 logging.debug('Using given wind speed (at hub height).')
-                v_wind = kwargs['weather_2']['v_wind']
+                v_wind = weather['v_wind_2']
             else:
                 logging.debug('Calculating v_wind with logarithmic wind ' +
-                              'profile.')
-                h_v_2 = kwargs['data_height_2']['v_wind']
-                h_v_1 = data_height['v_wind']
-                if (abs(h_v_1 - self.hub_height) <=
-                        abs(h_v_2 - self.hub_height)):
+                              'profile choosing wind speed measured closest ' +
+                              'to hub height.')
+                if (abs(data_height['v_wind'] - self.hub_height) <=
+                        abs(data_height['v_wind_2'] - self.hub_height)):
                     v_wind = wind_speed.logarithmic_wind_profile(
                         weather['v_wind'], data_height['v_wind'],
                         self.hub_height, weather['z0'], self.obstacle_height)
                 else:
                     v_wind = wind_speed.logarithmic_wind_profile(
-                        kwargs['weather_2']['v_wind'],
-                        kwargs['data_height_2']['v_wind'], self.hub_height,
-                        kwargs['weather_2']['z0'], self.obstacle_height)
+                        weather['v_wind_2'], data_height['v_wind_2'],
+                        self.hub_height, weather['z0'], self.obstacle_height)
+        elif self.wind_model == 'hellman':
+            logging.debug('Calculating v_wind with hellman equation.')
+            v_wind = wind_speed.v_wind_hellman(
+                weather['v_wind'], data_height['v_wind'], self.hub_height)
         else:
-            logging.info('wrong value: `wind_model` must be logarithmic or' +
-                         'logarithmic_closest. It was calculated with ' +
-                         'logarithmic.')
+            logging.info('wrong value: `wind_model` must be logarithmic, ' +
+                         'logarithmic_closest or hellman. It was calculated ' +
+                         'with logarithmic.')
             v_wind = wind_speed.logarithmic_wind_profile(
                 weather['v_wind'], data_height['v_wind'], self.hub_height,
                 weather['z0'], self.obstacle_height)
@@ -319,7 +304,7 @@ class Modelchain(object):
         v_wind[v_wind > v_max] = v_max
         return np.interp(v_wind, self.cp_values.index, self.cp_values.cp)
 
-    def turbine_power_output(self, weather, data_height, **kwargs):
+    def turbine_power_output(self, weather, data_height):
         r"""
         Calculates the power output in W of one wind turbine.
 
@@ -328,20 +313,11 @@ class Modelchain(object):
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for temperature
             (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0).
+            roughness length (z0). Optional wind speed (v_wind_2) and/or
+            temperature (temp_air_2) at different height for interpolation.
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights for which the
             corresponding parameters in `weather` apply.
-
-        Other parameters
-        ----------------
-        weather_2 : DataFrame or Dictionary
-            Containing columns or keys with the timeseries Temperature
-            (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0).
-        data_height_2 : dictionary
-            Containing columns or keys with the heights for which the
-            corresponding parameters in `weather_2` apply.
 
         Returns
         -------
@@ -350,8 +326,8 @@ class Modelchain(object):
 
         """
         # Calculation of parameters needed for power output
-        v_wind = self.v_wind_hub(weather, data_height, **kwargs)
-        rho_hub = self.rho_hub(weather, data_height, **kwargs)
+        v_wind = self.v_wind_hub(weather, data_height)
+        rho_hub = self.rho_hub(weather, data_height)
 
         # Calculation of turbine power output according to the chosen model.
         if self.tp_output_model == 'cp_values':
@@ -433,7 +409,7 @@ class Modelchain(object):
         return df.set_index(pd.to_datetime(df[datetime_column])).tz_localize(
             'UTC').tz_convert('Europe/Berlin').drop(datetime_column, 1)
 
-    def run_model(self, data_heights):
+    def run_model(self, data_height):
         r"""
         Runs the model.
 
@@ -441,9 +417,9 @@ class Modelchain(object):
 
         Parameters
         ----------
-        data_heights : list or tuple of DataFrames or Dictionaries
-            Contain columns or keys with the heights for which the
-            corresponding parameters in of the weather data set apply.
+        data_height : DataFrame or Dictionary
+            Contains columns or keys with the heights for which the
+            corresponding parameters of the weather data set apply.
 
         Returns
         -------
@@ -452,10 +428,8 @@ class Modelchain(object):
         """
         # Loading weather data
         weather_df = self.read_weather_data('weather.csv')
-        weather_df_2 = self.read_weather_data('weather_other_height.csv')
 
-        self.wind_turbine.power_output = self.turbine_power_output(
-            weather=weather_df, weather_2=weather_df_2,
-            data_height=data_heights[0], data_height_2=data_heights[1])
+        self.wind_turbine.power_output = self.turbine_power_output(weather_df,
+                                                                   data_height)
 
         return self
