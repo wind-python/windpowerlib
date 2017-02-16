@@ -336,7 +336,7 @@ class Modelchain(object):
                 logging.debug('Calculating power output with cp curve.')
                 p_wpp = power_output.tpo_through_cp(
                     v_wind, rho_hub, self.d_rotor, self.cp_series(v_wind))
-            elif self.density_corr is True:
+            else:
                 logging.debug('Calculating power output with density ' +
                               'corrected cp curve.')
                 # get P curve from cp values with ambient density = 1.225 kg/m³
@@ -348,17 +348,12 @@ class Modelchain(object):
                 # density correction of P and electrical time series
                 p_wpp = power_output.interpolate_P_curve(v_wind, rho_hub,
                                                          p_df)
-            else:
-                logging.info('wrong value: `density_corr` must be True or ' +
-                             'False. It was calculated with the value False.')
-                p_wpp = power_output.tpo_through_cp(
-                    v_wind, rho_hub, self.d_rotor, self.cp_series(v_wind))
 
         elif self.tp_output_model == 'p_values':
             if self.density_corr is False:
                 logging.debug('Calculating power output with power curve.')
                 p_wpp = power_output.tpo_through_P(self.p_values, v_wind)
-            if self.density_corr is True:
+            else:
                 logging.debug('Calculating power output with density ' +
                               'corrected power curve.')
                 p_wpp = power_output.interpolate_P_curve(v_wind, rho_hub,
@@ -369,11 +364,7 @@ class Modelchain(object):
                          'without density correction.')
             p_wpp = power_output.tpo_through_cp(v_wind, rho_hub, self.d_rotor,
                                                 self.cp_series(v_wind))
-        p_wpp_series = pd.Series(data=p_wpp,
-                                 index=weather.index,
-                                 name='feedin_wind_pp')
-        p_wpp_series.index.names = ['']
-        return p_wpp_series.clip(upper=(float(self.nominal_power)))
+        return p_wpp
 
     def read_weather_data(self, filename, datetime_column='Unnamed: 0',
                           **kwargs):

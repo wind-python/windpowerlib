@@ -8,11 +8,12 @@ __license__ = "GPLv3"
 __author__ = "author1, author2"
 
 import numpy as np
+import pandas as pd
 
 
 def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
     r"""
-    Calculates the power output of one wind turbine using cp values.
+    Calculates the power output of one wind turbine using cp time series.
 
     This fuction is carried out when the parameter `tp_output_model` of an
     object of the class WindTurbine is 'cp_values'.
@@ -86,7 +87,16 @@ def tpo_through_P(p_values, v_wind):
     """
     v_max = p_values.index.max()
     v_wind[v_wind > v_max] = v_max
-    return np.interp(v_wind, p_values.index, p_values.P)
+    p_wpp = np.interp(v_wind, p_values.index, p_values.P)
+    # Set index for time series
+    try:
+        series_index = v_wind.index
+    except AttributeError:
+        series_index = range(1, len(p_wpp)+1)
+    p_wpp_series = pd.Series(data=p_wpp, index=series_index,
+                             name='feedin_wind_pp')
+    p_wpp_series.index.names = ['']
+    return p_wpp_series
 
 
 def interpolate_P_curve(v_wind, rho_hub, p_values):
@@ -143,7 +153,16 @@ def interpolate_P_curve(v_wind, rho_hub, p_values):
             at RLI, 2014, p. 13
 
     """
-    return [(np.interp(v_wind[i], p_values.index *
-            (1.225 / rho_hub[i])**(np.interp(p_values.index, [7.5, 12.5],
-                                             [1/3, 2/3])),
-            p_values.P, left=0, right=0)) for i in range(len(v_wind))]
+    p_wpp = [(np.interp(v_wind[i], p_values.index *
+             (1.225 / rho_hub[i])**(np.interp(p_values.index, [7.5, 12.5],
+                                              [1/3, 2/3])), p_values.P,
+             left=0, right=0)) for i in range(len(v_wind))]
+     # Set index for time series
+    try:
+        series_index = v_wind.index
+    except AttributeError:
+        series_index = range(1, len(p_wpp)+1)
+    p_wpp_series = pd.Series(data=p_wpp, index=series_index,
+                             name='feedin_wind_pp')
+    p_wpp_series.index.names = ['']
+    return p_wpp_series
