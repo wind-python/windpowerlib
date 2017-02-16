@@ -29,17 +29,9 @@ coastDat2 = {
     'pressure': 0,
     'temp_air': 2,
     'v_wind': 10,
-    'Z0': 0}
-
-# Specification of a second weather data set Exampledata for interpolation
-# (example data)
-exampledata = {
-    'dhi': 0,
-    'dirhi': 0,
-    'pressure': 0,
-    'temp_air': 10,
-    'v_wind': 80,
-    'Z0': 0}
+    'Z0': 0,
+    'temp_air_2': 10,
+    'v_wind_2': 80}
 
 # Specifications of the wind turbines
 enerconE126 = {
@@ -66,10 +58,8 @@ modelchain_data = {
 e126 = wt.WindTurbine(**enerconE126)
 v90 = wt.WindTurbine(**vestasV90)
 
-data_heights = [coastDat2, exampledata]
-
-modelchain.Modelchain(e126, **modelchain_data).run_model(data_heights)
-modelchain.Modelchain(v90, **modelchain_data).run_model(data_heights)
+modelchain.Modelchain(e126, **modelchain_data).run_model(coastDat2)
+modelchain.Modelchain(v90, **modelchain_data).run_model(coastDat2)
 
 if plt:
     e126.power_output.plot(legend=True, label='Enercon E126')
