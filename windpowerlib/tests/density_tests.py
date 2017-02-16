@@ -8,7 +8,7 @@ import logging
 from nose.tools import eq_
 from windpowerlib.density import (temperature_gradient, temperature_interpol,
                                   rho_barometric, rho_ideal_gas)
-from windpowerlib.modelchain import SimpleWindTurbine
+
 logging.disable(logging.INFO)
 
 
@@ -23,9 +23,6 @@ class Density_and_Temperature_Tests:
                             'pressure': 0}
         self.weather_2 = {'temp_air': 266}
         self.data_height_2 = {'temp_air': 10}
-
-    def setup(self):
-        self.windturbine = SimpleWindTurbine()
 
     def test_temperature_gradient(self):
         T_hub_exp = 266.363

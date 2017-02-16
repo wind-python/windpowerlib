@@ -93,7 +93,8 @@ class WindTurbine(object):
                     if self.nominal_power is None:
                         self.nominal_power = wpp_data[1]
                 except:
-                    logging.info('Missing cp values. Check if csv file is ' +
+                    logging.info('Missing cp values.If needed for ' +
+                                 'calulations: Check if csv file is ' +
                                  'available and named cp_values.csv')
             if self.p_values is None or self.nominal_power is None:
                 try:
@@ -104,7 +105,8 @@ class WindTurbine(object):
                     if self.nominal_power is None:
                         self.nominal_power = wpp_data[1]
                 except:
-                    logging.info('Missing p values. Check if csv file is ' +
+                    logging.info('Missing p values. If needed for ' +
+                                 ' calulations: Check if csv file is ' +
                                  'available and named P_values.csv')
 
     def fetch_wpp_data(self, **kwargs):
