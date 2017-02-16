@@ -82,7 +82,7 @@ def tpo_through_P(p_values, v_wind):
 
     Note
     ----
-    See also cp_series() in the module modelchain.
+    See also cp_series() in the module ``modelchain``.
 
     """
     v_max = p_values.index.max()
