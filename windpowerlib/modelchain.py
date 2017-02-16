@@ -31,7 +31,7 @@ class Modelchain(object):
         Chooses the model for calculating the wind speed at hub height.
         Used in v_wind_hub.
         Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
-            set measured closest to hub height is used.).
+            set measured closest to hub height is used.), 'hellman'.
     rho_model : string, optional
         Chooses the model for calculating the density of air at hub height.
         Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
@@ -73,7 +73,7 @@ class Modelchain(object):
         Chooses the model for calculating the wind speed at hub height.
         Used in v_wind_hub.
         Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
-            set measured closest to hub height is used.).
+            set measured closest to hub height is used.), 'hellman'.
     rho_model : string, optional
         Chooses the model for calculating the density of air at hub height.
         Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
@@ -280,10 +280,14 @@ class Modelchain(object):
                         kwargs['weather_2']['v_wind'],
                         kwargs['data_height_2']['v_wind'], self.hub_height,
                         kwargs['weather_2']['z0'], self.obstacle_height)
+        elif self.wind_model == 'hellman':
+            logging.debug('Calculating v_wind with hellman equation.')
+            v_wind = wind_speed.v_wind_hellman(
+                weather['v_wind'], data_height['v_wind'], self.hub_height)
         else:
-            logging.info('wrong value: `wind_model` must be logarithmic or' +
-                         'logarithmic_closest. It was calculated with ' +
-                         'logarithmic.')
+            logging.info('wrong value: `wind_model` must be logarithmic, ' +
+                         'logarithmic_closest or hellman. It was calculated ' +
+                         'with logarithmic.')
             v_wind = wind_speed.logarithmic_wind_profile(
                 weather['v_wind'], data_height['v_wind'], self.hub_height,
                 weather['z0'], self.obstacle_height)
