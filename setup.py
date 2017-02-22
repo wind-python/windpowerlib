@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@author: uwe
-"""
-
 import os
 from setuptools import setup
 from windpowerlib import __version__

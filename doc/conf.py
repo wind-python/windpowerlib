@@ -54,7 +54,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'windpowerlib'
-copyright = u'2016, oemof developing group'
+copyright = u'2016, oemof developer group'
 author = u'Uwe Krien, oemof developing group'
 
 import windpowerlib
@@ -214,7 +214,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'windpowerlib.tex', u'windpowerlib Documentation',
-   u'Uwe Krien, oemof developing group', 'manual'),
+   u'oemof developer group', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -244,7 +244,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'windpowerlib', u'windpowerlib Documentation',
-     [u'Uwe Krien, oemof developing group'], 1)
+     [u'oemof developer group'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -258,7 +258,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'windpowerlib', u'windpowerlib Documentation',
-   u'Uwe Krien', 'windpowerlib', 'Calculate time series of wind and pv power plants from weather data.',
+   u'oemof developer group', 'windpowerlib', 'Calculate feedin time series of wind power plants from weather data.',
    'Miscellaneous'),
 ]
 
