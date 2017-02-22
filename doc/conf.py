@@ -56,12 +56,14 @@ project = u'windpowerlib'
 copyright = u'2016, oemof developing group'
 author = u'Uwe Krien, oemof developing group'
 
+import windpowerlib
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '0.0.4'
+version = '%s' % (windpowerlib.__version__)
 # The full version, including alpha/beta/rc tags.
 #release = 'beta'
 
