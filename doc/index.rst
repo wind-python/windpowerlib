@@ -4,13 +4,12 @@ Welcome to the windpowerlib documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 5
    :glob:   
    
    getting_started
    whats_new
-   model_description
-   api/*
+   modules.rst
 
 
 Indices and tables
