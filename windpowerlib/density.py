@@ -10,12 +10,12 @@ __license__ = "GPLv3"
 
 def temperature_gradient(temp_air, temp_height, hub_height):
     r"""
-    Calculates the temperature at hub height using a linear temperature 
+    Calculates the temperature at hub height using a linear temperature
     gradient.
 
     A linear temperature gradient of -6.5 K/km is assumed. This function is
     carried out when the parameter `temperature_model` of an instance of
-    the :class:`~.wind_turbine.WindTurbine` class is 
+    the :class:`~.wind_turbine.WindTurbine` class is
     'temperature_gradient'.
 
     Parameters
@@ -57,7 +57,7 @@ def temperature_gradient(temp_air, temp_height, hub_height):
     return temp_air - 0.0065 * (hub_height - temp_height)
 
 
-def temperature_interpol(temp_air_1, temp_air_2, 
+def temperature_interpol(temp_air_1, temp_air_2,
                          temp_air_height_1, temp_air_height_2, hub_height):
     r"""
     Calculates the temperature at hub height by inter- or extrapolation.
@@ -99,17 +99,17 @@ def temperature_interpol(temp_air_1, temp_air_2,
     * linear temperature gradient
 
     """
-    return ((temp_air_2 - temp_air_1) / 
+    return ((temp_air_2 - temp_air_1) /
             (temp_air_height_2 - temp_air_height_1) *
             (hub_height - temp_air_height_1) + temp_air_1)
 
 
 def rho_barometric(pressure, pressure_height, hub_height, T_hub):
     r"""
-    Calculates the density of air at hub height using the barometric height 
+    Calculates the density of air at hub height using the barometric height
     equation.
 
-    This fuction is carried out when the parameter `rho_model` of an instance 
+    This fuction is carried out when the parameter `rho_model` of an instance
     of the :class:`~.wind_turbine.WindTurbine` class is 'barometric'.
 
     Parameters
@@ -165,7 +165,7 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
     r"""
     Calculates the density of air at hub height using the ideal gas equation.
 
-    This fuction is carried out when the parameter `rho_model` of an instance 
+    This fuction is carried out when the parameter `rho_model` of an instance
     of the :class:`~.wind_turbine.WindTurbine` class is 'ideal_gas'.
 
     Parameters

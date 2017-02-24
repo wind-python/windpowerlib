@@ -38,7 +38,7 @@ class Modelchain(object):
     temperature_model : string, optional
         Chooses the model for calculating the temperature at hub height.
         Used in rho_hub. Possibilities: 'gradient', 'interpolation'.
-    tp_output_model : string, optional
+    power_output_model : string, optional
         Chooses the model for calculating the turbine power output.
         Used in turbine_power_output.
         Possibilities: 'cp_values', 'p_values', 'P_curve_correction'.
@@ -80,7 +80,7 @@ class Modelchain(object):
     temperature_model : string, optional
         Chooses the model for calculating the temperature at hub height.
         Used in rho_hub. Possibilities: 'gradient', 'interpolation'.
-    tp_output_model : string, optional
+    power_output_model : string, optional
         Chooses the model for calculating the turbine power output.
         Used in turbine_power_output.
         Possibilities: 'cp_values', 'p_values', 'P_curve_correction'.
@@ -110,7 +110,7 @@ class Modelchain(object):
                  wind_model='logarithmic',
                  rho_model='barometric',
                  temperature_model='gradient',
-                 tp_output_model='cp_values',
+                 power_output_model='cp_values',
                  density_corr=False):
 
         self.wind_turbine = wind_turbine
@@ -127,7 +127,7 @@ class Modelchain(object):
         self.wind_model = wind_model
         self.rho_model = rho_model
         self.temperature_model = temperature_model
-        self.tp_output_model = tp_output_model
+        self.power_output_model = power_output_model
         self.density_corr = density_corr
 
     def rho_hub(self, weather, data_height):
@@ -323,7 +323,7 @@ class Modelchain(object):
 
         Returns
         -------
-        pandas.Series
+        output : pandas.Series
             Electrical power of the wind turbine.
 
         """
@@ -332,40 +332,40 @@ class Modelchain(object):
         rho_hub = self.rho_hub(weather, data_height)
 
         # Calculation of turbine power output according to the chosen model.
-        if self.tp_output_model == 'cp_values':
+        if self.power_output_model == 'cp_values':
             if self.density_corr is False:
                 logging.debug('Calculating power output with cp curve.')
-                p_wpp = power_output.tpo_through_cp(
-                    v_wind, rho_hub, self.d_rotor, self.cp_series(v_wind))
+                output = power_output.cp_curve(v_wind, rho_hub, self.d_rotor,
+                                               self.cp_series(v_wind))
             else:
                 logging.debug('Calculating power output with density ' +
                               'corrected cp curve.')
                 # get P curve from cp values with ambient density = 1.225 kg/m³
-                p_curve = power_output.tpo_through_cp(
+                p_curve = power_output.cp_curve(
                     self.cp_values.index, 1.225, self.d_rotor,
                     self.cp_values.cp)
                 p_df = pd.DataFrame(data=p_curve, index=self.cp_values.index)
                 p_df.columns = ['P']
                 # density correction of P and electrical time series
-                p_wpp = power_output.interpolate_P_curve(v_wind, rho_hub,
-                                                         p_df)
+                output = power_output.p_curve_density_corr(v_wind, rho_hub,
+                                                           p_df)
 
-        elif self.tp_output_model == 'p_values':
+        elif self.power_output_model == 'p_values':
             if self.density_corr is False:
                 logging.debug('Calculating power output with power curve.')
-                p_wpp = power_output.tpo_through_P(self.p_values, v_wind)
+                output = power_output.p_curve(self.p_values, v_wind)
             else:
                 logging.debug('Calculating power output with density ' +
                               'corrected power curve.')
-                p_wpp = power_output.interpolate_P_curve(v_wind, rho_hub,
-                                                         self.p_values)
+                output = power_output.p_curve_density_corr(v_wind, rho_hub,
+                                                           self.p_values)
         else:
-            logging.info('wrong value: `tp_output_model` must be cp_values ' +
-                         'or p_values. It was calculated with cp_values and ' +
-                         'without density correction.')
-            p_wpp = power_output.tpo_through_cp(v_wind, rho_hub, self.d_rotor,
-                                                self.cp_series(v_wind))
-        return p_wpp
+            logging.info('wrong value: `power_output_model` must be ' +
+                         'cp_values or p_values. It was calculated with ' +
+                         'cp_values and without density correction.')
+            output = power_output.cp_curve(v_wind, rho_hub, self.d_rotor,
+                                           self.cp_series(v_wind))
+        return output
 
     def read_weather_data(self, filename, datetime_column='Unnamed: 0',
                           **kwargs):

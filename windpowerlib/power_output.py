@@ -11,11 +11,11 @@ import numpy as np
 import pandas as pd
 
 
-def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
+def cp_curve(v_wind, rho_hub, d_rotor, cp_series):
     r"""
     Calculates the power output of one wind turbine using cp time series.
 
-    This fuction is carried out when the parameter `tp_output_model` of an
+    This fuction is carried out when the parameter `power_output_model` of an
     object of the class WindTurbine is 'cp_values' and `density_corr` is False.
 
     Parameters
@@ -57,14 +57,14 @@ def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
             cp_series)
 
 
-def tpo_through_P(p_values, v_wind):
+def p_curve(p_values, v_wind):
     r"""
     Converts power curve to power output of wind turbine.
 
     Interpolates the values of the power curve as a function of the wind speed
     between data obtained from the power curve of the specified wind turbine
     type.
-    This fuction is carried out when the parameter `tp_output_model` of an
+    This fuction is carried out when the parameter `power_output_model` of an
     object of the class WindTurbine is 'p_values' and `density_corr` is False.
 
     Parameters
@@ -78,7 +78,7 @@ def tpo_through_P(p_values, v_wind):
 
     Returns
     -------
-    array
+    power_output : pandas.Series
         Electrical power of the wind turbine.
 
     Note
@@ -88,19 +88,19 @@ def tpo_through_P(p_values, v_wind):
     """
     v_max = p_values.index.max()
     v_wind[v_wind > v_max] = v_max
-    p_wpp = np.interp(v_wind, p_values.index, p_values.P)
+    power_output = np.interp(v_wind, p_values.index, p_values.P)
     # Set index for time series
     try:
         series_index = v_wind.index
     except AttributeError:
-        series_index = range(1, len(p_wpp)+1)
-    p_wpp_series = pd.Series(data=p_wpp, index=series_index,
+        series_index = range(1, len(power_output)+1)
+    power_output = pd.Series(data=power_output, index=series_index,
                              name='feedin_wind_pp')
-    p_wpp_series.index.names = ['']
-    return p_wpp_series
+    power_output.index.names = ['']
+    return power_output
 
 
-def interpolate_P_curve(v_wind, rho_hub, p_values):
+def p_curve_density_corr(v_wind, rho_hub, p_values):
     r"""
     Interpolates density corrected power curve.
 
@@ -120,7 +120,7 @@ def interpolate_P_curve(v_wind, rho_hub, p_values):
 
     Returns
     -------
-    numpy.array
+    power_output : pandas.Series
         Electrical power of the wind turbine.
 
     Notes
@@ -158,16 +158,16 @@ def interpolate_P_curve(v_wind, rho_hub, p_values):
             at RLI, 2014, p. 13
 
     """
-    p_wpp = [(np.interp(v_wind[i], p_values.index *
-             (1.225 / rho_hub[i])**(np.interp(p_values.index, [7.5, 12.5],
-                                              [1/3, 2/3])), p_values.P,
-             left=0, right=0)) for i in range(len(v_wind))]
+    power_output = [(np.interp(v_wind[i], p_values.index *
+                    (1.225 / rho_hub[i])**(np.interp(p_values.index,
+                    [7.5, 12.5], [1/3, 2/3])), p_values.P,
+                    left=0, right=0)) for i in range(len(v_wind))]
      # Set index for time series
     try:
         series_index = v_wind.index
     except AttributeError:
-        series_index = range(1, len(p_wpp)+1)
-    p_wpp_series = pd.Series(data=p_wpp, index=series_index,
+        series_index = range(1, len(power_output)+1)
+    power_output = pd.Series(data=power_output, index=series_index,
                              name='feedin_wind_pp')
-    p_wpp_series.index.names = ['']
-    return p_wpp_series
+    power_output.index.names = ['']
+    return power_output
