@@ -51,7 +51,7 @@ def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
     .. [21] Gasch, R., Twele, J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
             Vieweg + Teubner, 2010, pages 35ff, 208
     .. [26] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
-            Wirtschaftlichkeit". Springer-Verlag, 2008, p. 542
+            Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 542
 
     """
     return (1 / 8 * rho_hub * d_rotor ** 2 * np.pi * np.power(v_wind, 3) *
