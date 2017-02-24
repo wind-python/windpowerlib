@@ -1,12 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Feb  2 13:10:09 2017
-
-@author: RL-INSTITUT\sabine.haas
-"""
-from nose.tools import eq_, raises, ok_
-from windpowerlib.power_output import (tpo_through_cp, tpo_through_P,
-                                       interpolate_P_curve)
+from nose.tools import eq_, ok_
+from windpowerlib.power_output import tpo_through_cp
 import pandas as pd
 
 
@@ -29,18 +22,3 @@ class Power_Output_Tests:
 
     def test_tpo_through_cp_series(self):
         ok_(isinstance(tpo_through_cp(**self.cp_test_2), pd.Series))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 

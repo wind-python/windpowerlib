@@ -45,7 +45,7 @@ vestasV90 = {
     'd_rotor': 90,
     'turbine_name': 'VESTAS V 90 3000'}
 
-
+# Specifications of the modelchain data
 modelchain_data = {
     'obstacle_height': 0,
     'wind_model': 'logarithmic_closest',

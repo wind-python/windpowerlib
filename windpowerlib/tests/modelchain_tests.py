@@ -1,13 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jan 30 17:46:09 2017
-
-@author: RL-INSTITUT\sabine.haas
-"""
 import logging
 from windpowerlib import modelchain as mc
 from windpowerlib import wind_turbine as wt
-from nose.tools import *
+from nose.tools import eq_
 logging.disable(logging.INFO)
 
 
@@ -99,8 +93,3 @@ class Modelchain_Tests:
         rho_exp = 1.3657554585553522
         eq_(self.test_mc_4.rho_hub(self.weather, self.data_height), rho_exp)
         self.test_mc_4.run_model(self.coastDat2)
-
-
-
-
-
