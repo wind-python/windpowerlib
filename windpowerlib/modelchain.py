@@ -31,7 +31,7 @@ class Modelchain(object):
         Chooses the model for calculating the wind speed at hub height.
         Used in v_wind_hub.
         Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
-            set measured closest to hub height is used.), 'hellman'.
+        set measured closest to hub height is used.), 'hellman'.
     rho_model : string, optional
         Chooses the model for calculating the density of air at hub height.
         Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
@@ -73,7 +73,7 @@ class Modelchain(object):
         Chooses the model for calculating the wind speed at hub height.
         Used in v_wind_hub.
         Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
-            set measured closest to hub height is used.), 'hellman'.
+        set measured closest to hub height is used.), 'hellman'.
     rho_model : string, optional
         Chooses the model for calculating the density of air at hub height.
         Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
@@ -292,6 +292,8 @@ class Modelchain(object):
         numpy.array
             Cp values for the wind speed time series.
 
+        Examples
+        --------
         >>> import numpy
         >>> from windpowerlib import modelchain
         >>> e126 = modelchain.Modelchain('ENERCON E 126 7500')

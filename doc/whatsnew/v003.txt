@@ -1,19 +1,19 @@
 v0.0.3 (November 18, 2016)
-+++++++++++++++++++++++++
++++++++++++++++++++++++++++
 
 
 Other changes
-#############
+##############
 Allow installation of windpowerlib for python versions >3.4
 Import requests package instead of urllib5
 
 Contributors
-############
+#############
 
  * Uwe Krien
  * Stephen Bosch
  * Birgit Schachler
 
 Comment
-#######
+########
 Release of v0.0.2 has been skipped due to a mistake in the release process.

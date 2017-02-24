@@ -31,8 +31,9 @@ sys.path.insert(0, os.path.abspath('..'))
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
-    'sphinx.ext.pngmath',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.imgmath',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.autosummary'
 
 ]
 
@@ -53,15 +54,17 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'windpowerlib'
-copyright = u'2016, oemof developing group'
+copyright = u'2016, oemof developer group'
 author = u'Uwe Krien, oemof developing group'
+
+import windpowerlib
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '0.0.4'
+version = '%s' % (windpowerlib.__version__)
 # The full version, including alpha/beta/rc tags.
 #release = 'beta'
 
@@ -103,6 +106,7 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
+autosummary_generate = True
 
 # -- Options for HTML output ----------------------------------------------
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -210,7 +214,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'windpowerlib.tex', u'windpowerlib Documentation',
-   u'Uwe Krien, oemof developing group', 'manual'),
+   u'oemof developer group', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -240,7 +244,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'windpowerlib', u'windpowerlib Documentation',
-     [u'Uwe Krien, oemof developing group'], 1)
+     [u'oemof developer group'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -254,7 +258,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'windpowerlib', u'windpowerlib Documentation',
-   u'Uwe Krien', 'windpowerlib', 'Calculate time series of wind and pv power plants from weather data.',
+   u'oemof developer group', 'windpowerlib', 'Calculate feedin time series of wind power plants from weather data.',
    'Miscellaneous'),
 ]
 

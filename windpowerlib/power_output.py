@@ -1,11 +1,11 @@
-"""The ``power_output`` module contains methods to calculate the power output
+"""
+The ``power_output`` module contains methods to calculate the power output
 of a wind turbine.
 
 """
 
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
-__author__ = "author1, author2"
 
 import numpy as np
 import pandas as pd
@@ -37,7 +37,8 @@ def tpo_through_cp(v_wind, rho_hub, d_rotor, cp_series):
 
     Notes
     -----
-    The following equation is used for the power output [21],[26]_:
+    The following equation is used for the power output [21]_, [26]_:
+    
     .. math:: p _{wpp}=\frac{1}{8}\cdot\rho_{hub}\cdot d_{rotor}^{2}
         \cdot\pi\cdot v_{wind}^{3}\cdot cp\left(v_{wind}\right)
 
@@ -125,7 +126,8 @@ def interpolate_P_curve(v_wind, rho_hub, p_values):
     Notes
     -----
     The following equation is used for the wind speed at site
-    [28], [29], [30]_:
+    [28]_, [29]_, [30]_:
+    
     .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}
                        {\rho_{site}}\right)^{p(v)}
 
