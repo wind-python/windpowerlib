@@ -140,10 +140,10 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
 
     References
     ----------
-    .. [23] Hau, E. Windkraftanlagen - Grundlagen, Technik, Einsatz,
-            Wirtschaftlichkeit Springer-Verlag, 2008, p. 560
+    .. [23] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
+            Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 560
     .. [24] Weitere Erläuterungen zur Druckgradientkraft
-        http://www.dwd.de/DE/service/lexikon/begriffe/D/Druckgradient_pdf.
+            http://www.dwd.de/DE/service/lexikon/begriffe/D/Druckgradient_pdf.
             pdf?__blob=publicationFile&v=4
 
     """
@@ -176,8 +176,11 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
 
     Notes
     -----
-    The following equations are used:
+    The following equations are used [34]_, [35]_:
+
     .. math:: \rho_{hub}=p_{hub}/ (R_s T_{hub})
+
+    and [24]_:
     .. math:: p_{hub}=\left(p/100-\left(h_{hub}-h_{p,data}\right)\cdot
               \frac{1}{8}\right)\cdot 100
     (see also rho_barometric())
@@ -188,7 +191,17 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
     :math:`R_s` is the specific gas constant of dry air (287.058 J/(kg*K)) and
     :math:`p_{hub}` is the pressure at hub height.
 
-    ToDo: Check equation and add references for ideal gas equation
+    References
+    ----------
+    .. [34] Ahrendts J., Kabelac S. "Das Ingenieurwissen - Technische
+            Thermodynamik". 34. Auflage, Springer-Verlag, 2014, p. 23
+    .. [24] Weitere Erläuterungen zur Druckgradientkraft
+            http://www.dwd.de/DE/service/lexikon/begriffe/D/Druckgradient_pdf.
+            pdf?__blob=publicationFile&v=4
+    .. [35] Biank, M.: "Methodology, Implementation and Validation of a
+            Variable Scale Simulation Model for Windpower based on the
+            Georeferenced Installation Register of Germany". Master's Thesis
+            at RLI, 2014, p. 57
 
     """
     return ((pressure / 100 - (hub_height - pressure_height) * 1 / 8) * 100 /

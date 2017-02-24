@@ -64,10 +64,10 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
     ----------
     .. [20] Gasch R., Twele J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
             Vieweg + Teubner, 2010, page 129
-    .. [25] Hau, E. Windkraftanlagen - Grundlagen, Technik, Einsatz,
-            Wirtschaftlichkeit Springer-Verlag, 2008, p. 515
+    .. [25] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
+            Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 515
     .. [27] Quaschning V.: "Regenerative Energiesysteme". München, Hanser
-            Verlag, 2011, p. 245
+            Verlag, 2011, p. 278
 
     """
     if 0.7 * obstacle_height > v_wind_height:
@@ -135,8 +135,8 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
     .. [31] Sharp, E.: "Spatiotemporal disaggregation of GB scenarios depicting
             increased wind capacity and electrified heat demand in dwellings".
             UCL, Energy Institute, 2015, p. 83
-    .. [32] Hau, E. Windkraftanlagen - Grundlagen, Technik, Einsatz,
-            Wirtschaftlichkeit Springer-Verlag, 2008, p. 517
+    .. [32] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
+            Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 517
     .. [33] Quaschning V.: "Regenerative Energiesysteme". München, Hanser
             Verlag, 2011, p. 279
 
