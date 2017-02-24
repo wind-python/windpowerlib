@@ -1,10 +1,10 @@
-"""The ``basic_example`` module shows a simple usage of the windpowerlib.
+"""
+The ``basic_example`` module shows a simple usage of the windpowerlib.
 
 """
 
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
-__author__ = "author1, author2"
 
 import logging
 
