@@ -274,38 +274,6 @@ class Modelchain(object):
                 weather['z0'], self.obstacle_height)
         return v_wind
 
-    def cp_series(self, v_wind):
-        r"""
-        Converts the curve of the power coefficient to a time series.
-
-        Interpolates the power coefficient as a function of the wind speed
-        between data obtained from the cp curve of the specified wind turbine
-        type.
-
-        Parameters
-        ----------
-        v_wind : pandas.Series or array
-            Wind speed at hub height in m/s.
-
-        Returns
-        -------
-        numpy.array
-            Cp values for the wind speed time series.
-
-        Examples
-        --------
-        >>> import numpy
-        >>> from windpowerlib import modelchain
-        >>> e126 = modelchain.Modelchain('ENERCON E 126 7500')
-        >>> v_wind = numpy.array([1,2,3,4,5,6,7,8])
-        >>> print(e126.cp_series(v_wind))
-        [ 0.     0.     0.191  0.352  0.423  0.453  0.47   0.478]
-
-        """
-        v_max = self.cp_values.index.max()
-        v_wind[v_wind > v_max] = v_max
-        return np.interp(v_wind, self.cp_values.index, self.cp_values.cp)
-
     def turbine_power_output(self, weather, data_height):
         r"""
         Calculates the power output in W of one wind turbine.
@@ -336,14 +304,14 @@ class Modelchain(object):
             if self.density_corr is False:
                 logging.debug('Calculating power output with cp curve.')
                 output = power_output.cp_curve(v_wind, rho_hub, self.d_rotor,
-                                               self.cp_series(v_wind))
+                                               self.cp_values)
             else:
                 logging.debug('Calculating power output with density ' +
                               'corrected cp curve.')
                 # get P curve from cp values with ambient density = 1.225 kg/m³
-                p_curve = power_output.cp_curve(
-                    self.cp_values.index, 1.225, self.d_rotor,
-                    self.cp_values.cp)
+                p_curve = (1 / 8 * 1.225 * self.d_rotor ** 2 * np.pi *
+                           np.power(self.cp_values.index, 3) *
+                           self.cp_values.cp)
                 p_df = pd.DataFrame(data=p_curve, index=self.cp_values.index)
                 p_df.columns = ['P']
                 # density correction of P and electrical time series
@@ -364,7 +332,7 @@ class Modelchain(object):
                          'cp_values or p_values. It was calculated with ' +
                          'cp_values and without density correction.')
             output = power_output.cp_curve(v_wind, rho_hub, self.d_rotor,
-                                           self.cp_series(v_wind))
+                                           self.cp_values)
         return output
 
     def read_weather_data(self, filename, datetime_column='Unnamed: 0',

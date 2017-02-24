@@ -52,7 +52,7 @@ modelchain_data = {
     'rho_model': 'ideal_gas',
     'temperature_model': 'interpolation',
     'power_output_model': 'cp_values',
-    'density_corr': True}
+    'density_corr': False}
 
 
 e126 = wt.WindTurbine(**enerconE126)

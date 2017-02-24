@@ -11,9 +11,9 @@ import numpy as np
 import pandas as pd
 
 
-def cp_curve(v_wind, rho_hub, d_rotor, cp_series):
+def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
     r"""
-    Calculates the power output of one wind turbine using a cp time series.
+    Calculates the power output of one wind turbine using a cp curve.
 
     This function is carried out when the parameter `power_output_model` of an
     instance of the :class:`~.modelchain.Modelchain` class
@@ -27,9 +27,10 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_series):
         Density of air at hub height in kg/m³.
     d_rotor : float
         Diameter of rotor in m.
-    cp_series : pandas.Series or array
-        Cp (power coefficient) values for the wind speed time series.
-        See also modelchain.cp_series().
+    cp_values : pandas.DataFrame
+        Curve of the power coefficient of the wind turbine.
+        The indices are the corresponding wind speeds of the power coefficient
+        curve, the power coefficient values containing column is called 'cp'.
 
     Returns
     -------
@@ -54,6 +55,10 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_series):
             Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 542
 
     """
+    # cp time series
+    v_max = cp_values.index.max()
+    v_wind[v_wind > v_max] = v_max
+    cp_series = np.interp(v_wind, cp_values.index, cp_values.cp)
     return (1 / 8 * rho_hub * d_rotor ** 2 * np.pi * np.power(v_wind, 3) *
             cp_series)
 
