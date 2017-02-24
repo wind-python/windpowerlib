@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jan 30 13:03:26 2017
-
-@author: RL-INSTITUT\sabine.haas
-"""
 import logging
 from windpowerlib.wind_speed import logarithmic_wind_profile, v_wind_hellman
 from nose.tools import eq_, raises

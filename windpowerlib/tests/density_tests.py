@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jan 30 16:00:27 2017
-
-@author: RL-INSTITUT\sabine.haas
-"""
 import logging
 from nose.tools import eq_
 from windpowerlib.density import (temperature_gradient, temperature_interpol,
