@@ -42,7 +42,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
     Notes
     -----
     The following equation is used for the logarithmic wind profile [27]_:
-    
+
     .. math:: v_{wind,hub}=v_{wind,data}\cdot
         \frac{\ln\left(\frac{h_{hub}-d}{z_{0}}\right)}{\ln\left(
         \frac{h_{data}-d}{z_{0}}\right)}
@@ -52,7 +52,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
         d: includes obstacle height (d = 0.7 * obstacle_height)
 
     For  d = 0 it results in the following equation [20]_, [25]_:
-    
+
     .. math:: v_{wind,hub}=v_{wind,data}\cdot\frac{\ln\left(\frac{h_{hub}}
         {z_{0}}\right)}{\ln\left(\frac{h_{data}}{z_{0}}\right)}
 
@@ -114,7 +114,7 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
     -----
     The following equation is used for the logarithmic wind profile [31]_,
     [32]_, [33]_:
-    
+
     .. math:: v_{wind,hub}=v_{wind,data}\cdot \left(\frac{h_{hub}}{h_{data}}
         \right)^\alpha
 
@@ -128,7 +128,7 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
     For the Hellman exponent :math:`\alpha` many studies use a value of 1/7 for
     onshore and a value of 1/9 for for offshore. The Hellman exponent can also
     be calulated by the following equation [32]_, [33]_:
-    
+
     .. math:: \alpha = \frac{1}{ln\left(\frac{h_{hub}}{z_0} \right)}
 
     with:

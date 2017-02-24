@@ -36,7 +36,7 @@ def temperature_gradient(temp_air, temp_height, hub_height):
     -----
 
     The following equation is used [22]_:
-    
+
     .. math:: T_{hub}=T_{air}-0.0065\cdot\left(h_{hub}-h_{T,data}\right)
 
     with:
@@ -45,9 +45,9 @@ def temperature_gradient(temp_air, temp_height, hub_height):
     :math:`h_{T,data}` is the height in which the temperature is measured.
 
     Assumptions:
-    
+
     * Temperature gradient of -6.5 K/km (-0.0065 K/m)
-        
+
     References
     ----------
     .. [22] ICAO-Standardatmosphäre (ISA).
@@ -88,16 +88,16 @@ def temperature_interpol(temp_air_1, temp_air_2,
     -----
 
     The following equation is used:
-    
+
     .. math:: T_{hub} = (T_2 - T_1) / (h_2 - h_1) * (h_{hub} - h_1) + T_1
 
     with:
         T: temperature, h: height
 
     Assumptions:
-    
+
     * linear temperature gradient
-    
+
     """
     return ((temp_air_2 - temp_air_1) / 
             (temp_air_height_2 - temp_air_height_1) *
@@ -130,9 +130,9 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
 
     Notes
     -----
-    
+
     The following equation is used [23]_, [24]_ :
-    
+
     .. math:: \rho_{hub}=\left(p/100-\left(h_{hub}-h_{p,data}\right)
        \cdot\frac{1}{8}\right)\cdot \frac{\rho_0 T_0\cdot 100}{p_0 T_{hub}}
 
@@ -144,9 +144,9 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
     pressure, :math:`p_0` the ambient air pressure, :math:`\rho_0` the ambient
     density of air, :math:`T_0` the ambient temperature and :math:`T_{hub}` the
     temperature at hub height.
-    
+
     Assumptions:
-    
+
     * Pressure gradient of -1/8 hPa/m
 
     References
