@@ -51,8 +51,8 @@ modelchain_data = {
     'wind_model': 'logarithmic_closest',
     'rho_model': 'ideal_gas',
     'temperature_model': 'interpolation',
-    'tp_output_model': 'cp_values',
-    'density_corr': True}
+    'power_output_model': 'cp_values',
+    'density_corr': False}
 
 
 e126 = wt.WindTurbine(**enerconE126)

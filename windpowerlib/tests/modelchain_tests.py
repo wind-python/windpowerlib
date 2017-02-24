@@ -37,25 +37,25 @@ class Modelchain_Tests:
         self.test_modelchain = {'wind_model': 'logarithmic',
                                 'rho_model': 'barometric',
                                 'temperature_model': 'gradient',
-                                'tp_output_model': 'cp_values',
+                                'power_output_model': 'cp_values',
                                 'density_corr': False}
 
         self.test_modelchain_2 = {'wind_model': 'hellman',
                                   'rho_model': 'barometric',
                                   'temperature_model': 'interpolation',
-                                  'tp_output_model': 'cp_values',
+                                  'power_output_model': 'cp_values',
                                   'density_corr': True}
 
         self.test_modelchain_3 = {'wind_model': 'logarithmic_closest',
                                   'rho_model': 'ideal_gas',
                                   'temperature_model': 'gradient',
-                                  'tp_output_model': 'p_values',
+                                  'power_output_model': 'p_values',
                                   'density_corr': False}
 
         self.test_modelchain_4 = {'wind_model': 'logarithmic',
                                   'rho_model': 'ideal_gas',
                                   'temperature_model': 'interpolation',
-                                  'tp_output_model': 'p_values',
+                                  'power_output_model': 'p_values',
                                   'density_corr': True}
 
     def setup(self):
