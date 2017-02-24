@@ -65,7 +65,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
 
     References
     ----------
-    .. [20] Gasch R., Twele J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
+    .. [20] Gasch, R., Twele, J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
             Vieweg + Teubner, 2010, p. 129
     .. [25] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
             Wirtschaftlichkeit". Springer-Verlag, 2008, p. 515
