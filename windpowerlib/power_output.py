@@ -13,10 +13,11 @@ import pandas as pd
 
 def cp_curve(v_wind, rho_hub, d_rotor, cp_series):
     r"""
-    Calculates the power output of one wind turbine using cp time series.
+    Calculates the power output of one wind turbine using a cp time series.
 
-    This fuction is carried out when the parameter `power_output_model` of an
-    object of the class WindTurbine is 'cp_values' and `density_corr` is False.
+    This function is carried out when the parameter `power_output_model` of an
+    instance of the :class:`~.modelchain.Modelchain` class
+    is 'cp_values' and the parameter `density_corr` is False.
 
     Parameters
     ----------
@@ -47,7 +48,7 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_series):
 
     References
     ----------
-    .. [21] Gasch R., Twele J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
+    .. [21] Gasch, R., Twele, J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
             Vieweg + Teubner, 2010, pages 35ff, 208
     .. [26] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
             Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 542
@@ -64,8 +65,9 @@ def p_curve(p_values, v_wind):
     Interpolates the values of the power curve as a function of the wind speed
     between data obtained from the power curve of the specified wind turbine
     type.
-    This fuction is carried out when the parameter `power_output_model` of an
-    object of the class WindTurbine is 'p_values' and `density_corr` is False.
+    This function is carried out when the parameter `power_output_model` of an
+    instance of the :class:`~.modelchain.Modelchain` class
+    is 'p_values' and the parameter `density_corr` is False.
 
     Parameters
     ----------
@@ -104,7 +106,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     r"""
     Interpolates density corrected power curve.
 
-    This fuction is carried out when the parameter `density_corr` of an
+    This function is carried out when the parameter `density_corr` of an
     object of the class WindTurbine is True.
 
     Parameters

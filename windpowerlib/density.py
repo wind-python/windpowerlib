@@ -15,7 +15,7 @@ def temperature_gradient(temp_air, temp_height, hub_height):
 
     A linear temperature gradient of -6.5 K/km is assumed. This function is
     carried out when the parameter `temperature_model` of an instance of
-    the :class:`~.wind_turbine.WindTurbine` class is
+    the :class:`~.modelchain.Modelchain` class is
     'temperature_gradient'.
 
     Parameters
@@ -63,7 +63,7 @@ def temperature_interpol(temp_air_1, temp_air_2,
     Calculates the temperature at hub height by inter- or extrapolation.
 
     This fuction is carried out when the parameter `temperature_model` of an
-    instance of the :class:`~.wind_turbine.WindTurbine` class
+    instance of the :class:`~.modelchain.Modelchain` class
     is 'interpolation'.
 
     Parameters
@@ -110,7 +110,7 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
     equation.
 
     This fuction is carried out when the parameter `rho_model` of an instance
-    of the :class:`~.wind_turbine.WindTurbine` class is 'barometric'.
+    of the :class:`~.modelchain.Modelchain` class is 'barometric'.
 
     Parameters
     ----------
@@ -166,7 +166,7 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
     Calculates the density of air at hub height using the ideal gas equation.
 
     This fuction is carried out when the parameter `rho_model` of an instance
-    of the :class:`~.wind_turbine.WindTurbine` class is 'ideal_gas'.
+    of the :class:`~.modelchain.Modelchain` class is 'ideal_gas'.
 
     Parameters
     ----------
@@ -191,6 +191,7 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
     .. math:: \rho_{hub}=p_{hub}/ (R_s T_{hub})
 
     and [24]_:
+
     .. math:: p_{hub}=\left(p/100-\left(h_{hub}-h_{p,data}\right)\cdot
               \frac{1}{8}\right)\cdot 100
 

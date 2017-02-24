@@ -1,4 +1,5 @@
-"""The ``modelchain`` module contains functions and classes of the
+"""
+The ``modelchain`` module contains functions and classes of the
 windpowerlib. This module makes it easy to get started with the windpowerlib
 and demonstrates standard ways to use the library.
 
@@ -6,7 +7,6 @@ and demonstrates standard ways to use the library.
 
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
-__author__ = "author1, author2"
 
 import os
 import logging
