@@ -18,7 +18,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
     The logarithmic height equation is used. There is the possibility of
     including the height of the surrounding obstacles in the calculation. This
     function is carried out when the parameter `wind_model` of an instance of
-    the :class:`~.modelchain.Modelchain` class is 'logarithmic' or 
+    the :class:`~.modelchain.Modelchain` class is 'logarithmic' or
     'logarithmic_closest'.
 
     Parameters
@@ -42,8 +42,8 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
 
     Notes
     -----
-    The following equation is used for the logarithmic wind profile [27]_:
-    
+    The following equation is used for the logarithmic wind profile [1]_:
+
     .. math:: v_{wind,hub}=v_{wind,data}\cdot
         \frac{\ln\left(\frac{h_{hub}-d}{z_{0}}\right)}{\ln\left(
         \frac{h_{data}-d}{z_{0}}\right)}
@@ -52,25 +52,25 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
         v: wind speed, h: height, :math:`z_{0}`: roughness length,
         d: boundary layer offset (estimated by d = 0.7 * `obstacle_height`)
 
-    For  d = 0 it results in the following equation [20]_, [25]_:
-    
+    For  d = 0 it results in the following equation [2]_, [3]_:
+
     .. math:: v_{wind,hub}=v_{wind,data}\cdot\frac{\ln\left(\frac{h_{hub}}
         {z_{0}}\right)}{\ln\left(\frac{h_{data}}{z_{0}}\right)}
 
     :math:`h_{data}` is the height at which the wind speed
     :math:`v_{wind,data}` is measured.
 
-    Parameters `v_wind_height`, `z_0`, `hub_height` and `obstacle_height` have 
+    Parameters `v_wind_height`, `z_0`, `hub_height` and `obstacle_height` have
     to be of the same unit.
 
     References
     ----------
-    .. [20] Gasch, R., Twele, J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
-            Vieweg + Teubner, 2010, p. 129
-    .. [25] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
-            Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 515
-    .. [27] Quaschning V.: "Regenerative Energiesysteme". München, Hanser
+    .. [1] Quaschning V.: "Regenerative Energiesysteme". München, Hanser
             Verlag, 2011, p. 278
+    .. [2] Gasch, R., Twele, J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
+            Vieweg + Teubner, 2010, p. 129
+    .. [3] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
+            Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 515
 
     """
     if 0.7 * obstacle_height > v_wind_height:
@@ -101,7 +101,7 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
     hellman_exp : float, optional
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
-        constant. Default: 1/7. If roughness length is given 
+        constant. Default: 1/7. If roughness length is given
         `hellman_exp` = 1 / ln(h_hub/z_0).
     z_0 : float, optional
         Roughness length. Default: None.
@@ -113,9 +113,9 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
 
     Notes
     -----
-    The following equation is used for the logarithmic wind profile [31]_,
-    [32]_, [33]_:
-    
+    The following equation is used for the logarithmic wind profile [1]_,
+    [2]_, [3]_:
+
     .. math:: v_{wind,hub}=v_{wind,data}\cdot \left(\frac{h_{hub}}{h_{data}}
         \right)^\alpha
 
@@ -128,8 +128,8 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
 
     For the Hellman exponent :math:`\alpha` many studies use a value of 1/7 for
     onshore and a value of 1/9 for offshore. The Hellman exponent can also
-    be calulated by the following equation [32]_, [33]_:
-    
+    be calulated by the following equation [2]_, [3]_:
+
     .. math:: \alpha = \frac{1}{ln\left(\frac{h_{hub}}{z_0} \right)}
 
     with:
@@ -137,12 +137,12 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
 
     References
     ----------
-    .. [31] Sharp, E.: "Spatiotemporal disaggregation of GB scenarios depicting
+    .. [1] Sharp, E.: "Spatiotemporal disaggregation of GB scenarios depicting
             increased wind capacity and electrified heat demand in dwellings".
             UCL, Energy Institute, 2015, p. 83
-    .. [32] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
+    .. [2] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
             Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 517
-    .. [33] Quaschning V.: "Regenerative Energiesysteme". München, Hanser
+    .. [3] Quaschning V.: "Regenerative Energiesysteme". München, Hanser
             Verlag, 2011, p. 279
 
     """

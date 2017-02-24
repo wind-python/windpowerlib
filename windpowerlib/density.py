@@ -35,7 +35,7 @@ def temperature_gradient(temp_air, temp_height, hub_height):
     Notes
     -----
 
-    The following equation is used [22]_:
+    The following equation is used [1]_:
 
     .. math:: T_{hub}=T_{air}-0.0065\cdot\left(h_{hub}-h_{T,data}\right)
 
@@ -50,7 +50,7 @@ def temperature_gradient(temp_air, temp_height, hub_height):
 
     References
     ----------
-    .. [22] ICAO-Standardatmosphäre (ISA).
+    .. [1] ICAO-Standardatmosphäre (ISA).
         http://www.dwd.de/DE/service/lexikon/begriffe/S/Standardatmosphaere_pdf.pdf?__blob=publicationFile&v=3
 
     """
@@ -131,7 +131,7 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
     Notes
     -----
 
-    The following equation is used [23]_, [24]_ :
+    The following equation is used [1]_, [2]_ :
 
     .. math:: \rho_{hub}=\left(p/100-\left(h_{hub}-h_{p,data}\right)
        \cdot\frac{1}{8}\right)\cdot \frac{\rho_0 T_0\cdot 100}{p_0 T_{hub}}
@@ -151,9 +151,9 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
 
     References
     ----------
-    .. [23] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
+    .. [1] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
             Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 560
-    .. [24] Deutscher Wetterdienst
+    .. [2] Deutscher Wetterdienst:
         http://www.dwd.de/DE/service/lexikon/begriffe/D/Druckgradient_pdf.pdf?__blob=publicationFile&v=4
 
     """
@@ -186,12 +186,12 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
 
     Notes
     -----
-    The following equations are used [34]_, [35]_:
+    The following equations are used [1]_, [2]_:
 
     .. math:: \rho_{hub}=p_{hub}/ (R_s T_{hub})
 
-    and [24]_:
-    
+    and [3]_:
+
     .. math:: p_{hub}=\left(p/100-\left(h_{hub}-h_{p,data}\right)\cdot
               \frac{1}{8}\right)\cdot 100
 
@@ -203,15 +203,14 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
 
     References
     ----------
-    .. [34] Ahrendts J., Kabelac S. "Das Ingenieurwissen - Technische
+    .. [1] Ahrendts J., Kabelac S.: "Das Ingenieurwissen - Technische
             Thermodynamik". 34. Auflage, Springer-Verlag, 2014, p. 23
-    .. [24] Weitere Erläuterungen zur Druckgradientkraft
-            http://www.dwd.de/DE/service/lexikon/begriffe/D/Druckgradient_pdf.
-            pdf?__blob=publicationFile&v=4
-    .. [35] Biank, M.: "Methodology, Implementation and Validation of a
+    .. [2] Biank, M.: "Methodology, Implementation and Validation of a
             Variable Scale Simulation Model for Windpower based on the
             Georeferenced Installation Register of Germany". Master's Thesis
             at RLI, 2014, p. 57
+    .. [3] Deutscher Wetterdienst:
+            http://www.dwd.de/DE/service/lexikon/begriffe/D/Druckgradient_pdf.pdf?__blob=publicationFile&v=4
 
     """
     return ((pressure / 100 - (hub_height - pressure_height) * 1 / 8) * 100 /
