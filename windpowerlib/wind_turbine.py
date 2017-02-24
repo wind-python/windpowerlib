@@ -1,4 +1,5 @@
-"""The ``wind_turbine`` module contains the class WindTurbine that implements
+"""
+The ``wind_turbine`` module contains the class WindTurbine that implements
 a wind turbine in the windpowerlib and functions needed for the modelling of a
 wind turbine.
 
@@ -6,7 +7,6 @@ wind turbine.
 
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
-__author__ = "author1, author2"
 
 import pandas as pd
 import logging
@@ -127,7 +127,11 @@ class WindTurbine(object):
         Examples
         --------
         >>> from windpowerlib import wind_turbine
-        >>> e126 = wind_turbine.WindTurbine('ENERCON E 126 7500')
+        >>> enerconE126 = {
+        ...    'hub_height': 135,
+        ...    'd_rotor': 127,
+        ...    'turbine_name': 'ENERCON E 126 7500'}
+        >>> e126 = wind_turbine.WindTurbine(**enerconE126)
         >>> print(e126.cp_values.cp[5.0])
         0.423
         >>> print(e126.nominal_power)

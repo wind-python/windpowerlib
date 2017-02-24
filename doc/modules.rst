@@ -41,7 +41,8 @@ Wind turbine data
 ====================
 
 Functions and methods to obtain the nominal power as well as 
-power curve or power coefficient curve needed by the :class:`windpowerlib.wind_turbine.WindTurbine` class.
+power curve or power coefficient curve needed by the :py:class:`~wind_turbine.WindTurbine` class.
+
 
 .. autosummary::
    :toctree: temp/
