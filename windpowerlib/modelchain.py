@@ -308,15 +308,8 @@ class Modelchain(object):
             else:
                 logging.debug('Calculating power output with density ' +
                               'corrected cp curve.')
-                # get P curve from cp values with ambient density = 1.225 kg/m³
-                p_curve = (1 / 8 * 1.225 * self.d_rotor ** 2 * np.pi *
-                           np.power(self.cp_values.index, 3) *
-                           self.cp_values.cp)
-                p_df = pd.DataFrame(data=p_curve, index=self.cp_values.index)
-                p_df.columns = ['P']
-                # density correction of P and electrical time series
-                output = power_output.p_curve_density_corr(v_wind, rho_hub,
-                                                           p_df)
+                output = power_output.cp_curve_density_corr(
+                    v_wind, rho_hub, self.cp_values, self.d_rotor)
 
         elif self.power_output_model == 'p_values':
             if self.density_corr is False:

@@ -112,7 +112,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     Interpolates density corrected power curve.
 
     This function is carried out when the parameter `density_corr` of an
-    object of the class WindTurbine is True.
+    object of the :class:`~.modelchain.Modelchain` class is True.
 
     Parameters
     ----------
@@ -133,7 +133,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     Notes
     -----
     The following equation is used for the wind speed at site
-    [28]_, [29]_, [30]_:
+    [1]_, [2]_, [3]_:
 
     .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}
                        {\rho_{site}}\right)^{p(v)}
@@ -154,12 +154,12 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
 
     References
     ----------
-    .. [28] Svenningsen, L.: "Power Curve Air Density Correction And Other
+    .. [1] Svenningsen, L.: "Power Curve Air Density Correction And Other
             Power Curve Options in WindPRO". 1st edition, Aalborg,
             EMD International A/S , 2010, p. 4
-    .. [29] Svenningsen, L.: "Proposal of an Improved Power Curve Correction".
+    .. [2] Svenningsen, L.: "Proposal of an Improved Power Curve Correction".
             EMD International A/S , 2010
-    .. [30] Biank, M.: "Methodology, Implementation and Validation of a
+    .. [3] Biank, M.: "Methodology, Implementation and Validation of a
             Variable Scale Simulation Model for Windpower based on the
             Georeferenced Installation Register of Germany". Master's Thesis
             at RLI, 2014, p. 13
@@ -167,10 +167,11 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     """
     # Calulation of v_site and interpolation of density corrected power curve
     # for every wind speed in the time series `v_wind`.
+    power_output = np.zeros(len(v_wind))
     for i in range(len(v_wind)):
         v_site = (p_values.index * (1.225 / rho_hub[i]) **
                  (np.interp(p_values.index, [7.5, 12.5], [1/3, 2/3])))
-        power_output = np.interp(v_wind[i], v_site, p_values.P)
+        power_output[i] = np.interp(v_wind[i], v_site, p_values.P)
 
     # Set index for time series
     try:
@@ -180,4 +181,58 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     power_output = pd.Series(data=power_output, index=series_index,
                              name='feedin_wind_pp')
     power_output.index.names = ['']
+    return power_output
+
+
+def cp_curve_density_corr(v_wind, rho_hub, cp_values, d_rotor):
+    r"""
+    Interpolates density corrected power curve.
+
+    This function is carried out when the parameter `density_corr` of an
+    object of the :class:`~.modelchain.Modelchain` class is True.
+
+    Parameters
+    ----------
+    v_wind : pandas.Series or array
+        Wind speed time series at hub height in m/s.
+    rho_hub : pandas.Series or array
+        Density of air at hub height in kg/m³.
+    cp_values : pandas.DataFrame
+        Curve of the power coefficient of the wind turbine.
+        The indices are the corresponding wind speeds of the power coefficient
+        curve, the power coefficient values containing column is called 'cp'.
+    d_rotor : float
+        Diameter of the rotor.
+
+    Returns
+    -------
+    power_output : pandas.Series
+        Electrical power of the wind turbine.
+
+    Notes
+    -----
+    The following equation is used for the power output [1]_, [2]_:
+
+    .. math:: P=\frac{1}{8}\cdot\rho_{0}\cdot d_{rotor}^{2}
+        \cdot\pi\cdot v_{wind}^{3}\cdot cp\left(v_{wind}\right)
+
+    with:
+        v: wind speed [m/s], d: diameter [m], :math:`\rho`: density [kg/m³]
+
+    References
+    ----------
+    .. [1] Gasch, R., Twele, J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
+            Vieweg + Teubner, 2010, pages 35ff, 208
+    .. [2] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
+            Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 542
+
+    """
+    # get P curve from cp values with ambient density = 1.225 kg/m³
+    p_values = (1 / 8 * 1.225 * d_rotor ** 2 * np.pi *
+                np.power(cp_values.index, 3) * cp_values.cp)
+    p_values = pd.DataFrame(data=p_values, index=cp_values.index)
+    p_values.columns = ['P']
+
+    power_output = p_curve_density_corr(v_wind, rho_hub, p_values)
+
     return power_output
