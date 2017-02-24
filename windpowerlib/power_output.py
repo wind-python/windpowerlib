@@ -112,7 +112,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     Interpolates density corrected power curve.
 
     This function is carried out when the parameter `density_corr` of an
-    object of the class WindTurbine is True.
+    object of the :class:`~.modelchain.Modelchain` class is True.
 
     Parameters
     ----------
@@ -133,7 +133,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     Notes
     -----
     The following equation is used for the wind speed at site
-    [28]_, [29]_, [30]_:
+    [1]_, [2]_, [3]_:
 
     .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}
                        {\rho_{site}}\right)^{p(v)}
@@ -154,12 +154,12 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
 
     References
     ----------
-    .. [28] Svenningsen, L.: "Power Curve Air Density Correction And Other
+    .. [1] Svenningsen, L.: "Power Curve Air Density Correction And Other
             Power Curve Options in WindPRO". 1st edition, Aalborg,
             EMD International A/S , 2010, p. 4
-    .. [29] Svenningsen, L.: "Proposal of an Improved Power Curve Correction".
+    .. [2] Svenningsen, L.: "Proposal of an Improved Power Curve Correction".
             EMD International A/S , 2010
-    .. [30] Biank, M.: "Methodology, Implementation and Validation of a
+    .. [3] Biank, M.: "Methodology, Implementation and Validation of a
             Variable Scale Simulation Model for Windpower based on the
             Georeferenced Installation Register of Germany". Master's Thesis
             at RLI, 2014, p. 13
@@ -167,10 +167,11 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     """
     # Calulation of v_site and interpolation of density corrected power curve
     # for every wind speed in the time series `v_wind`.
+    power_output = np.zeros(len(v_wind))
     for i in range(len(v_wind)):
         v_site = (p_values.index * (1.225 / rho_hub[i]) **
                  (np.interp(p_values.index, [7.5, 12.5], [1/3, 2/3])))
-        power_output = np.interp(v_wind[i], v_site, p_values.P)
+        power_output[i] = np.interp(v_wind[i], v_site, p_values.P)
 
     # Set index for time series
     try:
