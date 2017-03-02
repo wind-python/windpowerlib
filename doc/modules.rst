@@ -60,9 +60,10 @@ Functions for calculating power output of a wind turbine.
 .. autosummary::
    :toctree: temp/
 
-   power_output.tpo_through_cp
-   power_output.tpo_through_P
-   power_output.interpolate_P_curve
+   power_output.cp_curve
+   power_output.cp_curve_density_corr
+   power_output.p_curve
+   power_output.p_curve_density_corr
 
 
 Modelchain
@@ -89,6 +90,5 @@ Methods of the Modelchain object.
 
    modelchain.Modelchain.rho_hub
    modelchain.Modelchain.v_wind_hub
-   modelchain.Modelchain.cp_series
    modelchain.Modelchain.turbine_power_output
    modelchain.Modelchain.read_weather_data
