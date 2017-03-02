@@ -103,10 +103,11 @@ def p_curve(p_values, v_wind):
 
 def p_curve_density_corr(v_wind, rho_hub, p_values):
     r"""
-    Interpolates density corrected power curve.
+    Calculates the turbine power output using a density corrected power curve.
 
-    This function is carried out when the parameter `density_corr` of an
-    object of the :class:`~.modelchain.Modelchain` class is True.
+    This function is carried out when the parameter `power_output_model` of an
+    instance of the :class:`~.modelchain.Modelchain` class is 'p_values' and
+    the parameter `density_corr` is True.
 
     Parameters
     ----------
@@ -122,7 +123,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     Returns
     -------
     power_output : pandas.Series
-        Electrical power of the wind turbine.
+        Electrical power output of the wind turbine in W.
 
     Notes
     -----
@@ -156,7 +157,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     .. [3] Biank, M.: "Methodology, Implementation and Validation of a
             Variable Scale Simulation Model for Windpower based on the
             Georeferenced Installation Register of Germany". Master's Thesis
-            at RLI, 2014, p. 13
+            at Reiner Lemoine Institute, 2014, p. 13
 
     """
     # Calulation of v_site and interpolation of density corrected power curve
