@@ -141,7 +141,7 @@ class WindTurbine(object):
         if 'data_name' not in kwargs:
             kwargs['data_name'] = 'cp'
 
-        df = read_wpp_data(**kwargs)
+        df = read_turbine_data(**kwargs)
         wpp_df = df[df.turbine_id == self.turbine_name]
         if wpp_df.shape[0] == 0:
             pd.set_option('display.max_rows', len(df))
@@ -164,7 +164,7 @@ class WindTurbine(object):
         return df, nominal_power
 
 
-def read_wpp_data(**kwargs):
+def read_turbine_data(**kwargs):
     r"""
     Fetches cp or P values from a file or downloads it from a server.
 
@@ -216,7 +216,7 @@ def get_wind_pp_types(print_out=True):
     Name: 5, dtype: object
 
     """
-    df = read_wpp_data()
+    df = read_turbine_data(**kwargs)
 
     if print_out:
         pd.set_option('display.max_rows', len(df))
