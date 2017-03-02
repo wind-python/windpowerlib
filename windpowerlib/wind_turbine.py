@@ -21,7 +21,7 @@ class WindTurbine(object):
     Parameters
     ----------
     turbine_name : string
-        Name of the wind turbine type. Use get_wind_pp_types() to see a list
+        Name of the wind turbine type. Use get_turbine_types() to see a list
         of all possible wind turbines.
     hub_height : float
         Height of the hub of the wind turbine.
@@ -41,7 +41,7 @@ class WindTurbine(object):
     Attributes
     ----------
     turbine_name : string
-        Name of the wind turbine type. Use get_wind_pp_types() to see a list
+        Name of the wind turbine type. Use get_turbine_types() to see a list
         of all possible wind turbines.
     hub_height : float
         Height of the hub of the wind turbine.
@@ -196,7 +196,7 @@ def read_turbine_data(**kwargs):
     return df
 
 
-def get_wind_pp_types(print_out=True):
+def get_turbine_types(print_out=True, **kwargs):
     r"""
     Get the names of all possible wind converter types.
 
