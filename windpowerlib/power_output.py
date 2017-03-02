@@ -64,6 +64,47 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
             cp_series)
 
 
+def cp_curve_density_corr(v_wind, rho_hub, cp_values, d_rotor):
+    r"""
+    Calculates the turbine power output using a density corrected cp curve.
+
+    This function is carried out when the parameter `power_output_model` of an
+    instance of the :class:`~.modelchain.Modelchain` class
+    is 'cp_values' and the parameter `density_corr` is True.
+
+    Parameters
+    ----------
+    v_wind : pandas.Series or array
+        Wind speed at hub height in m/s.
+    rho_hub : pandas.Series or array
+        Density of air at hub height in kg/m³.
+    cp_values : pandas.DataFrame
+        Power coefficient curve of the wind turbine.
+        Indices are the wind speeds of the power coefficient curve in m/s, the
+        corresponding power coefficient values are in the column 'cp'.
+    d_rotor : float
+        Diameter of the rotor in m.
+
+    Returns
+    -------
+    pandas.Series
+        Electrical power of the wind turbine in W.
+
+    Notes
+    -----
+    See :py:func:`cp_curve` for further information on how the power values
+    are calculated and :py:func:`p_curve_density_corr` for further
+    information on how the density correction is implemented.
+
+    """
+    p_values = (1 / 8 * 1.225 * d_rotor ** 2 * np.pi *
+                np.power(cp_values.index, 3) * cp_values.cp)
+    p_values = pd.DataFrame(
+        data=p_values, index=cp_values.index, columns=['P'])
+
+    return p_curve_density_corr(v_wind, rho_hub, p_values)
+
+
 def p_curve(p_values, v_wind):
     r"""
     Calculates the turbine power output using a power curve.
@@ -176,58 +217,4 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     power_output = pd.Series(data=power_output, index=series_index,
                              name='feedin_wind_pp')
     power_output.index.names = ['']
-    return power_output
-
-
-def cp_curve_density_corr(v_wind, rho_hub, cp_values, d_rotor):
-    r"""
-    Interpolates density corrected power curve.
-
-    This function is carried out when the parameter `density_corr` of an
-    object of the :class:`~.modelchain.Modelchain` class is True.
-
-    Parameters
-    ----------
-    v_wind : pandas.Series or array
-        Wind speed time series at hub height in m/s.
-    rho_hub : pandas.Series or array
-        Density of air at hub height in kg/m³.
-    cp_values : pandas.DataFrame
-        Curve of the power coefficient of the wind turbine.
-        The indices are the corresponding wind speeds of the power coefficient
-        curve, the power coefficient values containing column is called 'cp'.
-    d_rotor : float
-        Diameter of the rotor.
-
-    Returns
-    -------
-    power_output : pandas.Series
-        Electrical power of the wind turbine.
-
-    Notes
-    -----
-    The following equation is used for the power output [1]_, [2]_:
-
-    .. math:: P=\frac{1}{8}\cdot\rho_{0}\cdot d_{rotor}^{2}
-        \cdot\pi\cdot v_{wind}^{3}\cdot cp\left(v_{wind}\right)
-
-    with:
-        v: wind speed [m/s], d: diameter [m], :math:`\rho`: density [kg/m³]
-
-    References
-    ----------
-    .. [1] Gasch, R., Twele, J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
-            Vieweg + Teubner, 2010, pages 35ff, 208
-    .. [2] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
-            Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 542
-
-    """
-    # get P curve from cp values with ambient density = 1.225 kg/m³
-    p_values = (1 / 8 * 1.225 * d_rotor ** 2 * np.pi *
-                np.power(cp_values.index, 3) * cp_values.cp)
-    p_values = pd.DataFrame(data=p_values, index=cp_values.index)
-    p_values.columns = ['P']
-
-    power_output = p_curve_density_corr(v_wind, rho_hub, p_values)
-
     return power_output
