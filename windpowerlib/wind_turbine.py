@@ -166,21 +166,23 @@ class WindTurbine(object):
 
 def read_turbine_data(**kwargs):
     r"""
-    Fetches cp or P values from a file or downloads it from a server.
+    Fetches power coefficient curve or power curve from a file.
 
-    The files are located in the data folder of the package root.
+    The data files are provided along with the windpowerlib and are located in
+    the directory windpowerlib/data.
 
     Other Parameters
     ----------------
     datapath : string, optional
-        Path where the cp or P file is stored. Default: '$PACKAGE_ROOT/data'
+        Path where the data file is stored. Default: './data'
     filename : string, optional
-        Filename of the cp or P file.
+        Name of data file. Default: 'cp_values.csv'
 
     Returns
     -------
     pandas.DataFrame
-        Cp or P values with the corresponding wind speeds as indices.
+        Power coefficient curve values or power curve values with the
+        corresponding wind speeds as indices.
 
     """
     if 'datapath' not in kwargs:
