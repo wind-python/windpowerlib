@@ -1,5 +1,5 @@
 """
-The ``power_output`` module contains methods to calculate the power output
+The ``power_output`` module contains functions to calculate the power output
 of a wind turbine.
 
 """

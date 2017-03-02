@@ -1,5 +1,5 @@
 """
-The ``wind_speed`` module contains methods to calculate the wind_speed at
+The ``wind_speed`` module contains functions to calculate the wind speed at
 hub height of a wind turbine.
 
 """

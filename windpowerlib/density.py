@@ -1,5 +1,5 @@
 """
-The ``density`` module contains methods to calculate the density and
+The ``density`` module contains functions to calculate the density and
 temperature at hub height of a wind turbine.
 
 """
