@@ -66,32 +66,25 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
 
 def p_curve(p_values, v_wind):
     r"""
-    Converts power curve to power output of wind turbine.
+    Calculates the turbine power output using a power curve.
 
-    Interpolates the values of the power curve as a function of the wind speed
-    between data obtained from the power curve of the specified wind turbine
-    type.
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.Modelchain` class
-    is 'p_values' and the parameter `density_corr` is False.
+    instance of the :class:`~.modelchain.Modelchain` class is 'p_values' and
+    the parameter `density_corr` is False.
 
     Parameters
     ----------
     p_values : pandas.DataFrame
-        Power curve of the wind turbine
-        The indices are the corresponding wind speeds of the power curve, the
-        power values containing column is called 'P'.
+        Power curve of the wind turbine.
+        Indices are the wind speeds of the power curve in m/s, the
+        corresponding power values in W are in the column 'P'.
     v_wind : pandas.Series or array
-        Wind speed time series at hub height in m/s.
+        Wind speed at hub height in m/s.
 
     Returns
     -------
     power_output : pandas.Series
-        Electrical power of the wind turbine.
-
-    Note
-    ----
-    See also cp_series() in the module ``modelchain``.
+        Electrical power output of the wind turbine in W.
 
     """
     v_max = p_values.index.max()
