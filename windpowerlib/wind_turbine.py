@@ -198,12 +198,14 @@ def read_turbine_data(**kwargs):
 
 def get_turbine_types(print_out=True, **kwargs):
     r"""
-    Get the names of all possible wind converter types.
+    Get the names of all possible wind turbine types for which the power
+    coefficient curve or power curve is provided in the data files in
+    the directory windpowerlib/data.
 
     Parameters
     ----------
-    print_out : boolean (default: True)
-        Directly prints the list of types if set to True.
+    print_out : boolean
+        Directly prints the list of types if set to True. Default: True
 
     Examples
     --------
