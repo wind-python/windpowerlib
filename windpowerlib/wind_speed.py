@@ -4,10 +4,10 @@ hub height of a wind turbine.
 
 """
 
+import numpy as np
+
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
-
-import numpy as np
 
 
 def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,

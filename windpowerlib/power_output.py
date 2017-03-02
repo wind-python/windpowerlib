@@ -4,11 +4,11 @@ of a wind turbine.
 
 """
 
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import numpy as np
 import pandas as pd
+
+__copyright__ = "Copyright oemof developer group"
+__license__ = "GPLv3"
 
 
 def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
