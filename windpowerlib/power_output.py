@@ -201,13 +201,13 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
             at Reiner Lemoine Institute, 2014, p. 13
 
     """
-    # Calulation of v_site and interpolation of density corrected power curve
-    # for every wind speed in the time series `v_wind`.
-    power_output = np.zeros(len(v_wind))
-    for i in range(len(v_wind)):
-        v_site = (p_values.index * (1.225 / rho_hub[i]) **
-                 (np.interp(p_values.index, [7.5, 12.5], [1/3, 2/3])))
-        power_output[i] = np.interp(v_wind[i], v_site, p_values.P)
+    power_output = [(np.interp(
+                        v_wind[i],
+                        p_values.index * (1.225 / rho_hub[i])**(np.interp(
+                            p_values.index, [7.5, 12.5], [1/3, 2/3])),
+                        p_values.P,
+                        left=0, right=0))
+                    for i in range(len(v_wind))]
 
     # Set index for time series
     try:
