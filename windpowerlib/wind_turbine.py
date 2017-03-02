@@ -191,9 +191,8 @@ def read_turbine_data(**kwargs):
     if 'filename' not in kwargs:
         kwargs['filename'] = 'cp_values.csv'
 
-    file = os.path.join(kwargs['datapath'], kwargs['filename'])
-
-    df = pd.read_csv(file, index_col=0)
+    df = pd.read_csv(os.path.join(kwargs['datapath'], kwargs['filename']),
+                     index_col=0)
     return df
 
 
