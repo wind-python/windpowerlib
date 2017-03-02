@@ -142,14 +142,14 @@ class WindTurbine(object):
             kwargs['data_name'] = 'cp'
 
         df = read_wpp_data(**kwargs)
-        wpp_df = df[df.rli_anlagen_id == self.turbine_name]
+        wpp_df = df[df.turbine_id == self.turbine_name]
         if wpp_df.shape[0] == 0:
             pd.set_option('display.max_rows', len(df))
-            logging.info('Possible types: \n{0}'.format(df.rli_anlagen_id))
+            logging.info('Possible types: \n{0}'.format(df.turbine_id))
             pd.reset_option('display.max_rows')
             sys.exit('Cannot find the wind converter typ: {0}'.format(
                 self.turbine_name))
-        ncols = ['rli_anlagen_id', 'p_nenn', 'source', 'modificationtimestamp']
+        ncols = ['turbine_id', 'p_nom', 'source', 'modificationtimestamp']
         data = np.array([0, 0])
         for col in wpp_df.keys():
             if col not in ncols:
@@ -160,7 +160,7 @@ class WindTurbine(object):
         data = np.delete(data, 0, 0)
         df = pd.DataFrame(data, columns=['v_wind', kwargs['data_name']])
         df.set_index('v_wind', drop=True, inplace=True)
-        nominal_power = wpp_df['p_nenn'].iloc[0] * 1000
+        nominal_power = wpp_df['p_nom'].iloc[0] * 1000
         return df, nominal_power
 
 
@@ -211,8 +211,8 @@ def get_wind_pp_types(print_out=True):
     >>> valid_types_df.shape
     (91, 2)
     >>> print(valid_types_df.iloc[5])
-    rli_anlagen_id    DEWIND D8 2000
-    p_nenn                      2000
+    turbine_id    DEWIND D8 2000
+    p_nom                   2000
     Name: 5, dtype: object
 
     """
@@ -220,6 +220,6 @@ def get_wind_pp_types(print_out=True):
 
     if print_out:
         pd.set_option('display.max_rows', len(df))
-        print(df[['rli_anlagen_id', 'p_nenn']])
+        print(df[['turbine_id', 'p_nom']])
         pd.reset_option('display.max_rows')
-    return df[['rli_anlagen_id', 'p_nenn']]
+    return df[['turbine_id', 'p_nom']]
