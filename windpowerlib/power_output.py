@@ -137,7 +137,7 @@ def p_curve(p_values, v_wind):
     except AttributeError:
         series_index = range(1, len(power_output)+1)
     power_output = pd.Series(data=power_output, index=series_index,
-                             name='feedin_wind_pp')
+                             name='feedin_wind_turbine')
     power_output.index.names = ['']
     return power_output
 
@@ -215,6 +215,6 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     except AttributeError:
         series_index = range(1, len(power_output)+1)
     power_output = pd.Series(data=power_output, index=series_index,
-                             name='feedin_wind_pp')
+                             name='feedin_wind_turbine')
     power_output.index.names = ['']
     return power_output
