@@ -13,7 +13,7 @@ import pandas as pd
 
 def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
     r"""
-    Calculates the power output of one wind turbine using a cp curve.
+    Calculates the turbine power output using a cp curve.
 
     This function is carried out when the parameter `power_output_model` of an
     instance of the :class:`~.modelchain.Modelchain` class
@@ -22,15 +22,15 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
     Parameters
     ----------
     v_wind : pandas.Series or array
-        Wind speed time series at hub height in m/s.
+        Wind speed at hub height in m/s.
     rho_hub : pandas.Series or array
         Density of air at hub height in kg/m³.
     d_rotor : float
         Diameter of rotor in m.
     cp_values : pandas.DataFrame
-        Curve of the power coefficient of the wind turbine.
-        The indices are the corresponding wind speeds of the power coefficient
-        curve, the power coefficient values containing column is called 'cp'.
+        Power coefficient curve of the wind turbine.
+        Indices are the wind speeds of the power coefficient curve in m/s, the
+        corresponding power coefficient values are in the column 'cp'.
 
     Returns
     -------
@@ -39,19 +39,20 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
 
     Notes
     -----
-    The following equation is used for the power output [21]_, [26]_:
+    The following equation is used [1]_, [2]_:
 
-    .. math:: p _{wpp}=\frac{1}{8}\cdot\rho_{hub}\cdot d_{rotor}^{2}
+    .. math:: P=\frac{1}{8}\cdot\rho_{hub}\cdot d_{rotor}^{2}
         \cdot\pi\cdot v_{wind}^{3}\cdot cp\left(v_{wind}\right)
 
     with:
-        v: wind speed [m/s], d: diameter [m], :math:`\rho`: density [kg/m³]
+        P: power [W], :math:`\rho`: density [kg/m³], d: diameter [m],
+        v: wind speed [m/s], cp: power coefficient
 
     References
     ----------
-    .. [21] Gasch, R., Twele, J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
+    .. [1] Gasch, R., Twele, J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
             Vieweg + Teubner, 2010, pages 35ff, 208
-    .. [26] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
+    .. [2] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
             Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 542
 
     """
