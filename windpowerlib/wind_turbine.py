@@ -207,10 +207,8 @@ def get_turbine_types(print_out=True, **kwargs):
 
     Examples
     --------
-    >>> from windpowerlib import modelchain
-    >>> valid_types_df = modelchain.get_wind_pp_types(print_out=False)
-    >>> valid_types_df.shape
-    (91, 2)
+    >>> from windpowerlib import wind_turbine
+    >>> valid_types_df = wind_turbine.get_turbine_types(print_out=False)
     >>> print(valid_types_df.iloc[5])
     turbine_id    DEWIND D8 2000
     p_nom                   2000
