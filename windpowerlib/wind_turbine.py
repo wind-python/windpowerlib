@@ -16,47 +16,52 @@ import numpy as np
 
 
 class WindTurbine(object):
-    r"""Model to determine the output of a wind turbine
+    r"""
+    Defines a standard set of wind turbine attributes.
 
     Parameters
     ----------
     turbine_name : string
-        Name of the wind turbine type. Use get_wind_pp_types() to see a list
-        of all possible wind turbines.
+        Name of the wind turbine type. Use wind_turbine.get_turbine_types() to
+        see a list of all possible wind turbines.
     hub_height : float
         Height of the hub of the wind turbine.
     d_rotor : float
         Diameter of the rotor.
     cp_values : pandas.DataFrame
-        Curve of the power coefficient of the wind turbine.
-        The indices are the corresponding wind speeds of the power coefficient
-        curve, the power coefficient values containing column is called 'cp'.
+        Power coefficient curve of the wind turbine.
+        The indices of the DataFrame are the corresponding wind speeds of the
+        power coefficient curve, the power coefficient values are listed in
+        the column 'cp'.
     p_values : pandas.DataFrame
         Power curve of the wind turbine.
-        The indices are the corresponding wind speeds of the power curve, the
-        power values containing column is called 'P'.
+        The indices of the DataFrame are the corresponding wind speeds of the
+        power curve, the power values are listed in the column 'P'.
     nominal_power : float
-        The nominal output of the wind power plant.
+        The nominal output of the wind turbine.
 
     Attributes
     ----------
     turbine_name : string
-        Name of the wind turbine type. Use get_wind_pp_types() to see a list
-        of all possible wind turbines.
+        Name of the wind turbine type. Use wind_turbine.get_turbine_types() to
+        see a list of all possible wind turbines.
     hub_height : float
         Height of the hub of the wind turbine.
     d_rotor : float
         Diameter of the rotor.
     cp_values : pandas.DataFrame
-        Curve of the power coefficient of the wind turbine.
-        The indices are the corresponding wind speeds of the power coefficient
-        curve, the power coefficient values containing column is called 'cp'.
+        Power coefficient curve of the wind turbine.
+        The indices of the DataFrame are the corresponding wind speeds of the
+        power coefficient curve, the power coefficient values are listed in
+        the column 'cp'.
     p_values : pandas.DataFrame
         Power curve of the wind turbine.
-        The indices are the corresponding wind speeds of the power curve, the
-        power values containing column is called 'P'.
+        The indices of the DataFrame are the corresponding wind speeds of the
+        power curve, the power values are listed in the column 'P'.
     nominal_power : float
-        The nominal output of the wind power plant.
+        The nominal output of the wind turbine.
+    power_output : pandas.Series
+        The calculated power output of the wind turbine.
 
     Examples
     --------
