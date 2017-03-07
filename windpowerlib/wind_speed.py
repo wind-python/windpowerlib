@@ -1,13 +1,13 @@
 """
-The ``wind_speed`` module contains methods to calculate the wind_speed at
+The ``wind_speed`` module contains functions to calculate the wind speed at
 hub height of a wind turbine.
 
 """
 
+import numpy as np
+
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
-
-import numpy as np
 
 
 def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
@@ -42,7 +42,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
 
     Notes
     -----
-    The following equation is used for the logarithmic wind profile [1]_:
+    The following equation is used [1]_:
 
     .. math:: v_{wind,hub}=v_{wind,data}\cdot
         \frac{\ln\left(\frac{h_{hub}-d}{z_{0}}\right)}{\ln\left(
@@ -113,7 +113,7 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
 
     Notes
     -----
-    The following equation is used for the logarithmic wind profile [1]_,
+    The following equation is used [1]_,
     [2]_, [3]_:
 
     .. math:: v_{wind,hub}=v_{wind,data}\cdot \left(\frac{h_{hub}}{h_{data}}

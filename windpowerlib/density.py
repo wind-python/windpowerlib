@@ -1,5 +1,5 @@
 """
-The ``density`` module contains methods to calculate the density and
+The ``density`` module contains functions to calculate the density and
 temperature at hub height of a wind turbine.
 
 """
@@ -21,7 +21,7 @@ def temperature_gradient(temp_air, temp_height, hub_height):
     Parameters
     ----------
     temp_air : pandas.Series or array
-        Air temperature time series in K.
+        Air temperature in K.
     temp_height : float
         Height in m for which the parameter `temp_air` applies.
     hub_height : float
@@ -69,9 +69,9 @@ def temperature_interpol(temp_air_1, temp_air_2,
     Parameters
     ----------
     temp_air_1 : pandas.Series or array
-        Air temperature time series.
+        Air temperature.
     temp_air_2 : pandas.Series or array
-        Second air temperature time series for interpolation.
+        Second air temperature for interpolation.
     temp_air_height_1 : float
         Height for which the parameter `temp_air_1` applies.
     temp_air_height_2 : float
@@ -115,7 +115,7 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
     Parameters
     ----------
     pressure : pandas.Series or array
-        Pressure time series in Pa.
+        Pressure in Pa.
     pressure_height : float
         Height in m for which the parameter `pressure` applies.
     hub_height : float
@@ -171,7 +171,7 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
     Parameters
     ----------
     pressure : pandas.Series or array
-        Pressure time series in Pa.
+        Pressure in Pa.
     pressure_height : float
         Height in m for which the parameter `pressure` applies.
     hub_height : float

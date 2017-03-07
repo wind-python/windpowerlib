@@ -5,14 +5,14 @@ wind turbine.
 
 """
 
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import pandas as pd
 import logging
 import sys
 import os
 import numpy as np
+
+__copyright__ = "Copyright oemof developer group"
+__license__ = "GPLv3"
 
 
 class WindTurbine(object):
@@ -22,8 +22,8 @@ class WindTurbine(object):
     Parameters
     ----------
     turbine_name : string
-        Name of the wind turbine type. Use wind_turbine.get_turbine_types() to
-        see a list of all possible wind turbines.
+        Name of the wind turbine type. Use get_turbine_types() to see a list
+        of all possible wind turbines.
     hub_height : float
         Height of the hub of the wind turbine.
     d_rotor : float
@@ -43,8 +43,8 @@ class WindTurbine(object):
     Attributes
     ----------
     turbine_name : string
-        Name of the wind turbine type. Use wind_turbine.get_turbine_types() to
-        see a list of all possible wind turbines.
+        Name of the wind turbine type. Use get_turbine_types() to see a list
+        of all possible wind turbines.
     hub_height : float
         Height of the hub of the wind turbine.
     d_rotor : float
@@ -146,15 +146,15 @@ class WindTurbine(object):
         if 'data_name' not in kwargs:
             kwargs['data_name'] = 'cp'
 
-        df = read_wpp_data(**kwargs)
-        wpp_df = df[df.rli_anlagen_id == self.turbine_name]
+        df = read_turbine_data(**kwargs)
+        wpp_df = df[df.turbine_id == self.turbine_name]
         if wpp_df.shape[0] == 0:
             pd.set_option('display.max_rows', len(df))
-            logging.info('Possible types: \n{0}'.format(df.rli_anlagen_id))
+            logging.info('Possible types: \n{0}'.format(df.turbine_id))
             pd.reset_option('display.max_rows')
             sys.exit('Cannot find the wind converter typ: {0}'.format(
                 self.turbine_name))
-        ncols = ['rli_anlagen_id', 'p_nenn', 'source', 'modificationtimestamp']
+        ncols = ['turbine_id', 'p_nom', 'source', 'modificationtimestamp']
         data = np.array([0, 0])
         for col in wpp_df.keys():
             if col not in ncols:
@@ -165,27 +165,29 @@ class WindTurbine(object):
         data = np.delete(data, 0, 0)
         df = pd.DataFrame(data, columns=['v_wind', kwargs['data_name']])
         df.set_index('v_wind', drop=True, inplace=True)
-        nominal_power = wpp_df['p_nenn'].iloc[0] * 1000
+        nominal_power = wpp_df['p_nom'].iloc[0] * 1000
         return df, nominal_power
 
 
-def read_wpp_data(**kwargs):
+def read_turbine_data(**kwargs):
     r"""
-    Fetches cp or P values from a file or downloads it from a server.
+    Fetches power coefficient curve or power curve from a file.
 
-    The files are located in the data folder of the package root.
+    The data files are provided along with the windpowerlib and are located in
+    the directory windpowerlib/data.
 
     Other Parameters
     ----------------
     datapath : string, optional
-        Path where the cp or P file is stored. Default: '$PACKAGE_ROOT/data'
+        Path where the data file is stored. Default: './data'
     filename : string, optional
-        Filename of the cp or P file.
+        Name of data file. Default: 'cp_values.csv'
 
     Returns
     -------
     pandas.DataFrame
-        Cp or P values with the corresponding wind speeds as indices.
+        Power coefficient curve values or power curve values with the
+        corresponding wind speeds as indices.
 
     """
     if 'datapath' not in kwargs:
@@ -194,37 +196,36 @@ def read_wpp_data(**kwargs):
     if 'filename' not in kwargs:
         kwargs['filename'] = 'cp_values.csv'
 
-    file = os.path.join(kwargs['datapath'], kwargs['filename'])
-
-    df = pd.read_csv(file, index_col=0)
+    df = pd.read_csv(os.path.join(kwargs['datapath'], kwargs['filename']),
+                     index_col=0)
     return df
 
 
-def get_wind_pp_types(print_out=True):
+def get_turbine_types(print_out=True, **kwargs):
     r"""
-    Get the names of all possible wind converter types.
+    Get the names of all possible wind turbine types for which the power
+    coefficient curve or power curve is provided in the data files in
+    the directory windpowerlib/data.
 
     Parameters
     ----------
-    print_out : boolean (default: True)
-        Directly prints the list of types if set to True.
+    print_out : boolean
+        Directly prints the list of types if set to True. Default: True
 
     Examples
     --------
-    >>> from windpowerlib import modelchain
-    >>> valid_types_df = modelchain.get_wind_pp_types(print_out=False)
-    >>> valid_types_df.shape
-    (91, 2)
+    >>> from windpowerlib import wind_turbine
+    >>> valid_types_df = wind_turbine.get_turbine_types(print_out=False)
     >>> print(valid_types_df.iloc[5])
-    rli_anlagen_id    DEWIND D8 2000
-    p_nenn                      2000
+    turbine_id    DEWIND D8 2000
+    p_nom                   2000
     Name: 5, dtype: object
 
     """
-    df = read_wpp_data()
+    df = read_turbine_data(**kwargs)
 
     if print_out:
         pd.set_option('display.max_rows', len(df))
-        print(df[['rli_anlagen_id', 'p_nenn']])
+        print(df[['turbine_id', 'p_nom']])
         pd.reset_option('display.max_rows')
-    return df[['rli_anlagen_id', 'p_nenn']]
+    return df[['turbine_id', 'p_nom']]
