@@ -48,6 +48,9 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
         P: power [W], :math:`\rho`: density [kg/m³], d: diameter [m],
         v: wind speed [m/s], cp: power coefficient
 
+    It is assumed that the power output for wind speeds above the maximum
+    wind speed given in the power coefficient curve is zero.
+
     References
     ----------
     .. [1] Gasch, R., Twele, J.: "Windkraftanlagen". 6. Auflage, Wiesbaden,
@@ -57,9 +60,11 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
 
     """
     # cp time series
-    v_max = cp_values.index.max()
-    v_wind[v_wind > v_max] = v_max
-    cp_series = np.interp(v_wind, cp_values.index, cp_values.cp)
+    # TODO introduce new parameter v_cutout to allow for power output above
+    # maximum wind speed from power coefficient curve (maximum power output
+    # must be limited)
+    cp_series = np.interp(v_wind, cp_values.index, cp_values.cp,
+                          left=0, right=0)
     return (1 / 8 * rho_hub * d_rotor ** 2 * np.pi * np.power(v_wind, 3) *
             cp_series)
 
@@ -96,6 +101,9 @@ def cp_curve_density_corr(v_wind, rho_hub, cp_values, d_rotor):
     are calculated and :py:func:`p_curve_density_corr` for further
     information on how the density correction is implemented.
 
+    It is assumed that the power output for wind speeds above the maximum
+    wind speed given in the power coefficient curve is zero.
+
     """
     p_values = (1 / 8 * 1.225 * d_rotor ** 2 * np.pi *
                 np.power(cp_values.index, 3) * cp_values.cp)
@@ -127,10 +135,16 @@ def p_curve(p_values, v_wind):
     power_output : pandas.Series
         Electrical power output of the wind turbine in W.
 
+    Notes
+    -------
+    It is assumed that the power output for wind speeds above the maximum
+    wind speed given in the power curve is zero.
+
     """
-    v_max = p_values.index.max()
-    v_wind[v_wind > v_max] = v_max
-    power_output = np.interp(v_wind, p_values.index, p_values.P)
+    # TODO introduce new parameter v_cutout to allow for power output above
+    # maximum wind speed from power curve
+    power_output = np.interp(v_wind, p_values.index, p_values.P,
+                             left=0, right=0)
     # Set index for time series
     try:
         series_index = v_wind.index
@@ -188,6 +202,9 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     :math:`v_{site}` is the density corrected wind speed for the power curve
     (:math:`v_{site}`, :math:`P_{std}`).
 
+    It is assumed that the power output for wind speeds above the maximum
+    wind speed given in the power curve is zero.
+
     References
     ----------
     .. [1] Svenningsen, L.: "Power Curve Air Density Correction And Other
@@ -201,12 +218,13 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
             at Reiner Lemoine Institute, 2014, p. 13
 
     """
-    power_output = [(np.interp(
-                        v_wind[i],
-                        p_values.index * (1.225 / rho_hub[i])**(np.interp(
-                            p_values.index, [7.5, 12.5], [1/3, 2/3])),
-                        p_values.P,
-                        left=0, right=0))
+    # TODO introduce new parameter v_cutout to allow for power output above
+    # maximum wind speed from power curve
+    power_output = [(np.interp(v_wind[i],
+                               p_values.index * (1.225 / rho_hub[i])**(
+                                   np.interp(p_values.index,
+                                             [7.5, 12.5], [1/3, 2/3])),
+                               p_values.P, left=0, right=0))
                     for i in range(len(v_wind))]
 
     # Set index for time series
