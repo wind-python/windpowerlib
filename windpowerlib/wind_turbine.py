@@ -43,7 +43,7 @@ class WindTurbine(object):
         The nominal output of the wind turbine in kW.
     fetch_curve : string
         Parameter to specify whether the power or power coefficient curve
-        should be retrieved from the provided turbine data
+        should be retrieved from the provided turbine data. Default: cp.
 
     Attributes
     ----------
@@ -66,7 +66,7 @@ class WindTurbine(object):
         power curve, the power values are listed in the column 'P'.
         Default: None.
     nominal_power : float
-        The nominal output of the wind turbine.
+        The nominal output of the wind turbine in kW.
     power_output : pandas.Series
         The calculated power output of the wind turbine.
 
@@ -112,7 +112,7 @@ class WindTurbine(object):
         -------
         tuple of pandas.DataFrame and float
             Cp or P values and the nominal power
-            of the requested wind converter.
+            of the requested wind turbine.
 
         Examples
         --------

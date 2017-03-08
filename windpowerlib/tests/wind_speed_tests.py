@@ -1,9 +1,6 @@
-import logging
 from windpowerlib.wind_speed import logarithmic_wind_profile, v_wind_hellman
 from nose.tools import eq_, raises
 import pandas as pd
-
-logging.disable(logging.INFO)
 
 
 class Wind_speed_Tests:
@@ -51,7 +48,7 @@ class Wind_speed_Tests:
     @raises(ValueError)
     def test_raises_value_error(self):
         r"""
-        Raises ValueError if 70 % of obstacle height is higher than hub height.
+        Raises ValueError if 0.7 * obstacle height is higher than hub height.
 
         """
         self.logarithmic_test['obstacle_height'] = 20

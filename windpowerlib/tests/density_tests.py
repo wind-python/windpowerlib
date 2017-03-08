@@ -1,9 +1,6 @@
-import logging
 from nose.tools import eq_
 from windpowerlib.density import (temperature_gradient, temperature_interpol,
                                   rho_barometric, rho_ideal_gas)
-
-logging.disable(logging.INFO)
 
 
 class Density_and_Temperature_Tests:
