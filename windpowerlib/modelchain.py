@@ -163,11 +163,17 @@ class Modelchain(object):
 
         """
         # Check if temperature data is at hub height.
+        if 'temp_air_2' not in weather:
+            weather['temp_air_2'] = None
+            data_height['temp_air_2'] = None
         if data_height['temp_air'] == self.wind_turbine.hub_height:
             logging.debug('Using given temperature (at hub height).')
             T_hub = weather['temp_air']
         # Calculation of temperature in K at hub height according to the
         # chosen model.
+        elif data_height['temp_air_2'] == self.wind_turbine.hub_height:
+            logging.debug('Using given temperature (2) (at hub height).')
+            T_hub = weather['temp_air_2']
         elif self.temperature_model == 'gradient':
             logging.debug('Calculating temperature with gradient.')
             T_hub = density.temperature_gradient(
