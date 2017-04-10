@@ -8,10 +8,8 @@ and demonstrates standard ways to use the library.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
-import os
 import logging
-import numpy as np
-import pandas as pd
+import sys
 from windpowerlib import wind_speed, density, power_output
 
 
@@ -20,31 +18,31 @@ class Modelchain(object):
 
     Parameters
     ----------
-    wind_turbine : list or tuple of objects of the class WindTurbine
-        Objects contain attributes `turbine_name`, `hub_height`, `d_rotor`,
-        `cp_values` or/and `p_values` and `nominal_power`.
-        If only one object exists it is an item of a list.
-    obstacle_height : float, optional
-        Height of obstacles in the surroundings of the wind turbine. Put
-        obstacle_height to zero for wide spread obstacles. Default: 0
-    wind_model : string, optional
-        Chooses the model for calculating the wind speed at hub height.
-        Used in v_wind_hub.
-        Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
-        set measured closest to hub height is used.), 'hellman'.
-    rho_model : string, optional
-        Chooses the model for calculating the density of air at hub height.
-        Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
-    temperature_model : string, optional
-        Chooses the model for calculating the temperature at hub height.
-        Used in rho_hub. Possibilities: 'gradient', 'interpolation'.
-    power_output_model : string, optional
-        Chooses the model for calculating the turbine power output.
-        Used in turbine_power_output.
-        Possibilities: 'cp_values', 'p_values', 'P_curve_correction'.
-    density_corr : boolean, optional
+    wind_turbine : WindTurbine
+        A :class:`~.wind_turbine.WindTurbine` object representing the wind
+        turbine.
+    obstacle_height : float
+        Height of obstacles in the surrounding area of the wind turbine in m.
+        Set `obstacle_height` to zero for wide spread obstacles. Default: 0.
+    wind_model : string
+        Parameter to define which model to use to calculate the wind speed at
+        hub height. Valid options are 'logarithmic' and 'hellman'.
+        Default: 'logarithmic'.
+    rho_model : string
+        Parameter to define which model to use to calculate the density of air
+        at hub height. Valid options are 'barometric' and 'ideal_gas'.
+        Default: 'barometric'.
+    temperature_model : string
+        Parameter to define which model to use to calculate the temperature at
+        hub height. Valid options are 'gradient' and 'interpolation'.
+        Default: 'gradient'.
+    power_output_model : string
+        Parameter to define which model to use to calculate the turbine power
+        output. Valid options are 'cp_values' and 'p_values'.
+        Default: 'cp_values'.
+    density_corr : boolean
         If the parameter is True the density corrected power curve is used for
-        the calculation of the turbine power output. Default: False
+        the calculation of the turbine power output. Default: False.
     hellman_exp : float
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
@@ -54,51 +52,39 @@ class Modelchain(object):
 
     Attributes
     ----------
-    wind_turbine : list or tuple of objects of the class WindTurbine
-        Objects contain attributes `turbine_name`, `hub_height`, `d_rotor`,
-        `cp_values` or/and `p_values` and `nominal_power`.
-        If only one object exists it is an item of a list.
-    obstacle_height : float, optional
-        Height of obstacles in the surroundings of the wind turbine. Put
-        obstacle_height to zero for wide spread obstacles. Default: 0
-    hub_height : float
-        Hub height of the wind turbine.
-    d_rotor : float
-        Diameter of the rotor.
-    cp_values : pandas.DataFrame
-        Curve of the power coefficient of the wind turbine.
-        The indices are the corresponding wind speeds of the power coefficient
-        curve, the power coefficient values containing column is called 'cp'.
-    p_values : pandas.DataFrame
-        Power curve of the wind turbine.
-        The indices are the corresponding wind speeds of the power curve, the
-        power values containing column is called 'P'.
-    nominal_power : float
-        The nominal output of the wind power plant.
-    wind_model : string, optional
-        Chooses the model for calculating the wind speed at hub height.
-        Used in v_wind_hub.
-        Possibilities: 'logarithmic', 'logarithmic_closest' (The weather data
-        set measured closest to hub height is used.), 'hellman'.
-    rho_model : string, optional
-        Chooses the model for calculating the density of air at hub height.
-        Used in rho_hub. Possibilities:'barometric', 'ideal_gas'.
-    temperature_model : string, optional
-        Chooses the model for calculating the temperature at hub height.
-        Used in rho_hub. Possibilities: 'gradient', 'interpolation'.
-    power_output_model : string, optional
-        Chooses the model for calculating the turbine power output.
-        Used in turbine_power_output.
-        Possibilities: 'cp_values', 'p_values', 'P_curve_correction'.
-    density_corr : boolean, optional
+    wind_turbine : WindTurbine
+        A :class:`~.wind_turbine.WindTurbine` object representing the wind
+        turbine.
+    obstacle_height : float
+        Height of obstacles in the surrounding area of the wind turbine in m.
+        Set `obstacle_height` to zero for wide spread obstacles. Default: 0.
+    wind_model : string
+        Parameter to define which model to use to calculate the wind speed at
+        hub height. Valid options are 'logarithmic' and 'hellman'.
+        Default: 'logarithmic'.
+    rho_model : string
+        Parameter to define which model to use to calculate the density of air
+        at hub height. Valid options are 'barometric' and 'ideal_gas'.
+        Default: 'barometric'.
+    temperature_model : string
+        Parameter to define which model to use to calculate the temperature at
+        hub height. Valid options are 'gradient' and 'interpolation'.
+        Default: 'gradient'.
+    power_output_model : string
+        Parameter to define which model to use to calculate the turbine power
+        output. Valid options are 'cp_values' and 'p_values'.
+        Default: 'cp_values'.
+    density_corr : boolean
         If the parameter is True the density corrected power curve is used for
-        the calculation of the turbine power output. Default: False
+        the calculation of the turbine power output. Default: False.
     hellman_exp : float
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
         constant. Default: None.
     hellman_z0 : float
         Roughness length. Default: None.
+    power_output : pandas.Series
+        Electrical power output of the wind turbine in W.
 
     Examples
     --------
@@ -129,8 +115,6 @@ class Modelchain(object):
 
         self.wind_turbine = wind_turbine
         self.obstacle_height = obstacle_height
-
-        # call models
         self.wind_model = wind_model
         self.rho_model = rho_model
         self.temperature_model = temperature_model
@@ -138,6 +122,7 @@ class Modelchain(object):
         self.density_corr = density_corr
         self.hellman_exp = hellman_exp
         self.hellman_z0 = hellman_z0
+        self.power_output = None
 
     def rho_hub(self, weather, data_height):
         r"""
