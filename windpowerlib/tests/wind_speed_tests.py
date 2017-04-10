@@ -3,7 +3,7 @@ from nose.tools import eq_, raises
 import pandas as pd
 
 
-class WindSpeedTests:
+class TestWindSpeed:
 
     @classmethod
     def setUpClass(self):

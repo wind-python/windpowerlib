@@ -4,7 +4,7 @@ from windpowerlib.power_output import (cp_curve, cp_curve_density_corr,
 import pandas as pd
 
 
-class PowerOutputTests:
+class TestPowerOutput:
 
     @classmethod
     def setUpClass(self):

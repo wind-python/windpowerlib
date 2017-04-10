@@ -3,7 +3,7 @@ import windpowerlib.wind_turbine as wt
 from nose.tools import eq_
 
 
-class ModelchainTests:
+class TestModelchain:
 
     @classmethod
     def setUpClass(self):
