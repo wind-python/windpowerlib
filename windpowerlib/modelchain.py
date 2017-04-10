@@ -233,22 +233,11 @@ class Modelchain(object):
             v_wind = wind_speed.logarithmic_wind_profile(
                 weather['v_wind'], data_height['v_wind'], self.hub_height,
                 weather['z0'], self.obstacle_height)
-        elif self.wind_model == 'logarithmic_closest':
-            if 'v_wind_2' not in weather or 'v_wind_2' not in data_height:
-                logging.info('One wind speed time series or data height is ' +
-                             'missing. It was calculated with one data set.')
                 v_wind = wind_speed.logarithmic_wind_profile(
                     weather['v_wind'], data_height['v_wind'],
                     self.wind_turbine.hub_height,
                     weather['z0'], self.obstacle_height)
-            # Check if wind speed of second data set is at hub height.
-            elif data_height['v_wind_2'] == self.hub_height:
-                logging.debug('Using given wind speed (at hub height).')
-                v_wind = weather['v_wind_2']
             else:
-                logging.debug('Calculating v_wind with logarithmic wind ' +
-                              'profile choosing wind speed measured closest ' +
-                              'to hub height.')
                 if (abs(data_height['v_wind'] -
                         self.wind_turbine.hub_height) <=
                         abs(data_height['v_wind_2'] -
