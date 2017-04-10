@@ -363,27 +363,28 @@ class Modelchain(object):
         return df.set_index(pd.to_datetime(df[datetime_column])).tz_localize(
             'UTC').tz_convert('Europe/Berlin').drop(datetime_column, 1)
 
-    def run_model(self, data_height):
+    def run_model(self, weather, data_height):
         r"""
         Runs the model.
 
-        To run the model first a weather data set is read from a file.
-
         Parameters
         ----------
+        weather : DataFrame or Dictionary
+            Containing columns or keys with the timeseries for wind speed
+            `v_wind` in m/s ,roughness length `z0` in m, temperature
+            `temp_air` in K and pressure `pressure` in Pa, as well as
+            optionally wind speed `v_wind_2` in m/s and temperature
+            `temp_air_2` in K at different height for interpolation.
         data_height : DataFrame or Dictionary
-            Contains columns or keys with the heights for which the
-            corresponding parameters of the weather data set apply.
+            Containing columns or keys with the heights in m for which the
+            corresponding parameters in `weather` apply.
 
         Returns
         -------
         self
 
         """
-        # Loading weather data
-        weather_df = self.read_weather_data('weather.csv')
-
-        self.wind_turbine.power_output = self.turbine_power_output(weather_df,
-                                                                   data_height)
-
+        v_wind = self.v_wind_hub(weather, data_height)
+        rho_hub = self.rho_hub(weather, data_height)
+        self.power_output = self.turbine_power_output(v_wind, rho_hub)
         return self
