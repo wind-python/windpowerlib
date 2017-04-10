@@ -110,9 +110,8 @@ class WindTurbine(object):
 
         Returns
         -------
-        tuple of pandas.DataFrame and float
-            Cp or P values and the nominal power
-            of the requested wind turbine.
+        float
+            Nominal power of the requested wind turbine.
 
         Examples
         --------
