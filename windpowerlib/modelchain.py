@@ -278,7 +278,9 @@ class Modelchain(object):
 
     def turbine_power_output(self, v_wind, rho_hub):
         r"""
-        Calculates the power output in W of one wind turbine.
+        Calculates the power output of the wind turbine.
+
+        The method specified by the parameter `power_output_model` is used.
 
         Parameters
         ----------
@@ -290,11 +292,9 @@ class Modelchain(object):
         Returns
         -------
         output : pandas.Series
-            Electrical power of the wind turbine.
+            Electrical power in W of the wind turbine.
 
         """
-
-        # Calculation of turbine power output according to the chosen model.
         if self.power_output_model == 'cp_values':
             if self.density_corr is False:
                 logging.debug('Calculating power output using cp curve.')
@@ -302,7 +302,7 @@ class Modelchain(object):
                                                self.wind_turbine.d_rotor,
                                                self.wind_turbine.cp_values)
             else:
-                logging.debug('Calculating power output with density ' +
+                logging.debug('Calculating power output using density ' +
                               'corrected cp curve.')
                 output = power_output.cp_curve_density_corr(
                     v_wind, rho_hub, self.wind_turbine.d_rotor,
@@ -313,16 +313,13 @@ class Modelchain(object):
                 output = power_output.p_curve(self.wind_turbine.p_values,
                                               v_wind)
             else:
-                logging.debug('Calculating power output with density ' +
+                logging.debug('Calculating power output using density ' +
                               'corrected power curve.')
                 output = power_output.p_curve_density_corr(
                     v_wind, rho_hub, self.wind_turbine.p_values)
         else:
-            logging.info('wrong value: `power_output_model` must be ' +
-                         'cp_values or p_values. It was calculated with ' +
-                         'cp_values and without density correction.')
-            output = power_output.cp_curve(v_wind, rho_hub, self.d_rotor,
-                                           self.cp_values)
+            logging.info('Wrong value: `power_output_model` must be ' +
+                         'cp_values or p_values.')
         return output
 
     def run_model(self, weather, data_height):
