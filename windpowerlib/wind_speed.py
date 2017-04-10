@@ -31,8 +31,8 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
         Hub height of wind turbine.
     z_0 : pandas.Series or array or float
         Roughness length.
-    obstacle_height : float, optional
-        Height of obstacles in the surrounding area of the wind turbine. Put
+    obstacle_height : float
+        Height of obstacles in the surrounding area of the wind turbine. Set
         `obstacle_height` to zero for wide spread obstacles. Default: 0.
 
     Returns
@@ -95,15 +95,15 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
     v_wind : pandas.Series or array
         Wind speed time series.
     v_wind_height : float
-        Height for which the parameter v_wind` applies.
+        Height for which the parameter `v_wind` applies.
     hub_height : float
         Hub height of wind turbine.
-    hellman_exp : float, optional
+    hellman_exp : float
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
         constant. Default: 1/7. If roughness length is given
         `hellman_exp` = 1 / ln(h_hub/z_0).
-    z_0 : float, optional
+    z_0 : float
         Roughness length. Default: None.
 
     Returns
