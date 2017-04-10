@@ -143,17 +143,20 @@ class Modelchain(object):
         r"""
         Calculates the density of air at hub height.
 
-        Within the function the temperature at hub height is calculated as
-        well if it is not given at hub height.
+        The density is calculated using the method specified by the parameter
+        `rho_model`. Previous to the calculation of density the temperature at
+        hub height is calculated using the method specified by the parameter
+        `temperature_model`.
 
         Parameters
         ----------
         weather : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for temperature
-            (temp_air) and pressure (pressure). Optional temperature at
-            different height (temp_air_2) for interpolation.
+            Containing columns or keys with timeseries for temperature
+            `temp_air` in K and pressure `pressure` in Pa, as well as
+            optionally the temperature `temp_air_2` in K at a different height
+            for interpolation.
         data_height : DataFrame or Dictionary
-            Containing columns or keys with the heights for which the
+            Containing columns or keys with the heights in m for which the
             corresponding parameters in `weather` apply.
 
         Returns
@@ -169,59 +172,40 @@ class Modelchain(object):
         if data_height['temp_air'] == self.wind_turbine.hub_height:
             logging.debug('Using given temperature (at hub height).')
             T_hub = weather['temp_air']
-        # Calculation of temperature in K at hub height according to the
-        # chosen model.
         elif data_height['temp_air_2'] == self.wind_turbine.hub_height:
             logging.debug('Using given temperature (2) (at hub height).')
             T_hub = weather['temp_air_2']
+        # Calculation of temperature in K at hub height.
         elif self.temperature_model == 'gradient':
-            logging.debug('Calculating temperature with gradient.')
+            logging.debug('Calculating temperature using a temp. gradient.')
             T_hub = density.temperature_gradient(
                 weather['temp_air'], data_height['temp_air'],
                 self.wind_turbine.hub_height)
         elif self.temperature_model == 'interpolation':
-            if 'temp_air_2' not in weather or 'temp_air_2' not in data_height:
-                logging.info('One temperature or data height is missing. It ' +
-                             'was calculated with a temperature gradient.')
-                T_hub = density.temperature_gradient(
-                    weather['temp_air'], data_height['temp_air'],
-                    self.hub_height)
-            # Check if temperature data of second data set is at hub height.
-            elif data_height['temp_air_2'] == self.hub_height:
-                logging.debug('Using given temperature (at hub height).')
-                T_hub = weather['temp_air_2']
-            else:
-                logging.debug('Calculating temperature with interpolation.')
-                T_hub = density.temperature_interpol(
-                    weather['temp_air'], weather['temp_air_2'],
-                    data_height['temp_air'], data_height['temp_air_2'],
-                    self.hub_height)
+            logging.debug('Calculating temperature using interpolation.')
+            T_hub = density.temperature_interpol(
+                weather['temp_air'], weather['temp_air_2'],
+                data_height['temp_air'], data_height['temp_air_2'],
+                self.wind_turbine.hub_height)
         else:
-            logging.info('wrong value: `temperature_model` must be gradient ' +
-                         'or interpolation. It was calculated with gradient.')
-            T_hub = density.temperature_gradient(
-                weather['temp_air'], data_height['temp_air'], self.hub_height)
-
-        # Calculation of density in kg/m³ at hub height according to the
-        # chosen model.
+            logging.info('Wrong value: `temperature_model` must be gradient ' +
+                         'or interpolation.')
+        # Calculation of density in kg/m³ at hub height
         if self.rho_model == 'barometric':
-            logging.debug('Calculating density with barometric height eq.')
+            logging.debug('Calculating density using barometric height eq.')
             rho_hub = density.rho_barometric(weather['pressure'],
                                              data_height['pressure'],
                                              self.wind_turbine.hub_height,
                                              T_hub)
         elif self.rho_model == 'ideal_gas':
-            logging.debug('Calculating density with ideal gas equation.')
+            logging.debug('Calculating density using ideal gas equation.')
             rho_hub = density.rho_ideal_gas(weather['pressure'],
                                             data_height['pressure'],
                                             self.wind_turbine.hub_height,
                                             T_hub)
         else:
-            logging.info('wrong value: `rho_model` must be barometric ' +
-                         'or ideal_gas. It was calculated with barometric.')
-            rho_hub = density.rho_barometric(weather['pressure'],
-                                             data_height['pressure'],
-                                             self.hub_height, T_hub)
+            logging.info('Wrong value: `rho_model` must be barometric ' +
+                         'or ideal_gas.')
         return rho_hub
 
     def v_wind_hub(self, weather, data_height):
