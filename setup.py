@@ -11,7 +11,7 @@ setup(name='windpowerlib',
       license=None,
       packages=['windpowerlib'],
       package_data={
-            'windpowerlib': [os.path.join('data', '*.csv')]},
+          'windpowerlib': [os.path.join('data', '*.csv')]},
       zip_safe=False,
       install_requires=['numpy >= 1.7.0',
                         'pandas >= 0.13.1'])
