@@ -116,13 +116,6 @@ class Modelchain(object):
         self.wind_turbine = wind_turbine
         self.obstacle_height = obstacle_height
 
-        # attributes
-        self.hub_height = wind_turbine.hub_height
-        self.d_rotor = wind_turbine.d_rotor
-        self.cp_values = wind_turbine.cp_values
-        self.p_values = wind_turbine.p_values
-        self.nominal_power = wind_turbine.nominal_power
-
         # call models
         self.wind_model = wind_model
         self.rho_model = rho_model
@@ -154,7 +147,7 @@ class Modelchain(object):
 
         """
         # Check if temperature data is at hub height.
-        if data_height['temp_air'] == self.hub_height:
+        if data_height['temp_air'] == self.wind_turbine.hub_height:
             logging.debug('Using given temperature (at hub height).')
             T_hub = weather['temp_air']
         # Calculation of temperature in K at hub height according to the
@@ -162,7 +155,8 @@ class Modelchain(object):
         elif self.temperature_model == 'gradient':
             logging.debug('Calculating temperature with gradient.')
             T_hub = density.temperature_gradient(
-                weather['temp_air'], data_height['temp_air'], self.hub_height)
+                weather['temp_air'], data_height['temp_air'],
+                self.wind_turbine.hub_height)
         elif self.temperature_model == 'interpolation':
             if 'temp_air_2' not in weather or 'temp_air_2' not in data_height:
                 logging.info('One temperature or data height is missing. It ' +
@@ -192,12 +186,14 @@ class Modelchain(object):
             logging.debug('Calculating density with barometric height eq.')
             rho_hub = density.rho_barometric(weather['pressure'],
                                              data_height['pressure'],
-                                             self.hub_height, T_hub)
+                                             self.wind_turbine.hub_height,
+                                             T_hub)
         elif self.rho_model == 'ideal_gas':
             logging.debug('Calculating density with ideal gas equation.')
             rho_hub = density.rho_ideal_gas(weather['pressure'],
                                             data_height['pressure'],
-                                            self.hub_height, T_hub)
+                                            self.wind_turbine.hub_height,
+                                            T_hub)
         else:
             logging.info('wrong value: `rho_model` must be barometric ' +
                          'or ideal_gas. It was calculated with barometric.')
@@ -227,7 +223,7 @@ class Modelchain(object):
 
         """
         # Check if wind speed data is at hub height.
-        if data_height['v_wind'] == self.hub_height:
+        if data_height['v_wind'] == self.wind_turbine.hub_height:
             logging.debug('Using given wind speed (at hub height).')
             v_wind = weather['v_wind']
         # Calculation of wind speed in m/s at hub height according to the
@@ -242,7 +238,8 @@ class Modelchain(object):
                 logging.info('One wind speed time series or data height is ' +
                              'missing. It was calculated with one data set.')
                 v_wind = wind_speed.logarithmic_wind_profile(
-                    weather['v_wind'], data_height['v_wind'], self.hub_height,
+                    weather['v_wind'], data_height['v_wind'],
+                    self.wind_turbine.hub_height,
                     weather['z0'], self.obstacle_height)
             # Check if wind speed of second data set is at hub height.
             elif data_height['v_wind_2'] == self.hub_height:
@@ -252,19 +249,24 @@ class Modelchain(object):
                 logging.debug('Calculating v_wind with logarithmic wind ' +
                               'profile choosing wind speed measured closest ' +
                               'to hub height.')
-                if (abs(data_height['v_wind'] - self.hub_height) <=
-                        abs(data_height['v_wind_2'] - self.hub_height)):
+                if (abs(data_height['v_wind'] -
+                        self.wind_turbine.hub_height) <=
+                        abs(data_height['v_wind_2'] -
+                            self.wind_turbine.hub_height)):
                     v_wind = wind_speed.logarithmic_wind_profile(
                         weather['v_wind'], data_height['v_wind'],
-                        self.hub_height, weather['z0'], self.obstacle_height)
+                        self.wind_turbine.hub_height, weather['z0'],
+                        self.obstacle_height)
                 else:
                     v_wind = wind_speed.logarithmic_wind_profile(
                         weather['v_wind_2'], data_height['v_wind_2'],
-                        self.hub_height, weather['z0'], self.obstacle_height)
+                        self.wind_turbine.hub_height, weather['z0'],
+                        self.obstacle_height)
         elif self.wind_model == 'hellman':
             logging.debug('Calculating v_wind with hellman equation.')
             v_wind = wind_speed.v_wind_hellman(
-                weather['v_wind'], data_height['v_wind'], self.hub_height)
+                weather['v_wind'], data_height['v_wind'],
+                self.wind_turbine.hub_height,
         else:
             logging.info('wrong value: `wind_model` must be logarithmic, ' +
                          'logarithmic_closest or hellman. It was calculated ' +
@@ -295,24 +297,26 @@ class Modelchain(object):
         # Calculation of turbine power output according to the chosen model.
         if self.power_output_model == 'cp_values':
             if self.density_corr is False:
-                logging.debug('Calculating power output with cp curve.')
-                output = power_output.cp_curve(v_wind, rho_hub, self.d_rotor,
-                                               self.cp_values)
+                logging.debug('Calculating power output using cp curve.')
+                output = power_output.cp_curve(v_wind, rho_hub,
+                                               self.wind_turbine.d_rotor,
+                                               self.wind_turbine.cp_values)
             else:
                 logging.debug('Calculating power output with density ' +
                               'corrected cp curve.')
                 output = power_output.cp_curve_density_corr(
-                    v_wind, rho_hub, self.cp_values, self.d_rotor)
-
+                    v_wind, rho_hub, self.wind_turbine.d_rotor,
+                    self.wind_turbine.cp_values)
         elif self.power_output_model == 'p_values':
             if self.density_corr is False:
-                logging.debug('Calculating power output with power curve.')
-                output = power_output.p_curve(self.p_values, v_wind)
+                logging.debug('Calculating power output using power curve.')
+                output = power_output.p_curve(self.wind_turbine.p_values,
+                                              v_wind)
             else:
                 logging.debug('Calculating power output with density ' +
                               'corrected power curve.')
-                output = power_output.p_curve_density_corr(v_wind, rho_hub,
-                                                           self.p_values)
+                output = power_output.p_curve_density_corr(
+                    v_wind, rho_hub, self.wind_turbine.p_values)
         else:
             logging.info('wrong value: `power_output_model` must be ' +
                          'cp_values or p_values. It was calculated with ' +
