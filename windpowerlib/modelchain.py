@@ -239,11 +239,17 @@ class Modelchain(object):
 
         """
         # Check if wind speed data is at hub height.
+        if 'v_wind_2' not in weather:
+            weather['v_wind_2'] = None
+            data_height['v_wind_2'] = None
         if data_height['v_wind'] == self.wind_turbine.hub_height:
             logging.debug('Using given wind speed (at hub height).')
             v_wind = weather['v_wind']
         # Calculation of wind speed in m/s at hub height according to the
         # chosen model.
+        elif data_height['v_wind_2'] == self.wind_turbine.hub_height:
+            logging.debug('Using given wind speed (2) (at hub height).')
+            v_wind = weather['v_wind_2']
         elif self.wind_model == 'logarithmic':
             logging.debug('Calculating v_wind with logarithmic wind profile.')
             v_wind = wind_speed.logarithmic_wind_profile(
