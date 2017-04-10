@@ -222,20 +222,23 @@ class Modelchain(object):
         r"""
         Calculates the wind speed at hub height.
 
+        The method specified by the parameter `wind_model` is used.
+
         Parameters
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for wind speed
-            (v_wind) and roughness length (z0). Optional wind speed at
-            different height (v_wind_2) for interpolation.
+            `v_wind` in m/s and roughness length `z0` in m, as well as
+            optionally wind speed `v_wind_2` in m/s at different height for
+            interpolation.
         data_height : DataFrame or Dictionary
-            Containing columns or keys with the heights for which the
+            Containing columns or keys with the heights in m for which the
             corresponding parameters in `weather` apply.
 
         Returns
         -------
         v_wind : pandas.Series or array
-            Wind speed [m/s] at hub height as time series.
+            Wind speed in m/s at hub height.
 
         """
         # Check if wind speed data is at hub height.
@@ -245,16 +248,13 @@ class Modelchain(object):
         if data_height['v_wind'] == self.wind_turbine.hub_height:
             logging.debug('Using given wind speed (at hub height).')
             v_wind = weather['v_wind']
-        # Calculation of wind speed in m/s at hub height according to the
-        # chosen model.
         elif data_height['v_wind_2'] == self.wind_turbine.hub_height:
             logging.debug('Using given wind speed (2) (at hub height).')
             v_wind = weather['v_wind_2']
+        # Calculation of wind speed in m/s at hub height.
         elif self.wind_model == 'logarithmic':
-            logging.debug('Calculating v_wind with logarithmic wind profile.')
-            v_wind = wind_speed.logarithmic_wind_profile(
-                weather['v_wind'], data_height['v_wind'], self.hub_height,
-                weather['z0'], self.obstacle_height)
+            logging.debug('Calculating v_wind using logarithmic wind profile.')
+            if weather['v_wind_2'] is None:
                 v_wind = wind_speed.logarithmic_wind_profile(
                     weather['v_wind'], data_height['v_wind'],
                     self.wind_turbine.hub_height,
@@ -274,18 +274,15 @@ class Modelchain(object):
                         self.wind_turbine.hub_height, weather['z0'],
                         self.obstacle_height)
         elif self.wind_model == 'hellman':
-            logging.debug('Calculating v_wind with hellman equation.')
+            logging.debug('Calculating v_wind using hellman equation.')
             v_wind = wind_speed.v_wind_hellman(
                 weather['v_wind'], data_height['v_wind'],
                 self.wind_turbine.hub_height,
                 self.hellman_exp, self.hellman_z0)
         else:
-            logging.info('wrong value: `wind_model` must be logarithmic, ' +
-                         'logarithmic_closest or hellman. It was calculated ' +
-                         'with logarithmic.')
-            v_wind = wind_speed.logarithmic_wind_profile(
-                weather['v_wind'], data_height['v_wind'], self.hub_height,
-                weather['z0'], self.obstacle_height)
+            logging.error('Wrong value: `wind_model` must be logarithmic ' +
+                          'or hellman.')
+            sys.exit()
         return v_wind
 
     def turbine_power_output(self, v_wind, rho_hub):
