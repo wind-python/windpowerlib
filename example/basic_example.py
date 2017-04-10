@@ -7,6 +7,8 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 import logging
+import os
+import pandas as pd
 
 try:
     from matplotlib import pyplot as plt
@@ -22,6 +24,43 @@ from windpowerlib import wind_turbine as wt
 logging.getLogger().setLevel(logging.INFO)
 
 
+def read_weather_data(filename, datetime_column='Unnamed: 0',
+                      **kwargs):
+    r"""
+    Fetches weather data from a file.
+
+    The files are located in the example folder of the windpowerlib.
+
+    Parameters
+    ----------
+    filename : string
+        Filename of the weather data file.
+    datetime_column : string
+        Name of the datetime column of the weather DataFrame.
+
+    Other Parameters
+    ----------------
+    datapath : string, optional
+        Path where the weather data file is stored.
+        Default: 'windpowerlib/example'.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Contains weather data time series.
+
+    """
+    if 'datapath' not in kwargs:
+        kwargs['datapath'] = os.path.join(os.path.split(
+            os.path.dirname(__file__))[0], 'example')
+
+    file = os.path.join(kwargs['datapath'], filename)
+    df = pd.read_csv(file)
+    return df.set_index(pd.to_datetime(df[datetime_column])).tz_localize(
+        'UTC').tz_convert('Europe/Berlin').drop(datetime_column, 1)
+
+# Read weather data from csv
+weather = read_weather_data('weather.csv')
 # Specification of the weather data set CoastDat2 (example data)
 coastDat2 = {
     'dhi': 0,
