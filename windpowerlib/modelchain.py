@@ -274,20 +274,16 @@ class Modelchain(object):
                 weather['z0'], self.obstacle_height)
         return v_wind
 
-    def turbine_power_output(self, weather, data_height):
+    def turbine_power_output(self, v_wind, rho_hub):
         r"""
         Calculates the power output in W of one wind turbine.
 
         Parameters
         ----------
-        weather : DataFrame or Dictionary
-            Containing columns or keys with the timeseries for temperature
-            (temp_air), pressure (pressure), wind speed (v_wind) and
-            roughness length (z0). Optional wind speed (v_wind_2) and/or
-            temperature (temp_air_2) at different height for interpolation.
-        data_height : DataFrame or Dictionary
-            Containing columns or keys with the heights for which the
-            corresponding parameters in `weather` apply.
+        v_wind : pandas.Series or array
+            Wind speed at hub height in m/s.
+        rho_hub : pandas.Series or array
+            Density of air at hub height in kg/m³.
 
         Returns
         -------
@@ -295,9 +291,6 @@ class Modelchain(object):
             Electrical power of the wind turbine.
 
         """
-        # Calculation of parameters needed for power output
-        v_wind = self.v_wind_hub(weather, data_height)
-        rho_hub = self.rho_hub(weather, data_height)
 
         # Calculation of turbine power output according to the chosen model.
         if self.power_output_model == 'cp_values':
