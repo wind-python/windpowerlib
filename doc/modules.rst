@@ -47,9 +47,9 @@ power curve or power coefficient curve needed by the :py:class:`~wind_turbine.Wi
 .. autosummary::
    :toctree: temp/
 
-   wind_turbine.WindTurbine.fetch_wpp_data
-   wind_turbine.get_wind_pp_types
-   wind_turbine.read_wpp_data
+   wind_turbine.WindTurbine.fetch_turbine_data
+   wind_turbine.get_turbine_types
+   wind_turbine.read_turbine_data
 
 
 Power output
@@ -91,4 +91,3 @@ Methods of the Modelchain object.
    modelchain.Modelchain.rho_hub
    modelchain.Modelchain.v_wind_hub
    modelchain.Modelchain.turbine_power_output
-   modelchain.Modelchain.read_weather_data
