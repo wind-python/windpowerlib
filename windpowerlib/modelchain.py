@@ -45,6 +45,12 @@ class Modelchain(object):
     density_corr : boolean, optional
         If the parameter is True the density corrected power curve is used for
         the calculation of the turbine power output. Default: False
+    hellman_exp : float
+        The Hellman exponent, which combines the increase in wind speed due to
+        stability of atmospheric conditions and surface roughness into one
+        constant. Default: None.
+    hellman_z0 : float
+        Roughness length. Default: None.
 
     Attributes
     ----------
@@ -87,6 +93,12 @@ class Modelchain(object):
     density_corr : boolean, optional
         If the parameter is True the density corrected power curve is used for
         the calculation of the turbine power output. Default: False
+    hellman_exp : float
+        The Hellman exponent, which combines the increase in wind speed due to
+        stability of atmospheric conditions and surface roughness into one
+        constant. Default: None.
+    hellman_z0 : float
+        Roughness length. Default: None.
 
     Examples
     --------
@@ -111,7 +123,9 @@ class Modelchain(object):
                  rho_model='barometric',
                  temperature_model='gradient',
                  power_output_model='cp_values',
-                 density_corr=False):
+                 density_corr=False,
+                 hellman_exp=None,
+                 hellman_z0=None):
 
         self.wind_turbine = wind_turbine
         self.obstacle_height = obstacle_height
@@ -122,6 +136,8 @@ class Modelchain(object):
         self.temperature_model = temperature_model
         self.power_output_model = power_output_model
         self.density_corr = density_corr
+        self.hellman_exp = hellman_exp
+        self.hellman_z0 = hellman_z0
 
     def rho_hub(self, weather, data_height):
         r"""
@@ -256,6 +272,7 @@ class Modelchain(object):
             v_wind = wind_speed.v_wind_hellman(
                 weather['v_wind'], data_height['v_wind'],
                 self.wind_turbine.hub_height,
+                self.hellman_exp, self.hellman_z0)
         else:
             logging.info('wrong value: `wind_model` must be logarithmic, ' +
                          'logarithmic_closest or hellman. It was calculated ' +
