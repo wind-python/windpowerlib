@@ -93,7 +93,6 @@ modelchain_data = {
     'obstacle_height': 0,
     'wind_model': 'logarithmic',
     'rho_model': 'ideal_gas',
-    'temperature_model': 'interpolation',
     'power_output_model': 'cp_values',
     'density_corr': False}
 
