@@ -3,7 +3,7 @@ from windpowerlib.power_output import cp_curve
 import pandas as pd
 
 
-class Power_Output_Tests:
+class PowerOutputTests:
 
     @classmethod
     def setUpClass(self):

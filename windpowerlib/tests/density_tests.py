@@ -3,7 +3,7 @@ from windpowerlib.density import (temperature_gradient, temperature_interpol,
                                   rho_barometric, rho_ideal_gas)
 
 
-class Density_and_Temperature_Tests:
+class DensityTemperatureTests:
 
     @classmethod
     def setUpClass(self):

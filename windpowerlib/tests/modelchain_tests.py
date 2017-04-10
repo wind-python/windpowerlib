@@ -5,7 +5,7 @@ from nose.tools import eq_
 logging.disable(logging.INFO)
 
 
-class Modelchain_Tests:
+class ModelchainTests:
 
     @classmethod
     def setUpClass(self):
