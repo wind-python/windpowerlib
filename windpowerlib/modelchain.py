@@ -175,6 +175,7 @@ class Modelchain(object):
         else:
             logging.info('Wrong value: `temperature_model` must be gradient ' +
                          'or interpolation.')
+            sys.exit()
         # Calculation of density in kg/m³ at hub height
         if self.rho_model == 'barometric':
             logging.debug('Calculating density using barometric height eq.')
@@ -191,6 +192,7 @@ class Modelchain(object):
         else:
             logging.info('Wrong value: `rho_model` must be barometric ' +
                          'or ideal_gas.')
+            sys.exit()
         return rho_hub
 
     def v_wind_hub(self, weather, data_height):
@@ -229,7 +231,7 @@ class Modelchain(object):
         # Calculation of wind speed in m/s at hub height.
         elif self.wind_model == 'logarithmic':
             logging.debug('Calculating v_wind using logarithmic wind profile.')
-            if weather['v_wind_2'] is None:
+            if weather['v_wind_2'].isnull().all():
                 v_wind = wind_speed.logarithmic_wind_profile(
                     weather['v_wind'], data_height['v_wind'],
                     self.wind_turbine.hub_height,
