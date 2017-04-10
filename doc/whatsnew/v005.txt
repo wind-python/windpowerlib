@@ -4,14 +4,23 @@ v0.0.5 ()
 New features
 ############
 
+ * complete restructuring of the windpowerlib
+ * power curves for numerous wind turbines are provided
+ * new function for calculation of air density at hub height (rho_ideal_gas)
+ * new function for calculation of wind speed at hub height (v_wind_hellman)
+ * density correction for calculation of power output
+ * modelchain for convenient usage
+
 
 Documentation
 #############
 
+ * added references
 
 Testing
 ####### 
 
+ * tests for all modules were added
 
 Bug fixes
 #########
@@ -23,3 +32,6 @@ Other changes
 
 Contributors
 ############
+
+ * Sabine Haas
+ * Birgit Schachler
