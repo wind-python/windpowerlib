@@ -61,6 +61,7 @@ def read_weather_data(filename, datetime_column='Unnamed: 0',
 
 # Read weather data from csv
 weather = read_weather_data('weather.csv')
+
 # Specification of the weather data set CoastDat2 (example data)
 coastDat2 = {
     'dhi': 0,
@@ -78,28 +79,33 @@ enerconE126 = {
     'd_rotor': 127,
     'turbine_name': 'ENERCON E 126 7500'}
 
-
 vestasV90 = {
     'hub_height': 105,
     'd_rotor': 90,
     'turbine_name': 'VESTAS V 90 3000'}
 
+# Initialize WindTurbine objects
+e126 = wt.WindTurbine(**enerconE126)
+v90 = wt.WindTurbine(**vestasV90)
+
 # Specifications of the modelchain data
 modelchain_data = {
     'obstacle_height': 0,
-    'wind_model': 'logarithmic_closest',
+    'wind_model': 'logarithmic',
     'rho_model': 'ideal_gas',
     'temperature_model': 'interpolation',
     'power_output_model': 'cp_values',
     'density_corr': False}
 
+# Calculate turbine power output
+mc_e126 = modelchain.Modelchain(e126, **modelchain_data).run_model(
+    weather, coastDat2)
+e126.power_output = mc_e126.power_output
+mc_v90 = modelchain.Modelchain(v90, **modelchain_data).run_model(
+    weather, coastDat2)
+v90.power_output = mc_v90.power_output
 
-e126 = wt.WindTurbine(**enerconE126)
-v90 = wt.WindTurbine(**vestasV90)
-
-modelchain.Modelchain(e126, **modelchain_data).run_model(coastDat2)
-modelchain.Modelchain(v90, **modelchain_data).run_model(coastDat2)
-
+# Plot turbine power output
 if plt:
     e126.power_output.plot(legend=True, label='Enercon E126')
     v90.power_output.plot(legend=True, label='Vestas V90')
@@ -108,6 +114,7 @@ else:
     print(e126.power_output)
     print(v90.power_output)
 
+# Plot power (coefficient) curves
 if plt:
     if e126.cp_values is not None:
         e126.cp_values.plot(style='*', title='Enercon E126')
