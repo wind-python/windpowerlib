@@ -43,7 +43,7 @@ Install the windpowerlib using pip3.
     pip3 install windpowerlib
 
 So far, the windpowerlib is mainly tested on python 3.4 but seems to work down to 2.7.
-Please see the `Installation page <http://oemof.readthedocs.io/en/stable/installation_and_setup.html>`_ of the documentation for complete instructions.
+Please see the `installation page <http://oemof.readthedocs.io/en/stable/installation_and_setup.html>`_ of the oemof documentation for complete instructions on how to install python on your operating system.
 
   
 Optional Packages
