@@ -85,3 +85,15 @@ class TestModelchain:
         test_mc = mc.Modelchain(self.test_wt, **self.test_modelchain)
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
+
+    def test_turbine_power_output(self):
+        # power curve
+        power_output_exp = pd.Series(data=[1224.26396, 2733.30675])
+        self.test_modelchain['power_output_model'] = 'p_values'
+        self.test_turbine['fetch_curve'] = 'P'
+        test_wt = wt.WindTurbine(**self.test_turbine)
+        test_mc = mc.Modelchain(test_wt, **self.test_modelchain)
+        v_wind = test_mc.v_wind_hub(self.weather, self.data_height)
+        rho_hub = test_mc.rho_hub(self.weather, self.data_height)
+        assert_series_equal(test_mc.turbine_power_output(v_wind, rho_hub),
+                            power_output_exp)
