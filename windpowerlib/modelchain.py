@@ -47,8 +47,6 @@ class Modelchain(object):
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
         constant. Default: None.
-    hellman_z0 : float
-        Roughness length. Default: None.
 
     Attributes
     ----------
@@ -81,8 +79,6 @@ class Modelchain(object):
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
         constant. Default: None.
-    hellman_z0 : float
-        Roughness length. Default: None.
     power_output : pandas.Series
         Electrical power output of the wind turbine in W.
 
@@ -110,8 +106,7 @@ class Modelchain(object):
                  temperature_model='gradient',
                  power_output_model='cp_values',
                  density_corr=False,
-                 hellman_exp=None,
-                 hellman_z0=None):
+                 hellman_exp=None):
 
         self.wind_turbine = wind_turbine
         self.obstacle_height = obstacle_height
@@ -121,7 +116,6 @@ class Modelchain(object):
         self.power_output_model = power_output_model
         self.density_corr = density_corr
         self.hellman_exp = hellman_exp
-        self.hellman_z0 = hellman_z0
         self.power_output = None
 
     def rho_hub(self, weather, data_height):
@@ -255,7 +249,7 @@ class Modelchain(object):
             v_wind = wind_speed.v_wind_hellman(
                 weather['v_wind'], data_height['v_wind'],
                 self.wind_turbine.hub_height,
-                self.hellman_exp, self.hellman_z0)
+                self.hellman_exp, weather['z0'])
         else:
             logging.error('Wrong value: `wind_model` must be logarithmic ' +
                           'or hellman.')
