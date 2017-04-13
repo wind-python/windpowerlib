@@ -67,6 +67,9 @@ class WindTurbine(object):
         Default: None.
     nominal_power : float
         The nominal output of the wind turbine in kW.
+    fetch_curve : string
+        Parameter to specify whether the power or power coefficient curve
+        should be retrieved from the provided turbine data. Default: cp.
     power_output : pandas.Series
         The calculated power output of the wind turbine.
 
