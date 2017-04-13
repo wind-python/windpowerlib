@@ -14,6 +14,13 @@ class TestModelchain:
                         'v_wind_2': pd.Series(data=[4.0, 5.0]),
                         'pressure': pd.Series(data=[101125, 101000]),
                         'z0': 0.15}
+        self.weather_df = pd.DataFrame(data={'temp_air': [267, 268],
+                                             'temp_air_2': [267, 266],
+                                             'v_wind': [5.0, 6.5],
+                                             'v_wind_2': [4.0, 5.0],
+                                             'pressure': [101125, 101000],
+                                             'z0': 0.15},
+                                       index=[0, 1])
         self.data_height = {'temp_air': 2,
                             'temp_air_2': 10,
                             'v_wind': 10,
@@ -54,6 +61,11 @@ class TestModelchain:
             self.test_mc.v_wind_hub(self.weather, self.data_height),
             v_wind_exp)
 
+        # Test DataFrame
+        assert_series_equal(self.test_mc.v_wind_hub(self.weather_df,
+                                                    self.data_height),
+                            v_wind_exp)
+
     def test_rho_hub(self):
         # temp_air at hub height
         rho_exp = pd.Series(data=[1.30305, 1.29657])
@@ -72,6 +84,10 @@ class TestModelchain:
         self.data_height['temp_air_2'] = 10
         assert_series_equal(self.test_mc.rho_hub(self.weather,
                                                  self.data_height), rho_exp)
+        # Test DataFrame
+        assert_series_equal(self.test_mc.rho_hub(self.weather_df,
+                                                 self.data_height),
+                            rho_exp)
 
     def test_run_model_1(self):
         power_output_exp = pd.Series(data=[724829.76425940311, 1605284.00553])
