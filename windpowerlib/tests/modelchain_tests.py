@@ -48,8 +48,7 @@ class TestModelchain:
             v_wind_exp)
 
         # v_wind is closer to hub height than v_wind_2
-        v_wind_exp = pd.Series(data=[6.94747, 9.03172])
-        # TODO löschen: aber falls mit z0: 7.12462, 9.26201
+        v_wind_exp = pd.Series(data=[6.94748, 9.03172])
         self.data_height['v_wind_2'] = 8
         assert_series_equal(
             self.test_mc.v_wind_hub(self.weather, self.data_height),
