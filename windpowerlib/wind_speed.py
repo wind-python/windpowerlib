@@ -103,7 +103,7 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
         stability of atmospheric conditions and surface roughness into one
         constant. Default: 1/7. If roughness length is given
         `hellman_exp` = 1 / ln(h_hub/z_0).
-    z_0 : float
+    z_0 : pandas.Series or array or float
         Roughness length. Default: None.
 
     Returns
