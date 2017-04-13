@@ -1,68 +1,74 @@
 from windpowerlib.wind_speed import logarithmic_wind_profile, v_wind_hellman
-from nose.tools import eq_, raises
 import pandas as pd
+from pandas.util.testing import assert_series_equal
+import numpy as np
+from numpy.testing import assert_allclose
+from nose.tools import raises
 
 
 class TestWindSpeed:
 
     @classmethod
     def setUpClass(self):
-        self.logarithmic_test = {'v_wind': 5.0,
-                                 'z_0': 0.15,
-                                 'hub_height': 100,
-                                 'v_wind_height': 10,
-                                 'obstacle_height': 0}
+        self.logarithmic = {'v_wind': pd.Series(data=[5.0, 6.5]),
+                            'z_0': pd.Series(data=[0.15, 0.15]),
+                            'hub_height': 100,
+                            'v_wind_height': 10,
+                            'obstacle_height': 0}
 
-        self.logarithmic_test_2 = {'v_wind': pd.Series(data=[5.0, 6.5]),
-                                   'z_0': 0.15,
-                                   'hub_height': 100,
-                                   'v_wind_height': 10,
-                                   'obstacle_height': 0}
-
-        self.hellman_test = {'v_wind': 5.0,
-                             'hub_height': 100,
-                             'v_wind_height': 10}
-
-        self.hellman_test_2 = {'v_wind': 5.0,
-                               'hub_height': 100,
-                               'v_wind_height': 10,
-                               'z_0': 0.15}
+        self.hellman = {'v_wind': pd.Series(data=[5.0, 6.5]),
+                        'hub_height': 100,
+                        'v_wind_height': 10,
+                        'z_0': None,
+                        'hellman_exp': None}
 
     def test_logarithmic_wind_profile(self):
-        v_wind_hub_exp = 7.7413652271940308
-        eq_(logarithmic_wind_profile(**self.logarithmic_test),
-            v_wind_hub_exp)
+        # Test pandas.Series
+        v_wind_hub_exp = pd.Series(data=[7.74136523, 10.0637748])
+        assert_series_equal(logarithmic_wind_profile(**self.logarithmic),
+                            v_wind_hub_exp)
+        # Test array
+        self.logarithmic['z_0'] = np.array(self.logarithmic['z_0'])
+        self.logarithmic['v_wind'] = np.array(self.logarithmic['v_wind'])
+        assert_allclose(logarithmic_wind_profile(**self.logarithmic),
+                        v_wind_hub_exp)
+        # Test z_0 is float and obstacle height
+        v_wind_hub_exp = np.array([13.54925281, 17.61402865])
+        self.logarithmic['z_0'] = self.logarithmic['z_0'][0]
+        self.logarithmic['obstacle_height'] = 12
+        assert_allclose(logarithmic_wind_profile(**self.logarithmic),
+                        v_wind_hub_exp)
 
-    def test_logarithmic_wind_profile_obstacles(self):
-        v_wind_hub_exp = 13.549252811030639
-        self.logarithmic_test['obstacle_height'] = 12
-        eq_(logarithmic_wind_profile(**self.logarithmic_test),
-            v_wind_hub_exp)
+        @raises(ValueError)
+        def test_raises_value_error(self):
+            r"""
+            Raises ValueError if 0.7 * obstacle height is higher than hub
+            height.
 
-    def test_logarithmic_wind_profile_series(self):
-        v_wind_hub_exp = pd.Series(data=[7.7413652271940308,
-                                         10.06377479535224])
-        eq_(all(logarithmic_wind_profile(**self.logarithmic_test_2)),
-            all(v_wind_hub_exp))
-
-    @raises(ValueError)
-    def test_raises_value_error(self):
-        r"""
-        Raises ValueError if 0.7 * obstacle height is higher than hub height.
-
-        """
-        self.logarithmic_test['obstacle_height'] = 20
-        logarithmic_wind_profile(**self.logarithmic_test)
+            """
+            self.logarithmic['obstacle_height'] = 20
+            logarithmic_wind_profile(**self.logarithmic)
 
     def test_v_wind_hellman(self):
-        v_wind_hub_exp = 6.947477471865689
-        eq_(v_wind_hellman(**self.hellman_test), v_wind_hub_exp)
+        # Test pandas.Series and z_0 is None
+        v_wind_hub_exp = pd.Series(data=[6.9474774, 9.03172])
+        assert_series_equal(v_wind_hellman(**self.hellman), v_wind_hub_exp)
 
-    def test_v_wind_hellman_with_z0(self):
-        v_wind_hub_exp = 7.1246243695751321
-        eq_(v_wind_hellman(**self.hellman_test_2), v_wind_hub_exp)
+        # Test z_0 is float
+        v_wind_hub_exp = pd.Series(data=[7.12462437, 9.26201168])
+        self.hellman['z_0'] = 0.15
+        assert_series_equal(v_wind_hellman(**self.hellman), v_wind_hub_exp)
 
-    def test_v_wind_hellman_with_exp(self):
-        v_wind_hub_exp = 7.924465962305568
-        eq_(v_wind_hellman(hellman_exp=0.2, **self.hellman_test_2),
-            v_wind_hub_exp)
+        # Test array and z_0 is pandas.Series
+        self.hellman['v_wind'] = np.array(self.hellman['v_wind'])
+        self.hellman['z_0'] = pd.Series(data=[0.15, 0.15])
+        assert_allclose(v_wind_hellman(**self.hellman), v_wind_hub_exp)
+
+        # Test z_0 is array
+        self.hellman['z_0'] = np.array(self.hellman['z_0'])
+        assert_allclose(v_wind_hellman(**self.hellman), v_wind_hub_exp)
+
+        # Test hellman_exp is not None
+        v_wind_hub_exp = np.array([7.92446596, 10.30180575])
+        self.hellman['hellman_exp'] = 0.2
+        assert_allclose(v_wind_hellman(**self.hellman), v_wind_hub_exp)
