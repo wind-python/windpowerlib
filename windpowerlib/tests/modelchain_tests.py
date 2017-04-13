@@ -34,7 +34,7 @@ class TestModelchain:
         self.test_modelchain = {'wind_model': 'hellman',
                                 'rho_model': 'barometric',
                                 'temperature_model': 'interpolation',
-                                'power_output_model': 'cp_values',
+                                'power_output_model': 'p_values',
                                 'density_corr': False}
         self.test_mc = mc.Modelchain(self.test_wt, **self.test_modelchain)
 
@@ -57,9 +57,9 @@ class TestModelchain:
         # v_wind is closer to hub height than v_wind_2
         v_wind_exp = pd.Series(data=[6.94748, 9.03172])
         self.data_height['v_wind_2'] = 8
-        assert_series_equal(
-            self.test_mc.v_wind_hub(self.weather, self.data_height),
-            v_wind_exp)
+        assert_series_equal(self.test_mc.v_wind_hub(self.weather,
+                                                    self.data_height),
+                            v_wind_exp)
 
         # Test DataFrame
         assert_series_equal(self.test_mc.v_wind_hub(self.weather_df,
@@ -72,7 +72,6 @@ class TestModelchain:
         self.data_height['temp_air'] = 100
         assert_series_equal(self.test_mc.rho_hub(self.weather,
                                                  self.data_height), rho_exp)
-
         # temp_air_2 at hub height
         rho_exp = pd.Series(data=[1.30305, 1.30632])
         self.data_height['temp_air'] = 2
@@ -89,26 +88,27 @@ class TestModelchain:
                                                  self.data_height),
                             rho_exp)
 
-    def test_run_model_1(self):
+    def test_run_model(self):
+        # Test with default parameters of modelchain
         power_output_exp = pd.Series(data=[724829.76425940311, 1605284.00553])
         test_mc = mc.Modelchain(self.test_wt)
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
-    def test_run_model_2(self):
-        power_output_exp = pd.Series(data=[515175.88289, 1260879.53570])
-        test_mc = mc.Modelchain(self.test_wt, **self.test_modelchain)
-        test_mc.run_model(self.weather, self.data_height)
-        assert_series_equal(test_mc.power_output, power_output_exp)
-
-    def test_turbine_power_output(self):
-        # power curve
+    def test_different_models(self):
+        # Test with parameters of self.test_modelchain
         power_output_exp = pd.Series(data=[1224.26396, 2733.30675])
-        self.test_modelchain['power_output_model'] = 'p_values'
         self.test_turbine['fetch_curve'] = 'P'
         test_wt = wt.WindTurbine(**self.test_turbine)
         test_mc = mc.Modelchain(test_wt, **self.test_modelchain)
-        v_wind = test_mc.v_wind_hub(self.weather, self.data_height)
-        rho_hub = test_mc.rho_hub(self.weather, self.data_height)
-        assert_series_equal(test_mc.turbine_power_output(v_wind, rho_hub),
-                            power_output_exp)
+        test_mc.run_model(self.weather, self.data_height)
+        assert_series_equal(test_mc.power_output, power_output_exp)
+
+        # Ideal gas equation and density corrected power curve
+        power_output_exp = pd.Series(data=[1310.85512, 3458.80154])
+        self.test_modelchain['rho_model'] = 'ideal_gas'
+        self.test_modelchain['density_corr'] = True
+        test_mc = mc.Modelchain(test_wt, **self.test_modelchain)
+        test_mc.run_model(self.weather, self.data_height)
+        assert_series_equal(test_mc.power_output, power_output_exp)
+
