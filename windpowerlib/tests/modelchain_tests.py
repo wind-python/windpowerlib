@@ -48,8 +48,7 @@ class TestModelchain:
             v_wind_exp)
 
         # v_wind is closer to hub height than v_wind_2
-        v_wind_exp = pd.Series(data=[6.94747, 9.03172])
-        # TODO löschen: aber falls mit z0: 7.12462, 9.26201
+        v_wind_exp = pd.Series(data=[7.12462, 9.26201])
         self.data_height['v_wind_2'] = 8
         assert_series_equal(
             self.test_mc.v_wind_hub(self.weather, self.data_height),
@@ -81,14 +80,14 @@ class TestModelchain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
     def test_run_model_2(self):
-        power_output_exp = pd.Series(data=[515175.88289, 1260879.53570])
+        power_output_exp = pd.Series(data=[557835.45403, 1363746.94496])
         test_mc = mc.Modelchain(self.test_wt, **self.test_modelchain)
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
     def test_turbine_power_output(self):
         # power curve
-        power_output_exp = pd.Series(data=[1224.26396, 2733.30675])
+        power_output_exp = pd.Series(data=[1331.00584, 2975.11226])
         self.test_modelchain['power_output_model'] = 'p_values'
         self.test_turbine['fetch_curve'] = 'P'
         test_wt = wt.WindTurbine(**self.test_turbine)
