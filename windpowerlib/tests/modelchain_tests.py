@@ -105,7 +105,7 @@ class TestModelchain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Test with power curve
-        power_output_exp = pd.Series(data=[1224.26396, 2733.30675])
+        power_output_exp = pd.Series(data=[1224263.96121, 2733306.74910])
         self.test_turbine['fetch_curve'] = 'P'
         self.test_modelchain['power_output_model'] = 'p_values'
         self.test_modelchain['density_corr'] = False
@@ -115,7 +115,7 @@ class TestModelchain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Ideal gas equation and density corrected power curve
-        power_output_exp = pd.Series(data=[1310.85512, 3458.80154])
+        power_output_exp = pd.Series(data=[1310855.11824, 3458801.54045])
         self.test_modelchain['rho_model'] = 'ideal_gas'
         self.test_modelchain['density_corr'] = True
         test_mc = mc.Modelchain(test_wt, **self.test_modelchain)

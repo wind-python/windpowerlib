@@ -40,7 +40,7 @@ class WindTurbine(object):
         power curve, the power values are listed in the column 'P'.
         Default: None.
     nominal_power : float
-        The nominal output of the wind turbine in kW.
+        The nominal output of the wind turbine in W.
     fetch_curve : string
         Parameter to specify whether the power or power coefficient curve
         should be retrieved from the provided turbine data. Default: cp.
@@ -66,7 +66,7 @@ class WindTurbine(object):
         power curve, the power values are listed in the column 'P'.
         Default: None.
     nominal_power : float
-        The nominal output of the wind turbine in kW.
+        The nominal output of the wind turbine in W.
     fetch_curve : string
         Parameter to specify whether the power or power coefficient curve
         should be retrieved from the provided turbine data. Default: cp.
@@ -156,7 +156,8 @@ class WindTurbine(object):
             return df, nominal_power
         if self.fetch_curve == 'P':
             filename = 'P_curves.csv'
-            self.p_values, p_nom = restructure_data()
+            p_values, p_nom = restructure_data()
+            self.p_values = p_values * 1000
         else:
             filename = 'cp_curves.csv'
             self.cp_values, p_nom = restructure_data()
