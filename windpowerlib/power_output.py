@@ -65,8 +65,16 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
     # must be limited)
     cp_series = np.interp(v_wind, cp_values.index, cp_values.cp,
                           left=0, right=0)
-    return (1 / 8 * rho_hub * d_rotor ** 2 * np.pi * np.power(v_wind, 3) *
-            cp_series)
+    power_output = (1 / 8 * rho_hub * d_rotor ** 2 * np.pi
+                    * np.power(v_wind, 3) * cp_series)
+    # Set index for time series
+    try:
+        series_index = v_wind.index
+    except AttributeError:
+        series_index = range(1, len(power_output)+1)
+    power_output = pd.Series(data=power_output, index=series_index,
+                             name='feedin_wind_turbine')
+    return power_output
 
 
 def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
