@@ -55,7 +55,7 @@ class TestModelchain:
             v_wind_exp)
 
         # v_wind is closer to hub height than v_wind_2
-        v_wind_exp = pd.Series(data=[6.94748, 9.03172])
+        v_wind_exp = pd.Series(data=[7.12462, 9.26201])
         self.data_height['v_wind_2'] = 8
         assert_series_equal(self.test_mc.v_wind_hub(self.weather,
                                                     self.data_height),
@@ -98,7 +98,7 @@ class TestModelchain:
 
     def test_different_models(self):
         # Test density corrected power coefficient curve
-        power_output_exp = pd.Series(data=[520383.19719, 1371477.32811])
+        power_output_exp = pd.Series(data=[567663.35743, 1485484.80358])
         self.test_modelchain['density_corr'] = True
         test_wt = wt.WindTurbine(**self.test_turbine)
         test_mc = mc.Modelchain(test_wt, **self.test_modelchain)
@@ -106,7 +106,7 @@ class TestModelchain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Test with power curve
-        power_output_exp = pd.Series(data=[1224263.96121, 2733306.74910])
+        power_output_exp = pd.Series(data=[1331005.84022, 2975112.26447])
         self.test_turbine['fetch_curve'] = 'P'
         self.test_modelchain['power_output_model'] = 'p_values'
         self.test_modelchain['density_corr'] = False
@@ -116,7 +116,7 @@ class TestModelchain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Ideal gas equation and density corrected power curve
-        power_output_exp = pd.Series(data=[1310855.11824, 3458801.54045])
+        power_output_exp = pd.Series(data=[1430364.75401, 3746257.15047])
         self.test_modelchain['rho_model'] = 'ideal_gas'
         self.test_modelchain['density_corr'] = True
         test_mc = mc.Modelchain(test_wt, **self.test_modelchain)
