@@ -61,6 +61,7 @@ def read_weather_data(filename, datetime_column='Unnamed: 0',
 
 # Read weather data from csv
 weather = read_weather_data('weather.csv')
+weather.index.name = ''
 
 # Specification of the weather data set CoastDat2 (example data)
 coastDat2 = {
