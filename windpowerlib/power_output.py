@@ -107,9 +107,8 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
     """
     p_values = (1 / 8 * 1.225 * d_rotor ** 2 * np.pi *
                 np.power(cp_values.index, 3) * cp_values.cp)
-    p_values = pd.DataFrame(
-        data=p_values, index=cp_values.index, columns=['P'])
-
+    p_values = pd.DataFrame(data=np.array(p_values), index=cp_values.index,
+                            columns=['P'])
     return p_curve_density_corr(v_wind, rho_hub, p_values)
 
 
