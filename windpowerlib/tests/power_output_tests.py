@@ -20,7 +20,8 @@ class TestPowerOutput:
 
     def test_cp_curve(self):
         # Test pandas.Series
-        power_output_exp = pd.Series(data=[0.0, 244615.399, 0.0])
+        power_output_exp = pd.Series(data=[0.0, 244615.399, 0.0],
+                                     name='feedin_wind_turbine')
         assert_series_equal(cp_curve(self.v_wind, self.rho_hub, self.d_rotor,
                                      self.cp_values),
                             power_output_exp)
