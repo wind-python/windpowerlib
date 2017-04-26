@@ -13,7 +13,7 @@ import sys
 from windpowerlib import wind_speed, density, power_output
 
 
-class Modelchain(object):
+class ModelChain(object):
     r"""Model to determine the output of a wind turbine
 
     Parameters
@@ -93,7 +93,7 @@ class Modelchain(object):
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> modelchain_data = {'rho_model': 'ideal_gas',
     ...    'temperature_model': 'interpolation'}
-    >>> e126_md = modelchain.Modelchain(e126, **modelchain_data)
+    >>> e126_md = modelchain.ModelChain(e126, **modelchain_data)
     >>> print(e126.d_rotor)
     127
 

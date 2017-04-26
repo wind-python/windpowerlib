@@ -16,7 +16,7 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
     Calculates the turbine power output using a cp curve.
 
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.Modelchain` class
+    instance of the :class:`~.modelchain.ModelChain` class
     is 'cp_values' and the parameter `density_corr` is False.
 
     Parameters
@@ -82,7 +82,7 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
     Calculates the turbine power output using a density corrected cp curve.
 
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.Modelchain` class
+    instance of the :class:`~.modelchain.ModelChain` class
     is 'cp_values' and the parameter `density_corr` is True.
 
     Parameters
@@ -125,7 +125,7 @@ def p_curve(p_values, v_wind):
     Calculates the turbine power output using a power curve.
 
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.Modelchain` class is 'p_values' and
+    instance of the :class:`~.modelchain.ModelChain` class is 'p_values' and
     the parameter `density_corr` is False.
 
     Parameters
@@ -167,7 +167,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     Calculates the turbine power output using a density corrected power curve.
 
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.Modelchain` class is 'p_values' and
+    instance of the :class:`~.modelchain.ModelChain` class is 'p_values' and
     the parameter `density_corr` is True.
 
     Parameters

@@ -4,7 +4,7 @@ from pandas.util.testing import assert_series_equal
 import pandas as pd
 
 
-class TestModelchain:
+class TestModelChain:
 
     @classmethod
     def setUpClass(self):
@@ -36,7 +36,7 @@ class TestModelchain:
                                 'temperature_model': 'interpolation',
                                 'power_output_model': 'cp_values',
                                 'density_corr': False}
-        self.test_mc = mc.Modelchain(self.test_wt, **self.test_modelchain)
+        self.test_mc = mc.ModelChain(self.test_wt, **self.test_modelchain)
 
     def test_v_wind_hub(self):
         # v_wind is given at hub height
@@ -92,7 +92,7 @@ class TestModelchain:
     def test_run_model(self):
         # Test with default parameters of modelchain (cp curve)
         power_output_exp = pd.Series(data=[724829.76425940311, 1605284.00553])
-        test_mc = mc.Modelchain(self.test_wt)
+        test_mc = mc.ModelChain(self.test_wt)
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
@@ -101,7 +101,7 @@ class TestModelchain:
         power_output_exp = pd.Series(data=[567663.35743, 1485484.80358])
         self.test_modelchain['density_corr'] = True
         test_wt = wt.WindTurbine(**self.test_turbine)
-        test_mc = mc.Modelchain(test_wt, **self.test_modelchain)
+        test_mc = mc.ModelChain(test_wt, **self.test_modelchain)
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
@@ -111,7 +111,7 @@ class TestModelchain:
         self.test_modelchain['power_output_model'] = 'p_values'
         self.test_modelchain['density_corr'] = False
         test_wt = wt.WindTurbine(**self.test_turbine)
-        test_mc = mc.Modelchain(test_wt, **self.test_modelchain)
+        test_mc = mc.ModelChain(test_wt, **self.test_modelchain)
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
@@ -119,7 +119,7 @@ class TestModelchain:
         power_output_exp = pd.Series(data=[1430364.75401, 3746257.15047])
         self.test_modelchain['rho_model'] = 'ideal_gas'
         self.test_modelchain['density_corr'] = True
-        test_mc = mc.Modelchain(test_wt, **self.test_modelchain)
+        test_mc = mc.ModelChain(test_wt, **self.test_modelchain)
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
