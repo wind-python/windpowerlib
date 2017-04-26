@@ -20,28 +20,28 @@ class TestDensityTemperature:
 
     def test_temperature_gradient(self):
         # Test pandas.Series
-        T_hub_exp = pd.Series(data=[266.363, 267.36300])
+        temp_hub_exp = pd.Series(data=[266.363, 267.36300])
         assert_series_equal(temperature_gradient(self.weather['temp_air'],
                                                  self.data_height['temp_air'],
                                                  self.h_hub),
-                            T_hub_exp)
+                            temp_hub_exp)
         # Test array
         assert_array_equal(temperature_gradient(
             np.array(self.weather['temp_air']), self.data_height['temp_air'],
-                     self.h_hub), T_hub_exp)
+                     self.h_hub), temp_hub_exp)
 
     def test_temperature_interpol(self):
         # Test pandas.Series
-        T_hub_exp = pd.Series(data=[267.0, 243.5])
+        temp_hub_exp = pd.Series(data=[267.0, 243.5])
         assert_series_equal(temperature_interpol(
             self.weather['temp_air'], self.weather['temp_air_2'],
             self.data_height['temp_air'], self.data_height['temp_air_2'],
-            self.h_hub), T_hub_exp)
+            self.h_hub), temp_hub_exp)
         # Test array
         assert_array_equal(temperature_interpol(
             np.array(self.weather['temp_air']),
             np.array(self.weather['temp_air_2']), self.data_height['temp_air'],
-            self.data_height['temp_air_2'], self.h_hub), T_hub_exp)
+            self.data_height['temp_air_2'], self.h_hub), temp_hub_exp)
 
     def test_rho_barometric(self):
         # Test pandas.Series

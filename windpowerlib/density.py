@@ -104,7 +104,7 @@ def temperature_interpol(temp_air_1, temp_air_2,
             (hub_height - temp_air_height_1) + temp_air_1)
 
 
-def rho_barometric(pressure, pressure_height, hub_height, T_hub):
+def rho_barometric(pressure, pressure_height, hub_height, temp_hub):
     r"""
     Calculates the density of air at hub height using the barometric height
     equation.
@@ -120,7 +120,7 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
         Height in m for which the parameter `pressure` applies.
     hub_height : float
         Hub height of wind turbine in m.
-    T_hub : pandas.Series or array
+    temp_hub : pandas.Series or array
         Temperature at hub height in K.
 
     Returns
@@ -158,10 +158,10 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
 
     """
     return ((pressure / 100 - (hub_height - pressure_height) * 1 / 8) * 1.225 *
-            288.15 * 100 / (101330 * T_hub))
+            288.15 * 100 / (101330 * temp_hub))
 
 
-def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
+def rho_ideal_gas(pressure, pressure_height, hub_height, temp_hub):
     r"""
     Calculates the density of air at hub height using the ideal gas equation.
 
@@ -176,7 +176,7 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
         Height in m for which the parameter `pressure` applies.
     hub_height : float
         Hub height of wind turbine in m.
-    T_hub : pandas.Series or array
+    temp_hub : pandas.Series or array
         Temperature at hub height in K.
 
     Returns
@@ -214,4 +214,4 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
 
     """
     return ((pressure / 100 - (hub_height - pressure_height) * 1 / 8) * 100 /
-            (287.058 * T_hub))
+            (287.058 * temp_hub))

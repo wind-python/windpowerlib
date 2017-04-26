@@ -150,19 +150,19 @@ class ModelChain(object):
             data_height['temp_air_2'] = None
         if data_height['temp_air'] == self.wind_turbine.hub_height:
             logging.debug('Using given temperature (at hub height).')
-            T_hub = weather['temp_air']
+            temp_hub = weather['temp_air']
         elif data_height['temp_air_2'] == self.wind_turbine.hub_height:
             logging.debug('Using given temperature (2) (at hub height).')
-            T_hub = weather['temp_air_2']
+            temp_hub = weather['temp_air_2']
         # Calculation of temperature in K at hub height.
         elif self.temperature_model == 'gradient':
             logging.debug('Calculating temperature using a temp. gradient.')
-            T_hub = density.temperature_gradient(
+            temp_hub = density.temperature_gradient(
                 weather['temp_air'], data_height['temp_air'],
                 self.wind_turbine.hub_height)
         elif self.temperature_model == 'interpolation':
             logging.debug('Calculating temperature using interpolation.')
-            T_hub = density.temperature_interpol(
+            temp_hub = density.temperature_interpol(
                 weather['temp_air'], weather['temp_air_2'],
                 data_height['temp_air'], data_height['temp_air_2'],
                 self.wind_turbine.hub_height)
@@ -176,13 +176,13 @@ class ModelChain(object):
             rho_hub = density.rho_barometric(weather['pressure'],
                                              data_height['pressure'],
                                              self.wind_turbine.hub_height,
-                                             T_hub)
+                                             temp_hub)
         elif self.rho_model == 'ideal_gas':
             logging.debug('Calculating density using ideal gas equation.')
             rho_hub = density.rho_ideal_gas(weather['pressure'],
                                             data_height['pressure'],
                                             self.wind_turbine.hub_height,
-                                            T_hub)
+                                            temp_hub)
         else:
             logging.info('Wrong value: `rho_model` must be barometric ' +
                          'or ideal_gas.')
