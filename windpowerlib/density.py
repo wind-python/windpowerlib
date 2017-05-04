@@ -15,7 +15,7 @@ def temperature_gradient(temp_air, temp_height, hub_height):
 
     A linear temperature gradient of -6.5 K/km is assumed. This function is
     carried out when the parameter `temperature_model` of an instance of
-    the :class:`~.modelchain.Modelchain` class is
+    the :class:`~.modelchain.ModelChain` class is
     'temperature_gradient'.
 
     Parameters
@@ -63,7 +63,7 @@ def temperature_interpol(temp_air_1, temp_air_2,
     Calculates the temperature at hub height by inter- or extrapolation.
 
     This fuction is carried out when the parameter `temperature_model` of an
-    instance of the :class:`~.modelchain.Modelchain` class
+    instance of the :class:`~.modelchain.ModelChain` class
     is 'interpolation'.
 
     Parameters
@@ -104,13 +104,13 @@ def temperature_interpol(temp_air_1, temp_air_2,
             (hub_height - temp_air_height_1) + temp_air_1)
 
 
-def rho_barometric(pressure, pressure_height, hub_height, T_hub):
+def rho_barometric(pressure, pressure_height, hub_height, temp_hub):
     r"""
     Calculates the density of air at hub height using the barometric height
     equation.
 
     This fuction is carried out when the parameter `rho_model` of an instance
-    of the :class:`~.modelchain.Modelchain` class is 'barometric'.
+    of the :class:`~.modelchain.ModelChain` class is 'barometric'.
 
     Parameters
     ----------
@@ -120,7 +120,7 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
         Height in m for which the parameter `pressure` applies.
     hub_height : float
         Hub height of wind turbine in m.
-    T_hub : pandas.Series or array
+    temp_hub : pandas.Series or array
         Temperature at hub height in K.
 
     Returns
@@ -158,15 +158,15 @@ def rho_barometric(pressure, pressure_height, hub_height, T_hub):
 
     """
     return ((pressure / 100 - (hub_height - pressure_height) * 1 / 8) * 1.225 *
-            288.15 * 100 / (101330 * T_hub))
+            288.15 * 100 / (101330 * temp_hub))
 
 
-def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
+def rho_ideal_gas(pressure, pressure_height, hub_height, temp_hub):
     r"""
     Calculates the density of air at hub height using the ideal gas equation.
 
     This fuction is carried out when the parameter `rho_model` of an instance
-    of the :class:`~.modelchain.Modelchain` class is 'ideal_gas'.
+    of the :class:`~.modelchain.ModelChain` class is 'ideal_gas'.
 
     Parameters
     ----------
@@ -176,7 +176,7 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
         Height in m for which the parameter `pressure` applies.
     hub_height : float
         Hub height of wind turbine in m.
-    T_hub : pandas.Series or array
+    temp_hub : pandas.Series or array
         Temperature at hub height in K.
 
     Returns
@@ -214,4 +214,4 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, T_hub):
 
     """
     return ((pressure / 100 - (hub_height - pressure_height) * 1 / 8) * 100 /
-            (287.058 * T_hub))
+            (287.058 * temp_hub))

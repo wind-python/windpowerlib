@@ -5,14 +5,14 @@ wind turbine.
 
 """
 
+__copyright__ = "Copyright oemof developer group"
+__license__ = "GPLv3"
+
 import pandas as pd
 import logging
 import sys
 import os
 import numpy as np
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
 
 
 class WindTurbine(object):

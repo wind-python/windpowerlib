@@ -4,11 +4,11 @@ of a wind turbine.
 
 """
 
-import numpy as np
-import pandas as pd
-
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
+
+import numpy as np
+import pandas as pd
 
 
 def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
@@ -16,7 +16,7 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
     Calculates the turbine power output using a cp curve.
 
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.Modelchain` class
+    instance of the :class:`~.modelchain.ModelChain` class
     is 'cp_values' and the parameter `density_corr` is False.
 
     Parameters
@@ -65,8 +65,16 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
     # must be limited)
     cp_series = np.interp(v_wind, cp_values.index, cp_values.cp,
                           left=0, right=0)
-    return (1 / 8 * rho_hub * d_rotor ** 2 * np.pi * np.power(v_wind, 3) *
-            cp_series)
+    power_output = (1 / 8 * rho_hub * d_rotor ** 2 * np.pi
+                    * np.power(v_wind, 3) * cp_series)
+    # Set index for time series
+    try:
+        series_index = v_wind.index
+    except AttributeError:
+        series_index = range(1, len(power_output)+1)
+    power_output = pd.Series(data=power_output, index=series_index,
+                             name='feedin_wind_turbine')
+    return power_output
 
 
 def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
@@ -74,7 +82,7 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
     Calculates the turbine power output using a density corrected cp curve.
 
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.Modelchain` class
+    instance of the :class:`~.modelchain.ModelChain` class
     is 'cp_values' and the parameter `density_corr` is True.
 
     Parameters
@@ -117,7 +125,7 @@ def p_curve(p_values, v_wind):
     Calculates the turbine power output using a power curve.
 
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.Modelchain` class is 'p_values' and
+    instance of the :class:`~.modelchain.ModelChain` class is 'p_values' and
     the parameter `density_corr` is False.
 
     Parameters
@@ -159,7 +167,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     Calculates the turbine power output using a density corrected power curve.
 
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.Modelchain` class is 'p_values' and
+    instance of the :class:`~.modelchain.ModelChain` class is 'p_values' and
     the parameter `density_corr` is True.
 
     Parameters

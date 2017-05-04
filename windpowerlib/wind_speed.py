@@ -4,10 +4,10 @@ hub height of a wind turbine.
 
 """
 
-import numpy as np
-
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
+
+import numpy as np
 
 
 def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
@@ -18,7 +18,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
     The logarithmic height equation is used. There is the possibility of
     including the height of the surrounding obstacles in the calculation. This
     function is carried out when the parameter `wind_model` of an instance of
-    the :class:`~.modelchain.Modelchain` class is 'logarithmic' or
+    the :class:`~.modelchain.ModelChain` class is 'logarithmic' or
     'logarithmic_closest'.
 
     Parameters
@@ -88,7 +88,7 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
 
     It is assumed that the wind profile follows a power law. This fuction is
     carried out when the parameter `wind_model` of an instance of
-    the :class:`~.modelchain.Modelchain` class is 'hellman'.
+    the :class:`~.modelchain.ModelChain` class is 'hellman'.
 
     Parameters
     ----------

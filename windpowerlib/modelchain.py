@@ -13,7 +13,7 @@ import sys
 from windpowerlib import wind_speed, density, power_output
 
 
-class Modelchain(object):
+class ModelChain(object):
     r"""Model to determine the output of a wind turbine
 
     Parameters
@@ -47,8 +47,6 @@ class Modelchain(object):
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
         constant. Default: None.
-    hellman_z0 : float
-        Roughness length. Default: None.
 
     Attributes
     ----------
@@ -81,8 +79,6 @@ class Modelchain(object):
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
         constant. Default: None.
-    hellman_z0 : float
-        Roughness length. Default: None.
     power_output : pandas.Series
         Electrical power output of the wind turbine in W.
 
@@ -97,7 +93,7 @@ class Modelchain(object):
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> modelchain_data = {'rho_model': 'ideal_gas',
     ...    'temperature_model': 'interpolation'}
-    >>> e126_md = modelchain.Modelchain(e126, **modelchain_data)
+    >>> e126_md = modelchain.ModelChain(e126, **modelchain_data)
     >>> print(e126.d_rotor)
     127
 
@@ -110,8 +106,7 @@ class Modelchain(object):
                  temperature_model='gradient',
                  power_output_model='cp_values',
                  density_corr=False,
-                 hellman_exp=None,
-                 hellman_z0=None):
+                 hellman_exp=None):
 
         self.wind_turbine = wind_turbine
         self.obstacle_height = obstacle_height
@@ -121,7 +116,6 @@ class Modelchain(object):
         self.power_output_model = power_output_model
         self.density_corr = density_corr
         self.hellman_exp = hellman_exp
-        self.hellman_z0 = hellman_z0
         self.power_output = None
 
     def rho_hub(self, weather, data_height):
@@ -156,19 +150,19 @@ class Modelchain(object):
             data_height['temp_air_2'] = None
         if data_height['temp_air'] == self.wind_turbine.hub_height:
             logging.debug('Using given temperature (at hub height).')
-            T_hub = weather['temp_air']
+            temp_hub = weather['temp_air']
         elif data_height['temp_air_2'] == self.wind_turbine.hub_height:
             logging.debug('Using given temperature (2) (at hub height).')
-            T_hub = weather['temp_air_2']
+            temp_hub = weather['temp_air_2']
         # Calculation of temperature in K at hub height.
         elif self.temperature_model == 'gradient':
             logging.debug('Calculating temperature using a temp. gradient.')
-            T_hub = density.temperature_gradient(
+            temp_hub = density.temperature_gradient(
                 weather['temp_air'], data_height['temp_air'],
                 self.wind_turbine.hub_height)
         elif self.temperature_model == 'interpolation':
             logging.debug('Calculating temperature using interpolation.')
-            T_hub = density.temperature_interpol(
+            temp_hub = density.temperature_interpol(
                 weather['temp_air'], weather['temp_air_2'],
                 data_height['temp_air'], data_height['temp_air_2'],
                 self.wind_turbine.hub_height)
@@ -182,13 +176,13 @@ class Modelchain(object):
             rho_hub = density.rho_barometric(weather['pressure'],
                                              data_height['pressure'],
                                              self.wind_turbine.hub_height,
-                                             T_hub)
+                                             temp_hub)
         elif self.rho_model == 'ideal_gas':
             logging.debug('Calculating density using ideal gas equation.')
             rho_hub = density.rho_ideal_gas(weather['pressure'],
                                             data_height['pressure'],
                                             self.wind_turbine.hub_height,
-                                            T_hub)
+                                            temp_hub)
         else:
             logging.info('Wrong value: `rho_model` must be barometric ' +
                          'or ideal_gas.')
@@ -255,7 +249,7 @@ class Modelchain(object):
             v_wind = wind_speed.v_wind_hellman(
                 weather['v_wind'], data_height['v_wind'],
                 self.wind_turbine.hub_height,
-                self.hellman_exp, self.hellman_z0)
+                self.hellman_exp, weather['z0'])
         else:
             logging.error('Wrong value: `wind_model` must be logarithmic ' +
                           'or hellman.')
