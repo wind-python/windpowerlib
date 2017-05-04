@@ -9,7 +9,6 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 import logging
-import sys
 from windpowerlib import wind_speed, density, power_output
 
 
@@ -167,9 +166,9 @@ class ModelChain(object):
                 data_height['temp_air'], data_height['temp_air_2'],
                 self.wind_turbine.hub_height)
         else:
-            logging.info('Wrong value: `temperature_model` must be gradient ' +
-                         'or interpolation.')
-            sys.exit()
+            raise ValueError("'{0}' is an invalid value.".format(
+                             self.temperature_model) + "`temperature_model` " +
+                             "must be 'gradient' or 'interpolation'.")
         # Calculation of density in kg/m³ at hub height
         if self.rho_model == 'barometric':
             logging.debug('Calculating density using barometric height eq.')
@@ -184,9 +183,9 @@ class ModelChain(object):
                                             self.wind_turbine.hub_height,
                                             temp_hub)
         else:
-            logging.info('Wrong value: `rho_model` must be barometric ' +
-                         'or ideal_gas.')
-            sys.exit()
+            raise ValueError("'{0}' is an invalid value.".format(
+                             self.rho_model) + "`rho_model` " +
+                             "must be 'barometric' or 'ideal_gas'.")
         return rho_hub
 
     def v_wind_hub(self, weather, data_height):
@@ -251,9 +250,9 @@ class ModelChain(object):
                 self.wind_turbine.hub_height,
                 self.hellman_exp, weather['z0'])
         else:
-            logging.error('Wrong value: `wind_model` must be logarithmic ' +
-                          'or hellman.')
-            sys.exit()
+            raise ValueError("'{0}' is an invalid value.".format(
+                             self.wind_model) + "`wind_model` " +
+                             "must be 'logarithmic' or 'hellman'.")
         return v_wind
 
     def turbine_power_output(self, v_wind, rho_hub):
@@ -281,25 +280,35 @@ class ModelChain(object):
                 output = power_output.cp_curve(v_wind, rho_hub,
                                                self.wind_turbine.d_rotor,
                                                self.wind_turbine.cp_values)
-            else:
+            elif self.density_corr is True:
                 logging.debug('Calculating power output using density ' +
                               'corrected cp curve.')
                 output = power_output.cp_curve_density_corr(
                     v_wind, rho_hub, self.wind_turbine.d_rotor,
                     self.wind_turbine.cp_values)
+            else:
+                raise TypeError("'{0}' is an invalid type.".format(type(
+                                self.density_corr)) + "`density_corr` must " +
+                                "be Boolean (True or False).")
         elif self.power_output_model == 'p_values':
             if self.density_corr is False:
                 logging.debug('Calculating power output using power curve.')
                 output = power_output.p_curve(self.wind_turbine.p_values,
                                               v_wind)
-            else:
+            elif self.density_corr is True:
                 logging.debug('Calculating power output using density ' +
                               'corrected power curve.')
                 output = power_output.p_curve_density_corr(
                     v_wind, rho_hub, self.wind_turbine.p_values)
+            else:
+                raise TypeError("'{0}' is an invalid type.".format(type(
+                                self.density_corr)) + "`density_corr` must " +
+                                "be Boolean (True or False).")
         else:
-            logging.info('Wrong value: `power_output_model` must be ' +
-                         'cp_values or p_values.')
+            raise ValueError("'{0}' is an invalid value.".format(
+                             self.power_output_model) +
+                             "`power_output_model` " +
+                             "must be 'cp_values' or 'p_values'.")
         return output
 
     def run_model(self, weather, data_height):
