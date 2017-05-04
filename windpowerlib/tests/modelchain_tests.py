@@ -122,4 +122,3 @@ class TestModelChain:
         test_mc = mc.ModelChain(test_wt, **self.test_modelchain)
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
-
