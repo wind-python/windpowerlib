@@ -78,14 +78,16 @@ coastDat2 = {
 enerconE126 = {
     'hub_height': 135,
     'd_rotor': 127,
-    'turbine_name': 'ENERCON E 126 7500',
-    'fetch_curve': 'cp'}
+    'fetch_curve': 'P',  # 'P' vor p-curve and 'cp' for cp-curve
+    'turbine_name': 'ENERCON E 126 7500'}  # Turbine name as in register. Use
+                                           # wind_turbine.get_turbine_types()
+                                           # for a full list.
 
 vestasV90 = {
     'hub_height': 105,
     'd_rotor': 90,
-    'turbine_name': 'VESTAS V 90 3000',
-    'fetch_curve': 'cp'}
+    'fetch_curve': 'P',
+    'turbine_name': 'VESTAS V 90 3000'}
 
 # Initialize WindTurbine objects
 e126 = wt.WindTurbine(**enerconE126)
@@ -94,11 +96,11 @@ v90 = wt.WindTurbine(**vestasV90)
 # Specifications of the modelchain data
 modelchain_data = {
     'obstacle_height': 0,
-    'wind_model': 'logarithmic',
-    'rho_model': 'ideal_gas',
-    'power_output_model': 'cp_values',
-    'density_corr': False,
-    'hellman_exp': None}
+    'wind_model': 'logarithmic',       # 'logarithmic' or 'hellman'
+    'rho_model': 'ideal_gas',          # 'barometric' or 'ideal_gas'
+    'power_output_model': 'p_values',  # 'p_values' or 'cp_values'
+    'density_corr': False,             # True or False
+    'hellman_exp': None}               # Float or None
 
 # Calculate turbine power output
 mc_e126 = modelchain.ModelChain(e126, **modelchain_data).run_model(
