@@ -38,7 +38,7 @@ class ModelChain(object):
     power_output_model : string
         Parameter to define which model to use to calculate the turbine power
         output. Valid options are 'cp_values' and 'p_values'.
-        Default: 'cp_values'.
+        Default: 'p_values'.
     density_corr : boolean
         If the parameter is True the density corrected power curve is used for
         the calculation of the turbine power output. Default: False.
@@ -70,7 +70,7 @@ class ModelChain(object):
     power_output_model : string
         Parameter to define which model to use to calculate the turbine power
         output. Valid options are 'cp_values' and 'p_values'.
-        Default: 'cp_values'.
+        Default: 'p_values'.
     density_corr : boolean
         If the parameter is True the density corrected power curve is used for
         the calculation of the turbine power output. Default: False.
@@ -103,7 +103,7 @@ class ModelChain(object):
                  wind_model='logarithmic',
                  rho_model='barometric',
                  temperature_model='gradient',
-                 power_output_model='cp_values',
+                 power_output_model='p_values',
                  density_corr=False,
                  hellman_exp=None):
 

@@ -43,7 +43,7 @@ class WindTurbine(object):
         The nominal output of the wind turbine in W.
     fetch_curve : string
         Parameter to specify whether the power or power coefficient curve
-        should be retrieved from the provided turbine data. Default: cp.
+        should be retrieved from the provided turbine data. Default: 'P'.
 
     Attributes
     ----------
@@ -69,7 +69,7 @@ class WindTurbine(object):
         The nominal output of the wind turbine in W.
     fetch_curve : string
         Parameter to specify whether the power or power coefficient curve
-        should be retrieved from the provided turbine data. Default: cp.
+        should be retrieved from the provided turbine data. Default: 'P'.
     power_output : pandas.Series
         The calculated power output of the wind turbine.
 
@@ -87,7 +87,7 @@ class WindTurbine(object):
     """
 
     def __init__(self, turbine_name, hub_height, d_rotor, cp_values=None,
-                 p_values=None, nominal_power=None, fetch_curve='cp'):
+                 p_values=None, nominal_power=None, fetch_curve='P'):
 
         self.turbine_name = turbine_name
         self.hub_height = hub_height
