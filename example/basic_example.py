@@ -82,7 +82,6 @@ enerconE126 = {
     'turbine_name': 'ENERCON E 126 7500'}  # Turbine name as in register. Use
                                            # wind_turbine.get_turbine_types()
                                            # for a full list.
-
 vestasV90 = {
     'hub_height': 105,
     'd_rotor': 90,
