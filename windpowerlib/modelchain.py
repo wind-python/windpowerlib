@@ -275,6 +275,10 @@ class ModelChain(object):
 
         """
         if self.power_output_model == 'cp_values':
+            if self.wind_turbine.cp_values is None:
+                raise TypeError("Cp values of " +
+                                self.wind_turbine.turbine_name +
+                                " are missing.")
             if self.density_corr is False:
                 logging.debug('Calculating power output using cp curve.')
                 output = power_output.cp_curve(v_wind, rho_hub,
@@ -291,6 +295,10 @@ class ModelChain(object):
                                 self.density_corr)) + "`density_corr` must " +
                                 "be Boolean (True or False).")
         elif self.power_output_model == 'p_values':
+            if self.wind_turbine.p_values is None:
+                raise TypeError("P values of " +
+                                self.wind_turbine.turbine_name +
+                                " are missing.")
             if self.density_corr is False:
                 logging.debug('Calculating power output using power curve.')
                 output = power_output.p_curve(self.wind_turbine.p_values,
