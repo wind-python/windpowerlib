@@ -100,9 +100,7 @@ class WindTurbine(object):
         self.power_output = None
 
         if (self.cp_values is None and self.p_values is None):
-            p_nom = self.fetch_turbine_data()
-            if self.nominal_power is None:
-                self.nominal_power = p_nom
+            self.fetch_turbine_data()
 
     def fetch_turbine_data(self):
         r"""
@@ -174,7 +172,9 @@ class WindTurbine(object):
         else:
             filename = 'cp_curves.csv'
             self.cp_values, p_nom = restructure_data()
-        return p_nom
+        if self.nominal_power is None:
+                self.nominal_power = p_nom
+        return self
 
 
 def read_turbine_data(**kwargs):
