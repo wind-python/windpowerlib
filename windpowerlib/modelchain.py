@@ -199,8 +199,7 @@ class ModelChain(object):
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for wind speed
             `v_wind` in m/s and roughness length `z0` in m, as well as
-            optionally wind speed `v_wind_2` in m/s at different height for
-            interpolation.
+            optionally wind speed `v_wind_2` in m/s at different height.
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights in m for which the
             corresponding parameters in `weather` apply.
