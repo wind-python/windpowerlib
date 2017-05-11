@@ -210,6 +210,11 @@ class ModelChain(object):
         v_wind : pandas.Series or array
             Wind speed in m/s at hub height.
 
+        Notes
+        -----
+        If `weather` contains wind speeds at different heights it is calculated
+        with `v_wind` of which data height is closer to hub height.
+
         """
         # Check if wind speed data is at hub height.
         if 'v_wind_2' not in weather:
