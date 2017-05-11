@@ -147,9 +147,9 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
 
     """
     if hellman_exp is None:
-        try:
+        if z_0 is not None:
             hellman_exp = 1 / np.log(hub_height / z_0)
-        except:
+        else:
             hellman_exp = 1/7
     else:
         if not isinstance(hellman_exp, float):
