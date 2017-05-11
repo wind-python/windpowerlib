@@ -132,6 +132,19 @@ class WindTurbine(object):
         """
 
         def restructure_data():
+            r"""
+            Restructures data read from a csv file.
+
+            Method creates a two-dimensional DataFrame containing the power
+            coefficient curve or power curve of the requested wind turbine.
+
+            Returns
+            -------
+            Tuple (pd.DataFrame, float)
+                Power curve or power coefficient curve (pd.DataFrame)
+                and nominal power (float).
+
+            """
             df = read_turbine_data(filename=filename)
             wpp_df = df[df.turbine_id == self.turbine_name]
             if wpp_df.shape[0] == 0:
