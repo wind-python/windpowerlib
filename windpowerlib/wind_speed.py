@@ -101,10 +101,11 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
     hellman_exp : float
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
-        constant. Default: 1/7. If roughness length is given
-        `hellman_exp` = 1 / ln(h_hub/z_0).
+        constant. Default: None. If None and roughness length is given
+        `hellman_exp` = 1 / ln(h_hub/z_0), otherwise `hellman_exp` = 1/7.
     z_0 : pandas.Series or array or float
-        Roughness length. Default: None.
+        Roughness length. Default: None. If given
+        `hellman_exp` = 1 / ln(h_hub/z_0), otherwise `hellman_exp` = 1/7.
 
     Returns
     -------
@@ -147,9 +148,9 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
 
     """
     if hellman_exp is None:
-        try:
+        if z_0 is not None:
             hellman_exp = 1 / np.log(hub_height / z_0)
-        except:
+        else:
             hellman_exp = 1/7
     else:
         if not isinstance(hellman_exp, float):

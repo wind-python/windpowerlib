@@ -43,7 +43,7 @@ class WindTurbine(object):
         The nominal output of the wind turbine in W.
     fetch_curve : string
         Parameter to specify whether the power or power coefficient curve
-        should be retrieved from the provided turbine data. Default: cp.
+        should be retrieved from the provided turbine data. Default: 'P'.
 
     Attributes
     ----------
@@ -69,7 +69,7 @@ class WindTurbine(object):
         The nominal output of the wind turbine in W.
     fetch_curve : string
         Parameter to specify whether the power or power coefficient curve
-        should be retrieved from the provided turbine data. Default: cp.
+        should be retrieved from the provided turbine data. Default: 'P'.
     power_output : pandas.Series
         The calculated power output of the wind turbine.
 
@@ -87,7 +87,7 @@ class WindTurbine(object):
     """
 
     def __init__(self, turbine_name, hub_height, d_rotor, cp_values=None,
-                 p_values=None, nominal_power=None, fetch_curve='cp'):
+                 p_values=None, nominal_power=None, fetch_curve='P'):
 
         self.turbine_name = turbine_name
         self.hub_height = hub_height
@@ -100,9 +100,7 @@ class WindTurbine(object):
         self.power_output = None
 
         if (self.cp_values is None and self.p_values is None):
-            p_nom = self.fetch_turbine_data()
-            if self.nominal_power is None:
-                self.nominal_power = p_nom
+            self.fetch_turbine_data()
 
     def fetch_turbine_data(self):
         r"""
@@ -132,6 +130,19 @@ class WindTurbine(object):
         """
 
         def restructure_data():
+            r"""
+            Restructures data read from a csv file.
+
+            Method creates a two-dimensional DataFrame containing the power
+            coefficient curve or power curve of the requested wind turbine.
+
+            Returns
+            -------
+            Tuple (pd.DataFrame, float)
+                Power curve or power coefficient curve (pd.DataFrame)
+                and nominal power (float).
+
+            """
             df = read_turbine_data(filename=filename)
             wpp_df = df[df.turbine_id == self.turbine_name]
             if wpp_df.shape[0] == 0:
@@ -161,7 +172,9 @@ class WindTurbine(object):
         else:
             filename = 'cp_curves.csv'
             self.cp_values, p_nom = restructure_data()
-        return p_nom
+        if self.nominal_power is None:
+                self.nominal_power = p_nom
+        return self
 
 
 def read_turbine_data(**kwargs):

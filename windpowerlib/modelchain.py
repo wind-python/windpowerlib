@@ -38,7 +38,7 @@ class ModelChain(object):
     power_output_model : string
         Parameter to define which model to use to calculate the turbine power
         output. Valid options are 'cp_values' and 'p_values'.
-        Default: 'cp_values'.
+        Default: 'p_values'.
     density_corr : boolean
         If the parameter is True the density corrected power curve is used for
         the calculation of the turbine power output. Default: False.
@@ -70,7 +70,7 @@ class ModelChain(object):
     power_output_model : string
         Parameter to define which model to use to calculate the turbine power
         output. Valid options are 'cp_values' and 'p_values'.
-        Default: 'cp_values'.
+        Default: 'p_values'.
     density_corr : boolean
         If the parameter is True the density corrected power curve is used for
         the calculation of the turbine power output. Default: False.
@@ -103,7 +103,7 @@ class ModelChain(object):
                  wind_model='logarithmic',
                  rho_model='barometric',
                  temperature_model='gradient',
-                 power_output_model='cp_values',
+                 power_output_model='p_values',
                  density_corr=False,
                  hellman_exp=None):
 
@@ -199,8 +199,7 @@ class ModelChain(object):
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for wind speed
             `v_wind` in m/s and roughness length `z0` in m, as well as
-            optionally wind speed `v_wind_2` in m/s at different height for
-            interpolation.
+            optionally wind speed `v_wind_2` in m/s at different height.
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights in m for which the
             corresponding parameters in `weather` apply.
@@ -209,6 +208,11 @@ class ModelChain(object):
         -------
         v_wind : pandas.Series or array
             Wind speed in m/s at hub height.
+
+        Notes
+        -----
+        If `weather` contains wind speeds at different heights it is calculated
+        with `v_wind` of which data height is closer to hub height.
 
         """
         # Check if wind speed data is at hub height.
@@ -275,6 +279,10 @@ class ModelChain(object):
 
         """
         if self.power_output_model == 'cp_values':
+            if self.wind_turbine.cp_values is None:
+                raise TypeError("Cp values of " +
+                                self.wind_turbine.turbine_name +
+                                " are missing.")
             if self.density_corr is False:
                 logging.debug('Calculating power output using cp curve.')
                 output = power_output.cp_curve(v_wind, rho_hub,
@@ -291,6 +299,10 @@ class ModelChain(object):
                                 self.density_corr)) + "`density_corr` must " +
                                 "be Boolean (True or False).")
         elif self.power_output_model == 'p_values':
+            if self.wind_turbine.p_values is None:
+                raise TypeError("P values of " +
+                                self.wind_turbine.turbine_name +
+                                " are missing.")
             if self.density_corr is False:
                 logging.debug('Calculating power output using power curve.')
                 output = power_output.p_curve(self.wind_turbine.p_values,
