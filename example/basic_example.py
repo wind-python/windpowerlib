@@ -21,7 +21,7 @@ from windpowerlib import wind_turbine as wt
 # Feel free to remove or change these lines
 # import warnings
 # warnings.simplefilter(action="ignore", category=RuntimeWarning)
-logging.getLogger().setLevel(logging.INFO)
+logging.getLogger().setLevel(logging.DEBUG)
 
 
 def read_weather_data(filename, datetime_column='Unnamed: 0',
