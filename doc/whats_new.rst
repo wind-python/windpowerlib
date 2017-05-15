@@ -8,6 +8,5 @@ These are new features and improvements of note in each release
     :local:
     :backlinks: top
 
+.. include::  whatsnew/v005.txt
 .. include::  whatsnew/v004.txt
-.. include::  whatsnew/v003.txt
-.. include::  whatsnew/v001.txt
