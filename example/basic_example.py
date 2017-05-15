@@ -65,12 +65,9 @@ weather = read_weather_data('weather.csv')
 
 # Specification of the weather data set CoastDat2 (example data)
 coastDat2 = {
-    'dhi': 0,
-    'dirhi': 0,
     'pressure': 0,
     'temp_air': 2,
     'v_wind': 10,
-    'Z0': 0,
     'temp_air_2': 10,
     'v_wind_2': 80}
 
