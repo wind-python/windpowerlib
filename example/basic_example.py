@@ -75,7 +75,7 @@ coastDat2 = {
 enerconE126 = {
     'hub_height': 135,
     'd_rotor': 127,
-    'fetch_curve': 'P',  # 'P' vor p-curve and 'cp' for cp-curve
+    'fetch_curve': 'P',  # 'P' for p-curve and 'cp' for cp-curve
     'turbine_name': 'ENERCON E 126 7500'}  # Turbine name as in register. Use
                                            # wind_turbine.get_turbine_types()
                                            # for a full list.
