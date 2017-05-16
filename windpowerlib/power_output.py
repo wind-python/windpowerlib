@@ -133,14 +133,14 @@ def p_curve(p_values, v_wind):
     p_values : pandas.DataFrame
         Power curve of the wind turbine.
         Indices are the wind speeds of the power curve in m/s, the
-        corresponding power values in W are in the column 'P'.
+        corresponding power values are in the column 'P'.
     v_wind : pandas.Series or array
         Wind speed at hub height in m/s.
 
     Returns
     -------
     power_output : pandas.Series
-        Electrical power output of the wind turbine in W.
+        Electrical power output of the wind turbine in the unit of `p_values`.
 
     Notes
     -------
@@ -178,13 +178,13 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
         Density of air at hub height in kg/m³.
     p_values : pandas.DataFrame
         Power curve of the wind turbine.
-        The indices are the corresponding wind speeds of the power curve, the
-        power values containing column is called 'P'.
+        Indices are the wind speeds of the power curve in m/s, the
+        corresponding power values are in the column 'P'.
 
     Returns
     -------
     power_output : pandas.Series
-        Electrical power output of the wind turbine in W.
+        Electrical power output of the wind turbine in the unit of `p_values`.
 
     Notes
     -----
