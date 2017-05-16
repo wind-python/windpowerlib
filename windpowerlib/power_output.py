@@ -204,9 +204,11 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
         v: wind speed [m/s], :math:`\rho`: density [kg/m³]
 
     :math:`v_{std}` is the standard wind speed in the power curve
-    (:math:`v_{std}`, :math:`P_{std}`).
+    (:math:`v_{std}`, :math:`P_{std}`),
     :math:`v_{site}` is the density corrected wind speed for the power curve
-    (:math:`v_{site}`, :math:`P_{std}`).
+    (:math:`v_{site}`, :math:`P_{std}`),
+    :math:`\rho_0` is the ambient density (1.225 kg/m³)
+    and :math:`\rho_{site}` the density at site conditions (and hub height).
 
     It is assumed that the power output for wind speeds above the maximum
     wind speed given in the power curve is zero.
