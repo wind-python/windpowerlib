@@ -58,7 +58,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
         {z_{0}}\right)}{\ln\left(\frac{h_{data}}{z_{0}}\right)}
 
     :math:`h_{data}` is the height in which the wind speed
-    :math:`v_{wind,data}` is measured and :math:`v_{wind,data}` is the wind
+    :math:`v_{wind,data}` is measured and :math:`v_{wind,hub}` is the wind
     speed at hub height :math:`h_{hub}` of the wind turbine.
 
     Parameters `v_wind_height`, `z_0`, `hub_height` and `obstacle_height` have
@@ -124,7 +124,7 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
         v: wind speed, h: height, :math:`\alpha`: Hellman exponent
 
     :math:`h_{data}` is the height in which the wind speed
-    :math:`v_{wind,data}` is measured and :math:`v_{wind,data}` is the wind
+    :math:`v_{wind,data}` is measured and :math:`v_{wind,hub}` is the wind
     speed at hub height :math:`h_{hub}` of the wind turbine.
 
     For the Hellman exponent :math:`\alpha` many studies use a value of 1/7 for
