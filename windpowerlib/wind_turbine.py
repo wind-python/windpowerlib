@@ -173,7 +173,7 @@ class WindTurbine(object):
             filename = 'cp_curves.csv'
             self.cp_values, p_nom = restructure_data()
         if self.nominal_power is None:
-                self.nominal_power = p_nom
+            self.nominal_power = p_nom
         return self
 
 
