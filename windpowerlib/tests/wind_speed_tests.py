@@ -27,7 +27,7 @@ class TestWindSpeed:
         v_wind_hub_exp = pd.Series(data=[7.74136523, 10.0637748])
         assert_series_equal(logarithmic_wind_profile(**self.logarithmic),
                             v_wind_hub_exp)
-        # Test array
+        # Test numpy array
         self.logarithmic['z_0'] = np.array(self.logarithmic['z_0'])
         self.logarithmic['v_wind'] = np.array(self.logarithmic['v_wind'])
         assert_allclose(logarithmic_wind_profile(**self.logarithmic),

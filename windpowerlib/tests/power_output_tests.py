@@ -25,7 +25,7 @@ class TestPowerOutput:
         assert_series_equal(cp_curve(self.v_wind, self.rho_hub, self.d_rotor,
                                      self.cp_values),
                             power_output_exp)
-        # Test array
+        # Test numpy array
         assert_allclose(cp_curve(np.array(self.v_wind), np.array(self.rho_hub),
                                  self.d_rotor, self.cp_values),
                         power_output_exp)
@@ -38,7 +38,7 @@ class TestPowerOutput:
                                                   self.d_rotor,
                                                   self.cp_values),
                             power_output_exp)
-        # Test array
+        # Test numpy array
         assert_allclose(cp_curve_density_corr(np.array(self.v_wind),
                                               np.array(self.rho_hub),
                                               self.d_rotor, self.cp_values),
@@ -50,7 +50,7 @@ class TestPowerOutput:
                                      name='feedin_wind_turbine')
         assert_series_equal(p_curve(self.p_values, self.v_wind),
                             power_output_exp)
-        # Test array
+        # Test numpy array
         assert_allclose(p_curve(self.p_values, np.array(self.v_wind)),
                         power_output_exp)
 
@@ -61,7 +61,7 @@ class TestPowerOutput:
         assert_series_equal(p_curve_density_corr(self.v_wind, self.rho_hub,
                                                  self.p_values),
                             power_output_exp)
-        # Test array
+        # Test numpy array
         assert_allclose(p_curve_density_corr(np.array(self.v_wind),
                                              np.array(self.rho_hub),
                                              self.p_values),
