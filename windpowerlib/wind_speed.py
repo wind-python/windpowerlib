@@ -77,7 +77,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
     if 0.7 * obstacle_height > v_wind_height:
         raise ValueError("To take an obstacle height of {0} m".format(
                          obstacle_height) + " into consideration, wind" +
-                         " speed data of a higher height is needed.")
+                         " speed data of a greater height is needed.")
     return (v_wind * np.log((hub_height - 0.7 * obstacle_height) / z_0) /
             np.log((v_wind_height - 0.7 * obstacle_height) / z_0))
 
