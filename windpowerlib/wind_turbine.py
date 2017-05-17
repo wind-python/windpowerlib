@@ -99,7 +99,7 @@ class WindTurbine(object):
 
         self.power_output = None
 
-        if (self.cp_values is None and self.p_values is None):
+        if self.cp_values is None and self.p_values is None:
             self.fetch_turbine_data()
 
     def fetch_turbine_data(self):
