@@ -92,14 +92,16 @@ class TestModelChain:
 
     def test_run_model(self):
         # Test with default parameters of modelchain (cp curve)
-        power_output_exp = pd.Series(data=[724829.76425940311, 1605284.00553])
+        power_output_exp = pd.Series(data=[724829.76425940311, 1605284.00553],
+                                     name='feedin_wind_turbine')
         test_mc = mc.ModelChain(self.test_wt)
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
     def test_different_models(self):
         # Test density corrected power coefficient curve
-        power_output_exp = pd.Series(data=[567663.35743, 1485484.80358])
+        power_output_exp = pd.Series(data=[567663.35743, 1485484.80358],
+                                     name='feedin_wind_turbine')
         self.test_modelchain['density_corr'] = True
         test_wt = wt.WindTurbine(**self.test_turbine)
         test_mc = mc.ModelChain(test_wt, **self.test_modelchain)
@@ -107,7 +109,8 @@ class TestModelChain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Test with power curve
-        power_output_exp = pd.Series(data=[1331005.84022, 2975112.26447])
+        power_output_exp = pd.Series(data=[1331005.84022, 2975112.26447],
+                                     name='feedin_wind_turbine')
         self.test_turbine['fetch_curve'] = 'P'
         self.test_modelchain['power_output_model'] = 'p_values'
         self.test_modelchain['density_corr'] = False
@@ -117,7 +120,8 @@ class TestModelChain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Ideal gas equation and density corrected power curve
-        power_output_exp = pd.Series(data=[1430364.75401, 3746257.15047])
+        power_output_exp = pd.Series(data=[1430364.75401, 3746257.15047],
+                                     name = 'feedin_wind_turbine')
         self.test_modelchain['rho_model'] = 'ideal_gas'
         self.test_modelchain['density_corr'] = True
         test_mc = mc.ModelChain(test_wt, **self.test_modelchain)
