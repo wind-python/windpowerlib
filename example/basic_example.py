@@ -24,7 +24,7 @@ from windpowerlib import wind_turbine as wt
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-def read_weather_data(filename, datetime_column='Unnamed: 0',
+def read_weather_data(filename, datetime_column='time_index',
                       **kwargs):
     r"""
     Fetches weather data from a file.
@@ -61,7 +61,6 @@ def read_weather_data(filename, datetime_column='Unnamed: 0',
 
 # Read weather data from csv
 weather = read_weather_data('weather.csv')
-#weather.index.name = ''
 
 # Specification of the weather data set CoastDat2 (example data)
 data_height = {
@@ -75,14 +74,14 @@ data_height = {
 enerconE126 = {
     'hub_height': 135,
     'd_rotor': 127,
-    'fetch_curve': 'P',  # 'P' for p-curve and 'cp' for cp-curve
+    'fetch_curve': 'p',  # 'p' for p-curve and 'cp' for cp-curve
     'turbine_name': 'ENERCON E 126 7500'}  # Turbine name as in register. Use
                                            # wind_turbine.get_turbine_types()
                                            # for a full list.
 vestasV90 = {
     'hub_height': 105,
     'd_rotor': 90,
-    'fetch_curve': 'P',
+    'fetch_curve': 'p',
     'turbine_name': 'VESTAS V 90 3000'}
 
 # Initialize WindTurbine objects

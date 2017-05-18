@@ -60,9 +60,6 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
 
     """
     # cp time series
-    # TODO introduce new parameter v_cutout to allow for power output above
-    # maximum wind speed from power coefficient curve (maximum power output
-    # must be limited)
     cp_series = np.interp(v_wind, cp_values.index, cp_values.cp,
                           left=0, right=0)
     power_output = (1 / 8 * rho_hub * d_rotor ** 2 * np.pi
@@ -72,9 +69,8 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
         series_index = v_wind.index
     except AttributeError:
         series_index = range(1, len(power_output)+1)
-    power_output = pd.Series(data=power_output, index=series_index,
-                             name='feedin_wind_turbine')
-    return power_output
+    return pd.Series(data=power_output, index=series_index,
+                     name='feedin_wind_turbine')
 
 
 def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
@@ -116,7 +112,7 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
     p_values = (1 / 8 * 1.225 * d_rotor ** 2 * np.pi *
                 np.power(cp_values.index, 3) * cp_values.cp)
     p_values = pd.DataFrame(data=np.array(p_values), index=cp_values.index,
-                            columns=['P'])
+                            columns=['p'])
     return p_curve_density_corr(v_wind, rho_hub, p_values)
 
 
@@ -133,14 +129,14 @@ def p_curve(p_values, v_wind):
     p_values : pandas.DataFrame
         Power curve of the wind turbine.
         Indices are the wind speeds of the power curve in m/s, the
-        corresponding power values in W are in the column 'P'.
+        corresponding power values in W are in the column 'p'.
     v_wind : pandas.Series or array
         Wind speed at hub height in m/s.
 
     Returns
     -------
     power_output : pandas.Series
-        Electrical power output of the wind turbine in W.
+        Electrical power output of the wind turbine in the unit of `p_values`.
 
     Notes
     -------
@@ -148,18 +144,15 @@ def p_curve(p_values, v_wind):
     wind speed given in the power curve is zero.
 
     """
-    # TODO introduce new parameter v_cutout to allow for power output above
-    # maximum wind speed from power curve
-    power_output = np.interp(v_wind, p_values.index, p_values.P,
+    power_output = np.interp(v_wind, p_values.index, p_values.p,
                              left=0, right=0)
     # Set index for time series
     try:
         series_index = v_wind.index
     except AttributeError:
         series_index = range(1, len(power_output)+1)
-    power_output = pd.Series(data=power_output, index=series_index,
-                             name='feedin_wind_turbine')
-    return power_output
+    return pd.Series(data=power_output, index=series_index,
+                     name='feedin_wind_turbine')
 
 
 def p_curve_density_corr(v_wind, rho_hub, p_values):
@@ -178,13 +171,13 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
         Density of air at hub height in kg/m³.
     p_values : pandas.DataFrame
         Power curve of the wind turbine.
-        The indices are the corresponding wind speeds of the power curve, the
-        power values containing column is called 'P'.
+        Indices are the wind speeds of the power curve in m/s, the
+        corresponding power values in W are in the column 'p'.
 
     Returns
     -------
     power_output : pandas.Series
-        Electrical power output of the wind turbine in W.
+        Electrical power output of the wind turbine in the unit of `p_values`.
 
     Notes
     -----
@@ -204,9 +197,11 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
         v: wind speed [m/s], :math:`\rho`: density [kg/m³]
 
     :math:`v_{std}` is the standard wind speed in the power curve
-    (:math:`v_{std}`, :math:`P_{std}`).
+    (:math:`v_{std}`, :math:`P_{std}`),
     :math:`v_{site}` is the density corrected wind speed for the power curve
-    (:math:`v_{site}`, :math:`P_{std}`).
+    (:math:`v_{site}`, :math:`P_{std}`),
+    :math:`\rho_0` is the ambient density (1.225 kg/m³)
+    and :math:`\rho_{site}` the density at site conditions (and hub height).
 
     It is assumed that the power output for wind speeds above the maximum
     wind speed given in the power curve is zero.
@@ -224,13 +219,11 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
             at Reiner Lemoine Institute, 2014, p. 13
 
     """
-    # TODO introduce new parameter v_cutout to allow for power output above
-    # maximum wind speed from power curve
     power_output = [(np.interp(v_wind[i],
                                p_values.index * (1.225 / rho_hub[i])**(
                                    np.interp(p_values.index,
                                              [7.5, 12.5], [1/3, 2/3])),
-                               p_values.P, left=0, right=0))
+                               p_values.p, left=0, right=0))
                     for i in range(len(v_wind))]
 
     # Set index for time series
@@ -238,6 +231,5 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
         series_index = v_wind.index
     except AttributeError:
         series_index = range(1, len(power_output)+1)
-    power_output = pd.Series(data=power_output, index=series_index,
-                             name='feedin_wind_turbine')
-    return power_output
+    return pd.Series(data=power_output, index=series_index,
+                     name='feedin_wind_turbine')
