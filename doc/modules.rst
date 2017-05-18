@@ -1,5 +1,8 @@
 .. currentmodule:: windpowerlib
 
+#############
+API
+#############
 
 Classes
 =========
