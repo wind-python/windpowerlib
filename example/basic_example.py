@@ -24,7 +24,7 @@ from windpowerlib import wind_turbine as wt
 logging.getLogger().setLevel(logging.INFO)
 
 
-def read_weather_data(filename, datetime_column='Unnamed: 0',
+def read_weather_data(filename, datetime_column='time_index',
                       **kwargs):
     r"""
     Fetches weather data from a file.
@@ -61,7 +61,6 @@ def read_weather_data(filename, datetime_column='Unnamed: 0',
 
 # Read weather data from csv
 weather = read_weather_data('weather.csv')
-weather.index.name = ''
 
 # Specification of the weather data set CoastDat2 (example data)
 coastDat2 = {
