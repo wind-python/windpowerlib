@@ -160,17 +160,16 @@ class TestModelChain:
 
         """
         with pytest.raises(TypeError):
-            self.test_modelchain['power_output_model'] = 'cp_values'
+            self.test_modelchain['temperature_model'] = 'gradient'
             self.test_modelchain['density_corr'] = 'wrong_type'
             test_mc = mc.ModelChain(self.test_wt, **self.test_modelchain)
             test_mc.run_model(self.weather, self.data_height)
         with pytest.raises(TypeError):
                 self.test_modelchain['power_output_model'] = 'p_values'
-                self.test_turbine['fetch_curve'] = 'P'
+                self.test_turbine['fetch_curve'] = 'cp'
                 test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
                                         **self.test_modelchain)
                 test_mc.run_model(self.weather, self.data_height)
-
 
 
 
