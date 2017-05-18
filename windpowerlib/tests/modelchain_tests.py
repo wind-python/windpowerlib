@@ -121,7 +121,7 @@ class TestModelChain:
 
         # Ideal gas equation and density corrected power coefficient curve
         power_output_exp = pd.Series(data=[567683.92454, 1485556.96435],
-                                     name = 'feedin_wind_turbine')
+                                     name='feedin_wind_turbine')
         self.test_modelchain['rho_model'] = 'ideal_gas'
         self.test_modelchain['density_corr'] = True
         test_mc = mc.ModelChain(test_wt, **self.test_modelchain)
