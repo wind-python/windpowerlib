@@ -129,7 +129,7 @@ def p_curve(p_values, v_wind):
     p_values : pandas.DataFrame
         Power curve of the wind turbine.
         Indices are the wind speeds of the power curve in m/s, the
-        corresponding power values are in the column 'P'.
+        corresponding power values in W are in the column 'p'.
     v_wind : pandas.Series or array
         Wind speed at hub height in m/s.
 
@@ -172,7 +172,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     p_values : pandas.DataFrame
         Power curve of the wind turbine.
         Indices are the wind speeds of the power curve in m/s, the
-        corresponding power values are in the column 'P'.
+        corresponding power values in W are in the column 'p'.
 
     Returns
     -------
@@ -223,7 +223,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
                                p_values.index * (1.225 / rho_hub[i])**(
                                    np.interp(p_values.index,
                                              [7.5, 12.5], [1/3, 2/3])),
-                               p_values.P, left=0, right=0))
+                               p_values.p, left=0, right=0))
                     for i in range(len(v_wind))]
 
     # Set index for time series
