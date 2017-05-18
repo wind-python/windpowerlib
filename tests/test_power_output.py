@@ -9,7 +9,7 @@ from numpy.testing import assert_allclose
 class TestPowerOutput:
 
     @classmethod
-    def setUpClass(self):
+    def setup_class(self):
         self.v_wind = pd.Series(data=[2.0, 5.5, 7.0])
         self.rho_hub = pd.Series(data=[1.3, 1.3, 1.3])
         self.d_rotor = 80

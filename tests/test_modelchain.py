@@ -8,7 +8,7 @@ import pytest
 class TestModelChain:
 
     @classmethod
-    def setUpClass(self):
+    def setup_class(self):
         self.weather = {'temp_air': pd.Series(data=[267, 268]),
                         'temp_air_2': pd.Series(data=[267, 266]),
                         'v_wind': pd.Series(data=[5.0, 6.5]),

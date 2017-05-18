@@ -9,7 +9,7 @@ import numpy as np
 class TestDensityTemperature:
 
     @classmethod
-    def setUpClass(self):
+    def setup_class(self):
         self.h_hub = 100
         self.weather = {'temp_air': pd.Series(data=[267, 268]),
                         'temp_air_2': pd.Series(data=[267, 266]),

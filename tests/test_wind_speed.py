@@ -9,7 +9,7 @@ import pytest
 class TestWindSpeed:
 
     @classmethod
-    def setUpClass(self):
+    def setup_class(self):
         self.logarithmic = {'v_wind': pd.Series(data=[5.0, 6.5]),
                             'z_0': pd.Series(data=[0.15, 0.15]),
                             'hub_height': 100,
