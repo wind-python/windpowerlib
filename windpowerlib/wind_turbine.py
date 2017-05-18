@@ -108,11 +108,15 @@ class WindTurbine(object):
 
         Method fetches nominal power as well as power coefficient curve or
         power curve from a data file provided along with the windpowerlib.
+        You can also use this function to import your own power (coefficient)
+        curves. Therefore the wind speeds in m/s have to be in the first row
+        and the corresponding power coefficient curve values or power
+        curve values in W in a row where the first column contains the turbine
+        name (See directory windpowerlib/data as reference).
 
         Returns
         -------
-        float
-            Nominal power of the requested wind turbine.
+        self
 
         Examples
         --------
@@ -139,19 +143,21 @@ class WindTurbine(object):
             Returns
             -------
             Tuple (pd.DataFrame, float)
-                Power curve or power coefficient curve (pd.DataFrame)
-                and nominal power (float).
+                Power curve (values in W) or power coefficient curve as
+                pd.DataFrame and nominal power as float in W.
 
             """
             df = read_turbine_data(filename=filename)
             wpp_df = df[df.turbine_id == self.turbine_name]
+            # if turbine not in data file
             if wpp_df.shape[0] == 0:
                 pd.set_option('display.max_rows', len(df))
                 logging.info('Possible types: \n{0}'.format(df.turbine_id))
                 pd.reset_option('display.max_rows')
                 sys.exit('Cannot find the wind converter type: {0}'.format(
                     self.turbine_name))
-
+            # if turbine in data file write power (coefficient) curve values
+            # to 'data' array
             ncols = ['turbine_id', 'p_nom', 'source', 'modificationtimestamp']
             data = np.array([0, 0])
             for col in wpp_df.keys():
