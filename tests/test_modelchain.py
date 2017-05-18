@@ -128,12 +128,7 @@ class TestModelChain:
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
-    def test_raises_value_error(self):
-        r"""
-        Raises ValueError due to wrong spelling of the parameters `rho_model`,
-        `power_output_model`, `wind_model` and `temperature_model`.
-
-        """
+        # Raise ValueErrors due to wrong spelling of parameters
         with pytest.raises(ValueError):
             self.test_modelchain['power_output_model'] = 'wrong_spelling'
             test_mc = mc.ModelChain(self.test_wt, **self.test_modelchain)
@@ -153,17 +148,14 @@ class TestModelChain:
             self.test_modelchain['temperature_model'] = 'wrong_spelling'
             test_mc = mc.ModelChain(self.test_wt, **self.test_modelchain)
             test_mc.run_model(self.weather, self.data_height)
-# TODO: pytest.raises(ExpectedException, func, *args, **kwargs)
-    def test_raises_type_error(self):
-        r"""
-        Raises TypeError due to wrong type of `density_corr`.
 
-        """
+        # Raise TypeErrors due to wrong type of `density_corr`
         with pytest.raises(TypeError):
             self.test_modelchain['temperature_model'] = 'gradient'
             self.test_modelchain['density_corr'] = 'wrong_type'
             test_mc = mc.ModelChain(self.test_wt, **self.test_modelchain)
             test_mc.run_model(self.weather, self.data_height)
+        # Raise TypeErrors due to missing cp- or p-values
         with pytest.raises(TypeError):
                 self.test_modelchain['power_output_model'] = 'p_values'
                 self.test_turbine['fetch_curve'] = 'cp'
