@@ -69,9 +69,8 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
         series_index = v_wind.index
     except AttributeError:
         series_index = range(1, len(power_output)+1)
-    power_output = pd.Series(data=power_output, index=series_index,
-                             name='feedin_wind_turbine')
-    return power_output
+    return pd.Series(data=power_output, index=series_index,
+                     name='feedin_wind_turbine')
 
 
 def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
@@ -152,9 +151,8 @@ def p_curve(p_values, v_wind):
         series_index = v_wind.index
     except AttributeError:
         series_index = range(1, len(power_output)+1)
-    power_output = pd.Series(data=power_output, index=series_index,
-                             name='feedin_wind_turbine')
-    return power_output
+    return pd.Series(data=power_output, index=series_index,
+                     name='feedin_wind_turbine')
 
 
 def p_curve_density_corr(v_wind, rho_hub, p_values):
@@ -233,6 +231,5 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
         series_index = v_wind.index
     except AttributeError:
         series_index = range(1, len(power_output)+1)
-    power_output = pd.Series(data=power_output, index=series_index,
-                             name='feedin_wind_turbine')
-    return power_output
+    return pd.Series(data=power_output, index=series_index,
+                     name='feedin_wind_turbine')
