@@ -91,14 +91,14 @@ class TestModelChain:
 
     def test_run_model(self):
         # Test with default parameters of modelchain (power curve)
-        power_output_exp = pd.Series(data=[1731.8874, 3820.15227])
+        power_output_exp = pd.Series(data=[1731887.39768, 3820152.27489])
         test_mc = mc.ModelChain(self.test_wt)
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
     def test_different_models(self):
         # Test with density corrected power curve
-        power_output_exp = pd.Series(data=[1430.31277, 3746.07521])
+        power_output_exp = pd.Series(data=[1430312.76771, 3746075.21279])
         self.test_modelchain['density_corr'] = True
         test_wt = wt.WindTurbine(**self.test_turbine)
         test_mc = mc.ModelChain(test_wt, **self.test_modelchain)
