@@ -153,7 +153,7 @@ class TestModelChain:
             self.test_modelchain['temperature_model'] = 'wrong_spelling'
             test_mc = mc.ModelChain(self.test_wt, **self.test_modelchain)
             test_mc.run_model(self.weather, self.data_height)
-
+# TODO: pytest.raises(ExpectedException, func, *args, **kwargs)
     def test_raises_type_error(self):
         r"""
         Raises TypeError due to wrong type of `density_corr`.
