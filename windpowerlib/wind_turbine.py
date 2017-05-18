@@ -163,12 +163,12 @@ class WindTurbine(object):
             data = np.delete(data, 0, 0)
             df = pd.DataFrame(data, columns=['v_wind', self.fetch_curve])
             df.set_index('v_wind', drop=True, inplace=True)
-            nominal_power = wpp_df['p_nom'].iloc[0]
+            nominal_power = wpp_df['p_nom'].iloc[0] * 1000.0
             return df, nominal_power
         if self.fetch_curve == 'p':
             filename = 'p_curves.csv'
             p_values, p_nom = restructure_data()
-            self.p_values = p_values
+            self.p_values = p_values * 1000.0
         else:
             filename = 'cp_curves.csv'
             self.cp_values, p_nom = restructure_data()
