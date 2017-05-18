@@ -112,7 +112,7 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
     p_values = (1 / 8 * 1.225 * d_rotor ** 2 * np.pi *
                 np.power(cp_values.index, 3) * cp_values.cp)
     p_values = pd.DataFrame(data=np.array(p_values), index=cp_values.index,
-                            columns=['P'])
+                            columns=['p'])
     return p_curve_density_corr(v_wind, rho_hub, p_values)
 
 
@@ -144,7 +144,7 @@ def p_curve(p_values, v_wind):
     wind speed given in the power curve is zero.
 
     """
-    power_output = np.interp(v_wind, p_values.index, p_values.P,
+    power_output = np.interp(v_wind, p_values.index, p_values.p,
                              left=0, right=0)
     # Set index for time series
     try:

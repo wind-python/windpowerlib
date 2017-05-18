@@ -29,7 +29,7 @@ class TestModelChain:
         self.test_turbine = {'hub_height': 100,
                              'd_rotor': 80,
                              'turbine_name': 'ENERCON E 126 7500',
-                             'fetch_curve': 'P'}
+                             'fetch_curve': 'p'}
         self.test_wt = wt.WindTurbine(**self.test_turbine)
         self.test_modelchain = {'wind_model': 'hellman',
                                 'rho_model': 'barometric',
