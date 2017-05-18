@@ -91,15 +91,17 @@ class TestModelChain:
                             rho_exp)
 
     def test_run_model(self):
-        # Test with default parameters of modelchain (power curve)
-        power_output_exp = pd.Series(data=[1731887.39768, 3820152.27489])
+        # Test with default parameters of modelchain (p curve)
+        power_output_exp = pd.Series(data=[1731887.39768, 3820152.27489],
+                                     name='feedin_wind_turbine')
         test_mc = mc.ModelChain(self.test_wt)
         test_mc.run_model(self.weather, self.data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
     def test_different_models(self):
-        # Test with density corrected power curve
-        power_output_exp = pd.Series(data=[1430312.76771, 3746075.21279])
+        # Test density corrected power curve
+        power_output_exp = pd.Series(data=[1430312.76771, 3746075.21279],
+                                     name='feedin_wind_turbine')
         self.test_modelchain['density_corr'] = True
         test_wt = wt.WindTurbine(**self.test_turbine)
         test_mc = mc.ModelChain(test_wt, **self.test_modelchain)
@@ -107,7 +109,8 @@ class TestModelChain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Test with power coefficient curve
-        power_output_exp = pd.Series(data=[557835.45403, 1363746.94496])
+        power_output_exp = pd.Series(data=[557835.45403, 1363746.94496],
+                                     name='feedin_wind_turbine')
         self.test_turbine['fetch_curve'] = 'cp'
         self.test_modelchain['power_output_model'] = 'cp_values'
         self.test_modelchain['density_corr'] = False
@@ -117,7 +120,8 @@ class TestModelChain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Ideal gas equation and density corrected power coefficient curve
-        power_output_exp = pd.Series(data=[567683.92454, 1485556.96435])
+        power_output_exp = pd.Series(data=[567683.92454, 1485556.96435],
+                                     name = 'feedin_wind_turbine')
         self.test_modelchain['rho_model'] = 'ideal_gas'
         self.test_modelchain['density_corr'] = True
         test_mc = mc.ModelChain(test_wt, **self.test_modelchain)
