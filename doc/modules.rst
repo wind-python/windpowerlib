@@ -8,7 +8,7 @@ Classes
    :toctree: temp/
 
    wind_turbine.WindTurbine
-   modelchain.Modelchain
+   modelchain.ModelChain
 
 
 Density
@@ -66,28 +66,28 @@ Functions for calculating power output of a wind turbine.
    power_output.p_curve_density_corr
 
 
-Modelchain
+ModelChain
 ==============
 
-Creating a Modelchain object.
+Creating a ModelChain object.
 
 .. autosummary::
    :toctree: temp/
 
-   modelchain.Modelchain
+   modelchain.ModelChain
 
-Running the modelchain.
-
-.. autosummary::
-   :toctree: temp/
-
-   modelchain.Modelchain.run_model
-
-Methods of the Modelchain object.
+Running the ModelChain.
 
 .. autosummary::
    :toctree: temp/
 
-   modelchain.Modelchain.rho_hub
-   modelchain.Modelchain.v_wind_hub
-   modelchain.Modelchain.turbine_power_output
+   modelchain.ModelChain.run_model
+
+Methods of the ModelChain object.
+
+.. autosummary::
+   :toctree: temp/
+
+   modelchain.ModelChain.rho_hub
+   modelchain.ModelChain.v_wind_hub
+   modelchain.ModelChain.turbine_power_output
