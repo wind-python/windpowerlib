@@ -63,9 +63,9 @@ def read_weather_data(filename, datetime_column='time_index',
 weather = read_weather_data('weather.csv')
 
 # Specification of the weather data set CoastDat2 (example data)
-coastDat2 = {
     'dhi': 0,
     'dirhi': 0,
+data_height = {
     'pressure': 0,
     'temp_air': 2,
     'v_wind': 10,
@@ -102,10 +102,10 @@ modelchain_data = {
 
 # Calculate turbine power output
 mc_e126 = modelchain.ModelChain(e126, **modelchain_data).run_model(
-    weather, coastDat2)
+    weather, data_height)
 e126.power_output = mc_e126.power_output
 mc_v90 = modelchain.ModelChain(v90, **modelchain_data).run_model(
-    weather, coastDat2)
+    weather, data_height)
 v90.power_output = mc_v90.power_output
 
 # Plot turbine power output
