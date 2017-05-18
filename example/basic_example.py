@@ -77,14 +77,14 @@ data_height = {
 enerconE126 = {
     'hub_height': 135,
     'd_rotor': 127,
-    'fetch_curve': 'P',  # 'P' vor p-curve and 'cp' for cp-curve
+    'fetch_curve': 'p',  # 'p' for p-curve and 'cp' for cp-curve
     'turbine_name': 'ENERCON E 126 7500'}  # Turbine name as in register. Use
                                            # wind_turbine.get_turbine_types()
                                            # for a full list.
 vestasV90 = {
     'hub_height': 105,
     'd_rotor': 90,
-    'fetch_curve': 'P',
+    'fetch_curve': 'p',
     'turbine_name': 'VESTAS V 90 3000'}
 
 # Initialize WindTurbine objects
