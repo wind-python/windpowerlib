@@ -60,9 +60,6 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
 
     """
     # cp time series
-    # TODO introduce new parameter v_cutout to allow for power output above
-    # maximum wind speed from power coefficient curve (maximum power output
-    # must be limited)
     cp_series = np.interp(v_wind, cp_values.index, cp_values.cp,
                           left=0, right=0)
     power_output = (1 / 8 * rho_hub * d_rotor ** 2 * np.pi
@@ -148,8 +145,6 @@ def p_curve(p_values, v_wind):
     wind speed given in the power curve is zero.
 
     """
-    # TODO introduce new parameter v_cutout to allow for power output above
-    # maximum wind speed from power curve
     power_output = np.interp(v_wind, p_values.index, p_values.P,
                              left=0, right=0)
     # Set index for time series
@@ -226,8 +221,6 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
             at Reiner Lemoine Institute, 2014, p. 13
 
     """
-    # TODO introduce new parameter v_cutout to allow for power output above
-    # maximum wind speed from power curve
     power_output = [(np.interp(v_wind[i],
                                p_values.index * (1.225 / rho_hub[i])**(
                                    np.interp(p_values.index,
