@@ -170,11 +170,3 @@ class TestModelChain:
                 test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
                                         **self.test_modelchain)
                 test_mc.run_model(self.weather, self.data_height)
-
-
-
-
-
-
-
-
