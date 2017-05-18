@@ -63,13 +63,10 @@ def read_weather_data(filename, datetime_column='time_index',
 weather = read_weather_data('weather.csv')
 
 # Specification of the weather data set CoastDat2 (example data)
-    'dhi': 0,
-    'dirhi': 0,
 data_height = {
     'pressure': 0,
     'temp_air': 2,
     'v_wind': 10,
-    'Z0': 0,
     'temp_air_2': 10,
     'v_wind_2': 80}
 
