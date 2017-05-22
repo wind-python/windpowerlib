@@ -4,7 +4,7 @@ Welcome to the windpowerlib documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 5
+   :maxdepth: 2
    :glob:   
    
    getting_started

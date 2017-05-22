@@ -23,13 +23,13 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
 
     Parameters
     ----------
-    v_wind : pandas.Series or array
+    v_wind : pandas.Series or array-like
         Wind speed time series.
     v_wind_height : float
         Height for which the parameter `v_wind` applies.
     hub_height : float
         Hub height of wind turbine.
-    z_0 : pandas.Series or array or float
+    z_0 : pandas.Series or array-like or float
         Roughness length.
     obstacle_height : float
         Height of obstacles in the surrounding area of the wind turbine. Set
@@ -93,7 +93,7 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
 
     Parameters
     ----------
-    v_wind : pandas.Series or array
+    v_wind : pandas.Series or array-like
         Wind speed time series.
     v_wind_height : float
         Height for which the parameter `v_wind` applies.
