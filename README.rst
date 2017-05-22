@@ -40,6 +40,17 @@ Matplotlib can be installed using pip3 though some Linux users reported that it 
 Examples and basic usage
 =========================
 
+The basic usage of the windpowerlib is shown :ref:`here <basic_example_notebook.ipynb>`. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
+
+ * :download:`Python script <../example/basic_example.py>`
+ * :download:`Jupyter notebook <../example/basic_example.ipynb>`
+ * :download:`Example data file <../example/weather.csv>`
+
+To run the examples you first have to install the windpowerlib. To run the notebook you also need to install notebook using pip3. To launch jupyter notebook type ``jupyter notebook`` in terminal.
+This will open a browser window. Navigate to the directory containing the notebook to open it. See the jupyter notebook quick start guide for more information on `how to install <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/install.html>`_ and
+`how to run <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/execute.html>`_ jupyter notebooks.
+
+
 Contributing
 ==============
 
