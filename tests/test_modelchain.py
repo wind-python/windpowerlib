@@ -13,8 +13,7 @@ class TestModelChain:
     def setup_class(self):
         self.test_turbine = {'hub_height': 100,
                              'd_rotor': 80,
-                             'turbine_name': 'ENERCON E 126 7500',
-                             'fetch_curve': 'p'}
+                             'turbine_name': 'ENERCON E 126 7500'}
 
     def test_v_wind_hub(self):
         # Test modelchain with wind_model='logarithmic'
