@@ -1,8 +1,10 @@
 import windpowerlib.modelchain as mc
 import windpowerlib.wind_turbine as wt
 from pandas.util.testing import assert_series_equal
+from numpy.testing import assert_array_equal, assert_allclose
 import pandas as pd
 import pytest
+import numpy as np
 
 
 class TestModelChain:
@@ -29,9 +31,13 @@ class TestModelChain:
                                         'v_wind_2': [4.0, 5.0],
                                         'z0': 0.15},
                                   index=[0, 1])
+        weather_arr = {'v_wind': np.array(weather['v_wind']),
+                       'v_wind_2': np.array(weather['v_wind_2']),
+                       'z0': 0.15}
         data_height = {'v_wind': 10,
                        'v_wind_2': 8}
 
+        # Test weather dictionary with pandas.Series
         # v_wind is closer to hub height than v_wind_2
         v_wind_exp = pd.Series(data=[7.12462, 9.26201])
         assert_series_equal(self.test_mc.v_wind_hub(weather, data_height),
@@ -49,10 +55,13 @@ class TestModelChain:
         assert_series_equal(
             self.test_mc.v_wind_hub(weather, data_height),
             v_wind_exp)
-        # Test DataFrame
-        assert_series_equal(self.test_mc.v_wind_hub(weather_df,
-                                                    data_height),
+        # Test weather DataFrame
+        assert_series_equal(self.test_mc.v_wind_hub(weather_df, data_height),
                             v_wind_exp)
+        # Test weather dictionary with numpy.arrays
+        v_wind_exp = np.array([4.0, 5.0])
+        assert_array_equal(self.test_mc.v_wind_hub(weather_arr, data_height),
+                           v_wind_exp)
 
     def test_rho_hub(self):
         weather = {'temp_air': pd.Series(data=[267, 268]),
@@ -62,6 +71,9 @@ class TestModelChain:
                                         'temp_air_2': [267, 266],
                                         'pressure': [101125, 101000]},
                                   index=[0, 1])
+        weather_arr = {'temp_air': np.array(weather['temp_air']),
+                       'temp_air_2': np.array(weather['temp_air_2']),
+                       'pressure': np.array(weather['pressure'])}
         data_height = {'temp_air': 2,
                        'temp_air_2': 10,
                        'pressure': 0}
@@ -84,6 +96,10 @@ class TestModelChain:
         assert_series_equal(self.test_mc.rho_hub(weather_df,
                                                  data_height),
                             rho_exp)
+        # Test weather dictionary with numpy.arrays
+        rho_exp = np.array([1.30305336, 1.30631507])
+        assert_allclose(self.test_mc.rho_hub(weather_arr, data_height),
+                        rho_exp)
 
     def test_run_model(self):
         weather = {'temp_air': pd.Series(data=[267, 268]),
