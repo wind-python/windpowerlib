@@ -228,7 +228,7 @@ class ModelChain(object):
         # Calculation of wind speed in m/s at hub height.
         elif self.wind_model == 'logarithmic':
             logging.debug('Calculating v_wind using logarithmic wind profile.')
-            if weather['v_wind_2'].isnull().all():
+            if weather['v_wind_2'] is None:
                 v_wind = wind_speed.logarithmic_wind_profile(
                     weather['v_wind'], data_height['v_wind'],
                     self.wind_turbine.hub_height,
