@@ -331,7 +331,7 @@ class ModelChain(object):
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with the timeseries for wind speed
-            `v_wind` in m/s ,roughness length `z0` in m, temperature
+            `v_wind` in m/s, roughness length `z0` in m, temperature
             `temp_air` in K and pressure `pressure` in Pa, as well as
             optionally wind speed `v_wind_2` in m/s and temperature
             `temp_air_2` in K at different height for interpolation.
@@ -345,6 +345,8 @@ class ModelChain(object):
 
         """
         v_wind = self.v_wind_hub(weather, data_height)
-        rho_hub = self.rho_hub(weather, data_height)
+        rho_hub = None if (self.power_output_model=='p_values' and
+                           self.density_corr==False) \
+                       else self.rho_hub(weather, data_height)
         self.power_output = self.turbine_power_output(v_wind, rho_hub)
         return self

@@ -21,10 +21,10 @@ from windpowerlib import wind_turbine as wt
 # Feel free to remove or change these lines
 # import warnings
 # warnings.simplefilter(action="ignore", category=RuntimeWarning)
-logging.getLogger().setLevel(logging.INFO)
+logging.getLogger().setLevel(logging.DEBUG)
 
 
-def read_weather_data(filename, datetime_column='Unnamed: 0',
+def read_weather_data(filename, datetime_column='time_index',
                       **kwargs):
     r"""
     Fetches weather data from a file.
@@ -61,12 +61,9 @@ def read_weather_data(filename, datetime_column='Unnamed: 0',
 
 # Read weather data from csv
 weather = read_weather_data('weather.csv')
-weather.index.name = ''
 
 # Specification of the weather data set CoastDat2 (example data)
-coastDat2 = {
-    'dhi': 0,
-    'dirhi': 0,
+data_height = {
     'pressure': 0,
     'temp_air': 2,
     'v_wind': 10,
@@ -78,14 +75,14 @@ coastDat2 = {
 enerconE126 = {
     'hub_height': 135,
     'd_rotor': 127,
-    'fetch_curve': 'P',  # 'P' vor p-curve and 'cp' for cp-curve
+    'fetch_curve': 'p',  # 'p' for p-curve and 'cp' for cp-curve
     'turbine_name': 'ENERCON E 126 7500'}  # Turbine name as in register. Use
                                            # wind_turbine.get_turbine_types()
                                            # for a full list.
 vestasV90 = {
     'hub_height': 105,
     'd_rotor': 90,
-    'fetch_curve': 'P',
+    'fetch_curve': 'p',
     'turbine_name': 'VESTAS V 90 3000'}
 
 # Initialize WindTurbine objects
@@ -103,10 +100,10 @@ modelchain_data = {
 
 # Calculate turbine power output
 mc_e126 = modelchain.ModelChain(e126, **modelchain_data).run_model(
-    weather, coastDat2)
+    weather, data_height)
 e126.power_output = mc_e126.power_output
 mc_v90 = modelchain.ModelChain(v90, **modelchain_data).run_model(
-    weather, coastDat2)
+    weather, data_height)
 v90.power_output = mc_v90.power_output
 
 # Plot turbine power output

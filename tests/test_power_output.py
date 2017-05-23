@@ -15,7 +15,7 @@ class TestPowerOutput:
         self.d_rotor = 80
         self.cp_values = pd.DataFrame(data={'cp': [0.3, 0.4, 0.5]},
                                       index=[4.0, 5.0, 6.0])
-        self.p_values = pd.DataFrame(data={'P': [300, 400, 500]},
+        self.p_values = pd.DataFrame(data={'p': [300, 400, 500]},
                                      index=[4.0, 5.0, 6.0])
 
     def test_cp_curve(self):
