@@ -100,7 +100,7 @@ class TestModelChain:
         test_turbine = {'hub_height': 100,
                         'd_rotor': 80,
                         'turbine_name': 'ENERCON E 126 7500',
-                        'fetch_curve': 'P'}
+                        'fetch_curve': 'p'}
         test_modelchain = {'wind_model': 'hellman',
                            'rho_model': 'barometric',
                            'temperature_model': 'interpolation',
