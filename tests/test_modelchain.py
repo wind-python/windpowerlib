@@ -177,8 +177,15 @@ class TestModelChain:
             test_mc.run_model(weather, data_height)
         # Raise TypeErrors due to missing cp- or p-values
         with pytest.raises(TypeError):
-                test_modelchain['power_output_model'] = 'p_values'
-                test_turbine['fetch_curve'] = 'cp'
-                test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
-                                        **test_modelchain)
-                test_mc.run_model(weather, data_height)
+            turbine1 = {'hub_height': 100,
+                        'd_rotor': 80,
+                        'turbine_name': 'ENERCON E 126 7500',
+                        'fetch_curve': 'p'}
+            modelchain1 = {'wind_model': 'hellman',
+                           'rho_model': 'barometric',
+                           'temperature_model': 'interpolation',
+                           'power_output_model': 'cp_values',
+                           'density_corr': True}
+            test_mc = mc.ModelChain(wt.WindTurbine(**turbine1),
+                                    **modelchain1)
+            test_mc.run_model(weather, data_height)
