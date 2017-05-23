@@ -108,6 +108,12 @@ class TestModelChain:
                    'v_wind_2': pd.Series(data=[4.0, 5.0]),
                    'pressure': pd.Series(data=[101125, 101000]),
                    'z0': 0.15}
+        weather_arr = {'v_wind': np.array(weather['v_wind']),
+                       'v_wind_2': np.array(weather['v_wind_2']),
+                       'temp_air': np.array(weather['temp_air']),
+                       'temp_air_2': np.array(weather['temp_air_2']),
+                       'pressure': np.array(weather['pressure']),
+                       'z0': np.array([0.15, 0.15])}
         data_height = {'temp_air': 2,
                        'temp_air_2': 10,
                        'v_wind': 10,
@@ -157,6 +163,12 @@ class TestModelChain:
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                 **test_modelchain)
         test_mc.run_model(weather, data_height)
+        assert_series_equal(test_mc.power_output, power_output_exp)
+
+        # Test weather dictionary with numpy.arrays
+        power_output_exp = pd.Series(data=[567683.92454, 1485556.96435],
+                                     index=[1, 2], name='feedin_wind_turbine')
+        test_mc.run_model(weather_arr, data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Raise ValueErrors due to wrong spelling of parameters
