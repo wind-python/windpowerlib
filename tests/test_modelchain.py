@@ -24,7 +24,7 @@ class TestModelChain:
         test_mc_2 = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
                                   wind_model='hellman')
         weather = {'v_wind': pd.Series(data=[5.0, 6.5]),
-                   'v_wind_2': pd.Series(data=[4.0, 5.0]),
+                   'v_wind_2': pd.Series(data=[4.0, 5.0]), # TODO: test v_wind_2 is not in weather
                    'z0': 0.15}
         weather_df = pd.DataFrame(data={'v_wind': [5.0, 6.5],
                                         'v_wind_2': [4.0, 5.0],
