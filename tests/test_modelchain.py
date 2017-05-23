@@ -17,9 +17,7 @@ class TestModelChain:
                              'fetch_curve': 'p'}
         self.test_modelchain = {'wind_model': 'logarithmic',
                                 'rho_model': 'barometric',
-                                'temperature_model': 'gradient',
-                                'power_output_model': 'p_values',
-                                'density_corr': False}
+                                'temperature_model': 'gradient'}
         self.test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
                                      **self.test_modelchain)
 
