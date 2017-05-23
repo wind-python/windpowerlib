@@ -351,8 +351,8 @@ class ModelChain(object):
 
         """
         v_wind = self.v_wind_hub(weather, data_height)
-        rho_hub = None if (self.power_output_model=='p_values' and
-                           self.density_corr==False) \
+        rho_hub = None if (self.power_output_model == 'p_values' and
+                           self.density_corr is False) \
                        else self.rho_hub(weather, data_height)
         self.power_output = self.turbine_power_output(v_wind, rho_hub)
         return self
