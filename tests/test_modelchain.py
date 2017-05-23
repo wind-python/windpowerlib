@@ -15,9 +15,9 @@ class TestModelChain:
                              'd_rotor': 80,
                              'turbine_name': 'ENERCON E 126 7500',
                              'fetch_curve': 'p'}
-        self.test_modelchain = {'wind_model': 'hellman',
+        self.test_modelchain = {'wind_model': 'logarithmic',
                                 'rho_model': 'barometric',
-                                'temperature_model': 'interpolation',
+                                'temperature_model': 'gradient',
                                 'power_output_model': 'p_values',
                                 'density_corr': False}
         self.test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
@@ -39,7 +39,7 @@ class TestModelChain:
 
         # Test weather dictionary with pandas.Series
         # v_wind is closer to hub height than v_wind_2
-        v_wind_exp = pd.Series(data=[7.12462, 9.26201])
+        v_wind_exp = pd.Series(data=[7.74137, 10.06377])
         assert_series_equal(self.test_mc.v_wind_hub(weather, data_height),
                             v_wind_exp)
         # v_wind is given at hub height
@@ -78,7 +78,7 @@ class TestModelChain:
                        'temp_air_2': 10,
                        'pressure': 0}
         # Test with above conditions
-        rho_exp = pd.Series(data=[1.30305, 1.42702])
+        rho_exp = pd.Series(data=[1.30617, 1.29966])
         assert_series_equal(self.test_mc.rho_hub(weather,
                                                  data_height), rho_exp)
         # temp_air at hub height
