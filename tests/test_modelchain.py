@@ -189,3 +189,16 @@ class TestModelChain:
             test_mc = mc.ModelChain(wt.WindTurbine(**turbine1),
                                     **modelchain1)
             test_mc.run_model(weather, data_height)
+        with pytest.raises(TypeError):
+            turbine2 = {'hub_height': 100,
+                        'd_rotor': 80,
+                        'turbine_name': 'ENERCON E 126 7500',
+                        'fetch_curve': 'cp'}
+            modelchain2 = {'wind_model': 'hellman',
+                           'rho_model': 'barometric',
+                           'temperature_model': 'interpolation',
+                           'power_output_model': 'p_values',
+                           'density_corr': True}
+            test_mc = mc.ModelChain(wt.WindTurbine(**turbine2),
+                                    **modelchain2)
+            test_mc.run_model(weather, data_height)
