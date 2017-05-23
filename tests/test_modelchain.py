@@ -108,6 +108,13 @@ class TestModelChain:
                    'v_wind_2': pd.Series(data=[4.0, 5.0]),
                    'pressure': pd.Series(data=[101125, 101000]),
                    'z0': 0.15}
+        weather_df = pd.DataFrame(data={'v_wind': [5.0, 6.5],
+                                        'v_wind_2': [4.0, 5.0],
+                                        'z0': 0.15,
+                                        'temp_air': [267, 268],
+                                        'temp_air_2': [267, 266],
+                                        'pressure': [101125, 101000]},
+                                  index=[0, 1])
         weather_arr = {'v_wind': np.array(weather['v_wind']),
                        'v_wind_2': np.array(weather['v_wind_2']),
                        'temp_air': np.array(weather['temp_air']),
@@ -163,6 +170,10 @@ class TestModelChain:
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                 **test_modelchain)
         test_mc.run_model(weather, data_height)
+        assert_series_equal(test_mc.power_output, power_output_exp)
+
+        # Test weather as DataFrame
+        test_mc.run_model(weather_df, data_height)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Test weather dictionary with numpy.arrays
