@@ -99,7 +99,7 @@ class TestModelChain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
     def test_different_models(self):
-        # Test density corrected power curve
+        # Test with density corrected power curve
         power_output_exp = pd.Series(data=[1430312.76771, 3746075.21279],
                                      name='feedin_wind_turbine')
         self.test_modelchain['density_corr'] = True
