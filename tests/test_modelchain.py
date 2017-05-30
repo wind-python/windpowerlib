@@ -101,7 +101,7 @@ class TestModelChain:
                        'temp_air_2': 10,
                        'pressure': 0}
 
-        # temp_air_2 is closer to hub height than temp_air  # TODO: Add test for temp_air is closer to hub height than temp_air_2
+        # temp_air_2 is closer to hub height than temp_air
         rho_exp = pd.Series(data=[1.30591, 1.30919])
         assert_series_equal(test_mc.rho_hub(weather, data_height), rho_exp)
         assert_series_equal(test_mc.rho_hub(weather_df, data_height), rho_exp)
@@ -112,6 +112,21 @@ class TestModelChain:
         assert_series_equal(test_mc_2.rho_hub(weather_df, data_height),
                             rho_exp)
         rho_exp = np.array([1.30309439, 1.42706674])
+        assert_allclose(test_mc_2.rho_hub(weather_arr, data_height), rho_exp)
+
+        # temp_air is closer to hub height than temp_air_2
+        data_height['temp_air'] = 10
+        data_height['temp_air_2'] = 2
+        rho_exp = pd.Series(data=[1.30591, 1.29940])
+        assert_series_equal(test_mc.rho_hub(weather, data_height), rho_exp)
+        assert_series_equal(test_mc.rho_hub(weather_df, data_height), rho_exp)
+        rho_exp = np.array([1.30591464, 1.29940284])
+        assert_allclose(test_mc.rho_hub(weather_arr, data_height), rho_exp)
+        rho_exp = pd.Series(data=[1.30309, 1.19618])
+        assert_series_equal(test_mc_2.rho_hub(weather, data_height), rho_exp)
+        assert_series_equal(test_mc_2.rho_hub(weather_df, data_height),
+                            rho_exp)
+        rho_exp = np.array([1.30309439, 1.19618159])
         assert_allclose(test_mc_2.rho_hub(weather_arr, data_height), rho_exp)
 
         # temp_air at hub height
