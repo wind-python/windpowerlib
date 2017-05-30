@@ -88,7 +88,7 @@ class TestModelChain:
                                   rho_model='ideal_gas',
                                   temperature_model='interpolation')
         weather = {'temp_air': pd.Series(data=[267, 268]),
-                   'temp_air_2': pd.Series(data=[267, 266]), # TODO: test temp_air_2 is not in weather
+                   'temp_air_2': pd.Series(data=[267, 266]),
                    'pressure': pd.Series(data=[101125, 101000])}
         weather_df = pd.DataFrame(data={'temp_air': [267, 268],
                                         'temp_air_2': [267, 266],
