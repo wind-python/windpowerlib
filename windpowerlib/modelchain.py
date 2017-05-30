@@ -167,11 +167,15 @@ class ModelChain(object):
                 temp_air_closest, temp_air_height,
                 self.wind_turbine.hub_height)
         elif self.temperature_model == 'interpolation':
-            logging.debug('Calculating temperature using interpolation.')
-            temp_hub = density.temperature_interpol(
-                weather['temp_air'], weather['temp_air_2'],
-                data_height['temp_air'], data_height['temp_air_2'],
-                self.wind_turbine.hub_height)
+            try:
+                logging.debug('Calculating temperature using interpolation.')
+                temp_hub = density.temperature_interpol(
+                    weather['temp_air'], weather['temp_air_2'],
+                    data_height['temp_air'], data_height['temp_air_2'],
+                    self.wind_turbine.hub_height)
+            except TypeError:
+                raise KeyError("No 'temp_air_2' in `weather`, but needed " +
+                               "for interpolation.")
         else:
             raise ValueError("'{0}' is an invalid value.".format(
                              self.temperature_model) + "`temperature_model` " +
