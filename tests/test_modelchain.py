@@ -132,6 +132,13 @@ class TestModelChain:
         rho_exp = np.array([1.30309439, 1.30635621])
         assert_allclose(test_mc_2.rho_hub(weather_arr, data_height), rho_exp)
 
+        # Raise KeyError due to missing temp_air_2 while temperature_model =
+        # 'interpolation'
+        with pytest.raises(KeyError):
+            no_temp_air_2_dict = dict(weather)
+            del no_temp_air_2_dict['temp_air_2']
+            test_mc_2.rho_hub(no_temp_air_2_dict, data_height)
+
     def test_run_model(self):
         weather = {'temp_air': pd.Series(data=[267, 268]),
                    'temp_air_2': pd.Series(data=[267, 266]),
