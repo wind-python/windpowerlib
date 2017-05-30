@@ -223,7 +223,7 @@ class ModelChain(object):
         if 'v_wind_2' not in weather:
             weather['v_wind_2'] = None
             data_height['v_wind_2'] = None
-        # Select wind speed closer to hub height with smallest_difference()
+        # Select wind speed closer to hub height using smallest_difference()
         values = tools.smallest_difference(
             data_height['v_wind'], data_height['v_wind_2'],
             self.wind_turbine.hub_height, weather['v_wind'],
