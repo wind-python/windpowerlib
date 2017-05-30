@@ -149,17 +149,22 @@ class ModelChain(object):
         if 'temp_air_2' not in weather:
             weather['temp_air_2'] = None
             data_height['temp_air_2'] = None
-        if data_height['temp_air'] == self.wind_turbine.hub_height:
-            logging.debug('Using given temperature (at hub height).')
-            temp_hub = weather['temp_air']
-        elif data_height['temp_air_2'] == self.wind_turbine.hub_height:
-            logging.debug('Using given temperature (2) (at hub height).')
-            temp_hub = weather['temp_air_2']
+        # Select temperature closer to hub height using smallest_difference()
+        values = tools.smallest_difference(
+            data_height['temp_air'], data_height['temp_air_2'],
+            self.wind_turbine.hub_height, weather['temp_air'],
+            weather['temp_air_2'])
+        temp_air_height = values.closest_value
+        temp_air_closest = values.corresp_value
+        # Check if temperature data is at hub height.
+        if temp_air_height == self.wind_turbine.hub_height:
+            logging.debug('Using given temperature ' + values.logging_string)
+            temp_hub = temp_air_closest
         # Calculation of temperature in K at hub height.
         elif self.temperature_model == 'gradient':
             logging.debug('Calculating temperature using a temp. gradient.')
             temp_hub = density.temperature_gradient(
-                weather['temp_air'], data_height['temp_air'],
+                temp_air_closest, temp_air_height,
                 self.wind_turbine.hub_height)
         elif self.temperature_model == 'interpolation':
             logging.debug('Calculating temperature using interpolation.')
