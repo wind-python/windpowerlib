@@ -9,7 +9,7 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 import logging
-from windpowerlib import wind_speed, density, power_output
+from windpowerlib import wind_speed, density, power_output, tools
 
 
 class ModelChain(object):
@@ -133,6 +133,8 @@ class ModelChain(object):
             `temp_air` in K and pressure `pressure` in Pa, as well as
             optionally the temperature `temp_air_2` in K at a different height
             for interpolation.
+            If a Dictionary is used the data inside the dictionary has to be of
+            the types pandas.Series or numpy.array.
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights in m for which the
             corresponding parameters in `weather` apply.
@@ -147,17 +149,22 @@ class ModelChain(object):
         if 'temp_air_2' not in weather:
             weather['temp_air_2'] = None
             data_height['temp_air_2'] = None
-        if data_height['temp_air'] == self.wind_turbine.hub_height:
-            logging.debug('Using given temperature (at hub height).')
-            temp_hub = weather['temp_air']
-        elif data_height['temp_air_2'] == self.wind_turbine.hub_height:
-            logging.debug('Using given temperature (2) (at hub height).')
-            temp_hub = weather['temp_air_2']
+        # Select temperature closer to hub height using smallest_difference()
+        values = tools.smallest_difference(
+            data_height['temp_air'], data_height['temp_air_2'],
+            self.wind_turbine.hub_height, weather['temp_air'],
+            weather['temp_air_2'])
+        temp_air_height = values.closest_value
+        temp_air_closest = values.corresp_value
+        # Check if temperature data is at hub height.
+        if temp_air_height == self.wind_turbine.hub_height:
+            logging.debug('Using given temperature ' + values.logging_string)
+            temp_hub = temp_air_closest
         # Calculation of temperature in K at hub height.
         elif self.temperature_model == 'gradient':
             logging.debug('Calculating temperature using a temp. gradient.')
             temp_hub = density.temperature_gradient(
-                weather['temp_air'], data_height['temp_air'],
+                temp_air_closest, temp_air_height,
                 self.wind_turbine.hub_height)
         elif self.temperature_model == 'interpolation':
             logging.debug('Calculating temperature using interpolation.')
@@ -200,6 +207,8 @@ class ModelChain(object):
             Containing columns or keys with the timeseries for wind speed
             `v_wind` in m/s and roughness length `z0` in m, as well as
             optionally wind speed `v_wind_2` in m/s at different height.
+            If a Dictionary is used the data inside the dictionary has to be of
+            the types pandas.Series or numpy.array.
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights in m for which the
             corresponding parameters in `weather` apply.
@@ -215,44 +224,31 @@ class ModelChain(object):
         with `v_wind` of which data height is closer to hub height.
 
         """
-        # Check if wind speed data is at hub height.
         if 'v_wind_2' not in weather:
             weather['v_wind_2'] = None
             data_height['v_wind_2'] = None
-        if data_height['v_wind'] == self.wind_turbine.hub_height:
-            logging.debug('Using given wind speed (at hub height).')
-            v_wind = weather['v_wind']
-        elif data_height['v_wind_2'] == self.wind_turbine.hub_height:
-            logging.debug('Using given wind speed (2) (at hub height).')
-            v_wind = weather['v_wind_2']
+        # Select wind speed closer to hub height using smallest_difference()
+        values = tools.smallest_difference(
+            data_height['v_wind'], data_height['v_wind_2'],
+            self.wind_turbine.hub_height, weather['v_wind'],
+            weather['v_wind_2'])
+        v_wind_height = values.closest_value
+        v_wind_closest = values.corresp_value
+        # Check if wind speed data is at hub height.
+        if v_wind_height == self.wind_turbine.hub_height:
+            logging.debug('Using given wind speed ' + values.logging_string)
+            v_wind = v_wind_closest
         # Calculation of wind speed in m/s at hub height.
         elif self.wind_model == 'logarithmic':
             logging.debug('Calculating v_wind using logarithmic wind profile.')
-            if weather['v_wind_2'] is None:
-                v_wind = wind_speed.logarithmic_wind_profile(
-                    weather['v_wind'], data_height['v_wind'],
-                    self.wind_turbine.hub_height,
-                    weather['z0'], self.obstacle_height)
-            else:
-                if (abs(data_height['v_wind'] -
-                        self.wind_turbine.hub_height) <=
-                        abs(data_height['v_wind_2'] -
-                            self.wind_turbine.hub_height)):
-                    v_wind = wind_speed.logarithmic_wind_profile(
-                        weather['v_wind'], data_height['v_wind'],
-                        self.wind_turbine.hub_height, weather['z0'],
-                        self.obstacle_height)
-                else:
-                    v_wind = wind_speed.logarithmic_wind_profile(
-                        weather['v_wind_2'], data_height['v_wind_2'],
-                        self.wind_turbine.hub_height, weather['z0'],
-                        self.obstacle_height)
+            v_wind = wind_speed.logarithmic_wind_profile(
+                v_wind_closest, v_wind_height, self.wind_turbine.hub_height,
+                weather['z0'], self.obstacle_height)
         elif self.wind_model == 'hellman':
             logging.debug('Calculating v_wind using hellman equation.')
-            v_wind = wind_speed.v_wind_hellman(
-                weather['v_wind'], data_height['v_wind'],
-                self.wind_turbine.hub_height,
-                self.hellman_exp, weather['z0'])
+            v_wind = wind_speed.v_wind_hellman(v_wind_closest, v_wind_height,
+                                               self.wind_turbine.hub_height,
+                                               self.hellman_exp, weather['z0'])
         else:
             raise ValueError("'{0}' is an invalid value.".format(
                              self.wind_model) + "`wind_model` " +
@@ -335,6 +331,8 @@ class ModelChain(object):
             `temp_air` in K and pressure `pressure` in Pa, as well as
             optionally wind speed `v_wind_2` in m/s and temperature
             `temp_air_2` in K at different height for interpolation.
+            If a Dictionary is used the data inside the dictionary has to be of
+            the types pandas.Series or numpy.array.
         data_height : DataFrame or Dictionary
             Containing columns or keys with the heights in m for which the
             corresponding parameters in `weather` apply.
@@ -345,8 +343,8 @@ class ModelChain(object):
 
         """
         v_wind = self.v_wind_hub(weather, data_height)
-        rho_hub = None if (self.power_output_model=='p_values' and
-                           self.density_corr==False) \
+        rho_hub = None if (self.power_output_model == 'p_values' and
+                           self.density_corr is False) \
                        else self.rho_hub(weather, data_height)
         self.power_output = self.turbine_power_output(v_wind, rho_hub)
         return self

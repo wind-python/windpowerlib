@@ -94,3 +94,14 @@ Methods of the ModelChain object.
    modelchain.ModelChain.rho_hub
    modelchain.ModelChain.v_wind_hub
    modelchain.ModelChain.turbine_power_output
+
+
+Tools
+==============
+
+Additional functions used in the windpowerlib.
+
+.. autosummary::
+   :toctree: temp/
+
+   tools.smallest_difference
