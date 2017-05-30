@@ -197,6 +197,11 @@ class TestModelChain:
             no_temp_air_2_dict = dict(weather)
             del no_temp_air_2_dict['temp_air_2']
             test_mc_2.rho_hub(no_temp_air_2_dict, data_height)
+        with pytest.raises(KeyError):
+            data_height['temp_air_2'] = 100
+            no_temp_air_2_df = dict(weather)
+            del no_temp_air_2_df['temp_air_2']
+            test_mc_2.rho_hub(no_temp_air_2_df, data_height)
 
     def test_run_model(self):
         weather = {'temp_air': pd.Series(data=[267, 268]),
