@@ -56,6 +56,7 @@ def smallest_difference(value_1, value_2, comp_value, corresp_1, corresp_2):
             logging_string = None
     else:
         closest_value = value_1
+        logging_string = None
         if value_1 == comp_value:
             logging_string = '(at hub height).'
 
