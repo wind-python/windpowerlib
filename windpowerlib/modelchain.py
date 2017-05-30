@@ -223,40 +223,28 @@ class ModelChain(object):
         if 'v_wind_2' not in weather:
             weather['v_wind_2'] = None
             data_height['v_wind_2'] = None
-        if data_height['v_wind'] == self.wind_turbine.hub_height:
-            logging.debug('Using given wind speed (at hub height).')
-            v_wind = weather['v_wind']
-        elif data_height['v_wind_2'] == self.wind_turbine.hub_height:
-            logging.debug('Using given wind speed (2) (at hub height).')
-            v_wind = weather['v_wind_2']
+        # Select wind speed closer to hub height with smallest_difference()
+        values = tools.smallest_difference(
+            data_height['v_wind'], data_height['v_wind_2'],
+            self.wind_turbine.hub_height, weather['v_wind'],
+            weather['v_wind_2'])
+        v_wind_height = values.closest_value
+        v_wind_closest = values.corresp_value
+
+        if v_wind_height == self.wind_turbine.hub_height:
+            logging.debug('Using given wind speed ' + values.logging_string)
+            v_wind = v_wind_closest
         # Calculation of wind speed in m/s at hub height.
         elif self.wind_model == 'logarithmic':
             logging.debug('Calculating v_wind using logarithmic wind profile.')
-            if weather['v_wind_2'] is None:
-                v_wind = wind_speed.logarithmic_wind_profile(
-                    weather['v_wind'], data_height['v_wind'],
-                    self.wind_turbine.hub_height,
-                    weather['z0'], self.obstacle_height)
-            else:
-                if (abs(data_height['v_wind'] -
-                        self.wind_turbine.hub_height) <=
-                        abs(data_height['v_wind_2'] -
-                            self.wind_turbine.hub_height)):
-                    v_wind = wind_speed.logarithmic_wind_profile(
-                        weather['v_wind'], data_height['v_wind'],
-                        self.wind_turbine.hub_height, weather['z0'],
-                        self.obstacle_height)
-                else:
-                    v_wind = wind_speed.logarithmic_wind_profile(
-                        weather['v_wind_2'], data_height['v_wind_2'],
-                        self.wind_turbine.hub_height, weather['z0'],
-                        self.obstacle_height)
+            v_wind = wind_speed.logarithmic_wind_profile(
+                v_wind_closest, v_wind_height, self.wind_turbine.hub_height,
+                weather['z0'], self.obstacle_height)
         elif self.wind_model == 'hellman':
             logging.debug('Calculating v_wind using hellman equation.')
-            v_wind = wind_speed.v_wind_hellman(
-                weather['v_wind'], data_height['v_wind'],
-                self.wind_turbine.hub_height,
-                self.hellman_exp, weather['z0'])
+            v_wind = wind_speed.v_wind_hellman(v_wind_closest, v_wind_height,
+                                               self.wind_turbine.hub_height,
+                                               self.hellman_exp, weather['z0'])
         else:
             raise ValueError("'{0}' is an invalid value.".format(
                              self.wind_model) + "`wind_model` " +
