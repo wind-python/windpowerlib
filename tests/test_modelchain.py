@@ -171,13 +171,24 @@ class TestModelChain:
 
         # temp_air_2 at hub height
         rho_exp = pd.Series(data=[1.30309, 1.30636])
-        data_height['temp_air'] = 2
+        data_height['temp_air'] = 10
         data_height['temp_air_2'] = 100
         assert_series_equal(test_mc_2.rho_hub(weather, data_height), rho_exp)
         assert_series_equal(test_mc_2.rho_hub(weather_df, data_height),
                             rho_exp)
         rho_exp = np.array([1.30309439, 1.30635621])
         assert_allclose(test_mc_2.rho_hub(weather_arr, data_height), rho_exp)
+
+        # temp_air_2 is not in weather
+        rho_exp = pd.Series(data=[1.30591, 1.29940])
+        no_temp_air_2_dict = dict(weather)
+        del no_temp_air_2_dict['temp_air_2']
+        assert_series_equal(test_mc.rho_hub(no_temp_air_2_dict, data_height),
+                            rho_exp)
+        no_temp_air_2_df = dict(weather)
+        del no_temp_air_2_df['temp_air_2']
+        assert_series_equal(test_mc.rho_hub(no_temp_air_2_df, data_height),
+                            rho_exp)
 
         # Raise KeyError due to missing temp_air_2 while temperature_model =
         # 'interpolation'
