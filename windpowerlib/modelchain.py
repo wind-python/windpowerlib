@@ -224,7 +224,6 @@ class ModelChain(object):
         with `v_wind` of which data height is closer to hub height.
 
         """
-        # Check if wind speed data is at hub height.
         if 'v_wind_2' not in weather:
             weather['v_wind_2'] = None
             data_height['v_wind_2'] = None
@@ -235,7 +234,7 @@ class ModelChain(object):
             weather['v_wind_2'])
         v_wind_height = values.closest_value
         v_wind_closest = values.corresp_value
-
+        # Check if wind speed data is at hub height.
         if v_wind_height == self.wind_turbine.hub_height:
             logging.debug('Using given wind speed ' + values.logging_string)
             v_wind = v_wind_closest
