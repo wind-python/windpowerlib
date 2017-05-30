@@ -23,7 +23,7 @@ class TestModelChain:
         test_mc_2 = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
                                   wind_model='hellman')
         weather = {'v_wind': pd.Series(data=[5.0, 6.5]),
-                   'v_wind_2': pd.Series(data=[4.0, 5.0]), # TODO: test v_wind_2 is not in weather
+                   'v_wind_2': pd.Series(data=[4.0, 5.0]),
                    'z0': 0.15}
         weather_df = pd.DataFrame(data={'v_wind': [5.0, 6.5],
                                         'v_wind_2': [4.0, 5.0],
@@ -95,6 +95,18 @@ class TestModelChain:
         v_wind_exp = np.array([4.0, 5.0])
         assert_array_equal(test_mc_2.v_wind_hub(weather_arr, data_height),
                            v_wind_exp)
+
+        # v_wind_2 is not in weather
+        v_wind_exp = pd.Series(data=[7.12462, 9.26201])
+        no_v_wind_2_dict = dict(weather)
+        del no_v_wind_2_dict['v_wind_2']
+        assert_series_equal(test_mc_2.v_wind_hub(no_v_wind_2_dict,
+                                                 data_height),
+                            v_wind_exp)
+        no_v_wind_2_df = dict(weather_df)
+        del no_v_wind_2_df['v_wind_2']
+        assert_series_equal(test_mc_2.v_wind_hub(no_v_wind_2_df, data_height),
+                            v_wind_exp)
 
     def test_rho_hub(self):
         # Test modelchain with rho_model='barometric' and
