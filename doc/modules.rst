@@ -104,4 +104,4 @@ Additional functions used in the windpowerlib.
 .. autosummary::
    :toctree: temp/
 
-   tools.select_closer_value
+   tools.smallest_difference

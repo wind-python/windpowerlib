@@ -10,7 +10,7 @@ __license__ = "GPLv3"
 import collections
 
 
-def select_closer_value(value_1, value_2, comp_value, corresp_1, corresp_2):
+def smallest_difference(value_1, value_2, comp_value, corresp_1, corresp_2):
     r"""
     Selects the value with the smaller difference to a comparative value.
 
