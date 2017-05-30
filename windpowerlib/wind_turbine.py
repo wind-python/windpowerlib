@@ -99,7 +99,7 @@ class WindTurbine(object):
 
         self.power_output = None
 
-        if self.cp_values is None and self.p_values is None:
+        if (self.cp_values is None and self.p_values is None):
             self.fetch_turbine_data()
 
     def fetch_turbine_data(self):
@@ -143,8 +143,8 @@ class WindTurbine(object):
             Returns
             -------
             Tuple (pd.DataFrame, float)
-                Power curve (values in W) or power coefficient curve as
-                pd.DataFrame and nominal power as float in W.
+                Power curve or power coefficient curve (pd.DataFrame)
+                and nominal power (float).
 
             """
             df = read_turbine_data(filename=filename)
