@@ -9,7 +9,7 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 import logging
-from windpowerlib import wind_speed, density, power_output
+from windpowerlib import wind_speed, density, power_output, tools
 
 
 class ModelChain(object):
