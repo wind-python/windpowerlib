@@ -193,6 +193,7 @@ class TestModelChain:
         # Raise KeyError due to missing temp_air_2 while temperature_model =
         # 'interpolation'
         with pytest.raises(KeyError):
+            data_height['temp_air_2'] = 100
             no_temp_air_2_dict = dict(weather)
             del no_temp_air_2_dict['temp_air_2']
             test_mc_2.rho_hub(no_temp_air_2_dict, data_height)
