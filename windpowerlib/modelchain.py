@@ -158,7 +158,7 @@ class ModelChain(object):
         temp_air_closest = values.corresp_value
         # Check if temperature data is at hub height.
         if temp_air_height == self.wind_turbine.hub_height:
-            logging.debug('Using given temperature ' + values.logging_string)
+            logging.debug('Using given temperature at hub height.')
             temp_hub = temp_air_closest
         # Calculation of temperature in K at hub height.
         elif self.temperature_model == 'gradient':
@@ -240,7 +240,7 @@ class ModelChain(object):
         v_wind_closest = values.corresp_value
         # Check if wind speed data is at hub height.
         if v_wind_height == self.wind_turbine.hub_height:
-            logging.debug('Using given wind speed ' + values.logging_string)
+            logging.debug('Using given wind speed at hub height.')
             v_wind = v_wind_closest
         # Calculation of wind speed in m/s at hub height.
         elif self.wind_model == 'logarithmic':
