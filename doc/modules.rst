@@ -94,3 +94,11 @@ Methods of the ModelChain object.
    modelchain.ModelChain.rho_hub
    modelchain.ModelChain.v_wind_hub
    modelchain.ModelChain.turbine_power_output
+
+
+Example
+==============
+
+The basic example consists of the following functions.
+
+.. include:: example.rst
