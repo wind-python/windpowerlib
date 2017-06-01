@@ -40,7 +40,7 @@ Matplotlib can be installed using pip3 though some Linux users reported that it 
 Examples and basic usage
 =========================
 
-The basic usage of the windpowerlib is shown `'here' <http://windpowerlib.readthedocs.io/en/latest/basic_example_notebook.html>`_. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
+The basic usage of the windpowerlib is shown `here <http://windpowerlib.readthedocs.io/en/latest/basic_example_notebook.html>`_. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
 
  * `Python script <https://raw.githubusercontent.com/wind-python/windpowerlib/dev/example/basic_example.py>`_
  * `Jupyter notebook <https://raw.githubusercontent.com/wind-python/windpowerlib/features/revise_example/example/basic_example.ipynb>`_
