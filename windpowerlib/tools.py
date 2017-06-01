@@ -37,28 +37,17 @@ def smallest_difference(value_1, value_2, comp_value, corresp_1, corresp_2):
 
     Returns
     -------
-    Tuple(float, float, string)
-        Value closer to comparing value as float, corresponding value as
-        float and a string for logging.debug.
+    Tuple(float, float,)
+        Value closer to comparing value as float and its corresponding value as
+        float.
     """
     if (value_2 is not None and corresp_2 is not None):
-        if value_1 == comp_value:
+        if abs(value_1 - comp_value) <= abs(value_2 - comp_value):
             closest_value = value_1
-            logging_string = '(at hub height).'
-        elif value_2 == comp_value:
-            closest_value = value_2
-            logging_string = '(2) (at hub height).'
-        elif abs(value_1 - comp_value) <= abs(value_2 - comp_value):
-            closest_value = value_1
-            logging_string = None
         else:
             closest_value = value_2
-            logging_string = None
     else:
         closest_value = value_1
-        logging_string = None
-        if value_1 == comp_value:
-            logging_string = '(at hub height).'
 
     # Select correponding value
     if closest_value == value_1:
@@ -68,5 +57,5 @@ def smallest_difference(value_1, value_2, comp_value, corresp_1, corresp_2):
     # Store values in a named tuple
     return_tuple = collections.namedtuple('selected_values',
                                           ['closest_value',
-                                           'corresp_value', 'logging_string'])
-    return return_tuple(closest_value, corresp_value, logging_string)
+                                           'corresp_value'])
+    return return_tuple(closest_value, corresp_value)
