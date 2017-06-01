@@ -4,7 +4,7 @@ Introduction
 The windpowerlib is a library that provides a set of functions and classes to calculate the power output of wind turbines. It was originally part of the 
 `feedinlib <https://github.com/oemof/feedinlib>`_ (windpower and pv) but was taken out to build up a community concentrating on wind power models.
 
-For a quick start see the :ref:`examplereference-label` section.
+For a quick start see the `'Examples and basic usage' <http://windpowerlib.readthedocs.io/en/latest/getting_started.html#examplereference-label>`_ section.
 
 
 Documentation
@@ -31,7 +31,7 @@ Please see the `installation page <http://oemof.readthedocs.io/en/stable/install
 Optional Packages
 ~~~~~~~~~~~~~~~~~
 
-To see the plots of the windpowerlib example in the :ref:`examplereference-label` section you should `install the matplotlib package <http://matplotlib.org/users/installing.html>`_.
+To see the plots of the windpowerlib example in the `'Examples and basic usage' <http://windpowerlib.readthedocs.io/en/latest/getting_started.html#examplereference-label>`_ section you should `install the matplotlib package <http://matplotlib.org/users/installing.html>`_.
 Matplotlib can be installed using pip3 though some Linux users reported that it is easier and more stable to use the pre-built packages of your Linux distribution.
 
 
@@ -40,11 +40,12 @@ Matplotlib can be installed using pip3 though some Linux users reported that it 
 Examples and basic usage
 =========================
 
-The basic usage of the windpowerlib is shown :ref:`here <basic_example_notebook.ipynb>`. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
+The basic usage of the windpowerlib is shown `'here' <http://windpowerlib.readthedocs.io/en/latest/basic_example_notebook.html>`_. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
 
- * :download:`Python script <../example/basic_example.py>`
- * :download:`Jupyter notebook <../example/basic_example.ipynb>`
- * :download:`Example data file <../example/weather.csv>`
+ * `'Python script' <https://raw.githubusercontent.com/wind-python/windpowerlib/dev/example/basic_example.py>`_
+ * `'Jupyter notebook' <https://raw.githubusercontent.com/wind-python/windpowerlib/features/revise_example/example/basic_example.ipynb>`_
+ * `'Example data file' <https://raw.githubusercontent.com/wind-python/windpowerlib/dev/example/weather.csv>`_
+
 
 To run the examples you first have to install the windpowerlib. To run the notebook you also need to install notebook using pip3. To launch jupyter notebook type ``jupyter notebook`` in terminal.
 This will open a browser window. Navigate to the directory containing the notebook to open it. See the jupyter notebook quick start guide for more information on `how to install <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/install.html>`_ and
