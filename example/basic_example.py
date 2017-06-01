@@ -104,7 +104,6 @@ def get_weather_data(filename, datetime_column='time_index', **kwargs):
     return (weather, data_height)
 
 
-# TODO markdown for code snippet
 def initialise_wind_turbines():
     r"""
     Initialises two :class:`~.wind_turbine.WindTurbine` objects.
@@ -112,11 +111,11 @@ def initialise_wind_turbines():
     Function shows two ways to initialise a WindTurbine object. You can either
     specify your own turbine, as done below for 'myTurbine', or fetch power
     and/or power coefficient curve data from data files provided by the
-    windpowerlib, as done for the 'enerconE126'. Execute
-    windpowerlib.wind_turbine.get_turbine_types() or
-    windpowerlib.wind_turbine.get_turbine_types(filename='cp_curves.csv')
-    to get a list of all wind turbines for which power or power coefficient
-    curves, respectively, are provided.
+    windpowerlib, as done for the 'enerconE126'.
+    Execute ``windpowerlib.wind_turbine.get_turbine_types()`` or
+    ``windpowerlib.wind_turbine.get_turbine_types(filename='cp_curves.csv')``
+    to get a list of all wind turbines for which power and power coefficient
+    curves respectively are provided.
 
     Returns
     -------
@@ -251,6 +250,10 @@ def plot_or_print(my_turbine, e126):
 
 
 def run_basic_example():
+    r"""
+    Run the basic example.
+
+    """
     weather, data_height = get_weather_data('weather.csv')
     my_turbine, e126 = initialise_wind_turbines()
     calculate_power_output(weather, data_height, my_turbine, e126)
