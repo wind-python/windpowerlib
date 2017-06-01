@@ -135,8 +135,8 @@ def p_curve(p_values, v_wind):
 
     Returns
     -------
-    power_output : pandas.Series
-        Electrical power output of the wind turbine in the unit of `p_values`.
+    pandas.Series
+        Electrical power output of the wind turbine in W.
 
     Notes
     -------
@@ -176,8 +176,8 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
 
     Returns
     -------
-    power_output : pandas.Series
-        Electrical power output of the wind turbine in the unit of `p_values`.
+    pandas.Series
+        Electrical power output of the wind turbine in W.
 
     Notes
     -----
