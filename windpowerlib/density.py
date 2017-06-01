@@ -20,7 +20,7 @@ def temperature_gradient(temp_air, temp_height, hub_height):
 
     Parameters
     ----------
-    temp_air : pandas.Series or array-like
+    temp_air : pandas.Series or numpy.array
         Air temperature in K.
     temp_height : float
         Height in m for which the parameter `temp_air` applies.
@@ -29,7 +29,7 @@ def temperature_gradient(temp_air, temp_height, hub_height):
 
     Returns
     -------
-    pandas.Series or array
+    pandas.Series or numpy.array
         Temperature at hub height in K.
 
     Notes
@@ -70,9 +70,9 @@ def temperature_interpol(temp_air_1, temp_air_2,
 
     Parameters
     ----------
-    temp_air_1 : pandas.Series or array-like
+    temp_air_1 : pandas.Series or numpy.array
         Air temperature.
-    temp_air_2 : pandas.Series or array-like
+    temp_air_2 : pandas.Series or numpy.array
         Second air temperature for interpolation.
     temp_air_height_1 : float
         Height for which the parameter `temp_air_1` applies.
@@ -83,7 +83,7 @@ def temperature_interpol(temp_air_1, temp_air_2,
 
     Returns
     -------
-    pandas.Series or array
+    pandas.Series or numpy.array
         Temperature at hub height.
 
     Notes
@@ -116,18 +116,18 @@ def rho_barometric(pressure, pressure_height, hub_height, temp_hub):
 
     Parameters
     ----------
-    pressure : pandas.Series or array-like
+    pressure : pandas.Series or numpy.array
         Air pressure in Pa.
     pressure_height : float
         Height in m for which the parameter `pressure` applies.
     hub_height : float
         Hub height of wind turbine in m.
-    temp_hub : pandas.Series or array-like
+    temp_hub : pandas.Series or numpy.array
         Air temperature at hub height in K.
 
     Returns
     -------
-    pandas.Series
+    pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
 
     Notes
@@ -172,18 +172,18 @@ def rho_ideal_gas(pressure, pressure_height, hub_height, temp_hub):
 
     Parameters
     ----------
-    pressure : pandas.Series or array-like
+    pressure : pandas.Series or numpy.array
         Air pressure in Pa.
     pressure_height : float
         Height in m for which the parameter `pressure` applies.
     hub_height : float
         Hub height of wind turbine in m.
-    temp_hub : pandas.Series or array-like
+    temp_hub : pandas.Series or numpy.array
         Air temperature at hub height in K.
 
     Returns
     -------
-    pandas.Series
+    pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
 
     Notes

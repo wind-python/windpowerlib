@@ -141,7 +141,7 @@ class ModelChain(object):
 
         Returns
         -------
-        rho_hub : pandas.Series or array
+        rho_hub : pandas.Series or numpy.array
             Density of air in kg/m³ at hub height.
 
         """
@@ -214,7 +214,7 @@ class ModelChain(object):
 
         Returns
         -------
-        v_wind : pandas.Series or array
+        v_wind : pandas.Series or numpy.array
             Wind speed in m/s at hub height.
 
         Notes
@@ -275,9 +275,9 @@ class ModelChain(object):
 
         Parameters
         ----------
-        v_wind : pandas.Series or array
+        v_wind : pandas.Series or numpy.array
             Wind speed at hub height in m/s.
-        rho_hub : pandas.Series or array
+        rho_hub : pandas.Series or numpy.array
             Density of air at hub height in kg/m³.
 
         Returns

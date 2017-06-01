@@ -21,9 +21,9 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
 
     Parameters
     ----------
-    v_wind : pandas.Series or array-like
+    v_wind : pandas.Series or numpy.array
         Wind speed at hub height in m/s.
-    rho_hub : pandas.Series or array-like
+    rho_hub : pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
     d_rotor : float
         Diameter of rotor in m.
@@ -83,9 +83,9 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
 
     Parameters
     ----------
-    v_wind : pandas.Series or array
+    v_wind : pandas.Series or numpy.array
         Wind speed at hub height in m/s.
-    rho_hub : pandas.Series or array-like
+    rho_hub : pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
     cp_values : pandas.DataFrame
         Power coefficient curve of the wind turbine.
@@ -130,7 +130,7 @@ def p_curve(p_values, v_wind):
         Power curve of the wind turbine.
         Indices are the wind speeds of the power curve in m/s, the
         corresponding power values in W are in the column 'p'.
-    v_wind : pandas.Series or array
+    v_wind : pandas.Series or numpy.array
         Wind speed at hub height in m/s.
 
     Returns
@@ -165,9 +165,9 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
 
     Parameters
     ----------
-    v_wind : pandas.Series or array
+    v_wind : pandas.Series or numpy.array
         Wind speed time series at hub height in m/s.
-    rho_hub : pandas.Series or array
+    rho_hub : pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
     p_values : pandas.DataFrame
         Power curve of the wind turbine.
