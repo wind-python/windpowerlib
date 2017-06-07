@@ -48,10 +48,10 @@ class TestPowerOutput:
         # Test pandas.Series
         power_output_exp = pd.Series(data=[0.0, 450.0, 0.0],
                                      name='feedin_wind_turbine')
-        assert_series_equal(p_curve(self.p_values, self.v_wind),
+        assert_series_equal(p_curve(self.v_wind, self.p_values),
                             power_output_exp)
         # Test numpy array
-        assert_allclose(p_curve(self.p_values, np.array(self.v_wind)),
+        assert_allclose(p_curve(np.array(self.v_wind), self.p_values),
                         power_output_exp)
 
     def test_p_curve_density_corrected(self):
