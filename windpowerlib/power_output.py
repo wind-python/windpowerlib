@@ -34,7 +34,7 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
 
     Returns
     -------
-    pandas.Series
+    pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
 
     Notes
@@ -97,7 +97,7 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
 
     Returns
     -------
-    pandas.Series
+    pandas.Series or numpy.array
         Electrical power of the wind turbine in W.
 
     Notes
@@ -136,7 +136,7 @@ def p_curve(v_wind, p_values):
 
     Returns
     -------
-    pandas.Series
+    pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
 
     Notes
@@ -175,7 +175,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
 
     Returns
     -------
-    pandas.Series
+    pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
 
     Notes
@@ -231,4 +231,6 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     if isinstance(v_wind, pd.Series):
         power_output = pd.Series(data=power_output, index=v_wind.index,
                                  name='feedin_wind_turbine')
+    else:
+        power_output = np.array(power_output)
     return power_output
