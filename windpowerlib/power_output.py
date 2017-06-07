@@ -116,7 +116,7 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
     return p_curve_density_corr(v_wind, rho_hub, p_values)
 
 
-def p_curve(p_values, v_wind):
+def p_curve(v_wind, p_values):
     r"""
     Calculates the turbine power output using a power curve.
 
@@ -126,12 +126,12 @@ def p_curve(p_values, v_wind):
 
     Parameters
     ----------
+    v_wind : pandas.Series or numpy.array
+        Wind speed at hub height in m/s.
     p_values : pandas.DataFrame
         Power curve of the wind turbine.
         Indices are the wind speeds of the power curve in m/s, the
         corresponding power values in W are in the column 'p'.
-    v_wind : pandas.Series or numpy.array
-        Wind speed at hub height in m/s.
 
     Returns
     -------

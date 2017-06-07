@@ -313,8 +313,8 @@ class ModelChain(object):
                                 " are missing.")
             if self.density_corr is False:
                 logging.debug('Calculating power output using power curve.')
-                output = power_output.p_curve(self.wind_turbine.p_values,
-                                              v_wind)
+                output = power_output.p_curve(v_wind,
+                                              self.wind_turbine.p_values)
             elif self.density_corr is True:
                 logging.debug('Calculating power output using density ' +
                               'corrected power curve.')
