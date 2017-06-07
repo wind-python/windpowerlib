@@ -28,14 +28,14 @@ def smallest_difference(value_1, value_2, comp_value, corresp_1, corresp_2):
         Second value for comparison.
     comp_value : float
         Comparative value.
-    corresp_1 : float
+    corresp_1 : pd.Series or np.array or float
         Corresponding value to `value_1`.
-    corresp_2 : float
+    corresp_2 : pd.Series or np.array or float
         Corresponding value to `value_2`.
 
     Returns
     -------
-    Tuple(float, float)
+    Tuple(float, pd.Series or np.array or float)
         Value closer to comparing value as float and its corresponding value as
         float.
 
