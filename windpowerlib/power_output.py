@@ -62,6 +62,9 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
     # cp time series
     cp_time_series = np.interp(v_wind, cp_values.index, cp_values.cp,
                                left=0, right=0)
+    # Convert rho_hub to np.array if v_wind is np.array
+    if (isinstance(v_wind, np.ndarray) and isinstance(rho_hub, pd.Series)):
+        rho_hub = np.array(rho_hub)
     power_output = (1 / 8 * rho_hub * d_rotor ** 2 * np.pi
                     * np.power(v_wind, 3) * cp_time_series)
     # Power_output as pd.Series if v_wind is pd.Series
@@ -85,12 +88,12 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
         Wind speed at hub height in m/s.
     rho_hub : pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
+    d_rotor : float
+        Diameter of the rotor in m.
     cp_values : pandas.DataFrame
         Power coefficient curve of the wind turbine.
         Indices are the wind speeds of the power coefficient curve in m/s, the
         corresponding power coefficient values are in the column 'cp'.
-    d_rotor : float
-        Diameter of the rotor in m.
 
     Returns
     -------
@@ -215,6 +218,9 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
             at Reiner Lemoine Institute, 2014, p. 13
 
     """
+    # Convert rho_hub to np.array if v_wind is np.array
+    if (isinstance(v_wind, np.ndarray) and isinstance(rho_hub, pd.Series)):
+        rho_hub = np.array(rho_hub)
     power_output = [(np.interp(v_wind[i],
                                p_values.index * (1.225 / rho_hub[i])**(
                                    np.interp(p_values.index,
