@@ -78,6 +78,9 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
         raise ValueError("To take an obstacle height of {0} m".format(
                          obstacle_height) + " into consideration, wind" +
                          " speed data of a greater height is needed.")
+    # Return np.array if v_wind is np.array
+    if isinstance(v_wind, np.ndarray):
+        z_0 = np.array(z_0)
     return (v_wind * np.log((hub_height - 0.7 * obstacle_height) / z_0) /
             np.log((v_wind_height - 0.7 * obstacle_height) / z_0))
 
@@ -149,6 +152,9 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, z_0=None,
     """
     if hellman_exp is None:
         if z_0 is not None:
+            # Return np.array if v_wind is np.array
+            if isinstance(v_wind, np.ndarray):
+                z_0 = np.array(z_0)
             hellman_exp = 1 / np.log(hub_height / z_0)
         else:
             hellman_exp = 1/7
