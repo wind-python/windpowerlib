@@ -252,7 +252,7 @@ class ModelChain(object):
             logging.debug('Calculating v_wind using hellman equation.')
             v_wind = wind_speed.v_wind_hellman(v_wind_closest, v_wind_height,
                                                self.wind_turbine.hub_height,
-                                               self.hellman_exp, weather['z0'])
+                                               weather['z0'], self.hellman_exp)
         else:
             raise ValueError("'{0}' is an invalid value.".format(
                              self.wind_model) + "`wind_model` " +
