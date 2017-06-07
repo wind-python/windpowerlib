@@ -231,4 +231,6 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     if isinstance(v_wind, pd.Series):
         power_output = pd.Series(data=power_output, index=v_wind.index,
                                  name='feedin_wind_turbine')
+    else:
+        power_output = np.array(power_output)
     return power_output
