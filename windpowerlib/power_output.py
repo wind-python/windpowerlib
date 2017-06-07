@@ -60,10 +60,10 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
 
     """
     # cp time series
-    cp_series = np.interp(v_wind, cp_values.index, cp_values.cp,
-                          left=0, right=0)
+    cp_time_series = np.interp(v_wind, cp_values.index, cp_values.cp,
+                               left=0, right=0)
     power_output = (1 / 8 * rho_hub * d_rotor ** 2 * np.pi
-                    * np.power(v_wind, 3) * cp_series)
+                    * np.power(v_wind, 3) * cp_time_series)
     # Set index for time series
     try:
         series_index = v_wind.index
