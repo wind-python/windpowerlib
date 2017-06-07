@@ -8,16 +8,6 @@ from numpy.testing import assert_allclose
 
 class TestPowerOutput:
 
-    @classmethod
-    def setup_class(self):
-        self.v_wind = pd.Series(data=[2.0, 5.5, 7.0])
-        self.rho_hub = pd.Series(data=[1.3, 1.3, 1.3])
-        self.d_rotor = 80
-        self.cp_values = pd.DataFrame(data={'cp': [0.3, 0.4, 0.5]},
-                                      index=[4.0, 5.0, 6.0])
-        self.p_values = pd.DataFrame(data={'p': [300, 400, 500]},
-                                     index=[4.0, 5.0, 6.0])
-
     def test_cp_curve(self):
         parameters = {'v_wind': pd.Series(data=[2.0, 5.5, 7.0]),
                       'rho_hub': pd.Series(data=[1.3, 1.3, 1.3]),
