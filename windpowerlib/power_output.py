@@ -85,12 +85,12 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
         Wind speed at hub height in m/s.
     rho_hub : pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
+    d_rotor : float
+        Diameter of the rotor in m.
     cp_values : pandas.DataFrame
         Power coefficient curve of the wind turbine.
         Indices are the wind speeds of the power coefficient curve in m/s, the
         corresponding power coefficient values are in the column 'cp'.
-    d_rotor : float
-        Diameter of the rotor in m.
 
     Returns
     -------
