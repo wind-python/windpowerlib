@@ -7,8 +7,6 @@ windpowerlib.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
-import collections
-
 
 def smallest_difference(value_1, value_2, comp_value, corresp_1, corresp_2):
     r"""
@@ -37,9 +35,10 @@ def smallest_difference(value_1, value_2, comp_value, corresp_1, corresp_2):
 
     Returns
     -------
-    Tuple(float, float,)
+    Tuple(float, float)
         Value closer to comparing value as float and its corresponding value as
         float.
+
     """
     if (value_2 is not None and corresp_2 is not None):
         if abs(value_1 - comp_value) <= abs(value_2 - comp_value):
@@ -54,8 +53,4 @@ def smallest_difference(value_1, value_2, comp_value, corresp_1, corresp_2):
         corresp_value = corresp_1
     else:
         corresp_value = corresp_2
-    # Store values in a named tuple
-    return_tuple = collections.namedtuple('selected_values',
-                                          ['closest_value',
-                                           'corresp_value'])
-    return return_tuple(closest_value, corresp_value)
+    return (closest_value, corresp_value)

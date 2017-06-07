@@ -154,8 +154,8 @@ class ModelChain(object):
             data_height['temp_air'], data_height['temp_air_2'],
             self.wind_turbine.hub_height, weather['temp_air'],
             weather['temp_air_2'])
-        temp_air_height = values.closest_value
-        temp_air_closest = values.corresp_value
+        temp_air_height = values[0]
+        temp_air_closest = values[1]
         # Check if temperature data is at hub height.
         if temp_air_height == self.wind_turbine.hub_height:
             logging.debug('Using given temperature at hub height.')
@@ -236,8 +236,8 @@ class ModelChain(object):
             data_height['v_wind'], data_height['v_wind_2'],
             self.wind_turbine.hub_height, weather['v_wind'],
             weather['v_wind_2'])
-        v_wind_height = values.closest_value
-        v_wind_closest = values.corresp_value
+        v_wind_height = values[0]
+        v_wind_closest = values[1]
         # Check if wind speed data is at hub height.
         if v_wind_height == self.wind_turbine.hub_height:
             logging.debug('Using given wind speed at hub height.')
