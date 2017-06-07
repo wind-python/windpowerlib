@@ -10,9 +10,9 @@ class TestWindSpeed:
 
     def test_logarithmic_wind_profile(self):
         parameters = {'v_wind': pd.Series(data=[5.0, 6.5]),
-                      'z_0': pd.Series(data=[0.15, 0.15]),
-                      'hub_height': 100,
                       'v_wind_height': 10,
+                      'hub_height': 100,
+                      'z_0': pd.Series(data=[0.15, 0.15]),
                       'obstacle_height': 0}
         # Test pandas.Series
         v_wind_hub_exp = pd.Series(data=[7.74136523, 10.0637748])
@@ -34,8 +34,8 @@ class TestWindSpeed:
 
     def test_v_wind_hellman(self):
         parameters = {'v_wind': pd.Series(data=[5.0, 6.5]),
-                      'hub_height': 100,
                       'v_wind_height': 10,
+                      'hub_height': 100,
                       'z_0': None,
                       'hellman_exp': None}
         # Test pandas.Series and z_0 is None
