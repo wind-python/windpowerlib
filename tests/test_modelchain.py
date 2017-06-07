@@ -15,101 +15,6 @@ class TestModelChain:
                              'd_rotor': 80,
                              'turbine_name': 'ENERCON E 126 7500'}
 
-    def test_v_wind_hub(self):
-        # Test modelchain with wind_model='logarithmic'
-        test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
-                                wind_model='logarithmic')
-        # Test modelchain with wind_model='hellman'
-        test_mc_2 = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
-                                  wind_model='hellman')
-        weather = {'v_wind': pd.Series(data=[5.0, 6.5]),
-                   'v_wind_2': pd.Series(data=[4.0, 5.0]),
-                   'z0': 0.15}
-        weather_df = pd.DataFrame(data={'v_wind': [5.0, 6.5],
-                                        'v_wind_2': [4.0, 5.0],
-                                        'z0': 0.15},
-                                  index=[0, 1])
-        weather_arr = {'v_wind': np.array(weather['v_wind']),
-                       'v_wind_2': np.array(weather['v_wind_2']),
-                       'z0': 0.15}
-        data_height = {'v_wind': 10,
-                       'v_wind_2': 8}
-
-        # v_wind is closer to hub height than v_wind_2
-        v_wind_exp = pd.Series(data=[7.74137, 10.06377])
-        assert_series_equal(test_mc.v_wind_hub(weather, data_height),
-                            v_wind_exp)
-        assert_series_equal(test_mc.v_wind_hub(weather_df, data_height),
-                            v_wind_exp)
-        v_wind_exp = np.array([7.74136523, 10.0637748])
-        assert_allclose(test_mc.v_wind_hub(weather_arr, data_height),
-                        v_wind_exp)
-        v_wind_exp = pd.Series(data=[7.12462, 9.26201])
-        assert_series_equal(test_mc_2.v_wind_hub(weather, data_height),
-                            v_wind_exp)
-        assert_series_equal(test_mc_2.v_wind_hub(weather_df, data_height),
-                            v_wind_exp)
-        v_wind_exp = np.array([7.12462437, 9.26201168])
-        assert_allclose(test_mc_2.v_wind_hub(weather_arr, data_height),
-                        v_wind_exp)
-
-        # v_wind_2 is closer to hub height than v_wind
-        data_height['v_wind'] = 8
-        data_height['v_wind_2'] = 10
-        v_wind_exp = pd.Series(data=[6.19309, 7.74137])
-        assert_series_equal(test_mc.v_wind_hub(weather, data_height),
-                            v_wind_exp)
-        assert_series_equal(test_mc.v_wind_hub(weather_df, data_height),
-                            v_wind_exp)
-        v_wind_exp = np.array([6.19309218, 7.74136523])
-        assert_allclose(test_mc.v_wind_hub(weather_arr, data_height),
-                        v_wind_exp)
-        v_wind_exp = pd.Series(data=[5.69970, 7.12462])
-        assert_series_equal(test_mc_2.v_wind_hub(weather, data_height),
-                            v_wind_exp)
-        assert_series_equal(test_mc_2.v_wind_hub(weather_df, data_height),
-                            v_wind_exp)
-        v_wind_exp = np.array([5.69970, 7.12462437])
-        assert_allclose(test_mc_2.v_wind_hub(weather_arr, data_height),
-                        v_wind_exp)
-
-        # v_wind is given at hub height
-        data_height['v_wind'] = 100
-        v_wind_exp = pd.Series(data=[5.0, 6.5])
-        assert_series_equal(test_mc.v_wind_hub(weather, data_height),
-                            v_wind_exp)
-        v_wind_exp = pd.Series(data=[5.0, 6.5], name='v_wind')
-        assert_series_equal(test_mc.v_wind_hub(weather_df, data_height),
-                            v_wind_exp)
-        v_wind_exp = np.array([5.0, 6.5])
-        assert_array_equal(test_mc_2.v_wind_hub(weather_arr, data_height),
-                           v_wind_exp)
-
-        # v_wind_2 is given at hub height
-        v_wind_exp = pd.Series(data=[4.0, 5.0])
-        data_height['v_wind'] = 10
-        data_height['v_wind_2'] = 100
-        assert_series_equal(test_mc_2.v_wind_hub(weather, data_height),
-                            v_wind_exp)
-        v_wind_exp = pd.Series(data=[4.0, 5.0], name='v_wind_2')
-        assert_series_equal(test_mc_2.v_wind_hub(weather_df, data_height),
-                            v_wind_exp)
-        v_wind_exp = np.array([4.0, 5.0])
-        assert_array_equal(test_mc_2.v_wind_hub(weather_arr, data_height),
-                           v_wind_exp)
-
-        # v_wind_2 is not in weather
-        v_wind_exp = pd.Series(data=[7.12462, 9.26201])
-        no_v_wind_2_dict = dict(weather)
-        del no_v_wind_2_dict['v_wind_2']
-        assert_series_equal(test_mc_2.v_wind_hub(no_v_wind_2_dict,
-                                                 data_height),
-                            v_wind_exp)
-        no_v_wind_2_df = dict(weather_df)
-        del no_v_wind_2_df['v_wind_2']
-        assert_series_equal(test_mc_2.v_wind_hub(no_v_wind_2_df, data_height),
-                            v_wind_exp)
-
     def test_rho_hub(self):
         # Test modelchain with rho_model='barometric' and
         # temperature_model='gradient'
@@ -204,6 +109,101 @@ class TestModelChain:
             no_temp_air_2_df = dict(weather)
             del no_temp_air_2_df['temp_air_2']
             test_mc_2.rho_hub(no_temp_air_2_df, data_height)
+
+    def test_v_wind_hub(self):
+        # Test modelchain with wind_model='logarithmic'
+        test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
+                                wind_model='logarithmic')
+        # Test modelchain with wind_model='hellman'
+        test_mc_2 = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
+                                  wind_model='hellman')
+        weather = {'v_wind': pd.Series(data=[5.0, 6.5]),
+                   'v_wind_2': pd.Series(data=[4.0, 5.0]),
+                   'z0': 0.15}
+        weather_df = pd.DataFrame(data={'v_wind': [5.0, 6.5],
+                                        'v_wind_2': [4.0, 5.0],
+                                        'z0': 0.15},
+                                  index=[0, 1])
+        weather_arr = {'v_wind': np.array(weather['v_wind']),
+                       'v_wind_2': np.array(weather['v_wind_2']),
+                       'z0': 0.15}
+        data_height = {'v_wind': 10,
+                       'v_wind_2': 8}
+
+        # v_wind is closer to hub height than v_wind_2
+        v_wind_exp = pd.Series(data=[7.74137, 10.06377])
+        assert_series_equal(test_mc.v_wind_hub(weather, data_height),
+                            v_wind_exp)
+        assert_series_equal(test_mc.v_wind_hub(weather_df, data_height),
+                            v_wind_exp)
+        v_wind_exp = np.array([7.74136523, 10.0637748])
+        assert_allclose(test_mc.v_wind_hub(weather_arr, data_height),
+                        v_wind_exp)
+        v_wind_exp = pd.Series(data=[7.12462, 9.26201])
+        assert_series_equal(test_mc_2.v_wind_hub(weather, data_height),
+                            v_wind_exp)
+        assert_series_equal(test_mc_2.v_wind_hub(weather_df, data_height),
+                            v_wind_exp)
+        v_wind_exp = np.array([7.12462437, 9.26201168])
+        assert_allclose(test_mc_2.v_wind_hub(weather_arr, data_height),
+                        v_wind_exp)
+
+        # v_wind_2 is closer to hub height than v_wind
+        data_height['v_wind'] = 8
+        data_height['v_wind_2'] = 10
+        v_wind_exp = pd.Series(data=[6.19309, 7.74137])
+        assert_series_equal(test_mc.v_wind_hub(weather, data_height),
+                            v_wind_exp)
+        assert_series_equal(test_mc.v_wind_hub(weather_df, data_height),
+                            v_wind_exp)
+        v_wind_exp = np.array([6.19309218, 7.74136523])
+        assert_allclose(test_mc.v_wind_hub(weather_arr, data_height),
+                        v_wind_exp)
+        v_wind_exp = pd.Series(data=[5.69970, 7.12462])
+        assert_series_equal(test_mc_2.v_wind_hub(weather, data_height),
+                            v_wind_exp)
+        assert_series_equal(test_mc_2.v_wind_hub(weather_df, data_height),
+                            v_wind_exp)
+        v_wind_exp = np.array([5.69970, 7.12462437])
+        assert_allclose(test_mc_2.v_wind_hub(weather_arr, data_height),
+                        v_wind_exp)
+
+        # v_wind is given at hub height
+        data_height['v_wind'] = 100
+        v_wind_exp = pd.Series(data=[5.0, 6.5])
+        assert_series_equal(test_mc.v_wind_hub(weather, data_height),
+                            v_wind_exp)
+        v_wind_exp = pd.Series(data=[5.0, 6.5], name='v_wind')
+        assert_series_equal(test_mc.v_wind_hub(weather_df, data_height),
+                            v_wind_exp)
+        v_wind_exp = np.array([5.0, 6.5])
+        assert_array_equal(test_mc_2.v_wind_hub(weather_arr, data_height),
+                           v_wind_exp)
+
+        # v_wind_2 is given at hub height
+        v_wind_exp = pd.Series(data=[4.0, 5.0])
+        data_height['v_wind'] = 10
+        data_height['v_wind_2'] = 100
+        assert_series_equal(test_mc_2.v_wind_hub(weather, data_height),
+                            v_wind_exp)
+        v_wind_exp = pd.Series(data=[4.0, 5.0], name='v_wind_2')
+        assert_series_equal(test_mc_2.v_wind_hub(weather_df, data_height),
+                            v_wind_exp)
+        v_wind_exp = np.array([4.0, 5.0])
+        assert_array_equal(test_mc_2.v_wind_hub(weather_arr, data_height),
+                           v_wind_exp)
+
+        # v_wind_2 is not in weather
+        v_wind_exp = pd.Series(data=[7.12462, 9.26201])
+        no_v_wind_2_dict = dict(weather)
+        del no_v_wind_2_dict['v_wind_2']
+        assert_series_equal(test_mc_2.v_wind_hub(no_v_wind_2_dict,
+                                                 data_height),
+                            v_wind_exp)
+        no_v_wind_2_df = dict(weather_df)
+        del no_v_wind_2_df['v_wind_2']
+        assert_series_equal(test_mc_2.v_wind_hub(no_v_wind_2_df, data_height),
+                            v_wind_exp)
 
     def test_run_model(self):
         weather = {'temp_air': pd.Series(data=[267, 268]),
