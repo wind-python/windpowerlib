@@ -78,6 +78,7 @@ class TestModelChain:
         v_wind_exp = pd.Series(data=[5.0, 6.5])
         assert_series_equal(test_mc.v_wind_hub(weather, data_height),
                             v_wind_exp)
+        v_wind_exp = pd.Series(data=[5.0, 6.5], name='v_wind')
         assert_series_equal(test_mc.v_wind_hub(weather_df, data_height),
                             v_wind_exp)
         v_wind_exp = np.array([5.0, 6.5])
@@ -90,6 +91,7 @@ class TestModelChain:
         data_height['v_wind_2'] = 100
         assert_series_equal(test_mc_2.v_wind_hub(weather, data_height),
                             v_wind_exp)
+        v_wind_exp = pd.Series(data=[4.0, 5.0], name='v_wind_2')
         assert_series_equal(test_mc_2.v_wind_hub(weather_df, data_height),
                             v_wind_exp)
         v_wind_exp = np.array([4.0, 5.0])
