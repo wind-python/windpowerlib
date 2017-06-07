@@ -135,13 +135,13 @@ class ModelChain(object):
             for interpolation.
             If a Dictionary is used the data inside the dictionary has to be of
             the types pandas.Series or numpy.array.
-        data_height : DataFrame or Dictionary
+        data_height : Dictionary
             Containing columns or keys with the heights in m for which the
             corresponding parameters in `weather` apply.
 
         Returns
         -------
-        rho_hub : pandas.Series or array
+        rho_hub : pandas.Series or numpy.array
             Density of air in kg/m³ at hub height.
 
         """
@@ -213,13 +213,13 @@ class ModelChain(object):
             optionally wind speed `v_wind_2` in m/s at different height.
             If a Dictionary is used the data inside the dictionary has to be of
             the types pandas.Series or numpy.array.
-        data_height : DataFrame or Dictionary
+        data_height : Dictionary
             Containing columns or keys with the heights in m for which the
             corresponding parameters in `weather` apply.
 
         Returns
         -------
-        v_wind : pandas.Series or array
+        v_wind : pandas.Series or numpy.array
             Wind speed in m/s at hub height.
 
         Notes
@@ -267,9 +267,9 @@ class ModelChain(object):
 
         Parameters
         ----------
-        v_wind : pandas.Series or array
+        v_wind : pandas.Series or numpy.array
             Wind speed at hub height in m/s.
-        rho_hub : pandas.Series or array
+        rho_hub : pandas.Series or numpy.array
             Density of air at hub height in kg/m³.
 
         Returns
@@ -337,7 +337,7 @@ class ModelChain(object):
             `temp_air_2` in K at different height for interpolation.
             If a Dictionary is used the data inside the dictionary has to be of
             the types pandas.Series or numpy.array.
-        data_height : DataFrame or Dictionary
+        data_height : Dictionary
             Containing columns or keys with the heights in m for which the
             corresponding parameters in `weather` apply.
 

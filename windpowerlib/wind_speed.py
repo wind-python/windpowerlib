@@ -23,13 +23,13 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
 
     Parameters
     ----------
-    v_wind : pandas.Series or array-like
+    v_wind : pandas.Series or numpy.array
         Wind speed time series.
     v_wind_height : float
         Height for which the parameter `v_wind` applies.
     hub_height : float
         Hub height of wind turbine.
-    z_0 : pandas.Series or array-like or float
+    z_0 : pandas.Series or numpy.array or float
         Roughness length.
     obstacle_height : float
         Height of obstacles in the surrounding area of the wind turbine. Set
@@ -37,7 +37,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
 
     Returns
     -------
-    pandas.Series or array
+    pandas.Series or numpy.array
         Wind speed at hub height.
 
     Notes
@@ -93,7 +93,7 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
 
     Parameters
     ----------
-    v_wind : pandas.Series or array-like
+    v_wind : pandas.Series or numpy.array
         Wind speed time series.
     v_wind_height : float
         Height for which the parameter `v_wind` applies.
@@ -104,13 +104,13 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
         stability of atmospheric conditions and surface roughness into one
         constant. Default: None. If None and roughness length is given
         `hellman_exp` = 1 / ln(h_hub/z_0), otherwise `hellman_exp` = 1/7.
-    z_0 : pandas.Series or array or float
+    z_0 : pandas.Series or numpy.array or float
         Roughness length. Default: None. If given
         `hellman_exp` = 1 / ln(h_hub/z_0), otherwise `hellman_exp` = 1/7.
 
     Returns
     -------
-    pandas.Series or array
+    pandas.Series or numpy.array
         Wind speed at hub height.
 
     Notes

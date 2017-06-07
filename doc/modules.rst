@@ -105,3 +105,11 @@ Additional functions used in the windpowerlib.
    :toctree: temp/
 
    tools.smallest_difference
+
+
+Example
+==============
+
+The basic example consists of the following functions.
+
+.. include:: example.rst
