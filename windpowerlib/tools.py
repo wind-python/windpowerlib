@@ -37,7 +37,7 @@ def smallest_difference(value_1, value_2, comp_value, corresp_1, corresp_2):
 
     Returns
     -------
-    Tuple(float, float,)
+    Tuple(float, float)
         Value closer to comparing value as float and its corresponding value as
         float.
     """
