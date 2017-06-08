@@ -26,6 +26,7 @@ class TestModelChain:
         test_mc_2 = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
                                   rho_model='ideal_gas',
                                   temperature_model='interpolation')
+        # Parameters for tests
         weather = {'temp_air': pd.Series(data=[267, 268]),
                    'temp_air_2': pd.Series(data=[267, 266]),
                    'pressure': pd.Series(data=[101125, 101000])}
@@ -117,6 +118,7 @@ class TestModelChain:
         # Test modelchain with wind_model='hellman'
         test_mc_2 = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
                                   wind_model='hellman')
+        # Parameters for tests
         weather = {'v_wind': pd.Series(data=[5.0, 6.5]),
                    'v_wind_2': pd.Series(data=[4.0, 5.0]),
                    'z0': 0.15}

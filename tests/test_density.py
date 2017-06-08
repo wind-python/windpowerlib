@@ -12,9 +12,11 @@ class TestDensityTemperature:
         parameters = {'temp_air': pd.Series(data=[267, 268]),
                       'temp_height': 2,
                       'hub_height': 100}
+
         # Test temp_air as pd.Series
         temp_hub_exp = pd.Series(data=[266.363, 267.36300])
         assert_series_equal(temperature_gradient(**parameters), temp_hub_exp)
+
         # Test temp_air as np.array
         temp_hub_exp = np.array([266.363, 267.36300])
         parameters['temp_air'] = np.array(parameters['temp_air'])
@@ -51,6 +53,7 @@ class TestDensityTemperature:
                       'pressure_height': 0,
                       'hub_height': 100,
                       'temp_hub': pd.Series(data=[267, 268])}
+
         # Test pressure as pd.Series and temp_hub as pd.Series and np.array
         rho_exp = pd.Series(data=[1.30305336, 1.29656645])
         assert_series_equal(rho_barometric(**parameters), rho_exp)
