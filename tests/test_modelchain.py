@@ -208,18 +208,18 @@ class TestModelChain:
                             v_wind_exp)
 
     def test_run_model(self):
-        weather = {'temp_air': pd.Series(data=[267, 268]),
-                   'temp_air_2': pd.Series(data=[267, 266]),
-                   'v_wind': pd.Series(data=[5.0, 6.5]),
+        weather = {'v_wind': pd.Series(data=[5.0, 6.5]),
                    'v_wind_2': pd.Series(data=[4.0, 5.0]),
+                   'temp_air': pd.Series(data=[267, 268]),
+                   'temp_air_2': pd.Series(data=[267, 266]),
                    'pressure': pd.Series(data=[101125, 101000]),
                    'z0': 0.15}
         weather_df = pd.DataFrame(data={'v_wind': [5.0, 6.5],
                                         'v_wind_2': [4.0, 5.0],
-                                        'z0': 0.15,
                                         'temp_air': [267, 268],
                                         'temp_air_2': [267, 266],
-                                        'pressure': [101125, 101000]},
+                                        'pressure': [101125, 101000],
+                                        'z0': 0.15},
                                   index=[0, 1])
         weather_arr = {'v_wind': np.array(weather['v_wind']),
                        'v_wind_2': np.array(weather['v_wind_2']),
@@ -227,10 +227,10 @@ class TestModelChain:
                        'temp_air_2': np.array(weather['temp_air_2']),
                        'pressure': np.array(weather['pressure']),
                        'z0': np.array([0.15, 0.15])}
-        data_height = {'temp_air': 2,
-                       'temp_air_2': 10,
-                       'v_wind': 10,
+        data_height = {'v_wind': 10,
                        'v_wind_2': 8,
+                       'temp_air': 2,
+                       'temp_air_2': 10,
                        'pressure': 0}
         test_turbine = {'hub_height': 100,
                         'd_rotor': 80,
