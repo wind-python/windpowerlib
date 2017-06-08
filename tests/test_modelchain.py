@@ -304,8 +304,9 @@ class TestModelChain:
 
         # Test weather dictionary with numpy.arrays
         test_mc.run_model(weather_arr, data_height)
-        power_output_exp = [567683.924536, 1485556.964347] # TODO: Output should be np.array
+        power_output_exp = np.array([567683.924536, 1485556.964347])
         assert_allclose(test_mc.power_output, power_output_exp)
+        assert isinstance(test_mc.power_output, np.ndarray)
 
         # Raise ValueErrors due to wrong spelling of parameters
         with pytest.raises(ValueError):
