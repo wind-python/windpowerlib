@@ -246,7 +246,7 @@ def plot_or_print(my_turbine, e126):
             print(e126.cp_values)
         if e126.p_values is not None:
             print("The P value at a wind speed of 5 m/s: {0}".format(
-                e126.p_values.P[5.0]))
+                e126.p_values.p[5.0]))
 
 
 def run_basic_example():
