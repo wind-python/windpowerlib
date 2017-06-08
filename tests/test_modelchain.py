@@ -283,8 +283,6 @@ class TestModelChain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Test weather dictionary with numpy.arrays
-        power_output_exp = pd.Series(data=[567683.92454, 1485556.96435],
-                                     index=[1, 2], name='feedin_wind_turbine')
         test_mc.run_model(weather_arr, data_height)
         power_output_exp = [567683.924536, 1485556.964347] # TODO: Output should be np.array
         assert_allclose(test_mc.power_output, power_output_exp)
