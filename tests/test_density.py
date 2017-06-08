@@ -1,4 +1,4 @@
-from windpowerlib.density import (temperature_gradient, temperature_interpol,
+from windpowerlib.density import (temperature_gradient,
                                   rho_barometric, rho_ideal_gas)
 import pandas as pd
 from pandas.util.testing import assert_series_equal
