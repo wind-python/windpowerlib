@@ -47,12 +47,16 @@ class TestModelChain:
         assert_series_equal(test_mc.rho_hub(weather_df, data_height), rho_exp)
         rho_exp = np.array([1.30591464, 1.30919432])
         assert_allclose(test_mc.rho_hub(weather_arr, data_height), rho_exp)
+        assert isinstance(test_mc.rho_hub(weather_arr, data_height),
+                          np.ndarray)
         rho_exp = pd.Series(data=[1.30309, 1.42707])
         assert_series_equal(test_mc_2.rho_hub(weather, data_height), rho_exp)
         assert_series_equal(test_mc_2.rho_hub(weather_df, data_height),
                             rho_exp)
         rho_exp = np.array([1.30309439, 1.42706674])
         assert_allclose(test_mc_2.rho_hub(weather_arr, data_height), rho_exp)
+        assert isinstance(test_mc_2.rho_hub(weather_arr, data_height),
+                          np.ndarray)
 
         # temp_air is closer to hub height than temp_air_2
         data_height['temp_air'] = 10
@@ -62,12 +66,16 @@ class TestModelChain:
         assert_series_equal(test_mc.rho_hub(weather_df, data_height), rho_exp)
         rho_exp = np.array([1.30591464, 1.29940284])
         assert_allclose(test_mc.rho_hub(weather_arr, data_height), rho_exp)
+        assert isinstance(test_mc.rho_hub(weather_arr, data_height),
+                          np.ndarray)
         rho_exp = pd.Series(data=[1.30309, 1.19618])
         assert_series_equal(test_mc_2.rho_hub(weather, data_height), rho_exp)
         assert_series_equal(test_mc_2.rho_hub(weather_df, data_height),
                             rho_exp)
         rho_exp = np.array([1.30309439, 1.19618159])
         assert_allclose(test_mc_2.rho_hub(weather_arr, data_height), rho_exp)
+        assert isinstance(test_mc_2.rho_hub(weather_arr, data_height),
+                          np.ndarray)
 
         # temp_air at hub height
         rho_exp = pd.Series(data=[1.30305, 1.29657])
@@ -76,6 +84,8 @@ class TestModelChain:
         assert_series_equal(test_mc.rho_hub(weather_df, data_height), rho_exp)
         rho_exp = np.array([1.30305336, 1.29656645])
         assert_allclose(test_mc.rho_hub(weather_arr, data_height), rho_exp)
+        assert isinstance(test_mc.rho_hub(weather_arr, data_height),
+                          np.ndarray)
 
         # temp_air_2 at hub height
         rho_exp = pd.Series(data=[1.30309, 1.30636])
@@ -86,6 +96,8 @@ class TestModelChain:
                             rho_exp)
         rho_exp = np.array([1.30309439, 1.30635621])
         assert_allclose(test_mc_2.rho_hub(weather_arr, data_height), rho_exp)
+        assert isinstance(test_mc_2.rho_hub(weather_arr, data_height),
+                          np.ndarray)
 
         # temp_air_2 is not in weather
         rho_exp = pd.Series(data=[1.30591, 1.29940])
@@ -141,6 +153,8 @@ class TestModelChain:
         v_wind_exp = np.array([7.74136523, 10.0637748])
         assert_allclose(test_mc.v_wind_hub(weather_arr, data_height),
                         v_wind_exp)
+        assert isinstance(test_mc.v_wind_hub(weather_arr, data_height),
+                          np.ndarray)
         v_wind_exp = pd.Series(data=[7.12462, 9.26201])
         assert_series_equal(test_mc_2.v_wind_hub(weather, data_height),
                             v_wind_exp)
@@ -149,6 +163,8 @@ class TestModelChain:
         v_wind_exp = np.array([7.12462437, 9.26201168])
         assert_allclose(test_mc_2.v_wind_hub(weather_arr, data_height),
                         v_wind_exp)
+        assert isinstance(test_mc_2.v_wind_hub(weather_arr, data_height),
+                          np.ndarray)
 
         # v_wind_2 is closer to hub height than v_wind
         data_height['v_wind'] = 8
@@ -161,6 +177,8 @@ class TestModelChain:
         v_wind_exp = np.array([6.19309218, 7.74136523])
         assert_allclose(test_mc.v_wind_hub(weather_arr, data_height),
                         v_wind_exp)
+        assert isinstance(test_mc.v_wind_hub(weather_arr, data_height),
+                          np.ndarray)
         v_wind_exp = pd.Series(data=[5.69970, 7.12462])
         assert_series_equal(test_mc_2.v_wind_hub(weather, data_height),
                             v_wind_exp)
@@ -169,6 +187,8 @@ class TestModelChain:
         v_wind_exp = np.array([5.69970, 7.12462437])
         assert_allclose(test_mc_2.v_wind_hub(weather_arr, data_height),
                         v_wind_exp)
+        assert isinstance(test_mc_2.v_wind_hub(weather_arr, data_height),
+                          np.ndarray)
 
         # v_wind is given at hub height
         data_height['v_wind'] = 100
