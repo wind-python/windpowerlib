@@ -92,12 +92,15 @@ def linear_extra_interpolation(data_frame, requested_height, column_name):
     used for extrapolation:
 
     .. math:: interpolant = (value_2 - value_1) / (height_2 - height_1) *
-              (requested_height - height_1) + value_1
+              (height_{requested} - height_1) + value_1
 
     with:
-        height_2: largest/smallest value in data frame, height_1: second
-        largest/smallest value in data frame, value_2: corresponding value to
-        height_2, value_1: correponding value to height_1
+        :math:`height_2`: largest/smallest value in data frame,
+        :math:`height_1`: second largest/smallest value in data frame,
+        :math:`value_2`: corresponding value to `height_2`,
+        :math:`value_1`: correponding value to `height_1`,
+        :math:`height_{requested}` : Height for which the interpolation takes
+        place
 
     """
     if requested_height > max(data_frame.index):
