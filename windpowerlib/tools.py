@@ -4,8 +4,6 @@ windpowerlib.
 
 """
 
-import numpy as np
-
 
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
@@ -86,29 +84,19 @@ def linear_extra_interpolation(data_frame, requested_height, column_name):
               (height_{requested} - height_1) + value_1
 
     with:
-        :math:`height_2`: largest/smallest value in data frame,
-        :math:`height_1`: second largest/smallest value in data frame,
+        :math:`height_2`: largest/smallest index of data frame,
+        :math:`height_1`: second largest/smallest index of data frame,
         :math:`value_2`: corresponding value to `height_2`,
         :math:`value_1`: correponding value to `height_1`,
-        :math:`height_{requested}` : Height for which the interpolation takes
+        :math:`height_{requested}` : height for which the interpolation takes
         place
 
     """
-    if requested_height > max(data_frame.index):
-        height_2 = max(data_frame.index)
-        value_2 = data_frame[column_name][height_2]
-        height_1 = sorted(data_frame.index)[-2]  # Second largest number
-        value_1 = data_frame[column_name][height_1]
-        interpolant = ((value_2 - value_1) / (height_2 - height_1) *
-                       (requested_height - height_1) + value_1)
-    elif requested_height < min(data_frame.index):
-        height_2 = min(data_frame.index)
-        value_2 = data_frame[column_name][height_2]
-        height_1 = sorted(data_frame.index)[1]  # Second smallest number
-        value_1 = data_frame[column_name][height_1]
-        interpolant = ((value_2 - value_1) / (height_2 - height_1) *
-                       (requested_height - height_1) + value_1)
-    else:
-        interpolant = np.interp(requested_height, data_frame.index,
-                                data_frame[column_name])
+    height_2, value_2 = smallest_difference(data_frame, requested_height,
+                                            column_name)
+    data_frame_2 = data_frame.drop(height_2)
+    height_1, value_1 = smallest_difference(data_frame_2, requested_height,
+                                            column_name)
+    interpolant = ((value_2 - value_1) / (height_2 - height_1) *
+                   (requested_height - height_1) + value_1)
     return interpolant
