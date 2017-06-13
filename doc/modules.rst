@@ -105,6 +105,7 @@ Additional functions used in the windpowerlib.
    :toctree: temp/
 
    tools.smallest_difference
+   tools.linear_extra_interpolation
 
 
 Example
