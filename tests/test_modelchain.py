@@ -16,16 +16,12 @@ class TestModelChain:
                              'turbine_name': 'ENERCON E 126 7500'}
 
     def test_rho_hub(self):
-        # Test modelchain with rho_model='barometric' and
-        # temperature_model='gradient'
+        # Test modelchain with rho_model='barometric'
         test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
-                                rho_model='barometric',
-                                temperature_model='gradient')
-        # Test modelchain with rho_model='ideal_gas' and
-        # temperature_model='interpolation'
+                                rho_model='barometric')
+        # Test modelchain with rho_model='ideal_gas'
         test_mc_2 = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
-                                  rho_model='ideal_gas',
-                                  temperature_model='interpolation')
+                                  rho_model='ideal_gas')
         # Parameters for tests
         weather = {'temp_air': pd.Series(data=[267, 268]),
                    'temp_air_2': pd.Series(data=[267, 266]),
@@ -109,19 +105,6 @@ class TestModelChain:
         del no_temp_air_2_df['temp_air_2']
         assert_series_equal(test_mc.rho_hub(no_temp_air_2_df, data_height),
                             rho_exp)
-
-        # Raise KeyError due to missing temp_air_2 while temperature_model =
-        # 'interpolation'
-        with pytest.raises(KeyError):
-            data_height['temp_air_2'] = 100
-            no_temp_air_2_dict = dict(weather)
-            del no_temp_air_2_dict['temp_air_2']
-            test_mc_2.rho_hub(no_temp_air_2_dict, data_height)
-        with pytest.raises(KeyError):
-            data_height['temp_air_2'] = 100
-            no_temp_air_2_df = dict(weather)
-            del no_temp_air_2_df['temp_air_2']
-            test_mc_2.rho_hub(no_temp_air_2_df, data_height)
 
     def test_v_wind_hub(self):
         # Test modelchain with wind_model='logarithmic'
@@ -258,7 +241,6 @@ class TestModelChain:
                         'fetch_curve': 'p'}
         test_modelchain = {'wind_model': 'hellman',
                            'rho_model': 'barometric',
-                           'temperature_model': 'interpolation',
                            'power_output_model': 'p_values',
                            'density_corr': True}
 
@@ -326,16 +308,9 @@ class TestModelChain:
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                     **test_modelchain)
             test_mc.run_model(weather, data_height)
-        with pytest.raises(ValueError):
-            test_modelchain['rho_model'] = 'barometric'
-            test_modelchain['temperature_model'] = 'wrong_spelling'
-            test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
-                                    **test_modelchain)
-            test_mc.run_model(weather, data_height)
 
         # Raise TypeErrors due to wrong type of `density_corr`
         with pytest.raises(TypeError):
-            test_modelchain['temperature_model'] = 'gradient'
             test_modelchain['density_corr'] = 'wrong_type'
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                     **test_modelchain)
@@ -355,7 +330,6 @@ class TestModelChain:
                         'fetch_curve': 'p'}
             modelchain1 = {'wind_model': 'hellman',
                            'rho_model': 'barometric',
-                           'temperature_model': 'interpolation',
                            'power_output_model': 'cp_values',
                            'density_corr': True}
             test_mc = mc.ModelChain(wt.WindTurbine(**turbine1),
@@ -368,7 +342,6 @@ class TestModelChain:
                         'fetch_curve': 'cp'}
             modelchain2 = {'wind_model': 'hellman',
                            'rho_model': 'barometric',
-                           'temperature_model': 'interpolation',
                            'power_output_model': 'p_values',
                            'density_corr': True}
             test_mc = mc.ModelChain(wt.WindTurbine(**turbine2),
