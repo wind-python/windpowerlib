@@ -23,31 +23,6 @@ class TestDensityTemperature:
         assert_array_equal(temperature_gradient(**parameters), temp_hub_exp)
         assert isinstance(temperature_gradient(**parameters), np.ndarray)
 
-#    def test_temperature_interpol(self): # temperature_interpol() will be removed
-#        self.weather = {'temp_air': pd.Series(data=[267, 268]),
-#                        'temp_air_2': pd.Series(data=[267, 266]),
-#                        'pressure': pd.Series(data=[101125, 101000])}
-#        self.data_height = {'temp_air': 2,
-#                            'temp_air_2': 10,
-#                            'pressure': 0}
-#        # Test pandas.Series
-#        temp_hub_exp = pd.Series(data=[267.0, 243.5])
-#        assert_series_equal(
-#            temperature_interpol(self.weather['temp_air'],
-#                                 self.weather['temp_air_2'],
-#                                 self.data_height['temp_air'],
-#                                 self.data_height['temp_air_2'],
-#                                 self.h_hub),
-#            temp_hub_exp)
-#        # Test numpy array
-#        assert_array_equal(
-#            temperature_interpol(np.array(self.weather['temp_air']),
-#                                 np.array(self.weather['temp_air_2']),
-#                                 self.data_height['temp_air'],
-#                                 self.data_height['temp_air_2'],
-#                                 self.h_hub),
-#            temp_hub_exp)
-
     def test_rho_barometric(self):
         parameters = {'pressure': pd.Series(data=[101125, 101000]),
                       'pressure_height': 0,
