@@ -75,3 +75,15 @@ class TestTools:
         assert_series_equal(linear_extra_interpolation(weather_pd_series,
                                                        100, 'v_wind'),
                             expected_output)
+        expected_output = pd.Series(data=[12.0, 15.0, 21.0])
+        assert_series_equal(linear_extra_interpolation(weather_pd_series,
+                                                       175, 'v_wind'),
+                            expected_output)
+        expected_output = pd.Series(data=[24.0, 30.0, 42.0])
+        assert_series_equal(linear_extra_interpolation(weather_pd_series,
+                                                       250, 'v_wind'),
+                            expected_output)
+        expected_output = pd.Series(data=[2.0, 2.5, 2.0])  # TODO: Check this test
+        assert_series_equal(linear_extra_interpolation(weather_pd_series,
+                                                       75, 'v_wind'),
+                            expected_output)
