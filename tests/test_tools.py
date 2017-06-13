@@ -11,23 +11,41 @@ class TestTools:
                                                  index=[100, 150, 200]),
                       'comp_value': 100,
                       'column_name': 'v_wind'}
-        # TODO: test v_wind as pd.Series and np.array
+        parameters_pd_series = {'data_frame': pd.DataFrame(data={'v_wind': [
+            pd.Series(data=[4.0, 5.0, 6.0]),
+            pd.Series(data=[8.0, 10.0, 14.0]),
+            pd.Series(data=[16.0, 20.0, 28.0])]}, index=[100, 150, 200]),
+                                'comp_value': 100,
+                                'column_name': 'v_wind'}
+        # TODO: test v_wind as np.array
 
         # comparative value is an index of data frame
         expected_output = (100, 4.0)
         assert smallest_difference(**parameters) == expected_output
+        expected_series = pd.Series(data=[4.0, 5.0, 6.0])
+        assert_series_equal(smallest_difference(**parameters_pd_series)[1],
+                            expected_series)
         # comparative value between indices of data frame
         expected_output = (150, 5.0)
-        parameters['comp_value'] = 175
+        parameters['comp_value'], parameters_pd_series['comp_value'] = 175, 175
         assert smallest_difference(**parameters) == expected_output
+        expected_series = pd.Series(data=[8.0, 10.0, 14.0])
+        assert_series_equal(smallest_difference(**parameters_pd_series)[1],
+                            expected_series)
         # comparative value > indices of data frame
         expected_output = (200, 6.0)
-        parameters['comp_value'] = 250
+        parameters['comp_value'], parameters_pd_series['comp_value'] = 250, 250
         assert smallest_difference(**parameters) == expected_output
+        expected_series = pd.Series(data=[16.0, 20.0, 28.0])
+        assert_series_equal(smallest_difference(**parameters_pd_series)[1],
+                            expected_series)
         # comparative value < indices of data frame
         expected_output = (100, 4.0)
-        parameters['comp_value'] = 90
+        parameters['comp_value'], parameters_pd_series['comp_value'] = 90, 90
         assert smallest_difference(**parameters) == expected_output
+        expected_series = pd.Series(data=[4.0, 5.0, 6.0])
+        assert_series_equal(smallest_difference(**parameters_pd_series)[1],
+                            expected_series)
 
     def test_linear_extra_interpolation(self):
         weather = pd.DataFrame(data={'v_wind': [4.0, 5.0, 6.0]},
