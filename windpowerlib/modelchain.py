@@ -10,7 +10,7 @@ __license__ = "GPLv3"
 
 import logging
 from windpowerlib import wind_speed, density, power_output, tools
-
+import pandas as pd
 
 class ModelChain(object):
     r"""Model to determine the output of a wind turbine
@@ -136,13 +136,17 @@ class ModelChain(object):
         if 'temp_air_2' not in weather:
             weather['temp_air_2'] = None
             data_height['temp_air_2'] = None
-        # Select temperature closer to hub height using smallest_difference()
-        values = tools.smallest_difference(
-            data_height['temp_air'], data_height['temp_air_2'],
-            self.wind_turbine.hub_height, weather['temp_air'],
-            weather['temp_air_2'])
-        temp_air_height = values[0]
-        temp_air_closest = values[1]
+            temp_air_height = data_height['temp_air']
+            temp_air_closest = weather['temp_air']
+        else:
+            # Select temperature closer to hub height using
+            # smallest_difference()
+            temp_air_height, temp_air_closest = tools.smallest_difference(
+                pd.DataFrame(data={'temp_air': [weather['temp_air'],
+                                                weather['temp_air_2']]},
+                             index=[data_height['temp_air'],
+                                    data_height['temp_air_2']]),
+                self.wind_turbine.hub_height, 'temp_air')
         # Check if temperature data is at hub height.
         if temp_air_height == self.wind_turbine.hub_height:
             logging.debug('Using given temperature at hub height.')
@@ -204,13 +208,16 @@ class ModelChain(object):
         if 'v_wind_2' not in weather:
             weather['v_wind_2'] = None
             data_height['v_wind_2'] = None
-        # Select wind speed closer to hub height using smallest_difference()
-        values = tools.smallest_difference(
-            data_height['v_wind'], data_height['v_wind_2'],
-            self.wind_turbine.hub_height, weather['v_wind'],
-            weather['v_wind_2'])
-        v_wind_height = values[0]
-        v_wind_closest = values[1]
+            v_wind_height = data_height['v_wind']
+            v_wind_closest = weather['v_wind']
+        else:
+            # Select wind speed closer to hub height using smallest_difference()
+            v_wind_height, v_wind_closest = tools.smallest_difference(
+                pd.DataFrame(data={'v_wind': [weather['v_wind'],
+                                              weather['v_wind_2']]},
+                             index=[data_height['v_wind'],
+                                    data_height['v_wind_2']]),
+                self.wind_turbine.hub_height, 'v_wind')
         # Check if wind speed data is at hub height.
         if v_wind_height == self.wind_turbine.hub_height:
             logging.debug('Using given wind speed at hub height.')
