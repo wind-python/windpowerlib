@@ -147,21 +147,11 @@ class ModelChain(object):
             logging.debug('Using given temperature at hub height.')
             temp_hub = temp_air_closest
         # Calculation of temperature in K at hub height.
-        elif self.temperature_model == 'gradient':
+        else:
             logging.debug('Calculating temperature using a temp. gradient.')
             temp_hub = density.temperature_gradient(
                 temp_air_closest, temp_air_height,
                 self.wind_turbine.hub_height)
-        elif self.temperature_model == 'interpolation':
-            logging.debug('Calculating temperature using interpolation.')
-            temp_hub = density.temperature_interpol(
-                weather['temp_air'], weather['temp_air_2'],
-                data_height['temp_air'], data_height['temp_air_2'],
-                self.wind_turbine.hub_height)
-        else:
-            raise ValueError("'{0}' is an invalid value.".format(
-                             self.temperature_model) + "`temperature_model` " +
-                             "must be 'gradient' or 'interpolation'.")
         # Calculation of density in kg/m³ at hub height
         if self.rho_model == 'barometric':
             logging.debug('Calculating density using barometric height eq.')
