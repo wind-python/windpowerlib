@@ -11,51 +11,42 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 
-def smallest_difference(value_1, value_2, comp_value, corresp_1, corresp_2):
+def smallest_difference(data_frame, comp_value, column_name):
     r"""
-    Selects the value with the smaller difference to a comparative value.
+    Selects a value with the smallest difference to a comparative value.
 
     Additionally returns a corresponding value. This function is for example
     used in :py:func:`~.modelchain.v_wind_hub` of the
     :class:`~.modelchain.ModelChain` to choose the wind speed data that is
-    close to the hub height of the examined wind turbine. In this case
-    `value_1` and `value_2` are the heights of the corresponding wind speed
-    data sets `corresp_1` and `corresp_2`.
+    close to the hub height of the examined wind turbine. In this case the
+    column of the data frame contains wind speed time series and the indices
+    are the corresponding heights for which these time series apply.
 
     Parameters
     ----------
-    value_1 : float
-        First value of which the difference to `comp_value` will be
-        compared with the difference to `comp_value` of `value_2`.
-    value_2 : float
-        Second value for comparison.
+    data_frame : DataFrame
+        Indices are the values of which the smallest difference to `comp_value`
+        will be found, the corresponding values are in the column
+        specified by `column_name` and they can be floats, pd.Series or
+        np.arrays.
     comp_value : float
         Comparative value.
-    corresp_1 : pd.Series or np.array or float
-        Corresponding value to `value_1`.
-    corresp_2 : pd.Series or np.array or float
-        Corresponding value to `value_2`.
+    column_name : string
+        Name of the column in the `data_frame` that contains the
+        correponding values.
 
     Returns
     -------
     Tuple(float, pd.Series or np.array or float)
-        Value closer to comparing value as float and its corresponding value as
-        float.
+        Closest value to comparative value as float and its corresponding value
+        as float.
 
     """
-    if (value_2 is not None and corresp_2 is not None):
-        if abs(value_1 - comp_value) <= abs(value_2 - comp_value):
-            closest_value = value_1
-        else:
-            closest_value = value_2
-    else:
-        closest_value = value_1
-
-    # Select correponding value
-    if closest_value == value_1:
-        corresp_value = corresp_1
-    else:
-        corresp_value = corresp_2
+    diff = []
+    for index in sorted(data_frame.index):
+        diff.append(abs(comp_value - index))
+    closest_value = sorted(data_frame.index)[diff.index(min(diff))]
+    corresp_value = data_frame[column_name][closest_value]
     return (closest_value, corresp_value)
 
 
