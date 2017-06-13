@@ -31,10 +31,6 @@ class ModelChain(object):
         Parameter to define which model to use to calculate the density of air
         at hub height. Valid options are 'barometric' and 'ideal_gas'.
         Default: 'barometric'.
-    temperature_model : string
-        Parameter to define which model to use to calculate the temperature at
-        hub height. Valid options are 'gradient' and 'interpolation'.
-        Default: 'gradient'.
     power_output_model : string
         Parameter to define which model to use to calculate the turbine power
         output. Valid options are 'cp_values' and 'p_values'.
@@ -63,10 +59,6 @@ class ModelChain(object):
         Parameter to define which model to use to calculate the density of air
         at hub height. Valid options are 'barometric' and 'ideal_gas'.
         Default: 'barometric'.
-    temperature_model : string
-        Parameter to define which model to use to calculate the temperature at
-        hub height. Valid options are 'gradient' and 'interpolation'.
-        Default: 'gradient'.
     power_output_model : string
         Parameter to define which model to use to calculate the turbine power
         output. Valid options are 'cp_values' and 'p_values'.
@@ -90,8 +82,7 @@ class ModelChain(object):
     ...    'd_rotor': 127,
     ...    'wind_conv_type': 'ENERCON E 126 7500'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-    >>> modelchain_data = {'rho_model': 'ideal_gas',
-    ...    'temperature_model': 'interpolation'}
+    >>> modelchain_data = {'rho_model': 'ideal_gas'}
     >>> e126_md = modelchain.ModelChain(e126, **modelchain_data)
     >>> print(e126.d_rotor)
     127
@@ -102,7 +93,6 @@ class ModelChain(object):
                  obstacle_height=0,
                  wind_model='logarithmic',
                  rho_model='barometric',
-                 temperature_model='gradient',
                  power_output_model='p_values',
                  density_corr=False,
                  hellman_exp=None):
@@ -111,7 +101,6 @@ class ModelChain(object):
         self.obstacle_height = obstacle_height
         self.wind_model = wind_model
         self.rho_model = rho_model
-        self.temperature_model = temperature_model
         self.power_output_model = power_output_model
         self.density_corr = density_corr
         self.hellman_exp = hellman_exp
@@ -123,16 +112,13 @@ class ModelChain(object):
 
         The density is calculated using the method specified by the parameter
         `rho_model`. Previous to the calculation of density the temperature at
-        hub height is calculated using the method specified by the parameter
-        `temperature_model`.
+        hub height is calculated using a linear temperature gradient.
 
         Parameters
         ----------
         weather : DataFrame or Dictionary
             Containing columns or keys with timeseries for temperature
-            `temp_air` in K and pressure `pressure` in Pa, as well as
-            optionally the temperature `temp_air_2` in K at a different height
-            for interpolation.
+            `temp_air` in K and pressure `pressure` in Pa.
             If a Dictionary is used the data inside the dictionary has to be of
             the types pandas.Series or numpy.array.
         data_height : DataFrame or Dictionary
@@ -329,8 +315,8 @@ class ModelChain(object):
             Containing columns or keys with the timeseries for wind speed
             `v_wind` in m/s, roughness length `z0` in m, temperature
             `temp_air` in K and pressure `pressure` in Pa, as well as
-            optionally wind speed `v_wind_2` in m/s and temperature
-            `temp_air_2` in K at different height for interpolation.
+            optionally wind speed `v_wind_2` in m/s in K at different height
+            for interpolation.
             If a Dictionary is used the data inside the dictionary has to be of
             the types pandas.Series or numpy.array.
         data_height : DataFrame or Dictionary
