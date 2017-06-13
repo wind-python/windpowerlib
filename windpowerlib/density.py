@@ -59,53 +59,6 @@ def temperature_gradient(temp_air, temp_height, hub_height):
     return temp_air - 0.0065 * (hub_height - temp_height)
 
 
-def temperature_interpol(temp_air_1, temp_air_2,
-                         temp_air_height_1, temp_air_height_2, hub_height):
-    r"""
-    Calculates the temperature at hub height by inter- or extrapolation.
-
-    This function is carried out when the parameter `temperature_model` of an
-    instance of the :class:`~.modelchain.ModelChain` class
-    is 'interpolation'.
-
-    Parameters
-    ----------
-    temp_air_1 : pandas.Series or array-like
-        Air temperature.
-    temp_air_2 : pandas.Series or array-like
-        Second air temperature for interpolation.
-    temp_air_height_1 : float
-        Height for which the parameter `temp_air_1` applies.
-    temp_air_height_2 : float
-        Height for which the parameter `temp_air_2` applies.
-    hub_height : float
-        Hub height of wind turbine in m.
-
-    Returns
-    -------
-    pandas.Series or array
-        Temperature at hub height.
-
-    Notes
-    -----
-
-    The following equation is used:
-
-    .. math:: T_{hub} = (T_2 - T_1) / (h_2 - h_1) * (h_{hub} - h_1) + T_1
-
-    with:
-        T: temperature, h: height
-
-    Assumptions:
-
-    * linear temperature gradient
-
-    """
-    return ((temp_air_2 - temp_air_1) /
-            (temp_air_height_2 - temp_air_height_1) *
-            (hub_height - temp_air_height_1) + temp_air_1)
-
-
 def rho_barometric(pressure, pressure_height, hub_height, temp_hub):
     r"""
     Calculates the density of air at hub height using the barometric height
