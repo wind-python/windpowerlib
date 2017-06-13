@@ -45,11 +45,11 @@ class TestModelChain:
         assert_allclose(test_mc.rho_hub(weather_arr, data_height), rho_exp)
         assert isinstance(test_mc.rho_hub(weather_arr, data_height),
                           np.ndarray)
-        rho_exp = pd.Series(data=[1.30309, 1.42707])
+        rho_exp = pd.Series(data=[1.30595575725, 1.30923554056])
         assert_series_equal(test_mc_2.rho_hub(weather, data_height), rho_exp)
         assert_series_equal(test_mc_2.rho_hub(weather_df, data_height),
                             rho_exp)
-        rho_exp = np.array([1.30309439, 1.42706674])
+        rho_exp = np.array([1.30595576, 1.30923554])
         assert_allclose(test_mc_2.rho_hub(weather_arr, data_height), rho_exp)
         assert isinstance(test_mc_2.rho_hub(weather_arr, data_height),
                           np.ndarray)
@@ -64,11 +64,11 @@ class TestModelChain:
         assert_allclose(test_mc.rho_hub(weather_arr, data_height), rho_exp)
         assert isinstance(test_mc.rho_hub(weather_arr, data_height),
                           np.ndarray)
-        rho_exp = pd.Series(data=[1.30309, 1.19618])
+        rho_exp = pd.Series(data=[1.30595575725, 1.29944375221])
         assert_series_equal(test_mc_2.rho_hub(weather, data_height), rho_exp)
         assert_series_equal(test_mc_2.rho_hub(weather_df, data_height),
                             rho_exp)
-        rho_exp = np.array([1.30309439, 1.19618159])
+        rho_exp = np.array([1.30595575, 1.29944375])
         assert_allclose(test_mc_2.rho_hub(weather_arr, data_height), rho_exp)
         assert isinstance(test_mc_2.rho_hub(weather_arr, data_height),
                           np.ndarray)
@@ -252,7 +252,7 @@ class TestModelChain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Test with density corrected power curve
-        power_output_exp = pd.Series(data=[1430312.76771, 3746075.21279],
+        power_output_exp = pd.Series(data=[1433937.37959, 3285183.55084],
                                      name='feedin_wind_turbine')
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                 **test_modelchain)
@@ -260,7 +260,7 @@ class TestModelChain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Test with power coefficient curve
-        power_output_exp = pd.Series(data=[557835.45403, 1363746.94496],
+        power_output_exp = pd.Series(data=[559060.36156, 1251143.98621],
                                      name='feedin_wind_turbine')
         test_turbine['fetch_curve'] = 'cp'
         test_modelchain['power_output_model'] = 'cp_values'
@@ -271,7 +271,7 @@ class TestModelChain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Ideal gas equation and density corrected power coefficient curve
-        power_output_exp = pd.Series(data=[567683.92454, 1485556.96435],
+        power_output_exp = pd.Series(data=[569117.952419, 1302746.06501],
                                      name='feedin_wind_turbine')
         test_modelchain['rho_model'] = 'ideal_gas'
         test_modelchain['density_corr'] = True
@@ -286,7 +286,7 @@ class TestModelChain:
 
         # Test weather dictionary with numpy.arrays
         test_mc.run_model(weather_arr, data_height)
-        power_output_exp = np.array([567683.924536, 1485556.964347])
+        power_output_exp = np.array([569117.952419, 1302746.065006])
         assert_allclose(test_mc.power_output, power_output_exp)
         assert isinstance(test_mc.power_output, np.ndarray)
 
