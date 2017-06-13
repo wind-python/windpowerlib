@@ -311,6 +311,7 @@ class TestModelChain:
 
         # Raise TypeErrors due to wrong type of `density_corr`
         with pytest.raises(TypeError):
+            test_modelchain['rho_model'] = 'barometric'
             test_modelchain['density_corr'] = 'wrong_type'
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                     **test_modelchain)
