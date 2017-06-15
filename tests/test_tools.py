@@ -116,11 +116,10 @@ class TestTools:
                                                       **parameters),
                            exp_arr)
         # requested_height is < indices of data frame
-        exp_output = 3.0
-        parameters['requested_height'] = 50
+        exp_output = 3.5
+        parameters['requested_height'] = 75
         assert (linear_extra_interpolation(weather, **parameters) ==
                 exp_output)
-        parameters['requested_height'] = 75
         exp_series = pd.Series(data=[2.0, 2.5, 2.0])
         assert_series_equal(linear_extra_interpolation(weather_series,
                                                        **parameters),
@@ -129,4 +128,3 @@ class TestTools:
         assert_array_equal(linear_extra_interpolation(weather_arr,
                                                       **parameters),
                            exp_arr)
-        # TODO: Check this test
