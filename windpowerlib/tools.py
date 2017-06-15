@@ -40,9 +40,11 @@ def smallest_difference(data_frame, comp_value, column_name):
         as float, pd.Series or np.array.
 
     """
+    # Calculate difference to comp_value for all indices of data_frame
     diff = []
     for index in sorted(data_frame.index):
         diff.append(abs(comp_value - index))
+    # Find smallest difference
     closest_value = sorted(data_frame.index)[diff.index(min(diff))]
     corresp_value = data_frame[column_name][closest_value]
     return (closest_value, corresp_value)
@@ -92,11 +94,14 @@ def linear_extra_interpolation(data_frame, requested_height, column_name):
         place
 
     """
+    # Get closest index of data_frame to requested_height
     height_2, value_2 = smallest_difference(data_frame, requested_height,
                                             column_name)
+    # Drop row with closest index to requested_height and get second closest
     data_frame_2 = data_frame.drop(height_2)
     height_1, value_1 = smallest_difference(data_frame_2, requested_height,
                                             column_name)
+    # Interpolation
     interpolant = ((value_2 - value_1) / (height_2 - height_1) *
                    (requested_height - height_1) + value_1)
     return interpolant
