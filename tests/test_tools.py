@@ -27,7 +27,7 @@ class TestTools:
         exp_series = pd.Series(data=[4.0, 5.0, 6.0])
         assert_series_equal(smallest_difference(data_frame_series,
                                                 **parameters)[1], exp_series)
-        exp_arr = np.array([4.0, 5.0, 6.0])
+        exp_arr = np.array(exp_series)
         assert_array_equal(smallest_difference(data_frame_arr,
                                                **parameters)[1], exp_arr)
         # comparative value between indices of data frame
@@ -37,7 +37,7 @@ class TestTools:
         exp_series = pd.Series(data=[8.0, 10.0, 14.0])
         assert_series_equal(smallest_difference(data_frame_series,
                                                 **parameters)[1], exp_series)
-        exp_arr = np.array([8.0, 10.0, 14.0])
+        exp_arr = np.array(exp_series)
         assert_array_equal(smallest_difference(data_frame_arr,
                                                **parameters)[1], exp_arr)
         # comparative value > indices of data frame
@@ -47,7 +47,7 @@ class TestTools:
         exp_series = pd.Series(data=[16.0, 20.0, 28.0])
         assert_series_equal(smallest_difference(data_frame_series,
                                                 **parameters)[1], exp_series)
-        exp_arr = np.array([16.0, 20.0, 28.0])
+        exp_arr = np.array(exp_series)
         assert_array_equal(smallest_difference(data_frame_arr,
                                                **parameters)[1], exp_arr)
         # comparative value < indices of data frame
@@ -57,7 +57,7 @@ class TestTools:
         exp_series = pd.Series(data=[4.0, 5.0, 6.0])
         assert_series_equal(smallest_difference(data_frame_series,
                                                 **parameters)[1], exp_series)
-        exp_arr = np.array([4.0, 5.0, 6.0])
+        exp_arr = np.array(exp_series)
         assert_array_equal(smallest_difference(data_frame_arr,
                                                **parameters)[1], exp_arr)
 
