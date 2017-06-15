@@ -34,7 +34,7 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
 
     Returns
     -------
-    pandas.Series
+    pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
 
     Notes
@@ -60,17 +60,18 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
 
     """
     # cp time series
-    cp_series = np.interp(v_wind, cp_values.index, cp_values.cp,
-                          left=0, right=0)
+    cp_time_series = np.interp(v_wind, cp_values.index, cp_values.cp,
+                               left=0, right=0)
+    # Convert rho_hub to np.array if v_wind is np.array
+    if (isinstance(v_wind, np.ndarray) and isinstance(rho_hub, pd.Series)):
+        rho_hub = np.array(rho_hub)
     power_output = (1 / 8 * rho_hub * d_rotor ** 2 * np.pi
-                    * np.power(v_wind, 3) * cp_series)
-    # Set index for time series
-    try:
-        series_index = v_wind.index
-    except AttributeError:
-        series_index = range(1, len(power_output)+1)
-    return pd.Series(data=power_output, index=series_index,
-                     name='feedin_wind_turbine')
+                    * np.power(v_wind, 3) * cp_time_series)
+    # Power_output as pd.Series if v_wind is pd.Series
+    if isinstance(v_wind, pd.Series):
+        power_output = pd.Series(data=power_output, index=v_wind.index,
+                                 name='feedin_wind_turbine')
+    return power_output
 
 
 def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
@@ -87,16 +88,16 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
         Wind speed at hub height in m/s.
     rho_hub : pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
+    d_rotor : float
+        Diameter of the rotor in m.
     cp_values : pandas.DataFrame
         Power coefficient curve of the wind turbine.
         Indices are the wind speeds of the power coefficient curve in m/s, the
         corresponding power coefficient values are in the column 'cp'.
-    d_rotor : float
-        Diameter of the rotor in m.
 
     Returns
     -------
-    pandas.Series
+    pandas.Series or numpy.array
         Electrical power of the wind turbine in W.
 
     Notes
@@ -116,7 +117,7 @@ def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
     return p_curve_density_corr(v_wind, rho_hub, p_values)
 
 
-def p_curve(p_values, v_wind):
+def p_curve(v_wind, p_values):
     r"""
     Calculates the turbine power output using a power curve.
 
@@ -126,16 +127,16 @@ def p_curve(p_values, v_wind):
 
     Parameters
     ----------
+    v_wind : pandas.Series or numpy.array
+        Wind speed at hub height in m/s.
     p_values : pandas.DataFrame
         Power curve of the wind turbine.
         Indices are the wind speeds of the power curve in m/s, the
         corresponding power values in W are in the column 'p'.
-    v_wind : pandas.Series or numpy.array
-        Wind speed at hub height in m/s.
 
     Returns
     -------
-    pandas.Series
+    pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
 
     Notes
@@ -146,13 +147,11 @@ def p_curve(p_values, v_wind):
     """
     power_output = np.interp(v_wind, p_values.index, p_values.p,
                              left=0, right=0)
-    # Set index for time series
-    try:
-        series_index = v_wind.index
-    except AttributeError:
-        series_index = range(1, len(power_output)+1)
-    return pd.Series(data=power_output, index=series_index,
-                     name='feedin_wind_turbine')
+    # Power_output as pd.Series if v_wind is pd.Series
+    if isinstance(v_wind, pd.Series):
+        power_output = pd.Series(data=power_output, index=v_wind.index,
+                                 name='feedin_wind_turbine')
+    return power_output
 
 
 def p_curve_density_corr(v_wind, rho_hub, p_values):
@@ -176,7 +175,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
 
     Returns
     -------
-    pandas.Series
+    pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
 
     Notes
@@ -219,17 +218,19 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
             at Reiner Lemoine Institute, 2014, p. 13
 
     """
+    # Convert rho_hub to np.array if v_wind is np.array
+    if (isinstance(v_wind, np.ndarray) and isinstance(rho_hub, pd.Series)):
+        rho_hub = np.array(rho_hub)
     power_output = [(np.interp(v_wind[i],
                                p_values.index * (1.225 / rho_hub[i])**(
                                    np.interp(p_values.index,
                                              [7.5, 12.5], [1/3, 2/3])),
                                p_values.p, left=0, right=0))
                     for i in range(len(v_wind))]
-
-    # Set index for time series
-    try:
-        series_index = v_wind.index
-    except AttributeError:
-        series_index = range(1, len(power_output)+1)
-    return pd.Series(data=power_output, index=series_index,
-                     name='feedin_wind_turbine')
+    # Power_output as pd.Series if v_wind is pd.Series
+    if isinstance(v_wind, pd.Series):
+        power_output = pd.Series(data=power_output, index=v_wind.index,
+                                 name='feedin_wind_turbine')
+    else:
+        power_output = np.array(power_output)
+    return power_output

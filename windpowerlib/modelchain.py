@@ -260,7 +260,7 @@ class ModelChain(object):
             v_wind = wind_speed.v_wind_hellman(
                 weather['v_wind'], data_height['v_wind'],
                 self.wind_turbine.hub_height,
-                self.hellman_exp, weather['z0'])
+                weather['z0'], self.hellman_exp)
         else:
             raise ValueError("'{0}' is an invalid value.".format(
                              self.wind_model) + "`wind_model` " +
@@ -313,8 +313,8 @@ class ModelChain(object):
                                 " are missing.")
             if self.density_corr is False:
                 logging.debug('Calculating power output using power curve.')
-                output = power_output.p_curve(self.wind_turbine.p_values,
-                                              v_wind)
+                output = power_output.p_curve(v_wind,
+                                              self.wind_turbine.p_values)
             elif self.density_corr is True:
                 logging.debug('Calculating power output using density ' +
                               'corrected power curve.')

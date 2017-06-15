@@ -8,6 +8,7 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 import numpy as np
+import pandas as pd
 
 
 def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
@@ -78,12 +79,15 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
         raise ValueError("To take an obstacle height of {0} m".format(
                          obstacle_height) + " into consideration, wind" +
                          " speed data of a greater height is needed.")
+    # Return np.array if v_wind is np.array
+    if (isinstance(v_wind, np.ndarray) and isinstance(z_0, pd.Series)):
+        z_0 = np.array(z_0)
     return (v_wind * np.log((hub_height - 0.7 * obstacle_height) / z_0) /
             np.log((v_wind_height - 0.7 * obstacle_height) / z_0))
 
 
-def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
-                   z_0=None):
+def v_wind_hellman(v_wind, v_wind_height, hub_height, z_0=None,
+                   hellman_exp=None):
     r"""
     Calculates the wind speed at hub height using the hellman equation.
 
@@ -99,13 +103,13 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
         Height for which the parameter `v_wind` applies.
     hub_height : float
         Hub height of wind turbine.
+    z_0 : pandas.Series or numpy.array or float
+        Roughness length. Default: None. If given and `hellman_exp` is None:
+        `hellman_exp` = 1 / ln(h_hub/z_0), otherwise `hellman_exp` = 1/7.
     hellman_exp : float
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
         constant. Default: None. If None and roughness length is given
-        `hellman_exp` = 1 / ln(h_hub/z_0), otherwise `hellman_exp` = 1/7.
-    z_0 : pandas.Series or numpy.array or float
-        Roughness length. Default: None. If given
         `hellman_exp` = 1 / ln(h_hub/z_0), otherwise `hellman_exp` = 1/7.
 
     Returns
@@ -149,6 +153,9 @@ def v_wind_hellman(v_wind, v_wind_height, hub_height, hellman_exp=None,
     """
     if hellman_exp is None:
         if z_0 is not None:
+            # Return np.array if v_wind is np.array
+            if (isinstance(v_wind, np.ndarray) and isinstance(z_0, pd.Series)):
+                z_0 = np.array(z_0)
             hellman_exp = 1 / np.log(hub_height / z_0)
         else:
             hellman_exp = 1/7
