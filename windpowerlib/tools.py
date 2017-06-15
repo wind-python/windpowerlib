@@ -15,8 +15,8 @@ def smallest_difference(data_frame, comp_value, column_name):
 
     Additionally returns a corresponding value. This function is for example
     used in :py:func:`~.modelchain.v_wind_hub` of the
-    :class:`~.modelchain.ModelChain` to choose the wind speed data that is
-    close to the hub height of the examined wind turbine. In this case the
+    :class:`~.modelchain.ModelChain` to choose the wind speed data that is the
+    closest to the hub height of the examined wind turbine. In this case the
     column of the data frame contains wind speed time series and the indices
     are the corresponding heights for which these time series apply.
 
