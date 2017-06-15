@@ -15,9 +15,10 @@ class TestTools:
             pd.Series(data=[8.0, 10.0, 14.0]),
             pd.Series(data=[16.0, 20.0, 28.0])]}, index=[100, 150, 200])
         data_frame_arr = pd.DataFrame(data={'v_wind': [
-            np.array([4.0, 5.0, 6.0]),
-            np.array([8.0, 10.0, 14.0]),
-            np.array([16.0, 20.0, 28.0])]}, index=[100, 150, 200])
+            np.array(data_frame_series['v_wind'][data_frame_series.index[0]]),
+            np.array(data_frame_series['v_wind'][data_frame_series.index[1]]),
+            np.array(data_frame_series['v_wind'][data_frame_series.index[2]])]},
+                                   index=data_frame_series.index)
         parameters = {'comp_value': 100,
                       'column_name': 'v_wind'}
 
