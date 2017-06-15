@@ -62,42 +62,50 @@ class TestTools:
                                                **parameters)[1], exp_arr)
 
     def test_linear_extra_interpolation(self):
-        weather = pd.DataFrame(data={'v_wind': [4.0, 5.0, 6.0]},
-                               index=[100, 150, 200])
-        weather_pd_series = pd.DataFrame(data={'v_wind': [
+        parameters = {'requested_height': 100,
+                      'column_name': 'v_wind'}
+        data_frame = pd.DataFrame(data={'v_wind': [4.0, 5.0, 6.0]},
+                                  index=[100, 150, 200])
+        data_frame_series = pd.DataFrame(data={'v_wind': [
             pd.Series(data=[4.0, 5.0, 6.0]),
             pd.Series(data=[8.0, 10.0, 14.0]),
             pd.Series(data=[16.0, 20.0, 28.0])]}, index=[100, 150, 200])
         # TODO: test v_wind as np.array
 
-        # Entries in column v_wind are float
+        # requested_height is an index of data frame
         exp_output = 4.0
-        assert (linear_extra_interpolation(weather, 100, 'v_wind') ==
+        assert (linear_extra_interpolation(data_frame, **parameters) ==
                 exp_output)
-        exp_output = 5.5
-        assert (linear_extra_interpolation(weather, 175, 'v_wind') ==
-                exp_output)
-        exp_output = 7.0
-        assert (linear_extra_interpolation(weather, 250, 'v_wind') ==
-                exp_output)
-        exp_output = 3.0
-        assert (linear_extra_interpolation(weather, 50, 'v_wind') ==
-                exp_output)
-
-        # Entries in column v_wind are pd.Series
         exp_output = pd.Series(data=[4.0, 5.0, 6.0])
-        assert_series_equal(linear_extra_interpolation(weather_pd_series,
-                                                       100, 'v_wind'),
+        assert_series_equal(linear_extra_interpolation(data_frame_series,
+                                                       **parameters),
                             exp_output)
+        # requested_height is between indices of data frame
+        exp_output = 5.5
+        parameters['requested_height'] = 175
+        assert (linear_extra_interpolation(data_frame, **parameters) ==
+                exp_output)
         exp_output = pd.Series(data=[12.0, 15.0, 21.0])
-        assert_series_equal(linear_extra_interpolation(weather_pd_series,
-                                                       175, 'v_wind'),
+        assert_series_equal(linear_extra_interpolation(data_frame_series,
+                                                       **parameters),
                             exp_output)
+        # requested_height > indices of data frame
+        exp_output = 7.0
+        parameters['requested_height'] = 250
+        assert (linear_extra_interpolation(data_frame, **parameters) ==
+                exp_output)
         exp_output = pd.Series(data=[24.0, 30.0, 42.0])
-        assert_series_equal(linear_extra_interpolation(weather_pd_series,
-                                                       250, 'v_wind'),
+        assert_series_equal(linear_extra_interpolation(data_frame_series,
+                                                       **parameters),
                             exp_output)
-        exp_output = pd.Series(data=[2.0, 2.5, 2.0])  # TODO: Check this test
-        assert_series_equal(linear_extra_interpolation(weather_pd_series,
-                                                       75, 'v_wind'),
+        # requested_height is < indices of data frame
+        exp_output = 3.0
+        parameters['requested_height'] = 50
+        assert (linear_extra_interpolation(data_frame, **parameters) ==
+                exp_output)
+        parameters['requested_height'] = 75
+        exp_output = pd.Series(data=[2.0, 2.5, 2.0])
+        assert_series_equal(linear_extra_interpolation(data_frame_series,
+                                                       **parameters),
                             exp_output)
+        # TODO: Check this test
