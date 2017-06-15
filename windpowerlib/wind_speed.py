@@ -58,7 +58,7 @@ def logarithmic_wind_profile(v_wind, v_wind_height, hub_height, z_0,
     .. math:: v_{wind,hub}=v_{wind,data}\cdot\frac{\ln\left(\frac{h_{hub}}
         {z_{0}}\right)}{\ln\left(\frac{h_{data}}{z_{0}}\right)}
 
-    :math:`h_{data}` is the height in which the wind speed
+    :math:`h_{data}` is the height at which the wind speed
     :math:`v_{wind,data}` is measured and :math:`v_{wind,hub}` is the wind
     speed at hub height :math:`h_{hub}` of the wind turbine.
 

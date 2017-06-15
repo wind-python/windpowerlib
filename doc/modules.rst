@@ -96,6 +96,18 @@ Methods of the ModelChain object.
    modelchain.ModelChain.turbine_power_output
 
 
+Tools
+==============
+
+Additional functions used in the windpowerlib.
+
+.. autosummary::
+   :toctree: temp/
+
+   tools.smallest_difference
+   tools.linear_extra_interpolation
+
+
 Example
 ==============
 
