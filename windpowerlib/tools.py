@@ -50,7 +50,7 @@ def smallest_difference(data_frame, comp_value, column_name):
     return (closest_value, corresp_value)
 
 
-def linear_extra_interpolation(data_frame, requested_height, column_name):
+def linear_extra_interpolation(data_frame, requested_height):
     r"""
     Inter- or extrapolates between the values of a data frame.
 
@@ -94,14 +94,11 @@ def linear_extra_interpolation(data_frame, requested_height, column_name):
         place
 
     """
-    # Get closest index of data_frame to requested_height
-    height_2, value_2 = smallest_difference(data_frame, requested_height,
-                                            column_name)
-    # Drop row with closest index to requested_height and get second closest
-    data_frame_2 = data_frame.drop(height_2)
-    height_1, value_1 = smallest_difference(data_frame_2, requested_height,
-                                            column_name)
-    # Interpolation
-    interpolant = ((value_2 - value_1) / (height_2 - height_1) *
-                   (requested_height - height_1) + value_1)
-    return interpolant
+    # find closest heights
+    heights_sorted = data_frame.columns[
+        sorted(range(len(data_frame.columns)),
+               key=lambda i: abs(data_frame.columns[i] - requested_height))]
+    return ((data_frame[heights_sorted[1]] - data_frame[heights_sorted[0]]) /
+            (heights_sorted[1] - heights_sorted[0]) *
+           (requested_height - heights_sorted[0]) +
+            data_frame[heights_sorted[0]])
