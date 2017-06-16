@@ -8,6 +8,7 @@ __license__ = "GPLv3"
 
 import os
 import pandas as pd
+import numpy as np
 
 try:
     from matplotlib import pyplot as plt
@@ -89,7 +90,7 @@ def get_weather_data(filename, datetime_column='time_index', **kwargs):
             'UTC').tz_convert('Europe/Berlin').drop(datetime_column, 1)
 
     # read weather data from csv
-    weather = read_weather_data(filename=filename,
+    weather_tmp = read_weather_data(filename=filename,
                                 datetime_column=datetime_column, **kwargs)
 
     # dictionary specifying the height for which the weather data applies
@@ -101,7 +102,24 @@ def get_weather_data(filename, datetime_column='time_index', **kwargs):
         'temp_air_2': 10,
         'v_wind_2': 80}
 
-    return (weather, data_height)
+    # restructure weather DataFrame
+
+    data = np.transpose(np.asarray([weather_tmp['v_wind'],
+                                    weather_tmp['v_wind_2'],
+                                    weather_tmp['temp_air'],
+                                    weather_tmp['temp_air_2'],
+                                    weather_tmp['pressure'],
+                                    weather_tmp['z0']]))
+    weather = pd.DataFrame(
+        data,
+        index=weather_tmp.index,
+        columns=[np.array(['v_wind', 'v_wind', 'temp_air', 'temp_air',
+                           'pressure', 'z0']),
+                 np.array([data_height['v_wind'], data_height['v_wind_2'],
+                           data_height['temp_air'], data_height['temp_air_2'],
+                           data_height['pressure'], 0])])
+
+    return weather
 
 
 def initialise_wind_turbines():
@@ -152,7 +170,7 @@ def initialise_wind_turbines():
     return (my_turbine, e126)
 
 
-def calculate_power_output(weather, data_height, my_turbine, e126):
+def calculate_power_output(weather, my_turbine, e126):
     r"""
     Calculates power output of wind turbines using the
     :class:`~.modelchain.ModelChain`.
@@ -166,8 +184,6 @@ def calculate_power_output(weather, data_height, my_turbine, e126):
     ----------
     weather : pd.DataFrame
         Contains weather data time series.
-    data_height : dictionary
-        Contains height for which corresponding weather data applies.
     my_turbine : WindTurbine
         WindTurbine object with self provided power curve.
     e126 : WindTurbine
@@ -179,8 +195,7 @@ def calculate_power_output(weather, data_height, my_turbine, e126):
     # power output calculation for my_turbine
     # initialise ModelChain with default parameters and use run_model method
     # to calculate power output
-    mc_my_turbine = modelchain.ModelChain(my_turbine).run_model(
-        weather, data_height)
+    mc_my_turbine = modelchain.ModelChain(my_turbine).run_model(weather)
     # write power output timeseries to WindTurbine object
     my_turbine.power_output = mc_my_turbine.power_output
 
@@ -196,8 +211,7 @@ def calculate_power_output(weather, data_height, my_turbine, e126):
         'hellman_exp': None}  # None (default) or None
     # initialise ModelChain with own specifications and use run_model method
     # to calculate power output
-    mc_e126 = modelchain.ModelChain(e126, **modelchain_data).run_model(
-        weather, data_height)
+    mc_e126 = modelchain.ModelChain(e126, **modelchain_data).run_model(weather)
     # write power output timeseries to WindTurbine object
     e126.power_output = mc_e126.power_output
 
@@ -254,9 +268,9 @@ def run_basic_example():
     Run the basic example.
 
     """
-    weather, data_height = get_weather_data('weather.csv')
+    weather = get_weather_data('weather.csv')
     my_turbine, e126 = initialise_wind_turbines()
-    calculate_power_output(weather, data_height, my_turbine, e126)
+    calculate_power_output(weather, my_turbine, e126)
     plot_or_print(my_turbine, e126)
 
 
