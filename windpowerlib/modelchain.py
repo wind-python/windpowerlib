@@ -79,12 +79,12 @@ class ModelChain(object):
     >>> from windpowerlib import wind_turbine
     >>> enerconE126 = {
     ...    'hub_height': 135,
-    ...    'd_rotor': 127,
+    ...    'rotor_diameter': 127,
     ...    'wind_conv_type': 'ENERCON E 126 7500'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> modelchain_data = {'rho_model': 'ideal_gas'}
     >>> e126_md = modelchain.ModelChain(e126, **modelchain_data)
-    >>> print(e126.d_rotor)
+    >>> print(e126.rotor_diameter)
     127
 
     """
@@ -136,27 +136,28 @@ class ModelChain(object):
         if 'temp_air_2' not in weather:
             weather['temp_air_2'] = None
             data_height['temp_air_2'] = None
-            temp_air_height = data_height['temp_air']
-            temp_air_closest = weather['temp_air']
+            temperature_height = data_height['temp_air']
+            temperature_closest = weather['temp_air']
         else:
             # Select temperature closer to hub height using
             # smallest_difference()
-            temp_air_height, temp_air_closest = tools.smallest_difference(
+            temperature_height, temperature_closest = tools.smallest_difference(
                 pd.DataFrame(data={'temp_air': [weather['temp_air'],
                                                 weather['temp_air_2']]},
                              index=[data_height['temp_air'],
                                     data_height['temp_air_2']]),
                 self.wind_turbine.hub_height, 'temp_air')
         # Check if temperature data is at hub height.
-        if temp_air_height == self.wind_turbine.hub_height:
+        if temperature_height == self.wind_turbine.hub_height:
             logging.debug('Using given temperature at hub height.')
-            temp_hub = temp_air_closest
+            temp_hub = temperature_closest
         # Calculation of temperature in K at hub height.
         else:
             logging.debug('Calculating temperature using a temp. gradient.')
             temp_hub = density.temperature_gradient(
-                temp_air_closest, temp_air_height,
+                temperature_closest, temperature_height,
                 self.wind_turbine.hub_height)
+
         # Calculation of density in kg/m³ at hub height
         if self.rho_model == 'barometric':
             logging.debug('Calculating density using barometric height eq.')
@@ -239,7 +240,7 @@ class ModelChain(object):
                              "must be 'logarithmic' or 'hellman'.")
         return v_wind
 
-    def turbine_power_output(self, v_wind, rho_hub):
+    def turbine_power_output(self, wind_speed, density):
         r"""
         Calculates the power output of the wind turbine.
 
@@ -247,15 +248,15 @@ class ModelChain(object):
 
         Parameters
         ----------
-        v_wind : pandas.Series or numpy.array
+        wind_speed : pandas.Series or numpy.array
             Wind speed at hub height in m/s.
-        rho_hub : pandas.Series or numpy.array
+        density : pandas.Series or numpy.array
             Density of air at hub height in kg/m³.
 
         Returns
         -------
         output : pandas.Series
-            Electrical power in W of the wind turbine.
+            Electrical power output of the wind turbine in W.
 
         """
         if self.power_output_model == 'cp_values':
@@ -265,14 +266,14 @@ class ModelChain(object):
                                 " are missing.")
             if self.density_corr is False:
                 logging.debug('Calculating power output using cp curve.')
-                output = power_output.cp_curve(v_wind, rho_hub,
-                                               self.wind_turbine.d_rotor,
-                                               self.wind_turbine.cp_values)
+                output = power_output.cp_curve(
+                    wind_speed, density, self.wind_turbine.rotor_diameter,
+                    self.wind_turbine.cp_values)
             elif self.density_corr is True:
                 logging.debug('Calculating power output using density ' +
                               'corrected cp curve.')
                 output = power_output.cp_curve_density_corr(
-                    v_wind, rho_hub, self.wind_turbine.d_rotor,
+                    wind_speed, density, self.wind_turbine.rotor_diameter,
                     self.wind_turbine.cp_values)
             else:
                 raise TypeError("'{0}' is an invalid type.".format(type(
@@ -285,13 +286,13 @@ class ModelChain(object):
                                 " are missing.")
             if self.density_corr is False:
                 logging.debug('Calculating power output using power curve.')
-                output = power_output.p_curve(v_wind,
+                output = power_output.p_curve(wind_speed,
                                               self.wind_turbine.p_values)
             elif self.density_corr is True:
                 logging.debug('Calculating power output using density ' +
                               'corrected power curve.')
                 output = power_output.p_curve_density_corr(
-                    v_wind, rho_hub, self.wind_turbine.p_values)
+                    wind_speed, density, self.wind_turbine.p_values)
             else:
                 raise TypeError("'{0}' is an invalid type.".format(type(
                                 self.density_corr)) + "`density_corr` must " +
@@ -314,7 +315,7 @@ class ModelChain(object):
             `v_wind` in m/s, roughness length `z0` in m, temperature
             `temp_air` in K and pressure `pressure` in Pa, as well as
             optionally wind speed `v_wind_2` in m/s and temperature
--            `temp_air_2` in K at different height.
+-           `temp_air_2` in K at different height.
             If a Dictionary is used the data inside the dictionary has to be of
             the types pandas.Series or numpy.array.
         data_height : Dictionary
@@ -326,9 +327,9 @@ class ModelChain(object):
         self
 
         """
-        v_wind = self.v_wind_hub(weather, data_height)
-        rho_hub = None if (self.power_output_model == 'p_values' and
+        wind_speed = self.v_wind_hub(weather, data_height)
+        density = None if (self.power_output_model == 'p_values' and
                            self.density_corr is False) \
                        else self.rho_hub(weather, data_height)
-        self.power_output = self.turbine_power_output(v_wind, rho_hub)
+        self.power_output = self.turbine_power_output(wind_speed, density)
         return self

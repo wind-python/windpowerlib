@@ -12,7 +12,7 @@ class TestModelChain:
     @classmethod
     def setup_class(self):
         self.test_turbine = {'hub_height': 100,
-                             'd_rotor': 80,
+                             'rotor_diameter': 80,
                              'turbine_name': 'ENERCON E 126 7500'}
 
     def test_rho_hub(self):
@@ -236,7 +236,7 @@ class TestModelChain:
                        'temp_air_2': 10,
                        'pressure': 0}
         test_turbine = {'hub_height': 100,
-                        'd_rotor': 80,
+                        'rotor_diameter': 80,
                         'turbine_name': 'ENERCON E 126 7500',
                         'fetch_curve': 'p'}
         test_modelchain = {'wind_model': 'hellman',
@@ -326,7 +326,7 @@ class TestModelChain:
         # Raise TypeErrors due to missing cp- or p-values
         with pytest.raises(TypeError):
             turbine1 = {'hub_height': 100,
-                        'd_rotor': 80,
+                        'rotor_diameter': 80,
                         'turbine_name': 'ENERCON E 126 7500',
                         'fetch_curve': 'p'}
             modelchain1 = {'wind_model': 'hellman',
@@ -338,7 +338,7 @@ class TestModelChain:
             test_mc.run_model(weather, data_height)
         with pytest.raises(TypeError):
             turbine2 = {'hub_height': 100,
-                        'd_rotor': 80,
+                        'rotor_diameter': 80,
                         'turbine_name': 'ENERCON E 126 7500',
                         'fetch_curve': 'cp'}
             modelchain2 = {'wind_model': 'hellman',

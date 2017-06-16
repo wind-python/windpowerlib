@@ -129,7 +129,7 @@ def initialise_wind_turbines():
         'turbine_name': 'myTurbine',
         'nominal_power': 3e6,  # in W
         'hub_height': 105,  # in m
-        'd_rotor': 90,  # in m
+        'rotor_diameter': 90,  # in m
         'p_values': pd.DataFrame(
             data={'p': [p * 1000 for p in
                         [0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]]},  # in W
@@ -144,7 +144,7 @@ def initialise_wind_turbines():
     enerconE126 = {
         'turbine_name': 'ENERCON E 126 7500',  # turbine name as in register
         'hub_height': 135,  # in m
-        'd_rotor': 127  # in m
+        'rotor_diameter': 127  # in m
     }
     # initialise WindTurbine object
     e126 = wt.WindTurbine(**enerconE126)

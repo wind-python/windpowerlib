@@ -27,19 +27,19 @@ class WindTurbine(object):
         power (coefficient) curve data is provided.
     hub_height : float
         Hub height of the wind turbine in m.
-    d_rotor : float
+    rotor_diameter : None or float
         Diameter of the rotor in m.
-    cp_values : pandas.DataFrame
+    cp_values : None or pandas.DataFrame
         Power coefficient curve of the wind turbine.
         The indices of the DataFrame are the corresponding wind speeds of the
         power coefficient curve, the power coefficient values are listed in
         the column 'cp'. Default: None.
-    p_values : pandas.DataFrame
+    p_values : None or pandas.DataFrame
         Power curve of the wind turbine.
         The indices of the DataFrame are the corresponding wind speeds of the
         power curve, the power values are listed in the column 'p'.
         Default: None.
-    nominal_power : float
+    nominal_power : None or float
         The nominal output of the wind turbine in W.
     fetch_curve : string
         Parameter to specify whether the power or power coefficient curve
@@ -53,19 +53,19 @@ class WindTurbine(object):
         power (coefficient) curve data is provided.
     hub_height : float
         Hub height of the wind turbine in m.
-    d_rotor : float
+    rotor_diameter : None or float
         Diameter of the rotor in m.
-    cp_values : pandas.DataFrame
+    cp_values : None or pandas.DataFrame
         Power coefficient curve of the wind turbine.
         The indices of the DataFrame are the corresponding wind speeds of the
         power coefficient curve, the power coefficient values are listed in
         the column 'cp'. Default: None.
-    p_values : pandas.DataFrame
+    p_values : None or pandas.DataFrame
         Power curve of the wind turbine.
         Indices are the wind speeds of the power curve in m/s, the
         corresponding power values in W are in the column 'p'.
         Default: None.
-    nominal_power : float
+    nominal_power : None or float
         The nominal output of the wind turbine in W.
     fetch_curve : string
         Parameter to specify whether the power or power coefficient curve
@@ -78,20 +78,21 @@ class WindTurbine(object):
     >>> from windpowerlib import wind_turbine
     >>> enerconE126 = {
     ...    'hub_height': 135,
-    ...    'd_rotor': 127,
+    ...    'rotor_diameter': 127,
     ...    'turbine_name': 'ENERCON E 126 7500'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-    >>> print(e126.d_rotor)
+    >>> print(e126.rotor_diameter)
     127
 
     """
 
-    def __init__(self, turbine_name, hub_height, d_rotor, cp_values=None,
-                 p_values=None, nominal_power=None, fetch_curve='p'):
+    def __init__(self, turbine_name, hub_height, rotor_diameter=None,
+                 cp_values=None, p_values=None, nominal_power=None,
+                 fetch_curve='p'):
 
         self.turbine_name = turbine_name
         self.hub_height = hub_height
-        self.d_rotor = d_rotor
+        self.rotor_diameter = rotor_diameter
         self.cp_values = cp_values
         self.p_values = p_values
         self.nominal_power = nominal_power
@@ -99,7 +100,7 @@ class WindTurbine(object):
 
         self.power_output = None
 
-        if (self.cp_values is None and self.p_values is None):
+        if self.cp_values is None and self.p_values is None:
             self.fetch_turbine_data()
 
     def fetch_turbine_data(self):
@@ -123,7 +124,7 @@ class WindTurbine(object):
         >>> from windpowerlib import wind_turbine
         >>> enerconE126 = {
         ...    'hub_height': 135,
-        ...    'd_rotor': 127,
+        ...    'rotor_diameter': 127,
         ...    'turbine_name': 'ENERCON E 126 7500'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
         >>> print(e126.cp_values.cp[5.0])
@@ -145,6 +146,9 @@ class WindTurbine(object):
             Tuple (pd.DataFrame, float)
                 Power curve or power coefficient curve (pd.DataFrame)
                 and nominal power (float).
+                Power (coefficient) curve DataFrame contains power coefficient
+                curve values (dimensionless) or power curve values in W with
+                the corresponding wind speeds in m/s as indices.
 
             """
             df = read_turbine_data(filename=filename)
@@ -169,12 +173,12 @@ class WindTurbine(object):
             data = np.delete(data, 0, 0)
             df = pd.DataFrame(data, columns=['v_wind', self.fetch_curve])
             df.set_index('v_wind', drop=True, inplace=True)
-            nominal_power = wpp_df['p_nom'].iloc[0] * 1000.0
+            nominal_power = wpp_df['p_nom'].iloc[0] * 1000.0  # kW to W
             return df, nominal_power
         if self.fetch_curve == 'p':
             filename = 'p_curves.csv'
             p_values, p_nom = restructure_data()
-            self.p_values = p_values * 1000.0
+            self.p_values = p_values * 1000.0  # kW to W
         else:
             filename = 'cp_curves.csv'
             self.cp_values, p_nom = restructure_data()
@@ -185,7 +189,7 @@ class WindTurbine(object):
 
 def read_turbine_data(**kwargs):
     r"""
-    Fetches power coefficient curve or power curve from a file.
+    Fetches power (coefficient) curves from a file.
 
     The data files are provided along with the windpowerlib and are located in
     the directory windpowerlib/data.
@@ -195,13 +199,15 @@ def read_turbine_data(**kwargs):
     datapath : string, optional
         Path where the data file is stored. Default: './data'
     filename : string, optional
-        Name of data file. Default: 'p_curves.csv'
+        Name of data file. Provided data files are 'p_curves.csv' containing
+        power curves and 'cp_curves.csv' containing power coefficient curves.
+        Default: 'p_curves.csv'
 
     Returns
     -------
     pandas.DataFrame
-        Power coefficient curve values or power curve values with the
-        corresponding wind speeds as indices.
+        Power coefficient curve values (dimensionless) or power curve values
+        in kW with the corresponding wind speeds in m/s as indices.
 
     """
     if 'datapath' not in kwargs:
