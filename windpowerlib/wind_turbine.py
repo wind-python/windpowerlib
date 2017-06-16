@@ -111,7 +111,7 @@ class WindTurbine(object):
         You can also use this function to import your own power (coefficient)
         curves. Therefore the wind speeds in m/s have to be in the first row
         and the corresponding power coefficient curve values or power
-        curve values in W in a row where the first column contains the turbine
+        curve values in kW in a row where the first column contains the turbine
         name (See directory windpowerlib/data as reference).
 
         Returns
