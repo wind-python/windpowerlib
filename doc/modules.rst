@@ -23,7 +23,6 @@ Functions for calculating air density at hub height.
    :toctree: temp/
 
    density.temperature_gradient
-   density.temperature_interpol
    density.rho_barometric
    density.rho_ideal_gas
    
