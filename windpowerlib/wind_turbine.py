@@ -143,8 +143,8 @@ class WindTurbine(object):
 
             Returns
             -------
-            Tuple (pd.DataFrame, float)
-                Power curve or power coefficient curve (pd.DataFrame)
+            Tuple (pandas.DataFrame, float)
+                Power curve or power coefficient curve (pandas.DataFrame)
                 and nominal power (float).
                 Power (coefficient) curve DataFrame contains power coefficient
                 curve values (dimensionless) or power curve values in W with

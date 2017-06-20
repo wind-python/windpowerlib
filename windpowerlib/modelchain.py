@@ -116,7 +116,7 @@ class ModelChain(object):
 
         Parameters
         ----------
-        weather : DataFrame or Dictionary
+        weather : pandas.DataFrame or Dictionary
             Containing columns or keys with timeseries for temperature
             `temp_air` in K and pressure `pressure` in Pa, as well as
             optionally the temperature `temp_air_2` in K at a different height.
@@ -185,7 +185,7 @@ class ModelChain(object):
 
         Parameters
         ----------
-        weather : DataFrame or Dictionary
+        weather : pandas.DataFrame or Dictionary
             Containing columns or keys with the timeseries for wind speed
             `v_wind` in m/s and roughness length `z0` in m, as well as
             optionally wind speed `v_wind_2` in m/s at different height.
@@ -310,7 +310,7 @@ class ModelChain(object):
 
         Parameters
         ----------
-        weather : DataFrame or Dictionary
+        weather : pandas.DataFrame or Dictionary
             Containing columns or keys with the timeseries for wind speed
             `v_wind` in m/s, roughness length `z0` in m, temperature
             `temp_air` in K and pressure `pressure` in Pa, as well as

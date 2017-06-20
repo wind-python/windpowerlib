@@ -22,11 +22,11 @@ def smallest_difference(data_frame, comp_value, column_name):
 
     Parameters
     ----------
-    data_frame : DataFrame
+    data_frame : pandas.DataFrame
         Indices are the values of which the smallest difference to `comp_value`
         will be found, the corresponding values are in the column
-        specified by `column_name` and they can be floats, pd.Series or
-        np.arrays.
+        specified by `column_name` and they can be floats, pandas.Series or
+        numpy.arrays.
     comp_value : float
         Comparative value.
     column_name : string
@@ -35,9 +35,9 @@ def smallest_difference(data_frame, comp_value, column_name):
 
     Returns
     -------
-    Tuple(float, float or pd.Series or np.array)
+    Tuple(float, float or pandas.Series or numpy.array)
         Closest value to comparative value as float and its corresponding value
-        as float, pd.Series or np.array.
+        as float, pandas.Series or numpy.array.
 
     """
     # Calculate difference to comp_value for all indices of data_frame
@@ -60,10 +60,11 @@ def linear_extra_interpolation(data_frame, requested_height, column_name):
 
     Parameters
     ----------
-    data_frame : DataFrame
+    data_frame : pandas.DataFrame
         Indices are the values between which will be interpolated or from which
         will be extrapolated, the corresponding values are in the column
-        specified by `column_name` and can be floats, pd.Series or np.arrays.
+        specified by `column_name` and can be floats, pandas.Series or
+        numpy.arrays.
     requested_height : float
         Height for which the interpolation takes place (e.g. hub height of wind
         turbine).
