@@ -12,6 +12,7 @@ import logging
 from windpowerlib import wind_speed, density, power_output, tools
 import pandas as pd
 
+
 class ModelChain(object):
     r"""Model to determine the output of a wind turbine
 
@@ -328,8 +329,8 @@ class ModelChain(object):
 
         """
         wind_speed = self.v_wind_hub(weather, data_height)
-        density = None if (self.power_output_model == 'p_values' and
-                           self.density_corr is False) \
-                       else self.rho_hub(weather, data_height)
+        density = (None if (self.power_output_model == 'p_values' and
+                   self.density_corr is False)
+                   else self.rho_hub(weather, data_height))
         self.power_output = self.turbine_power_output(wind_speed, density)
         return self

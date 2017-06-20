@@ -31,7 +31,7 @@ def smallest_difference(data_frame, comp_value, column_name):
         Comparative value.
     column_name : string
         Name of the column in the `data_frame` that contains the
-        correponding values.
+        corresponding values.
 
     Returns
     -------
@@ -47,7 +47,7 @@ def smallest_difference(data_frame, comp_value, column_name):
     # Find smallest difference
     closest_value = sorted(data_frame.index)[diff.index(min(diff))]
     corresp_value = data_frame[column_name][closest_value]
-    return (closest_value, corresp_value)
+    return closest_value, corresp_value
 
 
 def linear_extra_interpolation(data_frame, requested_height, column_name):
@@ -70,7 +70,7 @@ def linear_extra_interpolation(data_frame, requested_height, column_name):
         turbine).
     column_name : string
         Name of the column in the DataFrame `data_frame` that contains the
-        correponding values.
+        corresponding values.
 
     Returns
     -------
@@ -90,7 +90,7 @@ def linear_extra_interpolation(data_frame, requested_height, column_name):
         :math:`height_{requested}`, :math:`height_1`: index of data frame
         second closest to :math:`height_{requested}`,
         :math:`value_2`: corresponding value to `height_2`,
-        :math:`value_1`: correponding value to `height_1`,
+        :math:`value_1`: corresponding value to `height_1`,
         :math:`height_{requested}` : height for which the interpolation takes
         place
 
