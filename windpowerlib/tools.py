@@ -22,22 +22,22 @@ def smallest_difference(data_frame, comp_value, column_name):
 
     Parameters
     ----------
-    data_frame : DataFrame
+    data_frame : pandas.DataFrame
         Indices are the values of which the smallest difference to `comp_value`
         will be found, the corresponding values are in the column
-        specified by `column_name` and they can be floats, pd.Series or
-        np.arrays.
+        specified by `column_name` and they can be floats, pandas.Series or
+        numpy.arrays.
     comp_value : float
         Comparative value.
     column_name : string
         Name of the column in the `data_frame` that contains the
-        correponding values.
+        corresponding values.
 
     Returns
     -------
-    Tuple(float, float or pd.Series or np.array)
+    Tuple(float, float or pandas.Series or numpy.array)
         Closest value to comparative value as float and its corresponding value
-        as float, pd.Series or np.array.
+        as float, pandas.Series or numpy.array.
 
     """
     # Calculate difference to comp_value for all indices of data_frame
@@ -47,7 +47,7 @@ def smallest_difference(data_frame, comp_value, column_name):
     # Find smallest difference
     closest_value = sorted(data_frame.index)[diff.index(min(diff))]
     corresp_value = data_frame[column_name][closest_value]
-    return (closest_value, corresp_value)
+    return closest_value, corresp_value
 
 
 def linear_extra_interpolation(data_frame, requested_height):
@@ -60,16 +60,17 @@ def linear_extra_interpolation(data_frame, requested_height):
 
     Parameters
     ----------
-    data_frame : DataFrame
+    data_frame : pandas.DataFrame
         Indices are the values between which will be interpolated or from which
         will be extrapolated, the corresponding values are in the column
-        specified by `column_name` and can be floats, pd.Series or np.arrays.
+        specified by `column_name` and can be floats, pandas.Series or
+        numpy.arrays.
     requested_height : float
         Height for which the interpolation takes place (e.g. hub height of wind
         turbine).
     column_name : string
         Name of the column in the DataFrame `data_frame` that contains the
-        correponding values.
+        corresponding values.
 
     Returns
     -------
@@ -89,7 +90,7 @@ def linear_extra_interpolation(data_frame, requested_height):
         :math:`height_{requested}`, :math:`height_1`: index of data frame
         second closest to :math:`height_{requested}`,
         :math:`value_2`: corresponding value to `height_2`,
-        :math:`value_1`: correponding value to `height_1`,
+        :math:`value_1`: corresponding value to `height_1`,
         :math:`height_{requested}` : height for which the interpolation takes
         place
 

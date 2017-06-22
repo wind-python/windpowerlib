@@ -125,12 +125,13 @@ class WindTurbine(object):
         >>> enerconE126 = {
         ...    'hub_height': 135,
         ...    'rotor_diameter': 127,
-        ...    'turbine_name': 'ENERCON E 126 7500'}
+        ...    'turbine_name': 'ENERCON E 126 7500',
+        ...    'fetch_curve': 'cp'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.cp_values.cp[5.0])
+        >>> print(e126.cp_values[5.0])
         0.423
         >>> print(e126.nominal_power)
-        7500000.0
+        7500000000.0
 
         """
 
@@ -143,8 +144,8 @@ class WindTurbine(object):
 
             Returns
             -------
-            Tuple (pd.DataFrame, float)
-                Power curve or power coefficient curve (pd.DataFrame)
+            Tuple (pandas.DataFrame, float)
+                Power curve or power coefficient curve (pandas.DataFrame)
                 and nominal power (float).
                 Power (coefficient) curve DataFrame contains power coefficient
                 curve values (dimensionless) or power curve values in W with
@@ -172,9 +173,9 @@ class WindTurbine(object):
                             [float(col), float(wpp_df[col])])))
             data = np.delete(data, 0, 0)
             df = pd.DataFrame(data, columns=['v_wind', self.fetch_curve])
-            df.set_index('v_wind', drop=True, inplace=True)
+            series = pd.Series(df[self.fetch_curve], index=df['v_wind'])
             nominal_power = wpp_df['p_nom'].iloc[0] * 1000.0  # kW to W
-            return df, nominal_power
+            return series, nominal_power
         if self.fetch_curve == 'p':
             filename = 'p_curves.csv'
             p_values, p_nom = restructure_data()

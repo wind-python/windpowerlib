@@ -12,6 +12,7 @@ import logging
 from windpowerlib import wind_speed, density, power_output, tools
 import pandas as pd
 
+
 class ModelChain(object):
     r"""Model to determine the output of a wind turbine
 
@@ -80,7 +81,7 @@ class ModelChain(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'wind_conv_type': 'ENERCON E 126 7500'}
+    ...    'turbine_name': 'ENERCON E 126 7500'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> modelchain_data = {'rho_model': 'ideal_gas'}
     >>> e126_md = modelchain.ModelChain(e126, **modelchain_data)
@@ -118,7 +119,7 @@ class ModelChain(object):
 
         Parameters
         ----------
-        weather : DataFrame or Dictionary
+        weather : pandas.DataFrame or Dictionary
             Containing columns or keys with timeseries for temperature
             `temp_air` in K and pressure `pressure` in Pa, as well as
             optionally the temperature `temp_air_2` in K at a different height.
@@ -193,7 +194,7 @@ class ModelChain(object):
 
         Parameters
         ----------
-        weather : DataFrame or Dictionary
+        weather : pandas.DataFrame or Dictionary
             Containing columns or keys with the timeseries for wind speed
             `v_wind` in m/s and roughness length `z0` in m, as well as
             optionally wind speed `v_wind_2` in m/s at different height.
@@ -271,39 +272,20 @@ class ModelChain(object):
                 raise TypeError("Cp values of " +
                                 self.wind_turbine.turbine_name +
                                 " are missing.")
-            if self.density_corr is False:
-                logging.debug('Calculating power output using cp curve.')
-                output = power_output.cp_curve(
-                    wind_speed, density, self.wind_turbine.rotor_diameter,
-                    self.wind_turbine.cp_values)
-            elif self.density_corr is True:
-                logging.debug('Calculating power output using density ' +
-                              'corrected cp curve.')
-                output = power_output.cp_curve_density_corr(
-                    wind_speed, density, self.wind_turbine.rotor_diameter,
-                    self.wind_turbine.cp_values)
-            else:
-                raise TypeError("'{0}' is an invalid type.".format(type(
-                                self.density_corr)) + "`density_corr` must " +
-                                "be Boolean (True or False).")
+            logging.debug('Calculating power output using cp curve.')
+            output = power_output.power_coefficient_curve(
+                wind_speed, self.wind_turbine.cp_values,
+                self.wind_turbine.rotor_diameter, density,
+                self.density_corr)
         elif self.power_output_model == 'p_values':
             if self.wind_turbine.p_values is None:
                 raise TypeError("P values of " +
                                 self.wind_turbine.turbine_name +
                                 " are missing.")
-            if self.density_corr is False:
-                logging.debug('Calculating power output using power curve.')
-                output = power_output.p_curve(wind_speed,
-                                              self.wind_turbine.p_values)
-            elif self.density_corr is True:
-                logging.debug('Calculating power output using density ' +
-                              'corrected power curve.')
-                output = power_output.p_curve_density_corr(
-                    wind_speed, density, self.wind_turbine.p_values)
-            else:
-                raise TypeError("'{0}' is an invalid type.".format(type(
-                                self.density_corr)) + "`density_corr` must " +
-                                "be Boolean (True or False).")
+            logging.debug('Calculating power output using power curve.')
+            output = power_output.power_curve(
+                wind_speed, self.wind_turbine.p_values, density,
+                self.density_corr)
         else:
             raise ValueError("'{0}' is an invalid value.".format(
                              self.power_output_model) +
@@ -317,7 +299,7 @@ class ModelChain(object):
 
         Parameters
         ----------
-        weather : DataFrame or Dictionary
+        weather : pandas.DataFrame or Dictionary
             Containing columns or keys with the timeseries for wind speed
             `v_wind` in m/s, roughness length `z0` in m, temperature
             `temp_air` in K and pressure `pressure` in Pa, as well as
@@ -332,8 +314,8 @@ class ModelChain(object):
 
         """
         wind_speed = self.v_wind_hub(weather)
-        density = None if (self.power_output_model == 'p_values' and
-                           self.density_corr is False) \
-                       else self.rho_hub(weather)
+        density = (None if (self.power_output_model == 'p_values' and
+                   self.density_corr is False)
+                   else self.rho_hub(weather))
         self.power_output = self.turbine_power_output(wind_speed, density)
         return self
