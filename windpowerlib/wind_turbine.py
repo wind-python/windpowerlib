@@ -128,7 +128,7 @@ class WindTurbine(object):
         ...    'turbine_name': 'ENERCON E 126 7500',
         ...    'fetch_curve': 'cp'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.cp_values.cp[5.0])
+        >>> print(e126.cp_values[5.0])
         0.423
         >>> print(e126.nominal_power)
         7500000000.0
