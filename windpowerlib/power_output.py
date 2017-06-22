@@ -16,8 +16,8 @@ def power_coefficient_curve(wind_speed, density, rotor_diameter, cp_values):
     Calculates the turbine power output using a power coefficient curve.
 
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.ModelChain` class
-    is 'cp_values' and the parameter `density_corr` is False.
+    instance of the :class:`~.modelchain.ModelChain` class is 'cp_values' and
+    the parameter `density_corr` is False.
 
     Parameters
     ----------
@@ -36,6 +36,7 @@ def power_coefficient_curve(wind_speed, density, rotor_diameter, cp_values):
     -------
     pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
+        Data type depends on type of `wind_speed`.
 
     Notes
     -----
@@ -100,6 +101,7 @@ def cp_curve_density_corr(wind_speed, density, rotor_diameter, cp_values):
     -------
     pandas.Series or numpy.array
         Electrical power of the wind turbine in W.
+        Data type depends on type of `wind_speed`.
 
     Notes
     -----
@@ -140,6 +142,7 @@ def power_curve(wind_speed, p_values):
     -------
     pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
+        Data type depends on type of `wind_speed`.
 
     Notes
     -------
@@ -179,6 +182,7 @@ def p_curve_density_corr(wind_speed, density, p_values):
     -------
     pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
+        Data type depends on type of `wind_speed`.
 
     Notes
     -----

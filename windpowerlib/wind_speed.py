@@ -39,7 +39,7 @@ def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
     Returns
     -------
     pandas.Series or numpy.array
-        Wind speed at hub height.
+        Wind speed at hub height. Data type depends on type of `wind_speed`.
 
     Notes
     -----
@@ -121,7 +121,7 @@ def hellman(wind_speed, wind_speed_height, hub_height,
     Returns
     -------
     pandas.Series or numpy.array
-        Wind speed at hub height.
+        Wind speed at hub height. Data type depends on type of `wind_speed`.
 
     Notes
     -----
