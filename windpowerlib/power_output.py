@@ -75,7 +75,7 @@ def power_coefficient_curve(wind_speed, cp_values,
         p_values = (1 / 8 * 1.225 * rotor_diameter ** 2 * np.pi *
                     np.power(cp_values.index, 3) * cp_values)
         p_values = pd.Series(np.array(p_values), index=cp_values.index)
-        power_output = _p_curve_density_corr(wind_speed, density, p_values)
+        power_output = _p_curve_density_corr(wind_speed, p_values, density)
     else:
         raise TypeError("'{0}' is an invalid type.".format(type(
                         density_corr)) + "`density_corr` must be Boolean " +
