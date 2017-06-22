@@ -27,10 +27,9 @@ def power_coefficient_curve(wind_speed, density, rotor_diameter, cp_values):
         Density of air at hub height in kg/m³.
     rotor_diameter : float
         Rotor diameter in m.
-    cp_values : pandas.DataFrame
+    cp_values : pandas.Series
         Power coefficient curve of the wind turbine.
-        Indices are the wind speeds of the power coefficient curve in m/s, the
-        corresponding power coefficient values are in the column 'cp'.
+        Indices are the wind speeds of the power coefficient curve in m/s.
 
     Returns
     -------
@@ -61,7 +60,7 @@ def power_coefficient_curve(wind_speed, density, rotor_diameter, cp_values):
             Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 542
 
     """
-    cp_time_series = np.interp(wind_speed, cp_values.index, cp_values.cp,
+    cp_time_series = np.interp(wind_speed, cp_values.index, cp_values,
                                left=0, right=0)
     # Convert density to np.array if wind_speed is np.array
     if isinstance(wind_speed, np.ndarray) and isinstance(density, pd.Series):
@@ -92,10 +91,9 @@ def cp_curve_density_corr(wind_speed, density, rotor_diameter, cp_values):
         Density of air at hub height in kg/m³.
     rotor_diameter : float
         Rotor diameter in m.
-    cp_values : pandas.DataFrame
+    cp_values : pandas.Series
         Power coefficient curve of the wind turbine.
-        Indices are the wind speeds of the power coefficient curve in m/s, the
-        corresponding power coefficient values are in the column 'cp'.
+        Indices are the wind speeds of the power coefficient curve in m/s.
 
     Returns
     -------
@@ -115,9 +113,8 @@ def cp_curve_density_corr(wind_speed, density, rotor_diameter, cp_values):
 
     """
     p_values = (1 / 8 * 1.225 * rotor_diameter ** 2 * np.pi *
-                np.power(cp_values.index, 3) * cp_values.cp)
-    p_values = pd.DataFrame(data=np.array(p_values), index=cp_values.index,
-                            columns=['p'])
+                np.power(cp_values.index, 3) * cp_values)
+    p_values = pd.Series(np.array(p_values), index=cp_values.index)
     return p_curve_density_corr(wind_speed, density, p_values)
 
 
@@ -133,10 +130,9 @@ def power_curve(wind_speed, p_values):
     ----------
     wind_speed : pandas.Series or numpy.array
         Wind speed at hub height in m/s.
-    p_values : pandas.DataFrame
+    p_values : pandas.Series
         Power curve of the wind turbine.
-        Indices are the wind speeds of the power curve in m/s, the
-        corresponding power values in W are in the column 'p'.
+        Indices are the wind speeds of the power curve in m/s.
 
     Returns
     -------
@@ -150,7 +146,7 @@ def power_curve(wind_speed, p_values):
     and below the minimum wind speed given in the power curve is zero.
 
     """
-    power_output = np.interp(wind_speed, p_values.index, p_values.p,
+    power_output = np.interp(wind_speed, p_values.index, p_values,
                              left=0, right=0)
     # Power_output as pd.Series if wind_speed is pd.Series
     if isinstance(wind_speed, pd.Series):
@@ -173,10 +169,9 @@ def p_curve_density_corr(wind_speed, density, p_values):
         Wind speed time series at hub height in m/s.
     density : pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
-    p_values : pandas.DataFrame
+    p_values : pandas.Series
         Power curve of the wind turbine.
-        Indices are the wind speeds of the power curve in m/s, the
-        corresponding power values in W are in the column 'p'.
+        Indices are the wind speeds of the power curve in m/s.
 
     Returns
     -------
@@ -231,7 +226,7 @@ def p_curve_density_corr(wind_speed, density, p_values):
                                p_values.index * (1.225 / density[i])**(
                                    np.interp(p_values.index,
                                              [7.5, 12.5], [1/3, 2/3])),
-                               p_values.p, left=0, right=0))
+                               p_values, left=0, right=0))
                     for i in range(len(wind_speed))]
     # Power_output as pd.Series if wind_speed is pd.Series
     if isinstance(wind_speed, pd.Series):
