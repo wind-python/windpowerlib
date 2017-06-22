@@ -211,8 +211,8 @@ def _p_curve_density_corr(wind_speed, p_values, density):
         raise TypeError("`density` is None. For the calculation with a " +
                         "density corrected power curve density at hub height" +
                         "is needed.")
-    return[(np.interp(wind_speed[i],
-                      p_values.index * (1.225 / density[i])**(
-                          np.interp(p_values.index, [7.5, 12.5], [1/3, 2/3])),
-                      p_values, left=0, right=0))
-           for i in range(len(wind_speed))]
+    return [(np.interp(wind_speed[i],
+                       p_values.index * (1.225 / density[i])**(
+                           np.interp(p_values.index, [7.5, 12.5], [1/3, 2/3])),
+                       p_values, left=0, right=0))
+            for i in range(len(wind_speed))]
