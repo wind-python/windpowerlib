@@ -265,39 +265,20 @@ class ModelChain(object):
                 raise TypeError("Cp values of " +
                                 self.wind_turbine.turbine_name +
                                 " are missing.")
-            if self.density_corr is False:
-                logging.debug('Calculating power output using cp curve.')
-                output = power_output.power_coefficient_curve(
-                    wind_speed, density, self.wind_turbine.rotor_diameter,
-                    self.wind_turbine.cp_values)
-            elif self.density_corr is True:
-                logging.debug('Calculating power output using density ' +
-                              'corrected cp curve.')
-                output = power_output.cp_curve_density_corr(
-                    wind_speed, density, self.wind_turbine.rotor_diameter,
-                    self.wind_turbine.cp_values)
-            else:
-                raise TypeError("'{0}' is an invalid type.".format(type(
-                                self.density_corr)) + "`density_corr` must " +
-                                "be Boolean (True or False).")
+            logging.debug('Calculating power output using cp curve.')
+            output = power_output.power_coefficient_curve(
+                wind_speed, self.wind_turbine.cp_values,
+                self.wind_turbine.rotor_diameter, density,
+                self.density_corr)
         elif self.power_output_model == 'p_values':
             if self.wind_turbine.p_values is None:
                 raise TypeError("P values of " +
                                 self.wind_turbine.turbine_name +
                                 " are missing.")
-            if self.density_corr is False:
-                logging.debug('Calculating power output using power curve.')
-                output = power_output.power_curve(wind_speed,
-                                                  self.wind_turbine.p_values)
-            elif self.density_corr is True:
-                logging.debug('Calculating power output using density ' +
-                              'corrected power curve.')
-                output = power_output.p_curve_density_corr(
-                    wind_speed, density, self.wind_turbine.p_values)
-            else:
-                raise TypeError("'{0}' is an invalid type.".format(type(
-                                self.density_corr)) + "`density_corr` must " +
-                                "be Boolean (True or False).")
+            logging.debug('Calculating power output using power curve.')
+            output = power_output.power_curve(
+                wind_speed, self.wind_turbine.p_values, density,
+                self.density_corr)
         else:
             raise ValueError("'{0}' is an invalid value.".format(
                              self.power_output_model) +
