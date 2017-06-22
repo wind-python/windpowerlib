@@ -267,7 +267,7 @@ class ModelChain(object):
                                 " are missing.")
             if self.density_corr is False:
                 logging.debug('Calculating power output using cp curve.')
-                output = power_output.cp_curve(
+                output = power_output.power_coefficient_curve(
                     wind_speed, density, self.wind_turbine.rotor_diameter,
                     self.wind_turbine.cp_values)
             elif self.density_corr is True:
@@ -287,8 +287,8 @@ class ModelChain(object):
                                 " are missing.")
             if self.density_corr is False:
                 logging.debug('Calculating power output using power curve.')
-                output = power_output.p_curve(wind_speed,
-                                              self.wind_turbine.p_values)
+                output = power_output.power_curve(wind_speed,
+                                                  self.wind_turbine.p_values)
             elif self.density_corr is True:
                 logging.debug('Calculating power output using density ' +
                               'corrected power curve.')
