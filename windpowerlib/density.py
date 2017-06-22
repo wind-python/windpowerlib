@@ -8,6 +8,7 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 
+def barometric(pressure, pressure_height, hub_height, temperature_hub_height):
     r"""
     Calculates the density of air at hub height using the barometric height
     equation.
@@ -64,8 +65,7 @@ __license__ = "GPLv3"
             288.15 * 100 / (101330 * temperature_hub_height))
 
 
-def rho_ideal_gas(pressure, pressure_height, hub_height,
-                  temperature_hub_height):
+def ideal_gas(pressure, pressure_height, hub_height, temperature_hub_height):
     r"""
     Calculates the density of air at hub height using the ideal gas equation.
 

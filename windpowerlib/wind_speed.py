@@ -11,8 +11,8 @@ import numpy as np
 import pandas as pd
 
 
-def logarithmic_wind_profile(wind_speed, wind_speed_height, hub_height,
-                             roughness_length, obstacle_height=0):
+def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
+                        roughness_length, obstacle_height=0):
     r"""
     Calculates the wind speed at hub height using a logarithmic wind profile.
 
@@ -90,8 +90,8 @@ def logarithmic_wind_profile(wind_speed, wind_speed_height, hub_height,
                    roughness_length))
 
 
-def v_wind_hellman(wind_speed, wind_speed_height, hub_height,
-                   roughness_length=None, hellman_exponent=None):
+def hellman(wind_speed, wind_speed_height, hub_height,
+            roughness_length=None, hellman_exponent=None):
     r"""
     Calculates the wind speed at hub height using the hellman equation.
 
