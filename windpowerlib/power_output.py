@@ -220,7 +220,7 @@ def p_curve_density_corr(wind_speed, density, p_values):
             at Reiner Lemoine Institute, 2014, p. 13
 
     """
-    # Convert rho_hub to np.array if v_wind is np.array
+    # Convert density to np.array if wind_speed is np.array
     if isinstance(wind_speed, np.ndarray) and isinstance(density, pd.Series):
         density = np.array(density)
     power_output = [(np.interp(wind_speed[i],
