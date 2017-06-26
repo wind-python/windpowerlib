@@ -24,21 +24,20 @@ import logging
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-def get_weather_data(filename, datetime_column='time_index', **kwargs):
+def get_weather_data(filename='weather.csv', **kwargs):
     r"""
-    Imports weather data from a file and specifies height of weather data.
+    Imports weather data from a file.
 
     The data include wind speed at two different heights in m/s, air
     temperature in two different heights in K, surface roughness length in m
-    and air pressure in Pa.
+    and air pressure in Pa. The file is located in the example folder of the
+    windpowerlib. The height in m for which the data applies is specified in
+    the second row.
 
     Parameters
     ----------
     filename : string
-        Filename of the weather data file.
-    datetime_column : string
-            Name of the datetime column of the weather DataFrame.
-            Default: 'time_index'.
+        Filename of the weather data file. Default: 'weather.csv'.
 
     Other Parameters
     ----------------
@@ -48,78 +47,27 @@ def get_weather_data(filename, datetime_column='time_index', **kwargs):
 
     Returns
     -------
-    Tuple (pd.DataFrame, dictionary)
-        `weather` DataFrame contains weather data time series.
-        `data_height` dictionary contains height for which corresponding
-        weather data applies.
+    weather_df : pandas.DataFrame
+            DataFrame with time series for wind speed `wind_speed` in m/s,
+            temperature `temperature` in K, roughness length `roughness_length`
+            in m, and pressure `pressure` in Pa.
+            The columns of the DataFrame are a MultiIndex where the first level
+            contains the variable name (e.g. wind_speed) and the second level
+            contains the height at which it applies (e.g. 10, if it was
+            measured at a height of 10 m).
 
     """
-    def read_weather_data(filename, datetime_column='time_index',
-                          **kwargs):
-        r"""
-        Fetches weather data from a file.
 
-        The file is located in the example folder of the windpowerlib.
-
-        Parameters
-        ----------
-        filename : string
-            Filename of the weather data file.
-        datetime_column : string
-            Name of the datetime column of the weather DataFrame.
-
-        Other Parameters
-        ----------------
-        datapath : string, optional
-            Path where the weather data file is stored.
-            Default: 'windpowerlib/example'.
-
-        Returns
-        -------
-        pandas.DataFrame
-            Contains weather data time series.
-
-        """
-        if 'datapath' not in kwargs:
-            kwargs['datapath'] = os.path.join(os.path.split(
-                os.path.dirname(__file__))[0], 'example')
-
-        file = os.path.join(kwargs['datapath'], filename)
-        df = pd.read_csv(file)
-        return df.set_index(pd.to_datetime(df[datetime_column])).tz_localize(
-            'UTC').tz_convert('Europe/Berlin').drop(datetime_column, 1)
-
-    # read weather data from csv
-    weather_tmp = read_weather_data(filename=filename,
-                                datetime_column=datetime_column, **kwargs)
-
-    # dictionary specifying the height for which the weather data applies
-    # data in m
-    data_height = {
-        'pressure': 0,
-        'temp_air': 2,
-        'v_wind': 10,
-        'temp_air_2': 10,
-        'v_wind_2': 80}
-
-    # restructure weather DataFrame
-
-    data = np.transpose(np.asarray([weather_tmp['v_wind'],
-                                    weather_tmp['v_wind_2'],
-                                    weather_tmp['temp_air'],
-                                    weather_tmp['temp_air_2'],
-                                    weather_tmp['pressure'],
-                                    weather_tmp['z0']]))
-    weather = pd.DataFrame(
-        data,
-        index=weather_tmp.index,
-        columns=[np.array(['v_wind', 'v_wind', 'temp_air', 'temp_air',
-                           'pressure', 'z0']),
-                 np.array([data_height['v_wind'], data_height['v_wind_2'],
-                           data_height['temp_air'], data_height['temp_air_2'],
-                           data_height['pressure'], 0])])
-
-    return weather
+    if 'datapath' not in kwargs:
+        kwargs['datapath'] = os.path.join(os.path.split(
+            os.path.dirname(__file__))[0], 'example')
+    file = os.path.join(kwargs['datapath'], filename)
+    # read csv file
+    weather_df = pd.read_csv(file, index_col=0, header=[0, 1])
+    # change type of index to datetime and set time zone
+    weather_df.index = pd.to_datetime(weather_df.index).tz_localize(
+        'UTC').tz_convert('Europe/Berlin')
+    return weather_df
 
 
 def initialise_wind_turbines():
