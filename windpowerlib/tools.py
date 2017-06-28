@@ -1,5 +1,5 @@
 """
-The ``tools`` module contains a collection of functions used in the
+The ``tools`` module contains a collection of helper functions used in the
 windpowerlib.
 
 """
@@ -9,97 +9,64 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 
-def smallest_difference(data_frame, comp_value, column_name):
-    r"""
-    Selects a value with the smallest difference to a comparative value.
-
-    Additionally returns a corresponding value. This function is for example
-    used in :py:func:`~.modelchain.v_wind_hub` of the
-    :class:`~.modelchain.ModelChain` to choose the wind speed data that is the
-    closest to the hub height of the examined wind turbine. In this case the
-    column of the data frame contains wind speed time series and the indices
-    are the corresponding heights for which these time series apply.
-
-    Parameters
-    ----------
-    data_frame : pandas.DataFrame
-        Indices are the values of which the smallest difference to `comp_value`
-        will be found, the corresponding values are in the column
-        specified by `column_name` and they can be floats, pandas.Series or
-        numpy.arrays.
-    comp_value : float
-        Comparative value.
-    column_name : string
-        Name of the column in the `data_frame` that contains the
-        corresponding values.
-
-    Returns
-    -------
-    Tuple(float, float or pandas.Series or numpy.array)
-        Closest value to comparative value as float and its corresponding value
-        as float, pandas.Series or numpy.array.
-
-    """
-    # Calculate difference to comp_value for all indices of data_frame
-    diff = []
-    for index in sorted(data_frame.index):
-        diff.append(abs(comp_value - index))
-    # Find smallest difference
-    closest_value = sorted(data_frame.index)[diff.index(min(diff))]
-    corresp_value = data_frame[column_name][closest_value]
-    return closest_value, corresp_value
-
-
-def linear_extra_interpolation(data_frame, requested_height):
+def linear_interpolation_extrapolation(df, target_height):
     r"""
     Inter- or extrapolates between the values of a data frame.
 
-    This function can for example be used for the interpolation of a wind
-    speed, density or temperature to calculated these values at hub height of a
-    wind turbine.
+    This function can be used for the inter-/extrapolation of a parameter
+    (e.g wind speed) available at two or more different heights, to approximate
+    the value at hub height. The function is carried out when the parameter
+    `wind_speed_model`, `density_model` or `temperature_model` of an
+    instance of the :class:`~.modelchain.ModelChain` class is
+    'interpolation_extrapolation'.
 
     Parameters
     ----------
-    data_frame : pandas.DataFrame
-        Indices are the values between which will be interpolated or from which
-        will be extrapolated, the corresponding values are in the column
-        specified by `column_name` and can be floats, pandas.Series or
-        numpy.arrays.
-    requested_height : float
-        Height for which the interpolation takes place (e.g. hub height of wind
-        turbine).
-    column_name : string
-        Name of the column in the DataFrame `data_frame` that contains the
-        corresponding values.
+    df : pandas.DataFrame
+        DataFrame with time series for parameter that is to be interpolated or
+        extrapolated. The columns of the DataFrame are the different heights
+        for which the parameter is available. If more than two heights are
+        given, the two closest heights are used. See example below on how the
+        DataFrame should look like and how the function can be used.
+    target_height : float
+        Height for which the parameter is approximated (e.g. hub height).
 
     Returns
     -------
-    interpolant : float or pandas.Series or numpy.array
-        Result of the interpolation (e.g. density at hub height).
+    pandas.Series
+        Result of the inter-/extrapolation (e.g. wind speed at hub height).
 
     Notes
     -----
 
     For the inter- and extrapolation the following equation is used:
 
-    .. math:: interpolant = (value_2 - value_1) / (height_2 - height_1) *
-              (height_{requested} - height_1) + value_1
+    .. math:: f(x) = (f(x_2) - f(x_1)) / (x_2 - x_1) * (x - x_1) + f(x_1)
 
-    with:
-        :math:`height_2`: index of data frame closest to
-        :math:`height_{requested}`, :math:`height_1`: index of data frame
-        second closest to :math:`height_{requested}`,
-        :math:`value_2`: corresponding value to `height_2`,
-        :math:`value_1`: corresponding value to `height_1`,
-        :math:`height_{requested}` : height for which the interpolation takes
-        place
+    Examples
+    ---------
+    >>> import numpy as np
+    >>> import pandas as pd
+    >>> wind_speed_10m = np.array([[3], [4]])
+    >>> wind_speed_80m = np.array([[6], [6]])
+    >>> weather_df = pd.DataFrame(np.hstack((wind_speed_10m,
+    ...                                      wind_speed_80m)),
+    ...                           index=pd.date_range('1/1/2012',
+    ...                                               periods=2,
+    ...                                               freq='H'),
+    ...                           columns=[np.array(['wind_speed',
+    ...                                              'wind_speed']),
+    ...                                    np.array([10, 80])])
+    >>> linear_interpolation_extrapolation(
+    ...     weather_df['wind_speed'], 100)[0]
+    6.857143
 
     """
     # find closest heights
-    heights_sorted = data_frame.columns[
-        sorted(range(len(data_frame.columns)),
-               key=lambda i: abs(data_frame.columns[i] - requested_height))]
-    return ((data_frame[heights_sorted[1]] - data_frame[heights_sorted[0]]) /
+    heights_sorted = df.columns[
+        sorted(range(len(df.columns)),
+               key=lambda i: abs(df.columns[i] - target_height))]
+    return ((df[heights_sorted[1]] - df[heights_sorted[0]]) /
             (heights_sorted[1] - heights_sorted[0]) *
-           (requested_height - heights_sorted[0]) +
-            data_frame[heights_sorted[0]])
+           (target_height - heights_sorted[0]) +
+            df[heights_sorted[0]])
