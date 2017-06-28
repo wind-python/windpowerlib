@@ -52,9 +52,9 @@ def get_weather_data(filename='weather.csv', **kwargs):
             temperature `temperature` in K, roughness length `roughness_length`
             in m, and pressure `pressure` in Pa.
             The columns of the DataFrame are a MultiIndex where the first level
-            contains the variable name (e.g. wind_speed) and the second level
-            contains the height at which it applies (e.g. 10, if it was
-            measured at a height of 10 m).
+            contains the variable name as string (e.g. 'wind_speed') and the
+            second level contains the height as integer at which it applies
+            (e.g. 10, if it was measured at a height of 10 m).
 
     """
 
@@ -67,6 +67,11 @@ def get_weather_data(filename='weather.csv', **kwargs):
     # change type of index to datetime and set time zone
     weather_df.index = pd.to_datetime(weather_df.index).tz_localize(
         'UTC').tz_convert('Europe/Berlin')
+    # change type of height from str to int by resetting columns
+    weather_df.columns = [weather_df.axes[1].levels[0][
+                              weather_df.axes[1].labels[0]],
+                          weather_df.axes[1].levels[1][
+                              weather_df.axes[1].labels[1]].astype(int)]
     return weather_df
 
 
@@ -96,9 +101,9 @@ def initialise_wind_turbines():
         'nominal_power': 3e6,  # in W
         'hub_height': 105,  # in m
         'rotor_diameter': 90,  # in m
-        'p_values': pd.DataFrame(
-            data={'p': [p * 1000 for p in
-                        [0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]]},  # in W
+        'p_values': pd.Series(
+            data=[p * 1000 for p in [
+                0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],  # in W
             index=[0.0, 3.0, 5.0, 10.0, 15.0, 25.0])  # in m/s
     }
     # initialise WindTurbine object
@@ -115,7 +120,7 @@ def initialise_wind_turbines():
     # initialise WindTurbine object
     e126 = wt.WindTurbine(**enerconE126)
 
-    return (my_turbine, e126)
+    return my_turbine, e126
 
 
 def calculate_power_output(weather, my_turbine, e126):
@@ -151,11 +156,15 @@ def calculate_power_output(weather, my_turbine, e126):
     # own specifications for ModelChain setup
     modelchain_data = {
         'obstacle_height': 0,  # default: 0
-        'wind_model': 'logarithmic',  # 'logarithmic' (default) or 'hellman'
-        'rho_model': 'ideal_gas',  # 'barometric' (default) or 'ideal_gas'
-        'power_output_model': 'p_values',  # 'p_values' (default) or
-                                           # 'cp_values'
-        'density_corr': True,  # False (default) or True
+        'wind_speed_model': 'logarithmic',  # 'logarithmic' (default),
+                                            # 'hellman' or
+                                            # 'interpolation_extrapolation'
+        'density_model': 'ideal_gas',  # 'barometric' (default) or 'ideal_gas'
+        'temperature_model': 'linear_gradient', # 'linear_gradient' (def.) or
+                                                # 'interpolation_extrapolation'
+        'power_output_model': 'power_curve',  # 'power_curve' (default) or
+                                              # 'power_coefficient_curve'
+        'density_correction': True,  # False (default) or True
         'hellman_exp': None}  # None (default) or None
     # initialise ModelChain with own specifications and use run_model method
     # to calculate power output

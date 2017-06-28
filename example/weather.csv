@@ -1,5 +1,5 @@
-time_index,pressure,temperature,wind_speed,roughness_length,temperature,wind_speed
-,0,2,10,0,10,80
+variable_name,pressure,temperature,wind_speed,roughness_length,temperature,wind_speed
+height,0,2,10,0,10,80
 2010-01-01 00:00:00+01:00,98405.7,267.6,5.32697,0.15,267.57,7.80697
 2010-01-01 01:00:00+01:00,98382.7,267.6,5.46199,0.15,267.55,7.86199
 2010-01-01 02:00:00+01:00,98362.9,267.61,5.67899,0.15,267.54,8.59899
