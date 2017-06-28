@@ -18,9 +18,8 @@ def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
 
     The logarithmic height equation is used. There is the possibility of
     including the height of the surrounding obstacles in the calculation. This
-    function is carried out when the parameter `wind_model` of an instance of
-    the :class:`~.modelchain.ModelChain` class is 'logarithmic' or
-    'logarithmic_closest'.
+    function is carried out when the parameter `wind_speed_model` of an
+    instance of the :class:`~.modelchain.ModelChain` class is 'logarithmic'.
 
     Parameters
     ----------
@@ -76,9 +75,9 @@ def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
 
     """
     if 0.7 * obstacle_height > wind_speed_height:
-        raise ValueError("To take an obstacle height of {0} m".format(
-                         obstacle_height) + " into consideration, wind" +
-                         " speed data of a greater height is needed.")
+        raise ValueError("To take an obstacle height of {0} m ".format(
+                         obstacle_height) + "into consideration, wind " +
+                         "speed data of a greater height is needed.")
     # Return np.array if wind_speed is np.array
     if (isinstance(wind_speed, np.ndarray) and
             isinstance(roughness_length, pd.Series)):
@@ -96,7 +95,7 @@ def hellman(wind_speed, wind_speed_height, hub_height,
     Calculates the wind speed at hub height using the hellman equation.
 
     It is assumed that the wind profile follows a power law. This function is
-    carried out when the parameter `wind_model` of an instance of
+    carried out when the parameter `wind_speed_model` of an instance of
     the :class:`~.modelchain.ModelChain` class is 'hellman'.
 
     Parameters

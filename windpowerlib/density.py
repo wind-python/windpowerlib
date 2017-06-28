@@ -13,8 +13,8 @@ def barometric(pressure, pressure_height, hub_height, temperature_hub_height):
     Calculates the density of air at hub height using the barometric height
     equation.
 
-    This function is carried out when the parameter `rho_model` of an instance
-    of the :class:`~.modelchain.ModelChain` class is 'barometric'.
+    This function is carried out when the parameter `density_model` of an
+    instance of the :class:`~.modelchain.ModelChain` class is 'barometric'.
 
     Parameters
     ----------
@@ -70,8 +70,8 @@ def ideal_gas(pressure, pressure_height, hub_height, temperature_hub_height):
     r"""
     Calculates the density of air at hub height using the ideal gas equation.
 
-    This function is carried out when the parameter `rho_model` of an instance
-    of the :class:`~.modelchain.ModelChain` class is 'ideal_gas'.
+    This function is carried out when the parameter `density_model` of an
+    instance of the :class:`~.modelchain.ModelChain` class is 'ideal_gas'.
 
     Parameters
     ----------
