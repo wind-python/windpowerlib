@@ -236,11 +236,11 @@ def get_turbine_types(print_out=True, **kwargs):
     Examples
     --------
     >>> from windpowerlib import wind_turbine
-    >>> valid_types_df = wind_turbine.get_turbine_types(print_out=False)
-    >>> print(valid_types_df.iloc[5])
-    turbine_id    DEWIND D8 2000
-    p_nom                   2000
-    Name: 5, dtype: object
+    >>> turbines = wind_turbine.get_turbine_types(print_out=False)
+    >>> print(turbines[turbines["turbine_id"].str.contains("ENERCON")].iloc[0])
+    turbine_id    ENERCON E 101 3000
+    p_nom                       3000
+    Name: 25, dtype: object
 
     """
     df = read_turbine_data(**kwargs)
