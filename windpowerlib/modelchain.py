@@ -232,7 +232,7 @@ class ModelChain(object):
         elif self.density_model == 'interpolation_extrapolation':
             logging.debug('Calculating density using linear inter- or '
                           'extrapolation.')
-            density_hub = tools.linear_extra_interpolation(
+            density_hub = tools.linear_interpolation_extrapolation(
                 weather_df['density'], self.wind_turbine.hub_height)
         else:
             raise ValueError("'{0}' is an invalid value. ".format(

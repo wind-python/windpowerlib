@@ -80,8 +80,8 @@ def power_coefficient_curve(wind_speed, cp_values, rotor_diameter, density,
                                                      density)
     else:
         raise TypeError("'{0}' is an invalid type. ".format(type(
-                        density_correction)) + "`density_corr` must be " +
-                        "Boolean (True or False).")
+                        density_correction)) + "`density_correction` must " +
+                        "be Boolean (True or False).")
 
     # Power_output as pd.Series if wind_speed is pd.Series (else: np.array)
     if isinstance(wind_speed, pd.Series):
@@ -136,8 +136,8 @@ def power_curve(wind_speed, p_values, density=None, density_correction=False):
                                                       density)
     else:
         raise TypeError("'{0}' is an invalid type. ".format(type(
-                        density_correction)) + "`density_corr` must be " +
-                        "Boolean (True or False).")
+                        density_correction)) + "`density_correction` must " +
+                        "be Boolean (True or False).")
     # Power_output as pd.Series if wind_speed is pd.Series (else: np.array)
     if isinstance(wind_speed, pd.Series):
         power_output = pd.Series(data=power_output, index=wind_speed.index,
