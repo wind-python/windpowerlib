@@ -329,23 +329,27 @@ class ModelChain(object):
 
         """
         if self.power_output_model == 'power_curve':
-            if self.wind_turbine.p_values is None:
+            if self.wind_turbine.power_curve is None:
                 raise TypeError("Power curve values of " +
                                 self.wind_turbine.turbine_name +
                                 " are missing.")
             logging.debug('Calculating power output using power curve.')
             return (power_output.power_curve(
-                        wind_speed_hub, self.wind_turbine.p_values,
+                        wind_speed_hub,
+                        self.wind_turbine.power_curve['wind_speed'],
+                        self.wind_turbine.power_curve['values'],
                         density_hub, self.density_correction))
         elif self.power_output_model == 'power_coefficient_curve':
-            if self.wind_turbine.cp_values is None:
+            if self.wind_turbine.power_coefficient_curve is None:
                 raise TypeError("Power coefficient curve values of " +
                                 self.wind_turbine.turbine_name +
                                 " are missing.")
             logging.debug('Calculating power output using power coefficient '
                           'curve.')
             return (power_output.power_coefficient_curve(
-                        wind_speed_hub, self.wind_turbine.cp_values,
+                        wind_speed_hub,
+                        self.wind_turbine.power_curve['wind_speed'],
+                        self.wind_turbine.power_curve['values'],
                         self.wind_turbine.rotor_diameter, density_hub,
                         self.density_correction))
         else:
