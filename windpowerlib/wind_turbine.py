@@ -81,8 +81,8 @@ class WindTurbine(object):
     ...    'rotor_diameter': 127,
     ...    'turbine_name': 'ENERCON E 126 7500'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-    >>> print(e126.rotor_diameter)
-    127
+    >>> print(e126.nominal_power)
+    7500000
 
     """
 
@@ -126,12 +126,12 @@ class WindTurbine(object):
         ...    'hub_height': 135,
         ...    'rotor_diameter': 127,
         ...    'turbine_name': 'ENERCON E 126 7500',
-        ...    'fetch_curve': 'cp'}
+        ...    'fetch_curve': 'power_coefficient_curve'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.cp_values[5.0])
+        >>> print(e126.power_coefficient_curve['values'][5])
         0.423
         >>> print(e126.nominal_power)
-        7500000000.0
+        7500000
 
         """
 
@@ -239,7 +239,7 @@ def get_turbine_types(print_out=True, **kwargs):
     >>> turbines = wind_turbine.get_turbine_types(print_out=False)
     >>> print(turbines[turbines["turbine_id"].str.contains("ENERCON")].iloc[0])
     turbine_id    ENERCON E 101 3000
-    p_nom                       3000
+    p_nom                    3000000
     Name: 25, dtype: object
 
     """

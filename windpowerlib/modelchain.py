@@ -93,8 +93,8 @@ class ModelChain(object):
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> modelchain_data = {'density_model': 'ideal_gas'}
     >>> e126_mc = modelchain.ModelChain(e126, **modelchain_data)
-    >>> print(e126_mc.wind_turbine.rotor_diameter)
-    127
+    >>> print(e126_mc.density_model)
+    ideal_gas
 
     """
 
