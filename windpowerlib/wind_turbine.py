@@ -170,17 +170,19 @@ class WindTurbine(object):
                         data = np.vstack((data, np.array(
                             [float(col), float(wpp_df[col])])))
             data = np.delete(data, 0, 0)
-            df = pd.DataFrame(data, columns=['v_wind', self.fetch_curve])
-            series = pd.Series(df[self.fetch_curve], index=df['v_wind'])
-            nominal_power = wpp_df['p_nom'].iloc[0] * 1000.0  # kW to W
-            return series, nominal_power
-        if self.fetch_curve == 'p':
-            filename = 'p_curves.csv'
-            p_values, p_nom = restructure_data()
-            self.p_values = p_values * 1000.0  # kW to W
+            df = pd.DataFrame(data, columns=['wind_speed', 'values'])
+            nominal_power = wpp_df['p_nom'].iloc[0]
+            return df, nominal_power
+        if self.fetch_curve == 'power_curve':
+            filename = 'power_curves.csv'
+            self.power_curve, p_nom = restructure_data()
+        elif self.fetch_curve == 'power_coefficient_curve':
+            filename = 'power_coefficient_curves.csv'
+            self.power_coefficient_curve, p_nom = restructure_data()
         else:
-            filename = 'cp_curves.csv'
-            self.cp_values, p_nom = restructure_data()
+            raise ValueError("'{0}' is an invalid value. ".format(
+                             self.fetch_curve) + "`fetch_curve` must be " +
+                             "'power_curve' or 'power_coefficient_curve'.")
         if self.nominal_power is None:
             self.nominal_power = p_nom
         return self
@@ -198,9 +200,8 @@ def read_turbine_data(**kwargs):
     datapath : string, optional
         Path where the data file is stored. Default: './data'
     filename : string, optional
-        Name of data file. Provided data files are 'p_curves.csv' containing
-        power curves and 'cp_curves.csv' containing power coefficient curves.
-        Default: 'p_curves.csv'
+        Name of data file. Provided data files are 'power_curves.csv' and
+        'power_coefficient_curves.csv'. Default: 'power_curves.csv'.
 
     Returns
     -------

@@ -236,7 +236,7 @@ class ModelChain(object):
                 weather_df['density'], self.wind_turbine.hub_height)
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
-                             self.density_model) + "`rho_model` " +
+                             self.density_model) + "`density_model` " +
                              "must be 'barometric', 'ideal_gas' or " +
                              "'interpolation_extrapolation'.")
         return density_hub
@@ -348,8 +348,8 @@ class ModelChain(object):
                           'curve.')
             return (power_output.power_coefficient_curve(
                         wind_speed_hub,
-                        self.wind_turbine.power_curve['wind_speed'],
-                        self.wind_turbine.power_curve['values'],
+                        self.wind_turbine.power_coefficient_curve['wind_speed'],
+                        self.wind_turbine.power_coefficient_curve['values'],
                         self.wind_turbine.rotor_diameter, density_hub,
                         self.density_correction))
         else:

@@ -39,3 +39,4 @@ class TestTools:
         parameters['target_height'] = 5
         assert_series_equal(linear_interpolation_extrapolation(
             df, **parameters), exp_output)
+

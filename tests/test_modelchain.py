@@ -178,9 +178,9 @@ class TestModelChain:
         test_turbine = {'hub_height': 100,
                         'rotor_diameter': 80,
                         'turbine_name': 'ENERCON E 126 7500',
-                        'fetch_curve': 'p'}
+                        'fetch_curve': 'power_curve'}
 
-        # Test with default parameters of modelchain (p curve)
+        # Test with default parameters of modelchain (power curve)
         power_output_exp = pd.Series(data=[1731887.39768, 3820152.27489],
                                      name='feedin_wind_turbine')
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine))
@@ -201,7 +201,7 @@ class TestModelChain:
         # Test with power coefficient curve and hellman
         power_output_exp = pd.Series(data=[559060.36156, 1251143.98621],
                                      name='feedin_wind_turbine')
-        test_turbine['fetch_curve'] = 'cp'
+        test_turbine['fetch_curve'] = 'power_coefficient_curve'
         test_modelchain = {'wind_speed_model': 'hellman',
                            'power_output_model': 'power_coefficient_curve',
                            'density_correction': False}
@@ -229,17 +229,17 @@ class TestModelChain:
                                     **test_modelchain)
             test_mc.run_model(weather_df)
         with pytest.raises(ValueError):
-            test_modelchain['wind_speed_model'] = 'wrong_spelling'
-            test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
-                                    **test_modelchain)
-            test_mc.run_model(weather_df)
-        with pytest.raises(ValueError):
             test_modelchain['density_model'] = 'wrong_spelling'
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                     **test_modelchain)
             test_mc.run_model(weather_df)
         with pytest.raises(ValueError):
             test_modelchain['temperature_model'] = 'wrong_spelling'
+            test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
+                                    **test_modelchain)
+            test_mc.run_model(weather_df)
+        with pytest.raises(ValueError):
+            test_modelchain['wind_speed_model'] = 'wrong_spelling'
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                     **test_modelchain)
             test_mc.run_model(weather_df)
@@ -263,7 +263,7 @@ class TestModelChain:
             test_turbine = {'hub_height': 100,
                             'rotor_diameter': 80,
                             'turbine_name': 'ENERCON E 126 7500',
-                            'fetch_curve': 'p'}
+                            'fetch_curve': 'power_curve'}
             test_modelchain = {'power_output_model': 'power_coefficient_curve',
                                'density_correction': True}
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
@@ -273,7 +273,7 @@ class TestModelChain:
             test_turbine = {'hub_height': 100,
                             'rotor_diameter': 80,
                             'turbine_name': 'ENERCON E 126 7500',
-                            'fetch_curve': 'cp'}
+                            'fetch_curve': 'power_coefficient_curve'}
             test_modelchain = {'power_output_model': 'power_curve',
                                'density_corr': True}
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
