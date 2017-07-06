@@ -84,9 +84,10 @@ def initialise_wind_turbines():
     and/or power coefficient curve data from data files provided by the
     windpowerlib, as done for the 'enerconE126'.
     Execute ``windpowerlib.wind_turbine.get_turbine_types()`` or
-    ``windpowerlib.wind_turbine.get_turbine_types(filename='cp_curves.csv')``
-    to get a list of all wind turbines for which power and power coefficient
-    curves respectively are provided.
+    ``windpowerlib.wind_turbine.get_turbine_types(
+    filename='power_coefficient_curves.csv')`` to get a list of all wind
+    turbines for which power and power coefficient curves respectively are
+    provided.
 
     Returns
     -------
@@ -101,17 +102,17 @@ def initialise_wind_turbines():
         'nominal_power': 3e6,  # in W
         'hub_height': 105,  # in m
         'rotor_diameter': 90,  # in m
-        'p_values': pd.Series(
-            data=[p * 1000 for p in [
-                0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],  # in W
-            index=[0.0, 3.0, 5.0, 10.0, 15.0, 25.0])  # in m/s
+        'power_curve': pd.DataFrame(
+            data={'values': [p * 1000 for p in [
+                      0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],  # in W
+                  'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]})  # in m/s
     }
     # initialise WindTurbine object
     my_turbine = wt.WindTurbine(**myTurbine)
 
     # specification of wind turbine where power curve is provided
-    # if you want to use the power coefficient curve add {'fetch_curve': 'cp'}
-    # to the dictionary
+    # if you want to use the power coefficient curve add
+    # {'fetch_curve': 'power_coefficient_curve'} to the dictionary
     enerconE126 = {
         'turbine_name': 'ENERCON E 126 7500',  # turbine name as in register
         'hub_height': 135,  # in m
@@ -159,7 +160,8 @@ def calculate_power_output(weather, my_turbine, e126):
         'wind_speed_model': 'logarithmic',  # 'logarithmic' (default),
                                             # 'hellman' or
                                             # 'interpolation_extrapolation'
-        'density_model': 'ideal_gas',  # 'barometric' (default) or 'ideal_gas'
+        'density_model': 'ideal_gas',  # 'barometric' (default), 'ideal_gas' or
+                                       # 'interpolation_extrapolation'
         'temperature_model': 'linear_gradient', # 'linear_gradient' (def.) or
                                                 # 'interpolation_extrapolation'
         'power_output_model': 'power_curve',  # 'power_curve' (default) or
@@ -200,24 +202,29 @@ def plot_or_print(my_turbine, e126):
 
     # plot or print power (coefficient) curve
     if plt:
-        if e126.cp_values is not None:
-            e126.cp_values.plot(style='*', title='Enercon E126')
+        if e126.power_coefficient_curve is not None:
+            e126.power_coefficient_curve.plot(
+                x='wind_speed', y='values', style='*',
+                title='Enercon E126 power coefficient curve')
             plt.show()
-        if e126.p_values is not None:
-            e126.p_values.plot(style='*', title='Enercon E126')
+        if e126.power_curve is not None:
+            e126.power_curve.plot(x='wind_speed', y='values', style='*',
+                                  title='Enercon E126 power curve')
             plt.show()
-        if my_turbine.cp_values is not None:
-            my_turbine.cp_values.plot(style='*', title='myTurbine')
+        if my_turbine.power_coefficient_curve is not None:
+            my_turbine.power_coefficient_curve.plot(
+                x='wind_speed', y='values', style='*',
+                title='myTurbine power coefficient curve')
             plt.show()
-        if my_turbine.p_values is not None:
-            my_turbine.p_values.plot(style='*', title='myTurbine')
+        if my_turbine.power_curve is not None:
+            my_turbine.power_curve.plot(x='wind_speed', y='values', style='*',
+                                        title='myTurbine power curve')
             plt.show()
     else:
-        if e126.cp_values is not None:
-            print(e126.cp_values)
-        if e126.p_values is not None:
-            print("The P value at a wind speed of 5 m/s: {0}".format(
-                e126.p_values.p[5.0]))
+        if e126.power_coefficient_curve is not None:
+            print(e126.power_coefficient_curve)
+        if e126.power_curve is not None:
+            print(e126.power_curve)
 
 
 def run_basic_example():
