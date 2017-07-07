@@ -1,8 +1,9 @@
-from windpowerlib.temperature import linear_gradient
 import pandas as pd
+import numpy as np
 from pandas.util.testing import assert_series_equal
 from numpy.testing import assert_array_equal
-import numpy as np
+
+from windpowerlib.temperature import linear_gradient
 
 
 class TestTemperature:

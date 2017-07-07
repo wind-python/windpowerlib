@@ -1,10 +1,10 @@
-import windpowerlib.modelchain as mc
-import windpowerlib.wind_turbine as wt
-from pandas.util.testing import assert_series_equal
-from numpy.testing import assert_array_equal, assert_allclose
 import pandas as pd
-import pytest
 import numpy as np
+import pytest
+from pandas.util.testing import assert_series_equal
+
+import windpowerlib.wind_turbine as wt
+import windpowerlib.modelchain as mc
 
 
 class TestModelChain:

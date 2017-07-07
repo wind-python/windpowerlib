@@ -1,8 +1,7 @@
-from windpowerlib.tools import linear_interpolation_extrapolation
 import pandas as pd
-import numpy as np
 from pandas.util.testing import assert_series_equal
-from numpy.testing import assert_array_equal
+
+from windpowerlib.tools import linear_interpolation_extrapolation
 
 
 class TestTools:

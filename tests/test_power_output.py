@@ -1,11 +1,12 @@
+import pandas as pd
+import numpy as np
+import pytest
+from numpy.testing import assert_allclose
 from pandas.util.testing import assert_series_equal
+
 from windpowerlib.power_output import (power_coefficient_curve,
                                        power_curve,
                                        power_curve_density_correction)
-import pandas as pd
-import numpy as np
-from numpy.testing import assert_allclose
-import pytest
 
 
 class TestPowerOutput:
