@@ -181,8 +181,9 @@ def power_curve_density_correction(wind_speed, power_curve_wind_speeds,
 
     Returns
     -------
-    list
+    pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
+        Data type depends on type of `wind_speed`.
 
     Notes
     -----

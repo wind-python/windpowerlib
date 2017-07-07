@@ -41,7 +41,7 @@ def linear_interpolation_extrapolation(df, target_height):
 
     For the inter- and extrapolation the following equation is used:
 
-    .. math:: f(x) = (f(x_2) - f(x_1)) / (x_2 - x_1) * (x - x_1) + f(x_1)
+    .. math:: f(x) = (f(x_2) - f(x_1)) / (x_2 - x_1) \cdot (x - x_1) + f(x_1)
 
     Examples
     ---------
