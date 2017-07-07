@@ -181,26 +181,38 @@ class TestPowerOutput:
 
         # Test wind_speed as pd.Series with density and power_curve as
         # pd.Series and np.array
-        power_output_exp = [0.0, 461.00290572240806, 0.0]
-        assert power_curve_density_correction(**parameters) == power_output_exp
+        power_output_exp = pd.Series(data=[0.0, 461.00290572, 0.0],
+                                     name='feedin_wind_turbine')
+        assert_series_equal(power_curve_density_correction(**parameters),
+                            power_output_exp)
         parameters['density'] = np.array(parameters['density'])
-        assert power_curve_density_correction(**parameters) == power_output_exp
+        assert_series_equal(power_curve_density_correction(**parameters),
+                            power_output_exp)
         parameters['power_curve_values'] = np.array(
             parameters['power_curve_values'])
         parameters['power_curve_wind_speeds'] = np.array(
             parameters['power_curve_wind_speeds'])
-        assert power_curve_density_correction(**parameters) == power_output_exp
+        assert_series_equal(power_curve_density_correction(**parameters),
+                            power_output_exp)
 
         # Test wind_speed as np.array with density and power_curve as np.array
         # and pd.Series
-        assert power_curve_density_correction(**parameters) == power_output_exp
+        parameters['wind_speed'] = np.array(parameters['wind_speed'])
+        power_output_exp = np.array([0.0, 461.00290572, 0.0])
+        assert_allclose(power_curve_density_correction(**parameters),
+                        power_output_exp)
+        assert isinstance(power_curve(**parameters), np.ndarray)
         parameters['density'] = pd.Series(data=parameters['density'])
-        assert power_curve_density_correction(**parameters) == power_output_exp
+        assert_allclose(power_curve_density_correction(**parameters),
+                        power_output_exp)
+        assert isinstance(power_curve(**parameters), np.ndarray)
         parameters['power_curve_wind_speeds'] = pd.Series(
             data=parameters['power_curve_wind_speeds'])
         parameters['power_curve_values'] = pd.Series(
             data=parameters['power_curve_values'])
-        assert power_curve_density_correction(**parameters) == power_output_exp
+        assert_allclose(power_curve_density_correction(**parameters),
+                        power_output_exp)
+        assert isinstance(power_curve(**parameters), np.ndarray)
 
         # Raise TypeError due to density is None
         with pytest.raises(TypeError):
