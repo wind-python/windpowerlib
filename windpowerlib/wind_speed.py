@@ -12,7 +12,7 @@ import pandas as pd
 
 
 def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
-                        roughness_length, obstacle_height=0):
+                        roughness_length, obstacle_height=0.0):
     r"""
     Calculates the wind speed at hub height using a logarithmic wind profile.
 

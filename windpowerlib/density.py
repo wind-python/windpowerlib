@@ -31,7 +31,8 @@ def barometric(pressure, pressure_height, hub_height, temperature_hub_height):
     -------
     pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
-        Returns a pd.Series if one of the input parameters is a pd.Series.
+        Returns a pandas.Series if one of the input parameters is a
+        pandas.Series.
 
     Notes
     -----
@@ -88,7 +89,8 @@ def ideal_gas(pressure, pressure_height, hub_height, temperature_hub_height):
     -------
     pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
-        Returns a pd.Series if one of the input parameters is a pd.Series.
+        Returns a pandas.Series if one of the input parameters is a
+        pandas.Series.
 
     Notes
     -----

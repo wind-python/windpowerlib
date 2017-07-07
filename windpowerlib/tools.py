@@ -41,7 +41,7 @@ def linear_interpolation_extrapolation(df, target_height):
 
     For the inter- and extrapolation the following equation is used:
 
-    .. math:: f(x) = (f(x_2) - f(x_1)) / (x_2 - x_1) \cdot (x - x_1) + f(x_1)
+    .. math:: f(x) = \frac{(f(x_2) - f(x_1))}{(x_2 - x_1)} \cdot (x - x_1) + f(x_1)
 
     Examples
     ---------
@@ -68,5 +68,4 @@ def linear_interpolation_extrapolation(df, target_height):
                key=lambda i: abs(df.columns[i] - target_height))]
     return ((df[heights_sorted[1]] - df[heights_sorted[0]]) /
             (heights_sorted[1] - heights_sorted[0]) *
-           (target_height - heights_sorted[0]) +
-            df[heights_sorted[0]])
+            (target_height - heights_sorted[0]) + df[heights_sorted[0]])
