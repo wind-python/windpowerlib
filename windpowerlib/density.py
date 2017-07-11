@@ -8,59 +8,7 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 
-def temperature_gradient(temperature, temperature_height, hub_height):
-    r"""
-    Calculates the temperature at hub height using a linear temperature
-    gradient.
-
-    A linear temperature gradient of -6.5 K/km is assumed. This function is
-    carried out when the parameter `temperature_model` of an instance of
-    the :class:`~.modelchain.ModelChain` class is
-    'temperature_gradient'.
-
-    Parameters
-    ----------
-    temperature : pandas.Series or numpy.array
-        Air temperature in K.
-    temperature_height : float
-        Height in m for which the parameter `temperature` applies.
-    hub_height : float
-        Hub height of wind turbine in m.
-
-    Returns
-    -------
-    pandas.Series or numpy.array
-        Temperature at hub height in K.
-
-    Notes
-    -----
-
-    The following equation is used [1]_:
-
-    .. math:: T_{hub}=T_{air}-0.0065\cdot\left(h_{hub}-h_{T,data}\right)
-
-    with:
-        T: temperature [K], h: height [m]
-
-    :math:`h_{T,data}` is the height in which the temperature :math:`T_{air}`
-    is measured and :math:`T_{hub}` is the temperature at hub height
-    :math:`h_{hub}` of the wind turbine.
-
-    Assumptions:
-
-    * Temperature gradient of -6.5 K/km (-0.0065 K/m)
-
-    References
-    ----------
-    .. [1] ICAO-Standardatmosphäre (ISA).
-        http://www.dwd.de/DE/service/lexikon/begriffe/S/Standardatmosphaere_pdf.pdf?__blob=publicationFile&v=3
-
-    """
-    return temperature - 0.0065 * (hub_height - temperature_height)
-
-
-def rho_barometric(pressure, pressure_height, hub_height,
-                   temperature_hub_height):
+def barometric(pressure, pressure_height, hub_height, temperature_hub_height):
     r"""
     Calculates the density of air at hub height using the barometric height
     equation.
@@ -83,6 +31,7 @@ def rho_barometric(pressure, pressure_height, hub_height,
     -------
     pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
+        Returns a pd.Series if one of the input parameters is a pd.Series.
 
     Notes
     -----
@@ -117,8 +66,7 @@ def rho_barometric(pressure, pressure_height, hub_height,
             288.15 * 100 / (101330 * temperature_hub_height))
 
 
-def rho_ideal_gas(pressure, pressure_height, hub_height,
-                  temperature_hub_height):
+def ideal_gas(pressure, pressure_height, hub_height, temperature_hub_height):
     r"""
     Calculates the density of air at hub height using the ideal gas equation.
 
@@ -140,6 +88,7 @@ def rho_ideal_gas(pressure, pressure_height, hub_height,
     -------
     pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
+        Returns a pd.Series if one of the input parameters is a pd.Series.
 
     Notes
     -----
