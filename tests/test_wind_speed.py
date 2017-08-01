@@ -1,9 +1,10 @@
-from windpowerlib.wind_speed import logarithmic_profile, hellman
 import pandas as pd
-from pandas.util.testing import assert_series_equal
 import numpy as np
-from numpy.testing import assert_allclose
 import pytest
+from pandas.util.testing import assert_series_equal
+from numpy.testing import assert_allclose
+
+from windpowerlib.wind_speed import logarithmic_profile, hellman
 
 
 class TestWindSpeed:

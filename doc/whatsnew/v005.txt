@@ -1,4 +1,4 @@
-v0.0.5 ()
+v0.0.5 (April 10, 2017)
 +++++++++++++++++++++++++
 
 New features
@@ -21,14 +21,6 @@ Testing
 ####### 
 
  * tests for all modules were added
-
-Bug fixes
-#########
-
-
-Other changes
-#############
-
 
 Contributors
 ############

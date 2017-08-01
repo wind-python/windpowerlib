@@ -13,8 +13,8 @@ def barometric(pressure, pressure_height, hub_height, temperature_hub_height):
     Calculates the density of air at hub height using the barometric height
     equation.
 
-    This function is carried out when the parameter `rho_model` of an instance
-    of the :class:`~.modelchain.ModelChain` class is 'barometric'.
+    This function is carried out when the parameter `density_model` of an
+    instance of the :class:`~.modelchain.ModelChain` class is 'barometric'.
 
     Parameters
     ----------
@@ -31,7 +31,8 @@ def barometric(pressure, pressure_height, hub_height, temperature_hub_height):
     -------
     pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
-        Returns a pd.Series if one of the input parameters is a pd.Series.
+        Returns a pandas.Series if one of the input parameters is a
+        pandas.Series.
 
     Notes
     -----
@@ -70,8 +71,8 @@ def ideal_gas(pressure, pressure_height, hub_height, temperature_hub_height):
     r"""
     Calculates the density of air at hub height using the ideal gas equation.
 
-    This function is carried out when the parameter `rho_model` of an instance
-    of the :class:`~.modelchain.ModelChain` class is 'ideal_gas'.
+    This function is carried out when the parameter `density_model` of an
+    instance of the :class:`~.modelchain.ModelChain` class is 'ideal_gas'.
 
     Parameters
     ----------
@@ -88,7 +89,8 @@ def ideal_gas(pressure, pressure_height, hub_height, temperature_hub_height):
     -------
     pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
-        Returns a pd.Series if one of the input parameters is a pd.Series.
+        Returns a pandas.Series if one of the input parameters is a
+        pandas.Series.
 
     Notes
     -----
