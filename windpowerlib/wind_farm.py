@@ -14,16 +14,14 @@ import numpy as np
 class WindFarm(object):
     """
     
-    """
-    def __init__(self, wind_farm_name, wind_turbine_fleet, coordinates,
-                 power_curve=None, power_output=None):
+    def __init__(self, wind_farm_name, wind_turbine_fleet, coordinates):
 
         self.wind_farm_name = wind_farm_name
         self.wind_turbine_fleet = wind_turbine_fleet
         self.coordinates = coordinates
 
-        self.power_curve = power_curve
-        self.power_output = power_output
+        self.power_curve = None
+        self.power_output = None
 
 #    def wind_park_p_curve(self):
 #        p_curve = np.sum([self.wind_turbines[i].power_curve
