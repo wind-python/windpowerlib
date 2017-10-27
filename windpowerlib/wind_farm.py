@@ -41,6 +41,9 @@ class WindFarm(object):
         'values' columns with wind speeds in m/s and the corresponding power
         curve value in W.
     power_output : pandas.Series
+        The calculated power output of the wind farm.
+    annual_power_output : float
+        The calculated annual power output of the wind farm.
     """
     def __init__(self, wind_farm_name, wind_turbine_fleet, coordinates):
 
@@ -50,6 +53,7 @@ class WindFarm(object):
 
         self.power_curve = None
         self.power_output = None
+        self.annual_power_output = None
 
 #    def wind_park_p_curve(self):
 #        p_curve = np.sum([self.wind_turbines[i].power_curve
