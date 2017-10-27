@@ -41,8 +41,6 @@ class WindFarm(object):
         'values' columns with wind speeds in m/s and the corresponding power
         curve value in W.
     power_output : pandas.Series
-        The calculated power output of the wind turbine.
-
     """
     def __init__(self, wind_farm_name, wind_turbine_fleet, coordinates):
 
