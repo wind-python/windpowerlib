@@ -11,30 +11,6 @@ import numpy as np
 #from windpowerlib import wind_turbine
 
 
-def gaussian_distribution(function_variable, standard_deviation, median=0):
-    r"""
-    Normal distribution or gaussian distribution
-
-
-    Parameters
-    ----------
-    function_variable : 
-        Variable of the gaussian distribution.
-    standard_deviation : float
-        Standard deviation of the guassian distribution.
-    median : float
-        Defines the offset of the gaussian distribution function. Default: 0.
-        TODO: figure could be added for explanation
-
-    Returns
-    -------
-    
-
-    """
-    return (1 / (standard_deviation * np.sqrt(2 * np.pi)) *
-            np.exp(-0.5 * ((function_variable - median) / standard_deviation)**2))
-
-
 #def smooth_p_curve(p_values):
 #    r"""
 #
