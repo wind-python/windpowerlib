@@ -11,23 +11,6 @@ import numpy as np
 #from windpowerlib import wind_turbine
 
 
-#def smooth_p_curve(p_values):
-#    r"""
-#
-#
-#    Parameters
-#    ----------
-#    p_values : pandas.Series
-#        Power curve of the wind turbine.
-#        Indices are the wind speeds of the power curve in m/s.
-#
-#
-#    Returns
-#    -------
-#
-#
-#    """
-#    return
 
 
 #class WindPark(object):

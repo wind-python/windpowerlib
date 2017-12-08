@@ -9,6 +9,8 @@ __license__ = "GPLv3"
 
 import numpy as np
 import pandas as pd
+from windpowerlib import tools
+from matplotlib import pyplot as plt
 
 
 def power_coefficient_curve(wind_speed, power_coefficient_curve_wind_speeds,
@@ -241,3 +243,49 @@ def power_curve_density_correction(wind_speed, power_curve_wind_speeds,
     else:
         power_output = np.array(power_output)
     return power_output
+
+
+# TODO: 1. smooth curve? 2. density corr? 
+
+def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
+                       block_width=0.01, normalized_standard_deviation=0.15):
+    r"""
+    Calulates the the turbine power output using a smoothed power curve.
+
+    Parameters
+    ----------
+    p_values : pandas.Series
+        Power curve of the wind turbine.
+        Indices are the wind speeds of the power curve in m/s.
+
+
+    Returns
+    -------
+
+    Notes
+    -----
+
+    References
+    ----------
+    Knorr p. 106
+    """
+    
+    smoothed_power_curve_values = []
+    for power_curve_wind_speed in power_curve_wind_speeds:
+        # Create list of wind speeds for the moving block
+        wind_speeds_block = np.linspace(
+            power_curve_wind_speed - block_width, power_curve_wind_speed +
+            block_width, num=10)
+        smoothed_value = sum(
+            block_width * np.interp(wind_speed, power_curve_wind_speeds,
+                                    power_curve_values, left=0, right=0) *
+            tools.gaussian_distribution(
+                power_curve_wind_speed - wind_speed,
+                power_curve_wind_speed * normalized_standard_deviation, mean=0)
+            for wind_speed in wind_speeds_block)
+        smoothed_power_curve_values.append(smoothed_value)
+#    turbulence_intensity = 1 / (np.log(hub_height / roughness_length))
+#    standard_deviation = turbulence_intensity * wind_speed
+    return smoothed_power_curve_values
+
+
