@@ -73,19 +73,18 @@ def linear_interpolation_extrapolation(df, target_height):
             (target_height - heights_sorted[0]) + df[heights_sorted[0]])
 
 
-def gaussian_distribution(function_variable, standard_deviation, mean):
+def gaussian_distribution(function_variable, standard_deviation, mean=0):
     r"""
-    Normal distribution or gaussian distribution.
+    Normal distribution / gaussian distribution.
 
     Parameters
     ----------
-    function_variable : 
+    function_variable : pd.Series
         Variable of the gaussian distribution.
     standard_deviation : float
-        Standard deviation of the guassian distribution.
+        Standard deviation of the gaussian distribution.
     mean : float
-        Defines the offset of the gaussian distribution function.
-        TODO: figure could be added for explanation
+        Defines the offset of the gaussian distribution function. Default: 0.
 
     Returns
     -------
