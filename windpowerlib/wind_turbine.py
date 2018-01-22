@@ -234,6 +234,14 @@ def get_turbine_types(print_out=True, **kwargs):
     print_out : boolean
         Directly prints the list of types if set to True. Default: True.
 
+    Other Parameters
+    ----------------
+    datapath : string, optional
+        Path where the data file is stored. Default: './data'
+    filename : string, optional
+        Name of data file. Provided data files are 'power_curves.csv' and
+        'power_coefficient_curves.csv'. Default: 'power_curves.csv'.
+
     Examples
     --------
     >>> from windpowerlib import wind_turbine
