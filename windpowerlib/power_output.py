@@ -249,15 +249,19 @@ def power_curve_density_correction(wind_speed, power_curve_wind_speeds,
 # TODO: 1. smooth curve? 2. density corr? 
 
 def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
-                       block_width=0.01, normalized_standard_deviation=0.15):
+                       block_width=0.01, normalized_standard_deviation=0.15,
+                       mean_gauss=0):
     r"""
-    Calulates the the turbine power output using a smoothed power curve.
+    Smoothes the input power curve values by using a gaussian distribution.
 
     Parameters
     ----------
-    p_values : pandas.Series
-        Power curve of the wind turbine.
-        Indices are the wind speeds of the power curve in m/s.
+    power_curve_wind_speeds : pandas.Series
+        Wind speeds in m/s for which the power curve values are provided in
+        `power_curve_values`.
+    power_curve_values : pandas.Series or numpy.array
+        Power curve values corresponding to wind speeds in
+        `power_curve_wind_speeds`.
 
 
     Returns
@@ -270,23 +274,32 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     ----------
     Knorr p. 106
     """
-    
     smoothed_power_curve_values = []
+    # Steop of power curve wind speeds
+    step = power_curve_wind_speeds.iloc[-2] - power_curve_wind_speeds.iloc[-3]
+    # Append wind speeds to `power_curve_wind_speeds` until 40 m/s
+    while (power_curve_wind_speeds.values[-1] < 40.0):
+        power_curve_wind_speeds.append(
+            pd.Series(power_curve_wind_speeds.iloc[-1] + step,
+                      index=[power_curve_wind_speeds.index[-1] + 1]))
+        power_curve_values.append(pd.Series(0.0, index=[power_curve_values.index[-1] + 1]))
     for power_curve_wind_speed in power_curve_wind_speeds:
-        # Create list of wind speeds for the moving block
-        wind_speeds_block = np.linspace(
-            power_curve_wind_speed - block_width, power_curve_wind_speed +
-            block_width, num=10)
+        # Create array of wind speeds for the moving block
+        wind_speeds_block = (np.arange(-15.0, 15.0, block_width) +
+                             power_curve_wind_speed)
+        # Get the smoothed value of the power output
         smoothed_value = sum(
             block_width * np.interp(wind_speed, power_curve_wind_speeds,
                                     power_curve_values, left=0, right=0) *
             tools.gaussian_distribution(
                 power_curve_wind_speed - wind_speed,
-                power_curve_wind_speed * normalized_standard_deviation, mean=0)
+                power_curve_wind_speed * normalized_standard_deviation,
+                mean_gauss)
             for wind_speed in wind_speeds_block)
         smoothed_power_curve_values.append(smoothed_value)
+    # Create smoothed power curve
+    smoothed_power_curve = pd.Series(smoothed_power_curve_values,
+                                     index=power_curve_wind_speeds)
 #    turbulence_intensity = 1 / (np.log(hub_height / roughness_length))
 #    standard_deviation = turbulence_intensity * wind_speed
-    return smoothed_power_curve_values
-
-
+    return smoothed_power_curve
