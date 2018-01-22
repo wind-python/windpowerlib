@@ -262,30 +262,36 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     power_curve_values : pandas.Series or numpy.array
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
-
+    block_width : Float
+        Width of the moving block
 
     Returns
     -------
-
+    smoothed_power_curve_df : pd.DataFrame
+        Smoothed power curve DataFrame contains power curve values in W with
+                the corresponding wind speeds in m/s.
     Notes
     -----
+    The following equation is used [1]_:
 
     References
     ----------
-    Knorr p. 106
+    .. [1] Knorr p. 106
+    # TODO: add references
     """
     smoothed_power_curve_values = []
-    # Steop of power curve wind speeds
+    # Step of power curve wind speeds
     step = power_curve_wind_speeds.iloc[-2] - power_curve_wind_speeds.iloc[-3]
     # Append wind speeds to `power_curve_wind_speeds` until 40 m/s
     while (power_curve_wind_speeds.values[-1] < 40.0):
-        power_curve_wind_speeds.append(
+        power_curve_wind_speeds = power_curve_wind_speeds.append(
             pd.Series(power_curve_wind_speeds.iloc[-1] + step,
                       index=[power_curve_wind_speeds.index[-1] + 1]))
-        power_curve_values.append(pd.Series(0.0, index=[power_curve_values.index[-1] + 1]))
+        power_curve_values = power_curve_values.append(
+            pd.Series(0.0, index=[power_curve_values.index[-1] + 1]))
     for power_curve_wind_speed in power_curve_wind_speeds:
         # Create array of wind speeds for the moving block
-        wind_speeds_block = (np.arange(-15.0, 15.0, block_width) +
+        wind_speeds_block = (np.arange(-15.0, 15.0 + block_width, block_width) +
                              power_curve_wind_speed)
         # Get the smoothed value of the power output
         smoothed_value = sum(
@@ -298,8 +304,11 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
             for wind_speed in wind_speeds_block)
         smoothed_power_curve_values.append(smoothed_value)
     # Create smoothed power curve
-    smoothed_power_curve = pd.Series(smoothed_power_curve_values,
-                                     index=power_curve_wind_speeds)
+    # TODO: nan to 0
+    smoothed_power_curve_df = pd.DataFrame(
+        data=[list(power_curve_wind_speeds.values),
+              smoothed_power_curve_values]).transpose()
+    smoothed_power_curve_df.columns = ['wind_speed', 'values']
 #    turbulence_intensity = 1 / (np.log(hub_height / roughness_length))
 #    standard_deviation = turbulence_intensity * wind_speed
-    return smoothed_power_curve
+    return smoothed_power_curve_df
