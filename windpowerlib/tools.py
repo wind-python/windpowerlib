@@ -75,15 +75,15 @@ def linear_interpolation_extrapolation(df, target_height):
 
 def gaussian_distribution(function_variable, standard_deviation, mean=0):
     r"""
-    Normal distribution / gaussian distribution.
+    Normal distribution or gaussian distribution.
 
     Parameters
     ----------
-    function_variable : pd.Series
+    function_variable : Float
         Variable of the gaussian distribution.
-    standard_deviation : float
+    standard_deviation : Float
         Standard deviation of the gaussian distribution.
-    mean : float
+    mean : Float
         Defines the offset of the gaussian distribution function. Default: 0.
 
     Returns
