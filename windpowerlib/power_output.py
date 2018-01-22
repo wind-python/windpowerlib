@@ -302,9 +302,11 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                 power_curve_wind_speed * normalized_standard_deviation,
                 mean_gauss)
             for wind_speed in wind_speeds_block)
-        smoothed_power_curve_values.append(smoothed_value)
+        # Add value to list - add 0 if `smoothed_value` is nan. This occurs
+        # because the gaussian distribution is not defined for 0.
+        smoothed_power_curve_values.append(0 if np.isnan(smoothed_value)
+                                           else smoothed_value)
     # Create smoothed power curve
-    # TODO: nan to 0
     smoothed_power_curve_df = pd.DataFrame(
         data=[list(power_curve_wind_speeds.values),
               smoothed_power_curve_values]).transpose()
