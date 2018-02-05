@@ -35,7 +35,8 @@ class WindFarm(object):
         (contains wind turbine object) and 'number_of_turbines' (number of
         turbine type in wind farm) as keys.
     coordinates : List
-        List of coordinates [lat, lon] of location for loading data.
+        List of coordinates (floats) of location for loading data.
+        Example: [lat, lon]
     power_curve : pandas.DataFrame or None
         Power curve of the wind turbine. DataFrame has 'wind_speed' and
         'values' columns with wind speeds in m/s and the corresponding power

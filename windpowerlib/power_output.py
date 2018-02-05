@@ -268,8 +268,10 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     Returns
     -------
     smoothed_power_curve_df : pd.DataFrame
-        Smoothed power curve DataFrame contains power curve values in W with
-                the corresponding wind speeds in m/s.
+        Smoothed power curve. DataFrame has 'wind_speed' and
+        'values' columns with wind speeds in m/s and the corresponding power
+        curve value in W.
+
     Notes
     -----
     The following equation is used [1]_:
@@ -306,10 +308,11 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         # because the gaussian distribution is not defined for 0.
         smoothed_power_curve_values.append(0 if np.isnan(smoothed_value)
                                            else smoothed_value)
-    # Create smoothed power curve
+    # Create smoothed power curve DataFrame
     smoothed_power_curve_df = pd.DataFrame(
         data=[list(power_curve_wind_speeds.values),
               smoothed_power_curve_values]).transpose()
+    # Rename columns of DataFrame
     smoothed_power_curve_df.columns = ['wind_speed', 'values']
 #    turbulence_intensity = 1 / (np.log(hub_height / roughness_length))
 #    standard_deviation = turbulence_intensity * wind_speed
