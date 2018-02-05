@@ -263,10 +263,10 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         `power_curve_wind_speeds`.
     block_width : Float
         Width of the moving block. Default: 0.5.
-    standard_deviation_method : String, optional
+    standard_deviation_method : String
         Method for calculating the standard deviation for the gaussian
         distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
-        Default: 'Staffell'.
+        Default: 'turbulence_intensity'.
 
     Other Parameters
     ----------------
@@ -342,6 +342,4 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
               smoothed_power_curve_values]).transpose()
     # Rename columns of DataFrame
     smoothed_power_curve_df.columns = ['wind_speed', 'values']
-#    turbulence_intensity = 1 / (np.log(hub_height / roughness_length))
-#    standard_deviation = turbulence_intensity * wind_speed
     return smoothed_power_curve_df
