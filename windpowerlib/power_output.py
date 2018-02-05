@@ -246,11 +246,10 @@ def power_curve_density_correction(wind_speed, power_curve_wind_speeds,
     return power_output
 
 
-# TODO: 1. smooth curve? 2. density corr? 
-
 def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
-                       block_width=0.01, normalized_standard_deviation=0.15,
-                       mean_gauss=0):
+                       block_width=0.5,
+                       standard_deviation_method='turbulence_intensity',
+                       mean_gauss=0, **kwargs):
     r"""
     Smoothes the input power curve values by using a gaussian distribution.
 
@@ -263,7 +262,17 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
     block_width : Float
-        Width of the moving block
+        Width of the moving block. Default: 0.5.
+    standard_deviation_method : String, optional
+        Method for calculating the standard deviation for the gaussian
+        distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
+        Default: 'Staffell'.
+
+    Other Parameters
+    ----------------
+    turbulence intensity : Float, optional
+        Turbulence intensity at hub height of the wind turbine the power curve
+        is smoothed for.
 
     Returns
     -------
@@ -275,12 +284,26 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     Notes
     -----
     The following equation is used [1]_:
+        # TODO: add equations
 
     References
     ----------
     .. [1] Knorr p. 106
     # TODO: add references
     """
+    # Specify normalized standard deviation
+    if standard_deviation_method == 'turbulence_intensity':
+        if kwargs['turbulence_intensity']:
+            normalized_standard_deviation = kwargs['turbulence_intensity']
+        else:
+            raise ValueError("Turbulence intensity must be defined for " +
+                             "using 'turbulence_intensity' as " +
+                             "`standard_deviation_method`")
+    elif standard_deviation_method == 'Norgaard':
+        pass # TODO add
+    elif standard_deviation_method == 'Staffell':
+        normalized_standard_deviation = 0.2
+    # Initialize list for power curve values
     smoothed_power_curve_values = []
     # Step of power curve wind speeds
     step = power_curve_wind_speeds.iloc[-2] - power_curve_wind_speeds.iloc[-3]
@@ -293,16 +316,21 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
             pd.Series(0.0, index=[power_curve_values.index[-1] + 1]))
     for power_curve_wind_speed in power_curve_wind_speeds:
         # Create array of wind speeds for the moving block
-        wind_speeds_block = (np.arange(-15.0, 15.0 + block_width, block_width) +
-                             power_curve_wind_speed)
+        wind_speeds_block = (
+            np.arange(-15.0, 15.0 + block_width, block_width) +
+            power_curve_wind_speed)
+        # Get standard deviation for gaussian filter
+        standard_deviation = (
+            (power_curve_wind_speed * normalized_standard_deviation + 0.6)
+            if standard_deviation_method is 'Staffell'
+            else power_curve_wind_speed * normalized_standard_deviation)
         # Get the smoothed value of the power output
         smoothed_value = sum(
             block_width * np.interp(wind_speed, power_curve_wind_speeds,
                                     power_curve_values, left=0, right=0) *
             tools.gaussian_distribution(
                 power_curve_wind_speed - wind_speed,
-                power_curve_wind_speed * normalized_standard_deviation,
-                mean_gauss)
+                standard_deviation, mean_gauss)
             for wind_speed in wind_speeds_block)
         # Add value to list - add 0 if `smoothed_value` is nan. This occurs
         # because the gaussian distribution is not defined for 0.
