@@ -112,3 +112,12 @@ def gaussian_distribution(function_variable, standard_deviation, mean=0):
     return (1 / (standard_deviation * np.sqrt(2 * np.pi)) *
             np.exp(-(function_variable - mean)**2 /
                    (2 * standard_deviation**2)))
+
+
+def estimate_turbulence_intensity(height, roughness_length):
+    """
+    Calculate turbulence intensity.
+
+    """
+    # TODO: Search other possibilities for TI.
+    return 1 / (np.log(height / roughness_length))
