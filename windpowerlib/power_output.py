@@ -356,22 +356,33 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
         Dictionaries with the keys 'wind_turbine' (contains
         :class:`~.wind_turbine.WindTurbine` object) and 'number_of_turbines'
         (contains number of turbine type in 'wind_turbine' key).
+    smoothing : Boolean
+        If True the power curves will be smoothed before the summation.
+        Default: True.
+    density_correction : Boolean
+        If True a density correction will be applied to the power curves
+        before the summation. Default: False.
 
     Other Parameters
     ----------------
     block_width : Float, optional
-        Width of the moving block. Default: 0.5.
+        Width of the moving block.
     standard_deviation_method : String, optional
         Method for calculating the standard deviation for the gaussian
         distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
-        Default: 'turbulence_intensity'.
     turbulence intensity : Float, optional
         Turbulence intensity at hub height of the wind turbine the power curve
         is smoothed for.
     roughness_length : Float, optional
+        Roughness length.
 
     Returns
     -------
+    summarized_power_curve_df : pd.DataFrame
+        Summarized power curve. DataFrame has 'wind_speed' and
+        'values' columns with wind speeds in m/s and the corresponding power
+        curve value in W.
+
     TODO: add to docstring
     """
     df = pd.DataFrame()
