@@ -381,10 +381,15 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
             if ('standard_deviation_method' not in kwargs or
                     kwargs['standard_deviation_method'] ==
                     'turbulence_intensity'):
-                turbulence_intensity = tools.estimate_turbulence_intensity(
-                    turbine_type_dict['wind_turbine'].hub_height,
-                    kwargs['roughness_length']) # TODO Abfangen, falls inexistent?
-                kwargs['turbulence_intensity'] = turbulence_intensity # TODO: give possibility to enter TI
+                if 'roughness_length' in kwargs:
+                    turbulence_intensity = tools.estimate_turbulence_intensity(
+                        turbine_type_dict['wind_turbine'].hub_height,
+                        kwargs['roughness_length'])
+                    kwargs['turbulence_intensity'] = turbulence_intensity
+                else:
+                    raise ValueError("`roughness_length` must be defined " +
+                                     "for using 'turbulence_intensity' as " +
+                                     "`standard_deviation_method`")
             power_curve = smooth_power_curve(
                 turbine_type_dict['wind_turbine'].power_curve['wind_speed'],
                 turbine_type_dict['wind_turbine'].power_curve['values'],
