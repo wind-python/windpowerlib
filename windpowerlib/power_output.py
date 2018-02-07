@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 from windpowerlib import tools
 from matplotlib import pyplot as plt
+import os
 
 
 def power_coefficient_curve(wind_speed, power_coefficient_curve_wind_speeds,
@@ -342,6 +343,15 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
               smoothed_power_curve_values]).transpose()
     # Rename columns of DataFrame
     smoothed_power_curve_df.columns = ['wind_speed', 'values']
+#    # Plot power curves
+#    fig = plt.figure()
+#    plt.plot(power_curve_wind_speeds.values, power_curve_values.values)
+#    plt.plot(power_curve_wind_speeds.values, smoothed_power_curve_values)
+#    fig.savefig(os.path.abspath(os.path.join(
+#        os.path.dirname(__file__), '../Plots/power_curves',
+#        '{0}_{1}_{2}.png'.format(kwargs['turbine_name'],
+#                                 standard_deviation_method, block_width))))
+#    plt.close()
     return smoothed_power_curve_df
 
 
