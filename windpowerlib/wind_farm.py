@@ -52,11 +52,30 @@ class WindFarm(object):
         self.wind_turbine_fleet = wind_turbine_fleet
         self.coordinates = coordinates
 
+        self.average_hub_height = self.average_hub_height()
         self.power_curve = None
         self.power_output = None
         self.annual_energy_output = None
 
-#    def wind_park_p_curve(self):
-#        p_curve = np.sum([self.wind_turbines[i].power_curve
-#                          for i in range(len(self.wind_turbines))], axis=0)
-#        return p_curve
+    def average_hub_height(self):
+        """
+
+        Notes
+        -----
+        The following equation is used for the wind speed at site [1]_:
+        .. math:: h_{WP} = e^{\sum\limits_{k}{ln(h_{WEA,k})}
+                           \frac{P_{n,k}}{\sum\limits_{k}{P_{n,k}}}}
+
+        with:
+
+
+        References
+        ----------
+        .. [1]
+
+        """
+        return sum(np.log(wind_dict['wind_turbine'].hub_height ) *
+                   wind_dict['wind_turbine'].nominal_power /
+                   sum(wind_dict_2['wind_turbine'].nominal_power
+                       for wind_dict_2 in self.wind_turbine_fleet)
+                   for wind_dict in self.wind_turbine_fleet)
