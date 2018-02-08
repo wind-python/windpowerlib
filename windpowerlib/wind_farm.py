@@ -52,27 +52,37 @@ class WindFarm(object):
         self.wind_turbine_fleet = wind_turbine_fleet
         self.coordinates = coordinates
 
-        self.average_hub_height = None
-        # self.average_hub_height = self.average_hub_height()
+        # self.average_hub_height = None
+        self.average_hub_height = self.mean_hub_height()
         self.power_curve = None
         self.power_output = None
         self.annual_energy_output = None
 
-    def average_hub_height(self):
+    def mean_hub_height(self):
         """
+        Calculates the mean power weighted hub height of a wind farm.
+
+        Returns
+        -------
+        Float
+            Mean power weighted hub height.
 
         Notes
         -----
         The following equation is used for the wind speed at site [1]_:
-        .. math:: h_{WP} = e^{\sum\limits_{k}{ln(h_{WEA,k})}
-                           \frac{P_{n,k}}{\sum\limits_{k}{P_{n,k}}}}
+        .. math:: h_{WF} = e^{\sum\limits_{k}{ln(h_{WT,k})}
+                           \frac{P_{N,k}}{\sum\limits_{k}{P_{N,k}}}}
 
         with:
-
+            :math:`h_{WF}`: mean hub height of wind farm,
+            :math:`h_{WT,k}`: hub height of the k-th wind turbine of a wind
+            farm, :math:`P_{N,k}`: nominal power of the k-th wind turbine,
 
         References
         ----------
-        .. [1]
+        .. [1]  Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
+                 Windenergieeinspeisung für wetterdatenbasierte
+                 Windleistungssimulationen". Universität Kassel, Diss., 2016
 
         """
         total_nominal_power = sum(
