@@ -357,7 +357,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
 def summarized_power_curve(wind_turbine_fleet, smoothing=True,
                            density_correction=False, **kwargs):
-    """
+    r"""
     TODO: add to docstring
 
     Parameters
@@ -380,7 +380,7 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     standard_deviation_method : String, optional
         Method for calculating the standard deviation for the gaussian
         distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
-    turbulence intensity : Float, optional
+    turbulence_intensity : Float, optional
         Turbulence intensity at hub height of the wind turbine the power curve
         is smoothed for.
     roughness_length : Float, optional

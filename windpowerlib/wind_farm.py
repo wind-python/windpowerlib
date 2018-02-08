@@ -59,7 +59,7 @@ class WindFarm(object):
         self.annual_energy_output = None
 
     def mean_hub_height(self):
-        """
+        r"""
         Calculates the mean power weighted hub height of a wind farm.
 
         Returns
