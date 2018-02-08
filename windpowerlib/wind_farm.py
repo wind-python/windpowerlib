@@ -52,8 +52,8 @@ class WindFarm(object):
         self.wind_turbine_fleet = wind_turbine_fleet
         self.coordinates = coordinates
 
-        # self.average_hub_height = None
-        self.average_hub_height = self.mean_hub_height()
+        self.average_hub_height = None
+        # self.average_hub_height = self.mean_hub_height()
         self.power_curve = None
         self.power_output = None
         self.annual_energy_output = None
