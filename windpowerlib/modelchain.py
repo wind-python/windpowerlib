@@ -88,7 +88,7 @@ class ModelChain(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'turbine_name': 'ENERCON E 126 7500'}
+    ...    'object_name': 'ENERCON E 126 7500'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> modelchain_data = {'density_model': 'ideal_gas'}
     >>> e126_mc = modelchain.ModelChain(e126, **modelchain_data)
@@ -328,7 +328,7 @@ class ModelChain(object):
         if self.power_output_model == 'power_curve':
             if self.wind_turbine.power_curve is None:
                 raise TypeError("Power curve values of " +
-                                self.wind_turbine.turbine_name +
+                                self.wind_turbine.object_name +
                                 " are missing.")
             logging.debug('Calculating power output using power curve.')
             return (power_output.power_curve(
@@ -339,7 +339,7 @@ class ModelChain(object):
         elif self.power_output_model == 'power_coefficient_curve':
             if self.wind_turbine.power_coefficient_curve is None:
                 raise TypeError("Power coefficient curve values of " +
-                                self.wind_turbine.turbine_name +
+                                self.wind_turbine.object_name +
                                 " are missing.")
             logging.debug('Calculating power output using power coefficient '
                           'curve.')

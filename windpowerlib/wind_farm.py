@@ -46,9 +46,9 @@ class WindFarm(object):
     annual_energy_output : float
         The calculated annual energy output of the wind farm.
     """
-    def __init__(self, wind_farm_name, wind_turbine_fleet, coordinates):
+    def __init__(self, object_name, wind_turbine_fleet, coordinates):
 
-        self.wind_farm_name = wind_farm_name
+        self.object_name = object_name
         self.wind_turbine_fleet = wind_turbine_fleet
         self.coordinates = coordinates
 

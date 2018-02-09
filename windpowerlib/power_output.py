@@ -349,7 +349,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 #    plt.plot(power_curve_wind_speeds.values, smoothed_power_curve_values)
 #    fig.savefig(os.path.abspath(os.path.join(
 #        os.path.dirname(__file__), '../Plots/power_curves',
-#        '{0}_{1}_{2}.png'.format(kwargs['turbine_name'],
+#        '{0}_{1}_{2}.png'.format(kwargs['object_name'],
 #                                 standard_deviation_method, block_width))))
 #    plt.close()
     return smoothed_power_curve_df
@@ -420,7 +420,7 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
             pass  # TODO: add
         # Add sum of power curves to DataFrame df
         power_curve.columns = ['wind_speed',
-                               turbine_type_dict['wind_turbine'].turbine_name]
+                               turbine_type_dict['wind_turbine'].object_name]
         df = pd.concat([df, pd.DataFrame(power_curve.set_index(
             ['wind_speed']) * turbine_type_dict['number_of_turbines'])],
                        axis=1)

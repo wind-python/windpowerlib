@@ -21,7 +21,7 @@ class WindTurbine(object):
 
     Parameters
     ----------
-    turbine_name : string
+    object_name : string
         Name of the wind turbine type.
         Use get_turbine_types() to see a list of all wind turbines for which
         power (coefficient) curve data is provided.
@@ -46,7 +46,7 @@ class WindTurbine(object):
 
     Attributes
     ----------
-    turbine_name : string
+    object_name : string
         Name of the wind turbine type.
         Use get_turbine_types() to see a list of all wind turbines for which
         power (coefficient) curve data is provided.
@@ -77,18 +77,18 @@ class WindTurbine(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'turbine_name': 'ENERCON E 126 7500'}
+    ...    'object_name': 'ENERCON E 126 7500'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> print(e126.nominal_power)
     7500000
 
     """
 
-    def __init__(self, turbine_name, hub_height, rotor_diameter=None,
+    def __init__(self, object_name, hub_height, rotor_diameter=None,
                  power_coefficient_curve=None, power_curve=None,
                  nominal_power=None, fetch_curve='power_curve'):
 
-        self.turbine_name = turbine_name
+        self.object_name = object_name
         self.hub_height = hub_height
         self.rotor_diameter = rotor_diameter
         self.power_coefficient_curve = power_coefficient_curve
@@ -123,7 +123,7 @@ class WindTurbine(object):
         >>> enerconE126 = {
         ...    'hub_height': 135,
         ...    'rotor_diameter': 127,
-        ...    'turbine_name': 'ENERCON E 126 7500',
+        ...    'object_name': 'ENERCON E 126 7500',
         ...    'fetch_curve': 'power_coefficient_curve'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
         >>> print(e126.power_coefficient_curve['values'][5])
@@ -151,14 +151,14 @@ class WindTurbine(object):
 
             """
             df = read_turbine_data(filename=filename)
-            wpp_df = df[df.turbine_id == self.turbine_name]
+            wpp_df = df[df.turbine_id == self.object_name]
             # if turbine not in data file
             if wpp_df.shape[0] == 0:
                 pd.set_option('display.max_rows', len(df))
                 logging.info('Possible types: \n{0}'.format(df.turbine_id))
                 pd.reset_option('display.max_rows')
                 sys.exit('Cannot find the wind converter type: {0}'.format(
-                    self.turbine_name))
+                    self.object_name))
             # if turbine in data file write power (coefficient) curve values
             # to 'data' array
             ncols = ['turbine_id', 'p_nom', 'source', 'modificationtimestamp']
