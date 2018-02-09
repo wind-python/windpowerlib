@@ -356,7 +356,8 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
 
 def summarized_power_curve(wind_turbine_fleet, smoothing=True,
-                           density_correction=False, **kwargs):
+                           density_correction=False, wake_losses=False,
+                           **kwargs):
     r"""
     TODO: add to docstring
 
@@ -372,19 +373,26 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     density_correction : Boolean
         If True a density correction will be applied to the power curves
         before the summation. Default: False.
+    wake_losses : Boolean
+        If True wake losses within the farm are taken into consideration.
+        Default: False.
 
     Other Parameters
     ----------------
     block_width : Float, optional
         Width of the moving block.
+        Default in :py:func:`~.smooth_power_curve`: 0.5.
     standard_deviation_method : String, optional
         Method for calculating the standard deviation for the gaussian
         distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
+        Default in :py:func:`~.smooth_power_curve`:  'turbulence_intensity'.
     turbulence_intensity : Float, optional
         Turbulence intensity at hub height of the wind turbine the power curve
-        is smoothed for.
+        is smoothed for. If this parameter is not given the turbulence
+        intensity is calculated via the `roughness_length`.
     roughness_length : Float, optional
-        Roughness length.
+        Roughness length. Only needed if `turbulence_intensity` is not given
+        and `standard_deviation_method` is 'turbulence_intensity' or not given.
 
     Returns
     -------
@@ -393,7 +401,6 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
         'values' columns with wind speeds in m/s and the corresponding power
         curve value in W.
 
-    TODO: add to docstring
     """
     df = pd.DataFrame()
     for turbine_type_dict in wind_turbine_fleet:
@@ -403,15 +410,17 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
             if ('standard_deviation_method' not in kwargs or
                     kwargs['standard_deviation_method'] ==
                     'turbulence_intensity'):
-                if 'roughness_length' in kwargs:
-                    turbulence_intensity = tools.estimate_turbulence_intensity(
-                        turbine_type_dict['wind_turbine'].hub_height,
-                        kwargs['roughness_length'])
-                    kwargs['turbulence_intensity'] = turbulence_intensity
-                else:
-                    raise ValueError("`roughness_length` must be defined " +
-                                     "for using 'turbulence_intensity' as " +
-                                     "`standard_deviation_method`")
+                if 'turbulence_intensity' not in kwargs:
+                    if 'roughness_length' in kwargs:
+                        turbulence_intensity = tools.estimate_turbulence_intensity(
+                            turbine_type_dict['wind_turbine'].hub_height,
+                            kwargs['roughness_length'])
+                        kwargs['turbulence_intensity'] = turbulence_intensity
+                    else:
+                        raise ValueError("`roughness_length` must be " +
+                                         "defined for using " +
+                                         "'turbulence_intensity' as " +
+                                         "`standard_deviation_method`")
             power_curve = smooth_power_curve(
                 turbine_type_dict['wind_turbine'].power_curve['wind_speed'],
                 turbine_type_dict['wind_turbine'].power_curve['values'],
