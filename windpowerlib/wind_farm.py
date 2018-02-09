@@ -61,10 +61,11 @@ class WindFarm(object):
         r"""
         Calculates the mean power weighted hub height of a wind farm.
 
+        Assigns the hub height to the wind farm object.
+
         Returns
         -------
-        Float
-            Mean power weighted hub height.
+        self
 
         Notes
         -----
@@ -88,8 +89,10 @@ class WindFarm(object):
             wind_dict_2['wind_turbine'].nominal_power *
             wind_dict_2['number_of_turbines']
             for wind_dict_2 in self.wind_turbine_fleet)
-        return np.exp(sum(np.log(wind_dict['wind_turbine'].hub_height) *
-                          wind_dict['wind_turbine'].nominal_power *
-                          wind_dict['number_of_turbines']
-                          for wind_dict in self.wind_turbine_fleet) /
-                      total_nominal_power)
+        self.hub_height = np.exp(
+            sum(np.log(wind_dict['wind_turbine'].hub_height) *
+                wind_dict['wind_turbine'].nominal_power *
+                wind_dict['number_of_turbines']
+                for wind_dict in self.wind_turbine_fleet) /
+            total_nominal_power)
+        return self
