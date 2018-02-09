@@ -82,7 +82,8 @@ class WindFarm(object):
         ----------
         .. [1]  Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
                  Windenergieeinspeisung für wetterdatenbasierte
-                 Windleistungssimulationen". Universität Kassel, Diss., 2016
+                 Windleistungssimulationen". Universität Kassel, Diss., 2016,
+                 p. 35
 
         """
         total_nominal_power = sum(

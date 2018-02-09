@@ -289,7 +289,11 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
     References
     ----------
-    .. [1] Knorr p. 106
+    .. [1]  Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
+             Windenergieeinspeisung für wetterdatenbasierte
+             Windleistungssimulationen". Universität Kassel, Diss., 2016,
+             p. 106
+
     # TODO: add references
     """
     # Specify normalized standard deviation
