@@ -360,7 +360,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
 
 def summarized_power_curve(wind_turbine_fleet, smoothing=True,
-                           density_correction=False, wake_losses=False,
+                           density_correction=False, wake_losses_method=None,
                            **kwargs):
     r"""
     TODO: add to docstring
@@ -377,9 +377,9 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     density_correction : Boolean
         If True a density correction will be applied to the power curves
         before the summation. Default: False.
-    wake_losses : Boolean
-        If True wake losses within the farm are taken into consideration.
-        Default: False.
+    wake_losses_method : String
+        Defines the method for talking wake losses within the farm into
+        consideration. Default: None.
 
     Other Parameters
     ----------------
@@ -397,6 +397,8 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     roughness_length : Float, optional
         Roughness length. Only needed if `turbulence_intensity` is not given
         and `standard_deviation_method` is 'turbulence_intensity' or not given.
+    wind_farm_efficiency : Float or DataFrame
+        # TODO: add
 
     Returns
     -------
@@ -444,6 +446,25 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     # Sum up power curves of all turbine types
     summarized_power_curve = sum(df[item].interpolate(method='index')
                                  for item in list(df))
+    # Take wake losses into consideration if `wake_losses_method` not None
+    if wake_losses_method is None:
+        pass
+    elif wake_losses_method == 'constant_efficiency':
+        try:
+            kwargs['wind_farm_efficiency']
+        except Exception:
+            raise ValueError("'wind_farm_efficiency' must be in kwargs when " +
+                             "`wake_losses_method´ is '{0}'".format(
+                                 wake_losses_method))
+        summarized_power_curve = (summarized_power_curve *
+                                 kwargs['wind_farm_efficiency'])
+    elif wake_losses_method == 'wind_efficiency_curve':
+        pass
+    else:
+        raise ValueError(
+            "`wake_losses_method` is {0} but should be None, ".format(
+                wake_losses_method) +
+            "'constant_efficiency' or 'wind_efficiency_curve'")
     # Create DataFrame
     summarized_power_curve_df = pd.DataFrame(
         data=[list(summarized_power_curve.index),

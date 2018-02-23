@@ -25,6 +25,8 @@ class WindFarm(object):
         turbine type in wind farm) as keys.
     coordinates : List
         List of coordinates [lat, lon] of location for loading data.
+    efficiency : Float or DataFrame
+        Efficiency of the wind farm. TODO: add if DataFrame contains...
 
     Attributes
     ----------
@@ -46,11 +48,13 @@ class WindFarm(object):
     annual_energy_output : float
         The calculated annual energy output of the wind farm.
     """
-    def __init__(self, object_name, wind_turbine_fleet, coordinates):
+    def __init__(self, object_name, wind_turbine_fleet, coordinates,
+                 efficiency=None):
 
         self.object_name = object_name
         self.wind_turbine_fleet = wind_turbine_fleet
         self.coordinates = coordinates
+        self.efficiency = efficiency
 
         self.hub_height = None
         self.power_curve = None

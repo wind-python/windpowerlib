@@ -24,9 +24,9 @@ class WindFarmModelChain(object):
     density_correction : Boolean
         If True a density correction will be applied to the power curves
         before the summation. Default: False.
-    wake_losses : Boolean
-        If True wake losses within the farm are taken into consideration.
-        Default: False.
+    wake_losses_method : String
+        Defines the method for talking wake losses within the farm into
+        consideration. Default: 'constant_efficiency'.
     smoothing : Boolean
         If True the power curves will be smoothed before the summation.
         Default: True.
@@ -38,24 +38,32 @@ class WindFarmModelChain(object):
         distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
         Default in :py:func:`~.power_output.smooth_power_curve`:
         'turbulence_intensity'.
+    wind_farm_efficiency : ...
+        Default: None.
 
     Attributes
     ----------
-
+    # TODO: Add
     """
     def __init__(self, wind_farm, cluster=False, density_correction=False,
-                 wake_losses=False, smoothing=True, block_width=0.5,
-                 standard_deviation_method='turbulence_intensity'):
+                 wake_losses_method='constant_efficiency', smoothing=True,
+                 block_width=0.5,
+                 standard_deviation_method='turbulence_intensity',
+                 wind_farm_efficiency=None):
 
         self.wind_farm = wind_farm
         self.cluster = cluster
         self.density_correction = density_correction
-        self.wake_losses = wake_losses
+        self.wake_losses_method = wake_losses_method
         self.smoothing = smoothing
         self.block_width = block_width
         self.standard_deviation_method = standard_deviation_method
+        self.wind_farm_efficiency = wind_farm_efficiency
 
         self.power_output = None
+
+# TODO: if a wind turbine of wind farm does not have power curve but cp curve:
+    # calculate power curve from cp curve
 
     def wind_farm_power_curve(self, **kwargs):
         r"""
@@ -83,11 +91,14 @@ class WindFarmModelChain(object):
                 kwargs['weather_df']['roughness_length']).mean()[0]
         except Exception:
             pass # TODO other solution
+        if self.wind_farm_efficiency is not None:
+            kwargs['wind_farm_efficiency'] = self.wind_farm_efficiency
         # Calculate power curve
         self.wind_farm.power_curve = power_output.summarized_power_curve(
             self.wind_farm.wind_turbine_fleet, smoothing=self.smoothing,
             density_correction=self.density_correction,
-            wake_losses=self.wake_losses, block_width=self.block_width,
+            wake_losses_method=self.wake_losses_method,
+            block_width=self.block_width,
             standard_deviation_method=self.standard_deviation_method, **kwargs)
         return self
 
