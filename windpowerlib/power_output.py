@@ -397,7 +397,7 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     roughness_length : Float, optional
         Roughness length. Only needed if `turbulence_intensity` is not given
         and `standard_deviation_method` is 'turbulence_intensity' or not given.
-    wind_farm_efficiency : Float or DataFrame
+    wind_farm_efficiency : Float or DataFrame or Dictionary
         # TODO: add
 
     Returns
@@ -413,7 +413,8 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     for turbine_type_dict in wind_turbine_fleet:
         if not smoothing and not density_correction:
             # Power curve is not altered
-            power_curve = pd.DataFrame(turbine_type_dict['wind_turbine'].power_curve)
+            power_curve = pd.DataFrame(
+                turbine_type_dict['wind_turbine'].power_curve)
         if smoothing:
             if ('standard_deviation_method' not in kwargs or
                     kwargs['standard_deviation_method'] ==
