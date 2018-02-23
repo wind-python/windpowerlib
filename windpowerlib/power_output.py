@@ -454,6 +454,9 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     elif wake_losses_method == 'constant_efficiency':
         try:
             kwargs['wind_farm_efficiency']
+            if not isinstance(kwargs['wind_farm_efficiency'], float):
+                raise TypeError("'wind_farm_efficiency' must be float" +
+                                "`wake_losses_method´ is '{0}'")
         except Exception:
             raise ValueError("'wind_farm_efficiency' must be in kwargs when " +
                              "`wake_losses_method´ is '{0}'".format(
