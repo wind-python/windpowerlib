@@ -71,6 +71,7 @@ class WindFarmModelChain(object):
         self
 
         """
+        # Create kwargs
         try:
             kwargs['turbulence_intensity'] = (
                 kwargs['weather_df']['turbulence_intensity'][
@@ -82,6 +83,7 @@ class WindFarmModelChain(object):
                 kwargs['weather_df']['roughness_length']).mean()[0]
         except Exception:
             pass # TODO other solution
+        # Calculate power curve
         self.wind_farm.power_curve = power_output.summarized_power_curve(
             self.wind_farm.wind_turbine_fleet, smoothing=self.smoothing,
             density_correction=self.density_correction,

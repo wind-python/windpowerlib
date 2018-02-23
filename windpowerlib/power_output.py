@@ -406,9 +406,11 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
         curve value in W.
 
     """
+    # Initialize data frame for power curve values
     df = pd.DataFrame()
     for turbine_type_dict in wind_turbine_fleet:
         if not smoothing and not density_correction:
+            # Power curve is not altered
             power_curve = turbine_type_dict['wind_turbine'].power_curve
         if smoothing:
             if ('standard_deviation_method' not in kwargs or
@@ -425,22 +427,24 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
                                          "defined for using " +
                                          "'turbulence_intensity' as " +
                                          "`standard_deviation_method`")
+            # Get smoothed power curve
             power_curve = smooth_power_curve(
                 turbine_type_dict['wind_turbine'].power_curve['wind_speed'],
                 turbine_type_dict['wind_turbine'].power_curve['values'],
                 **kwargs)
         if density_correction:
             pass  # TODO: add
-        # Add sum of power curves to DataFrame df
+        # Add power curves of all turbines of same type to data frame after
+        # renaming columns
         power_curve.columns = ['wind_speed',
                                turbine_type_dict['wind_turbine'].object_name]
         df = pd.concat([df, pd.DataFrame(power_curve.set_index(
             ['wind_speed']) * turbine_type_dict['number_of_turbines'])],
                        axis=1)
-    # Sum up all power curves
+    # Sum up power curves of all turbine types
     summarized_power_curve = sum(df[item].interpolate(method='index')
                                  for item in list(df))
-    # Create summarized power curve DataFrame
+    # Create DataFrame
     summarized_power_curve_df = pd.DataFrame(
         data=[list(summarized_power_curve.index),
               list(summarized_power_curve.values)]).transpose()
