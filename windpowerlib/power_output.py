@@ -279,7 +279,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     -------
     smoothed_power_curve_df : pd.DataFrame
         Smoothed power curve. DataFrame has 'wind_speed' and
-        'values' columns with wind speeds in m/s and the corresponding power
+        'power' columns with wind speeds in m/s and the corresponding power
         curve value in W.
 
     Notes
@@ -346,7 +346,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         data=[list(power_curve_wind_speeds.values),
               smoothed_power_curve_values]).transpose()
     # Rename columns of DataFrame
-    smoothed_power_curve_df.columns = ['wind_speed', 'values']
+    smoothed_power_curve_df.columns = ['wind_speed', 'power']
 #    # Plot power curves
 #    fig = plt.figure()
 #    plt.plot(power_curve_wind_speeds.values, power_curve_values.values)
@@ -380,13 +380,12 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         data=[list(power_curve_wind_speeds),
               list(power_curve_values)]).transpose()
     # Rename columns of DataFrame
-    power_curve_df.columns = ['wind_speed', 'values']
+    power_curve_df.columns = ['wind_speed', 'power']
     if wake_losses_method == 'constant_efficiency':
         if not isinstance(wind_farm_efficiency, float):
             raise TypeError("'wind_farm_efficiency' must be float if " +
                             "`wake_losses_method´ is '{0}'")
-        power_curve_df['values'] = (power_curve_values *
-                                    wind_farm_efficiency)
+        power_curve_df['power'] = power_curve_values * wind_farm_efficiency
     elif wake_losses_method == 'wind_efficiency_curve':
         if (not isinstance(wind_farm_efficiency, dict) and
                 not isinstance(wind_farm_efficiency, pd.DataFrame)):
@@ -397,12 +396,12 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
                         wind_farm_efficiency.set_index('wind_speed')], axis=1)
         # Add by efficiency reduced power column (nan values of efficiency
         # are interpolated)
-        df['reduced_power'] = df['values'] * df['efficiency'].interpolate(
+        df['reduced_power'] = df['power'] * df['efficiency'].interpolate(
             method='index')
         reduced_power = df['reduced_power'].dropna()
         power_curve_df = pd.DataFrame([reduced_power.index,
                                        reduced_power.values]).transpose()
-        power_curve_df.columns = ['wind_speed', 'values']
+        power_curve_df.columns = ['wind_speed', 'power']
     else:
         raise ValueError(
             "`wake_losses_method` is {0} but should be None, ".format(
@@ -456,7 +455,7 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     -------
     summarized_power_curve_df : pd.DataFrame
         Summarized power curve. DataFrame has 'wind_speed' and
-        'values' columns with wind speeds in m/s and the corresponding power
+        'power' columns with wind speeds in m/s and the corresponding power
         curve value in W.
 
     """
@@ -485,7 +484,7 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
                             "`standard_deviation_method`")
             # Get smoothed power curve
             power_curve = smooth_power_curve(power_curve['wind_speed'],
-                                             power_curve['values'], **kwargs)
+                                             power_curve['power'], **kwargs)
         if density_correction:
             pass  # TODO: add
         # Add power curves of all turbines of same type to data frame after
@@ -496,11 +495,11 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
             power_curve.set_index(['wind_speed']) *
             turbine_type_dict['number_of_turbines'])], axis=1)
         # Rename back TODO: copy()
-        power_curve.columns = ['wind_speed', 'values']
+        power_curve.columns = ['wind_speed', 'power']
     # Sum up power curves of all turbine types
     summarized_power_curve = pd.DataFrame(
         sum(df[item].interpolate(method='index') for item in list(df)))
-    summarized_power_curve.columns = ['values']
+    summarized_power_curve.columns = ['power']
     # Take wake losses into consideration if `wake_losses_method` not None
     if wake_losses_method is None:
         pass
@@ -514,7 +513,7 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
                                wake_losses_method))
         summarized_power_curve_df = wake_losses_to_power_curve(
             summarized_power_curve.index,
-            summarized_power_curve['values'].values,
+            summarized_power_curve['power'].values,
             wake_losses_method=wake_losses_method,
             wind_farm_efficiency=kwargs['wind_farm_efficiency'])
     else:

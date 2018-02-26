@@ -334,7 +334,7 @@ class ModelChain(object):
             return (power_output.power_curve(
                         wind_speed_hub,
                         self.wind_turbine.power_curve['wind_speed'],
-                        self.wind_turbine.power_curve['values'],
+                        self.wind_turbine.power_curve['power'],
                         density_hub, self.density_correction))
         elif self.power_output_model == 'power_coefficient_curve':
             if self.wind_turbine.power_coefficient_curve is None:
@@ -347,7 +347,8 @@ class ModelChain(object):
                         wind_speed_hub,
                         self.wind_turbine.power_coefficient_curve[
                             'wind_speed'],
-                        self.wind_turbine.power_coefficient_curve['values'],
+                        self.wind_turbine.power_coefficient_curve[
+                            'power coefficient'],
                         self.wind_turbine.rotor_diameter, density_hub,
                         self.density_correction))
         else:

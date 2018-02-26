@@ -31,11 +31,11 @@ class WindTurbine(object):
         Diameter of the rotor in m.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
         Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'values' columns/keys with wind speeds in m/s
-        and the corresponding power coefficients. Default: None.
+        have 'wind_speed' and 'power coefficient' columns/keys with wind
+        speeds in m/s and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
         Power curve of the wind turbine. DataFrame/dictionary must have
-        'wind_speed' and 'values' columns/keys with wind speeds in m/s and the
+        'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
         The nominal output of the wind turbine in W.
@@ -56,11 +56,11 @@ class WindTurbine(object):
         Diameter of the rotor in m.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
         Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'values' columns/keys with wind speeds in m/s
-        and the corresponding power coefficients. Default: None.
+        have 'wind_speed' and 'power coefficient' columns/keys with wind speeds
+        in m/s and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
         Power curve of the wind turbine. DataFrame/dictionary must have
-        'wind_speed' and 'values' columns/keys with wind speeds in m/s and the
+        'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
         The nominal output of the wind turbine in W.
@@ -126,7 +126,7 @@ class WindTurbine(object):
         ...    'object_name': 'ENERCON E 126 7500',
         ...    'fetch_curve': 'power_coefficient_curve'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.power_coefficient_curve['values'][5])
+        >>> print(e126.power_coefficient_curve['power coefficient'][5])
         0.423
         >>> print(e126.nominal_power)
         7500000
@@ -170,7 +170,11 @@ class WindTurbine(object):
                         data = np.vstack((data, np.array(
                             [float(col), float(wpp_df[col])])))
             data = np.delete(data, 0, 0)
-            df = pd.DataFrame(data, columns=['wind_speed', 'values'])
+            if self.fetch_curve == 'power_curve':
+                df = pd.DataFrame(data, columns=['wind_speed', 'power'])
+            if self.fetch_curve == 'power_coefficient_curve':
+                df = pd.DataFrame(data, columns=['wind_speed',
+                                                 'power coefficient'])
             nominal_power = wpp_df['p_nom'].iloc[0]
             return df, nominal_power
         if self.fetch_curve == 'power_curve':

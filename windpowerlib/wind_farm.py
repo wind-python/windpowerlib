@@ -41,7 +41,7 @@ class WindFarm(object):
         Example: [lat, lon]
     power_curve : pandas.DataFrame or None
         Power curve of the wind turbine. DataFrame has 'wind_speed' and
-        'values' columns with wind speeds in m/s and the corresponding power
+        'power' columns with wind speeds in m/s and the corresponding power
         curve value in W.
     power_output : pandas.Series
         The calculated power output of the wind farm.
