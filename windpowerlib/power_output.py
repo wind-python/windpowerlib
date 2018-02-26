@@ -502,7 +502,12 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     summarized_power_curve.columns = ['power']
     # Take wake losses into consideration if `wake_losses_method` not None
     if wake_losses_method is None:
-        pass
+        # Create DataFrame of the above power curve data
+        summarized_power_curve_df = pd.DataFrame(
+            data=[list(summarized_power_curve.index),
+                  list(summarized_power_curve['power'].values)]).transpose()
+        # Rename columns of DataFrame
+        summarized_power_curve_df.columns = ['wind_speed', 'power']
     elif (wake_losses_method == 'constant_efficiency' or
           wake_losses_method == 'wind_efficiency_curve'):
         try:
@@ -516,11 +521,4 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
             summarized_power_curve['power'].values,
             wake_losses_method=wake_losses_method,
             wind_farm_efficiency=kwargs['wind_farm_efficiency'])
-    else:
-        # Create DataFrame
-        summarized_power_curve_df = pd.DataFrame(
-            data=[list(summarized_power_curve.index),
-                  list(summarized_power_curve['values'].values)]).transpose()
-        # Rename columns of DataFrame
-        summarized_power_curve_df.columns = ['wind_speed', 'values']
     return summarized_power_curve_df
