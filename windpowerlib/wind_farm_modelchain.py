@@ -17,10 +17,10 @@ class WindFarmModelChain(object):
 
     Parameters
     ----------
-    wind_farm :
-        TODO: add to docstring
+    wind_farm : WindFarm
+        A :class:`~.wind_farm.WindFarm` object representing the wind farm.
     cluster : Boolean
-
+        TODO: add
     density_correction : Boolean
         If True a density correction will be applied to the power curves
         before the summation. Default: False.
@@ -38,12 +38,45 @@ class WindFarmModelChain(object):
         distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
         Default in :py:func:`~.power_output.smooth_power_curve`:
         'turbulence_intensity'.
-    wind_farm_efficiency : ...
-        Default: None.
+    wind_farm_efficiency : Float or pd.DataFrame or Dictionary
+        Efficiency of the wind farm. Either constant (float) or wind efficiency
+        curve (pd.DataFrame or Dictionary) contianing 'wind_speed' and
+        'efficiency' columns/keys with wind speeds in m/s and the
+        corresponding dimensionless wind farm efficiency. Default: None.
 
     Attributes
     ----------
-    # TODO: Add
+    Parameters
+    ----------
+    wind_farm : WindFarm
+        A :class:`~.wind_farm.WindFarm` object representing the wind farm.
+    cluster : Boolean
+        TODO: add
+    density_correction : Boolean
+        If True a density correction will be applied to the power curves
+        before the summation. Default: False.
+    wake_losses_method : String
+        Defines the method for talking wake losses within the farm into
+        consideration. Default: 'constant_efficiency'.
+    smoothing : Boolean
+        If True the power curves will be smoothed before the summation.
+        Default: True.
+    block_width : Float, optional
+        Width of the moving block.
+        Default in :py:func:`~.power_output.smooth_power_curve`: 0.5.
+    standard_deviation_method : String, optional
+        Method for calculating the standard deviation for the gaussian
+        distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
+        Default in :py:func:`~.power_output.smooth_power_curve`:
+        'turbulence_intensity'.
+    wind_farm_efficiency : Float or pd.DataFrame or Dictionary
+        Efficiency of the wind farm. Either constant (float) or wind efficiency
+        curve (pd.DataFrame or Dictionary) contianing 'wind_speed' and
+        'efficiency' columns/keys with wind speeds in m/s and the
+        corresponding dimensionless wind farm efficiency. Default: None.
+    power_output : pandas.Series
+        Electrical power output of the wind turbine in W.
+
     """
     def __init__(self, wind_farm, cluster=False, density_correction=False,
                  wake_losses_method='constant_efficiency', smoothing=True,
@@ -71,8 +104,15 @@ class WindFarmModelChain(object):
 
         Other Parameters
         ----------------
-        weather_df : pd.DataFrame
-            TODO: add to docstring
+        weather_df : pd.DataFrame or Dictionary, optional
+            DataFrame with time series for temperature `temperature` in K.
+            The columns of the DataFrame are a MultiIndex where the first level
+            contains the variable name (e.g. temperature) and the second level
+            contains the height at which it applies (e.g. 10, if it was
+            measured at a height of 10 m). See documentation of
+            :func:`ModelChain.run_model` for an example on how to create the
+            weather_df DataFrame.
+
 
         Returns
         -------
@@ -83,7 +123,7 @@ class WindFarmModelChain(object):
         try:
             kwargs['turbulence_intensity'] = (
                 kwargs['weather_df']['turbulence_intensity'][
-                    self.wind_farm.hub_height])
+                    self.wind_farm.hub_height]) # TODO check - and mean()
         except Exception:
             pass # TODO other solution (weather[] is..)
         try:

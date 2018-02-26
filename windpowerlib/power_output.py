@@ -367,12 +367,30 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
 
     Parameters
     ----------
-    wake_losses_method :
-
-    wind_farm_efficiency :
+    power_curve_wind_speeds : pandas.Series
+        Wind speeds in m/s for which the power curve values are provided in
+        `power_curve_values`.
+    power_curve_values : pandas.Series or numpy.array
+        Power curve values corresponding to wind speeds in
+        `power_curve_wind_speeds`.
+    wake_losses_method : String
+        Defines the method for talking wake losses within the farm into
+        consideration. Default: 'constant_efficiency'.
+    wind_farm_efficiency : Float or pd.DataFrame or Dictionary
+        Efficiency of the wind farm. Either constant (float) or wind efficiency
+        curve (pd.DataFrame or Dictionary) contianing 'wind_speed' and
+        'efficiency' columns/keys with wind speeds in m/s and the
+        corresponding dimensionless wind farm efficiency. Default: None.
 
     Returns
     -------
+    power_curve_df : pd.DataFrame
+        With wind farm efficiency reduced power curve. DataFrame power curve
+        values in W with the corresponding wind speeds in m/s.
+
+    Notes
+    -----
+    TODO add
 
     """
     # Create power curve DataFrame
@@ -414,7 +432,11 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
                            density_correction=False, wake_losses_method=None,
                            **kwargs):
     r"""
-    TODO: add to docstring
+    Creates a summarized power curve for a wind turbine fleet.
+
+    Power curve is created by summing up all power curves. Depending on the
+    input paramters the power cuvers are smoothed before the summation and/or
+    a wind farm efficiency is applied after the summation.
 
     Parameters
     ----------
@@ -448,8 +470,11 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     roughness_length : Float, optional
         Roughness length. Only needed if `turbulence_intensity` is not given
         and `standard_deviation_method` is 'turbulence_intensity' or not given.
-    wind_farm_efficiency : Float or DataFrame or Dictionary
-        # TODO: add
+    wind_farm_efficiency : Float or pd.DataFrame or Dictionary, optional
+        Efficiency of the wind farm. Either constant (float) or wind efficiency
+        curve (pd.DataFrame or Dictionary) contianing 'wind_speed' and
+        'efficiency' columns/keys with wind speeds in m/s and the
+        corresponding dimensionless wind farm efficiency.
 
     Returns
     -------
