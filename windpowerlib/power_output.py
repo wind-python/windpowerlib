@@ -463,10 +463,9 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
     # Initialize data frame for power curve values
     df = pd.DataFrame()
     for turbine_type_dict in wind_turbine_fleet:
-        if not smoothing and not density_correction:
-            # Power curve is not altered
-            power_curve = pd.DataFrame(
-                turbine_type_dict['wind_turbine'].power_curve)
+        # Start power curve
+        power_curve = pd.DataFrame(
+            turbine_type_dict['wind_turbine'].power_curve)
         if smoothing:
             if ('standard_deviation_method' not in kwargs or
                     kwargs['standard_deviation_method'] ==
@@ -485,48 +484,44 @@ def summarized_power_curve(wind_turbine_fleet, smoothing=True,
                             "'turbulence_intensity' as " +
                             "`standard_deviation_method`")
             # Get smoothed power curve
-            power_curve = smooth_power_curve(
-                turbine_type_dict['wind_turbine'].power_curve['wind_speed'],
-                turbine_type_dict['wind_turbine'].power_curve['values'],
-                **kwargs)
+            power_curve = smooth_power_curve(power_curve['wind_speed'],
+                                             power_curve['values'], **kwargs)
         if density_correction:
             pass  # TODO: add
         # Add power curves of all turbines of same type to data frame after
         # renaming columns
         power_curve.columns = ['wind_speed',
                                turbine_type_dict['wind_turbine'].object_name]
-        df = pd.concat([df, pd.DataFrame(power_curve.set_index(
-            ['wind_speed']) * turbine_type_dict['number_of_turbines'])],
-                       axis=1)
+        df = pd.concat([df, pd.DataFrame(
+            power_curve.set_index(['wind_speed']) *
+            turbine_type_dict['number_of_turbines'])], axis=1)
+        # Rename back TODO: copy()
+        power_curve.columns = ['wind_speed', 'values']
     # Sum up power curves of all turbine types
-    summarized_power_curve = sum(df[item].interpolate(method='index')
-                                 for item in list(df))
+    summarized_power_curve = pd.DataFrame(
+        sum(df[item].interpolate(method='index') for item in list(df)))
+    summarized_power_curve.columns = ['values']
     # Take wake losses into consideration if `wake_losses_method` not None
     if wake_losses_method is None:
         pass
-    elif wake_losses_method == 'constant_efficiency':
+    elif (wake_losses_method == 'constant_efficiency' or
+          wake_losses_method == 'wind_efficiency_curve'):
         try:
             kwargs['wind_farm_efficiency']
-            if not isinstance(kwargs['wind_farm_efficiency'], float):
-                raise TypeError("'wind_farm_efficiency' must be float" +
-                                "`wake_losses_method´ is '{0}'")
-        except Exception:
-            raise ValueError("'wind_farm_efficiency' must be in kwargs when " +
-                             "`wake_losses_method´ is '{0}'".format(
-                                 wake_losses_method))
-        summarized_power_curve = (summarized_power_curve *
-                                 kwargs['wind_farm_efficiency'])
-    elif wake_losses_method == 'wind_efficiency_curve':
-        pass
+        except KeyError:
+            raise KeyError("'wind_farm_efficiency' must be in kwargs when " +
+                           "`wake_losses_method´ is '{0}'".format(
+                               wake_losses_method))
+        summarized_power_curve_df = wake_losses_to_power_curve(
+            summarized_power_curve.index,
+            summarized_power_curve['values'].values,
+            wake_losses_method=wake_losses_method,
+            wind_farm_efficiency=kwargs['wind_farm_efficiency'])
     else:
-        raise ValueError(
-            "`wake_losses_method` is {0} but should be None, ".format(
-                wake_losses_method) +
-            "'constant_efficiency' or 'wind_efficiency_curve'")
-    # Create DataFrame
-    summarized_power_curve_df = pd.DataFrame(
-        data=[list(summarized_power_curve.index),
-              list(summarized_power_curve.values)]).transpose()
-    # Rename columns of DataFrame
-    summarized_power_curve_df.columns = ['wind_speed', 'values']
+        # Create DataFrame
+        summarized_power_curve_df = pd.DataFrame(
+            data=[list(summarized_power_curve.index),
+                  list(summarized_power_curve['values'].values)]).transpose()
+        # Rename columns of DataFrame
+        summarized_power_curve_df.columns = ['wind_speed', 'values']
     return summarized_power_curve_df
