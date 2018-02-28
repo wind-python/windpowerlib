@@ -19,11 +19,11 @@ class WindFarm(object):
     ----------
     wind_farm_name : string
         Name of the wind farm.
-    wind_turbine_fleet : List of Dictionaries
+    wind_turbine_fleet : list of dictionaries
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
         (contains wind turbine object) and 'number_of_turbines' (number of
         turbine type in wind farm) as keys.
-    coordinates : List
+    coordinates : list
         List of coordinates [lat, lon] of location for loading data.
     efficiency : Float or DataFrame
         Efficiency of the wind farm. TODO: add if DataFrame contains...
@@ -32,11 +32,11 @@ class WindFarm(object):
     ----------
     wind_farm_name : string
         Name of the wind farm.
-    wind_turbine_fleet : List of Dictionaries
+    wind_turbine_fleet : list of dictionaries
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
         (contains wind turbine object) and 'number_of_turbines' (number of
         turbine type in wind farm) as keys.
-    coordinates : List
+    coordinates : list
         List of coordinates (floats) of location for loading data.
         Example: [lat, lon]
     power_curve : pandas.DataFrame or None

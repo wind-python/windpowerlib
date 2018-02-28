@@ -129,15 +129,10 @@ class WindFarmModelChain(object):
 
         Other Parameters
         ----------------
-        weather_df : pd.DataFrame or Dictionary, optional
-            DataFrame with time series for temperature `temperature` in K.
-            The columns of the DataFrame are a MultiIndex where the first level
-            contains the variable name (e.g. temperature) and the second level
-            contains the height at which it applies (e.g. 10, if it was
-            measured at a height of 10 m). See documentation of
-            :func:`ModelChain.run_model` for an example on how to create the
-            weather_df DataFrame.
-
+        roughness_length : Float, optional.
+            Roughness length.
+        turbulence_intensity : Float, optional.
+            Turbulence intensity.
 
         Returns
         -------
