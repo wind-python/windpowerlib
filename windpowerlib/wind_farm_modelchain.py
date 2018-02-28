@@ -141,12 +141,9 @@ class WindFarmModelChain(object):
         """
         # Create kwargs
         if 'turbulence_intensity' in kwargs:
-            kwargs['turbulence_intensity'] = (
-                kwargs['weather_df']['turbulence_intensity'][
-                    self.wind_farm.hub_height].mean())
+            kwargs['turbulence_intensity'] = kwargs['turbulence_intensity']
         if 'roughness_length' in kwargs:
-            kwargs['roughness_length'] = (
-                kwargs['weather_df']['roughness_length']).mean()[0]
+            kwargs['roughness_length'] = kwargs['roughness_length']
         if self.wind_farm_efficiency is not None:
             kwargs['wind_farm_efficiency'] = self.wind_farm_efficiency
         # Calculate power curve
@@ -158,32 +155,32 @@ class WindFarmModelChain(object):
             standard_deviation_method=self.standard_deviation_method, **kwargs)
         return self
 
-    def get_modelchain_data(self):
+    def get_modelchain_data(self, **kwargs):
         modelchain_data = {}
-        if 'wind_speed_model' in self.kwargs:
-            modelchain_data['wind_speed_model'] = self.kwargs[
+        if 'wind_speed_model' in kwargs:
+            modelchain_data['wind_speed_model'] = kwargs[
                 'wind_speed_model']
-        if 'temperature_model' in self.kwargs:
-            modelchain_data['temperature_model'] = self.kwargs[
+        if 'temperature_model' in kwargs:
+            modelchain_data['temperature_model'] = kwargs[
                 'temperature_model']
-        if 'density_model' in self.kwargs:
-            modelchain_data['density_model'] = self.kwargs[
+        if 'density_model' in kwargs:
+            modelchain_data['density_model'] = kwargs[
                 'density_model']
-        if 'power_output_model' in self.kwargs:
-            modelchain_data['power_output_model'] = self.kwargs[
+        if 'power_output_model' in kwargs:
+            modelchain_data['power_output_model'] = kwargs[
                 'power_output_model']
-        if 'density_correction' in self.kwargs:
-            modelchain_data['density_correction'] = self.kwargs[
+        if 'density_correction' in kwargs:
+            modelchain_data['density_correction'] = kwargs[
                 'density_correction']
-        if 'obstacle_height' in self.kwargs:
-            modelchain_data['obstacle_height'] = self.kwargs[
+        if 'obstacle_height' in kwargs:
+            modelchain_data['obstacle_height'] = kwargs[
                 'obstacle_height']
-        if 'hellman_exp' in self.kwargs:
-            modelchain_data['hellman_exp'] = self.kwargs[
+        if 'hellman_exp' in kwargs:
+            modelchain_data['hellman_exp'] = kwargs[
                 'hellman_exp']
         return modelchain_data
 
-    def run_model(self, weather_df):
+    def run_model(self, weather_df, **kwargs):
         r"""
         Runs the model.
 
@@ -200,6 +197,13 @@ class WindFarmModelChain(object):
             contains the height at which it applies (e.g. 10, if it was
             measured at a height of 10 m). See below for an example on how to
             create the weather_df DataFrame.
+
+        Other Parameters
+        ----------------
+        roughness_length : Float, optional.
+            Roughness length.
+        turbulence_intensity : Float, optional.
+            Turbulence intensity.
 
         Returns
         -------
@@ -228,9 +232,9 @@ class WindFarmModelChain(object):
         # Assign mean hub height of wind farm
         self.wind_farm.mean_hub_height()
         # Assign wind farm power curve to wind farm
-        self.wind_farm_power_curve(weather_df=weather_df)
+        self.wind_farm_power_curve(weather_df=weather_df, **kwargs)
         # Get modelchain parameters
-        modelchain_data = self.get_modelchain_data()
+        modelchain_data = self.get_modelchain_data(**kwargs)
         # Run modelchain
         mc = modelchain.ModelChain(
             self.wind_farm, **modelchain_data).run_model(weather_df)
