@@ -1,7 +1,6 @@
 """
 The ``wind_farm_modelchain`` module contains functions and classes of the
-windpowerlib. This module makes it easy to get started with the windpowerlib
-and demonstrates standard ways to use the library. TODO: adapt
+windpowerlib. TODO: adapt
 
 """
 
@@ -73,8 +72,6 @@ class WindFarmModelChain(object):
         constant.
 
     Attributes
-    ----------
-    Parameters
     ----------
     wind_farm : WindFarm
         A :class:`~.wind_farm.WindFarm` object representing the wind farm.
