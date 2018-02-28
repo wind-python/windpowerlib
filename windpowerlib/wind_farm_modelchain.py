@@ -44,6 +44,34 @@ class WindFarmModelChain(object):
         'efficiency' columns/keys with wind speeds in m/s and the
         corresponding dimensionless wind farm efficiency. Default: None.
 
+    Other Parameters
+    ----------------
+    wind_speed_model : string
+        Parameter to define which model to use to calculate the wind speed at
+        hub height. Valid options are 'logarithmic', 'hellman' and
+        'interpolation_extrapolation'.
+    temperature_model : string
+        Parameter to define which model to use to calculate the temperature of
+        air at hub height. Valid options are 'linear_gradient' and
+        'interpolation_extrapolation'.
+    density_model : string
+        Parameter to define which model to use to calculate the density of air
+        at hub height. Valid options are 'barometric', 'ideal_gas' and
+        'interpolation_extrapolation'.
+    power_output_model : string
+        Parameter to define which model to use to calculate the turbine power
+        output. Valid options are 'power_curve' and 'power_coefficient_curve'.
+    density_correction : boolean
+        If the parameter is True the density corrected power curve is used for
+        the calculation of the turbine power output.
+    obstacle_height : float
+        Height of obstacles in the surrounding area of the wind turbine in m.
+        Set `obstacle_height` to zero for wide spread obstacles.
+    hellman_exp : float
+        The Hellman exponent, which combines the increase in wind speed due to
+        stability of atmospheric conditions and surface roughness into one
+        constant.
+
     Attributes
     ----------
     Parameters
@@ -82,7 +110,7 @@ class WindFarmModelChain(object):
                  wake_losses_method='constant_efficiency', smoothing=True,
                  block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
-                 wind_farm_efficiency=None):
+                 wind_farm_efficiency=None, **kwargs):
 
         self.wind_farm = wind_farm
         self.cluster = cluster
@@ -142,6 +170,31 @@ class WindFarmModelChain(object):
             standard_deviation_method=self.standard_deviation_method, **kwargs)
         return self
 
+    def get_modelchain_data(self):
+        modelchain_data = {}
+        if 'wind_speed_model' in self.kwargs:
+            modelchain_data['wind_speed_model'] = self.kwargs[
+                'wind_speed_model']
+        if 'temperature_model' in self.kwargs:
+            modelchain_data['temperature_model'] = self.kwargs[
+                'temperature_model']
+        if 'density_model' in self.kwargs:
+            modelchain_data['density_model'] = self.kwargs[
+                'density_model']
+        if 'power_output_model' in self.kwargs:
+            modelchain_data['power_output_model'] = self.kwargs[
+                'power_output_model']
+        if 'density_correction' in self.kwargs:
+            modelchain_data['density_correction'] = self.kwargs[
+                'density_correction']
+        if 'obstacle_height' in self.kwargs:
+            modelchain_data['obstacle_height'] = self.kwargs[
+                'obstacle_height']
+        if 'hellman_exp' in self.kwargs:
+            modelchain_data['hellman_exp'] = self.kwargs[
+                'hellman_exp']
+        return modelchain_data
+
     def run_model(self, weather_df):
         r"""
         Runs the model.
@@ -188,7 +241,10 @@ class WindFarmModelChain(object):
         self.wind_farm.mean_hub_height()
         # Assign wind farm power curve to wind farm
         self.wind_farm_power_curve(weather_df=weather_df)
+        # Get modelchain parameters
+        modelchain_data = self.get_modelchain_data()
         # Run modelchain
-        mc = modelchain.ModelChain(self.wind_farm).run_model(weather_df)
+        mc = modelchain.ModelChain(
+            self.wind_farm, **modelchain_data).run_model(weather_df)
         self.power_output = mc.power_output
         return self
