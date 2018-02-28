@@ -148,17 +148,13 @@ class WindFarmModelChain(object):
 
         """
         # Create kwargs
-        try:
+        if 'turbulence_intensity' in kwargs:
             kwargs['turbulence_intensity'] = (
                 kwargs['weather_df']['turbulence_intensity'][
-                    self.wind_farm.hub_height]) # TODO check - and mean()
-        except Exception:
-            pass # TODO other solution (weather[] is..)
-        try:
+                    self.wind_farm.hub_height].mean())
+        if 'roughness_length' in kwargs:
             kwargs['roughness_length'] = (
                 kwargs['weather_df']['roughness_length']).mean()[0]
-        except Exception:
-            pass # TODO other solution
         if self.wind_farm_efficiency is not None:
             kwargs['wind_farm_efficiency'] = self.wind_farm_efficiency
         # Calculate power curve
