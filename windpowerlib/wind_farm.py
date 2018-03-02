@@ -17,37 +17,45 @@ class WindFarm(object):
 
     Parameters
     ----------
-    wind_farm_name : string
+    object_name : string
         Name of the wind farm.
     wind_turbine_fleet : list of dictionaries
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
         (contains wind turbine object) and 'number_of_turbines' (number of
         turbine type in wind farm) as keys.
-    coordinates : list
+    coordinates : list or None
         List of coordinates [lat, lon] of location for loading data.
         Default: None.
-    efficiency : Float or DataFrame
-        Efficiency of the wind farm. TODO: add if DataFrame contains...
+    efficiency : Float or pd.DataFrame or Dictionary
+        Efficiency of the wind farm. Either constant (float) or wind efficiency
+        curve (pd.DataFrame or Dictionary) containing 'wind_speed' and
+        'efficiency' columns/keys with wind speeds in m/s and the
+        corresponding dimensionless wind farm efficiency. Default: None.
 
     Attributes
     ----------
-    wind_farm_name : string
+    object_name : string
         Name of the wind farm.
     wind_turbine_fleet : list of dictionaries
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
         (contains wind turbine object) and 'number_of_turbines' (number of
         turbine type in wind farm) as keys.
-    coordinates : list
-        List of coordinates (floats) of location for loading data.
-        Example: [lat, lon]
+    coordinates : list or None
+        List of coordinates [lat, lon] of location for loading data.
+        Default: None.
+    efficiency : Float or pd.DataFrame or Dictionary
+        Efficiency of the wind farm. Either constant (float) or wind efficiency
+        curve (pd.DataFrame or Dictionary) containing 'wind_speed' and
+        'efficiency' columns/keys with wind speeds in m/s and the
+        corresponding dimensionless wind farm efficiency. Default: None.
+    hub_height : float
+        The calculated average hub height of the wind farm.
+    installed_power : float
+        Installed power of the wind farm.
     power_curve : pandas.DataFrame or None
-        Power curve of the wind turbine. DataFrame has 'wind_speed' and
-        'power' columns with wind speeds in m/s and the corresponding power
-        curve value in W.
+        The calculated power curve of the wind turbine.
     power_output : pandas.Series
         The calculated power output of the wind farm.
-    annual_energy_output : float
-        The calculated annual energy output of the wind farm.
     """
     def __init__(self, object_name, wind_turbine_fleet, coordinates=None,
                  efficiency=None):
