@@ -21,7 +21,7 @@ class WindTurbine(object):
 
     Parameters
     ----------
-    turbine_name : string
+    object_name : string
         Name of the wind turbine type.
         Use get_turbine_types() to see a list of all wind turbines for which
         power (coefficient) curve data is provided.
@@ -31,11 +31,11 @@ class WindTurbine(object):
         Diameter of the rotor in m.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
         Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'values' columns/keys with wind speeds in m/s
-        and the corresponding power coefficients. Default: None.
+        have 'wind_speed' and 'power coefficient' columns/keys with wind
+        speeds in m/s and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
         Power curve of the wind turbine. DataFrame/dictionary must have
-        'wind_speed' and 'values' columns/keys with wind speeds in m/s and the
+        'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
         The nominal output of the wind turbine in W.
@@ -46,7 +46,7 @@ class WindTurbine(object):
 
     Attributes
     ----------
-    turbine_name : string
+    object_name : string
         Name of the wind turbine type.
         Use get_turbine_types() to see a list of all wind turbines for which
         power (coefficient) curve data is provided.
@@ -56,11 +56,11 @@ class WindTurbine(object):
         Diameter of the rotor in m.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
         Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'values' columns/keys with wind speeds in m/s
-        and the corresponding power coefficients. Default: None.
+        have 'wind_speed' and 'power coefficient' columns/keys with wind speeds
+        in m/s and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
         Power curve of the wind turbine. DataFrame/dictionary must have
-        'wind_speed' and 'values' columns/keys with wind speeds in m/s and the
+        'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
         The nominal output of the wind turbine in W.
@@ -77,18 +77,18 @@ class WindTurbine(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'turbine_name': 'ENERCON E 126 7500'}
+    ...    'object_name': 'ENERCON E 126 7500'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> print(e126.nominal_power)
     7500000
 
     """
 
-    def __init__(self, turbine_name, hub_height, rotor_diameter=None,
+    def __init__(self, object_name, hub_height, rotor_diameter=None,
                  power_coefficient_curve=None, power_curve=None,
                  nominal_power=None, fetch_curve='power_curve'):
 
-        self.turbine_name = turbine_name
+        self.object_name = object_name
         self.hub_height = hub_height
         self.rotor_diameter = rotor_diameter
         self.power_coefficient_curve = power_coefficient_curve
@@ -123,10 +123,10 @@ class WindTurbine(object):
         >>> enerconE126 = {
         ...    'hub_height': 135,
         ...    'rotor_diameter': 127,
-        ...    'turbine_name': 'ENERCON E 126 7500',
+        ...    'object_name': 'ENERCON E 126 7500',
         ...    'fetch_curve': 'power_coefficient_curve'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.power_coefficient_curve['values'][5])
+        >>> print(e126.power_coefficient_curve['power coefficient'][5])
         0.423
         >>> print(e126.nominal_power)
         7500000
@@ -151,14 +151,14 @@ class WindTurbine(object):
 
             """
             df = read_turbine_data(filename=filename)
-            wpp_df = df[df.turbine_id == self.turbine_name]
+            wpp_df = df[df.turbine_id == self.object_name]
             # if turbine not in data file
             if wpp_df.shape[0] == 0:
                 pd.set_option('display.max_rows', len(df))
                 logging.info('Possible types: \n{0}'.format(df.turbine_id))
                 pd.reset_option('display.max_rows')
                 sys.exit('Cannot find the wind converter type: {0}'.format(
-                    self.turbine_name))
+                    self.object_name))
             # if turbine in data file write power (coefficient) curve values
             # to 'data' array
             ncols = ['turbine_id', 'p_nom', 'source', 'modificationtimestamp']
@@ -170,7 +170,11 @@ class WindTurbine(object):
                         data = np.vstack((data, np.array(
                             [float(col), float(wpp_df[col])])))
             data = np.delete(data, 0, 0)
-            df = pd.DataFrame(data, columns=['wind_speed', 'values'])
+            if self.fetch_curve == 'power_curve':
+                df = pd.DataFrame(data, columns=['wind_speed', 'power'])
+            if self.fetch_curve == 'power_coefficient_curve':
+                df = pd.DataFrame(data, columns=['wind_speed',
+                                                 'power coefficient'])
             nominal_power = wpp_df['p_nom'].iloc[0]
             return df, nominal_power
         if self.fetch_curve == 'power_curve':
@@ -233,6 +237,14 @@ def get_turbine_types(print_out=True, **kwargs):
     ----------
     print_out : boolean
         Directly prints the list of types if set to True. Default: True.
+
+    Other Parameters
+    ----------------
+    datapath : string, optional
+        Path where the data file is stored. Default: './data'
+    filename : string, optional
+        Name of data file. Provided data files are 'power_curves.csv' and
+        'power_coefficient_curves.csv'. Default: 'power_curves.csv'.
 
     Examples
     --------

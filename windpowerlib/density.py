@@ -94,11 +94,11 @@ def ideal_gas(pressure, pressure_height, hub_height, temperature_hub_height):
 
     Notes
     -----
-    The following equations are used [1]_, [2]_:
+    The following equations are used [1]_, [2]_, [3]_:
 
     .. math:: \rho_{hub}=p_{hub}/ (R_s T_{hub})
 
-    and [3]_:
+    and [4]_:
 
     .. math:: p_{hub}=\left(p/100-\left(h_{hub}-h_{p,data}\right)\cdot
               \frac{1}{8}\right)\cdot 100
@@ -119,7 +119,10 @@ def ideal_gas(pressure, pressure_height, hub_height, temperature_hub_height):
             Variable Scale Simulation Model for Windpower based on the
             Georeferenced Installation Register of Germany". Master's Thesis
             at RLI, 2014, p. 57
-    .. [3] Deutscher Wetterdienst:
+    .. [3] Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
+            Windenergieeinspeisung für wetterdatenbasierte
+            Windleistungssimulationen". Universität Kassel, Diss., 2016, p. 97
+    .. [4] Deutscher Wetterdienst:
             http://www.dwd.de/DE/service/lexikon/begriffe/D/Druckgradient_pdf.pdf?__blob=publicationFile&v=4
 
     """
