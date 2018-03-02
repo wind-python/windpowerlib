@@ -58,9 +58,9 @@ class WindFarm(object):
         self.efficiency = efficiency
 
         self.hub_height = None
+        self.installed_power = None
         self.power_curve = None
         self.power_output = None
-        self.annual_energy_output = None
 
     def mean_hub_height(self):
         r"""
