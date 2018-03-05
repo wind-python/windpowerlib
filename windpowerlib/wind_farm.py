@@ -152,6 +152,10 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
         Wind efficiency curve. Contains 'wind_speed' and 'efficiency' columns
         with wind speed in m/s and wind farm efficiency (dimensionless).
 
+    Notes
+    -----
+    TODO: Add references
+
     """
     path = os.path.join(os.path.dirname(__file__), 'data',
                        'wind_efficiency_curves.csv')
@@ -176,3 +180,41 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
         plt.show()
     return efficiency_curve
 
+
+def display_wind_efficiency_curves():
+    r"""
+    Plots or prints all efficiency curves available in the windpowerlib.
+
+    Notes
+    -----
+    TODO: Add references
+
+    """
+    path = os.path.join(os.path.dirname(__file__), 'data',
+                        'wind_efficiency_curves.csv')
+    wind_efficiency_curves = pd.read_csv(path)
+    curves_df = pd.DataFrame()
+    for curve_name in [col.replace('y_', '') for
+                       col in list(wind_efficiency_curves) if 'x_' not in col]:
+        efficiency_curve = read_wind_efficiency_curve(
+            curve_name).rename(
+            columns={'efficiency': curve_name.replace('_', ' '),
+                     'wind_speed': 'wind speed m/s'}).set_index(
+                'wind speed m/s')
+        curves_df = pd.concat([curves_df, efficiency_curve], axis=1)
+    knorr_df = curves_df[[column_name for column_name in curves_df if
+                          'knorr' in column_name]]
+    dena_df = curves_df[[column_name for column_name in curves_df if
+                         'dena' in column_name]]
+    if plt:
+        fig, ax = plt.subplots()
+        dena_df.plot(ax=ax, legend=True, marker='x', markersize=3)
+        knorr_df.plot(ax=ax, legend=True, marker='o', markersize=3)
+        plt.show()
+        # fig.savefig('wind_eff_curves.pdf')
+    else:
+        print(dena_df)
+        print(knorr_df)
+    
+if __name__ == "__main__":
+    display_wind_efficiency_curves()
