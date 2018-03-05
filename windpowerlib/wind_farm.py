@@ -9,7 +9,13 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 import numpy as np
+import pandas as pd
+import os
 
+try:
+    from matplotlib import pyplot as plt
+except ImportError:
+    plt = None
 
 class WindFarm(object):
     r"""
@@ -124,3 +130,49 @@ class WindFarm(object):
         """
         # TODO: add (for clusters)
         return self
+
+
+def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
+    r"""
+    Reads the in `curve_name` specified wind efficiency curve.
+
+    Parameters
+    ----------
+    curve_name : String
+        Specifies the curve.
+        Possibilities: 'dena_mean', 'knorr_mean', 'dena_extrem1',
+        'dena_extreme2, 'knorr_extreme1', 'knorr_extreme2', 'knorr_extreme3'.
+        Default: 'dena_mean'.
+    plot : Boolean
+        If True the wind efficiency curve is plotted. Default: False.
+
+    Returns
+    -------
+    efficiency_curve : pd.DataFrame
+        Wind efficiency curve. Contains 'wind_speed' and 'efficiency' columns
+        with wind speed in m/s and wind farm efficiency (dimensionless).
+
+    """
+    path = os.path.join(os.path.dirname(__file__), 'data',
+                       'wind_efficiency_curves.csv')
+    wind_efficiency_curves = pd.read_csv(path)
+    wind_speed = pd.Series(np.arange(0, 25.5, 0.5))
+    if 'dena' in curve_name:
+        x_values = wind_efficiency_curves['x_dena']
+    if 'knorr' in curve_name:
+        x_values = wind_efficiency_curves['x_knorr']
+    efficiency = np.interp(wind_speed, x_values,
+                           wind_efficiency_curves['y_{}'.format(curve_name)])
+    efficiency_curve = pd.DataFrame(data=[wind_speed.values,
+                                          efficiency],).transpose()
+    efficiency_curve.columns = ['wind_speed', 'efficiency']
+    if plot:
+        efficiency_curve.rename(columns={'wind_speed': 'wind speed m/s'},
+                                inplace=True)
+        efficiency_curve.set_index('wind speed m/s').plot(
+            legend=False, title="Wind efficiency curve '{}'".format(
+                curve_name))
+        plt.ylabel('efficiency')
+        plt.show()
+    return efficiency_curve
+
