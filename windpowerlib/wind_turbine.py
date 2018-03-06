@@ -40,9 +40,9 @@ class WindTurbine(object):
     nominal_power : None or float
         The nominal output of the wind turbine in W.
     fetch_curve : string
-        Parameter to specify whether the power or power coefficient curve
+        Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
-        'power_curve' and 'power_coefficient_curve'. Default: 'power_curve'.
+        'power_curve' and 'power_coefficient_curve'. Default: None.
 
     Attributes
     ----------
@@ -65,11 +65,18 @@ class WindTurbine(object):
     nominal_power : None or float
         The nominal output of the wind turbine in W.
     fetch_curve : string
-        Parameter to specify whether the power or power coefficient curve
+        Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
-        'power_curve' and 'power_coefficient_curve'. Default: 'power_curve'.
+        'power_curve' and 'power_coefficient_curve'. Default: None.
     power_output : pandas.Series
         The calculated power output of the wind turbine.
+
+    Notes
+    ------
+    Your wind turbine object should have a power coefficient or power curve.
+    You can set the `fetch_curve` parameter if you don't want to provide one
+    yourself but want to automatically fetch a curve from the data set
+    provided along with the windpowerlib.
 
     Examples
     --------
@@ -77,7 +84,8 @@ class WindTurbine(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'turbine_name': 'ENERCON E 126 7500'}
+    ...    'turbine_name': 'ENERCON E 126 7500',
+    ...    'fetch_curve': 'power_curve'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> print(e126.nominal_power)
     7500000
@@ -86,7 +94,7 @@ class WindTurbine(object):
 
     def __init__(self, turbine_name, hub_height, rotor_diameter=None,
                  power_coefficient_curve=None, power_curve=None,
-                 nominal_power=None, fetch_curve='power_curve'):
+                 nominal_power=None, fetch_curve=None):
 
         self.turbine_name = turbine_name
         self.hub_height = hub_height
@@ -101,6 +109,7 @@ class WindTurbine(object):
         if self.power_coefficient_curve is None and self.power_curve is None:
             self.fetch_turbine_data()
 
+    # ToDo: Have fetch_curve as an input to this function.
     def fetch_turbine_data(self):
         r"""
         Fetches data of the requested wind turbine.

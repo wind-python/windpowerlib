@@ -110,12 +110,13 @@ def initialise_wind_turbines():
     my_turbine = WindTurbine(**myTurbine)
 
     # specification of wind turbine where power curve is provided
-    # if you want to use the power coefficient curve add
-    # {'fetch_curve': 'power_coefficient_curve'} to the dictionary
+    # if you want to use the power coefficient curve change the value of
+    # 'fetch_curve' to 'power_coefficient_curve'
     enerconE126 = {
         'turbine_name': 'ENERCON E 126 7500',  # turbine name as in register
         'hub_height': 135,  # in m
-        'rotor_diameter': 127  # in m
+        'rotor_diameter': 127,  # in m
+        'fetch_curve': 'power_curve'  # fetch power curve
     }
     # initialise WindTurbine object
     e126 = WindTurbine(**enerconE126)
