@@ -31,18 +31,18 @@ class WindTurbine(object):
         Diameter of the rotor in m.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
         Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'power coefficient' columns/keys with wind
-        speeds in m/s and the corresponding power coefficients. Default: None.
+        have 'wind_speed' and 'values' columns/keys with wind speeds in m/s
+        and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
         Power curve of the wind turbine. DataFrame/dictionary must have
-        'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
+        'wind_speed' and 'values' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
         The nominal output of the wind turbine in W.
     fetch_curve : string
-        Parameter to specify whether the power or power coefficient curve
+        Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
-        'power_curve' and 'power_coefficient_curve'. Default: 'power_curve'.
+        'power_curve' and 'power_coefficient_curve'. Default: None.
 
     Attributes
     ----------
@@ -56,20 +56,27 @@ class WindTurbine(object):
         Diameter of the rotor in m.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
         Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'power coefficient' columns/keys with wind speeds
-        in m/s and the corresponding power coefficients. Default: None.
+        have 'wind_speed' and 'values' columns/keys with wind speeds in m/s
+        and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
         Power curve of the wind turbine. DataFrame/dictionary must have
-        'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
+        'wind_speed' and 'values' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
         The nominal output of the wind turbine in W.
     fetch_curve : string
-        Parameter to specify whether the power or power coefficient curve
+        Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
-        'power_curve' and 'power_coefficient_curve'. Default: 'power_curve'.
+        'power_curve' and 'power_coefficient_curve'. Default: None.
     power_output : pandas.Series
         The calculated power output of the wind turbine.
+
+    Notes
+    ------
+    Your wind turbine object should have a power coefficient or power curve.
+    You can set the `fetch_curve` parameter if you don't want to provide one
+    yourself but want to automatically fetch a curve from the data set
+    provided along with the windpowerlib.
 
     Examples
     --------
@@ -77,16 +84,17 @@ class WindTurbine(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'object_name': 'ENERCON E 126 7500'}
+    ...    'object_name': 'ENERCON E 126 7500',
+    ...    'fetch_curve': 'power_curve'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> print(e126.nominal_power)
     7500000
 
     """
 
-    def __init__(self, object_name, hub_height, rotor_diameter=None,
+    def __init__(self, turbine_name, hub_height, rotor_diameter=None,
                  power_coefficient_curve=None, power_curve=None,
-                 nominal_power=None, fetch_curve='power_curve'):
+                 nominal_power=None, fetch_curve=None):
 
         self.object_name = object_name
         self.hub_height = hub_height
@@ -101,6 +109,7 @@ class WindTurbine(object):
         if self.power_coefficient_curve is None and self.power_curve is None:
             self.fetch_turbine_data()
 
+    # ToDo: Have fetch_curve as an input to this function.
     def fetch_turbine_data(self):
         r"""
         Fetches data of the requested wind turbine.
@@ -126,7 +135,7 @@ class WindTurbine(object):
         ...    'object_name': 'ENERCON E 126 7500',
         ...    'fetch_curve': 'power_coefficient_curve'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.power_coefficient_curve['power coefficient'][5])
+        >>> print(e126.power_coefficient_curve['values'][5])
         0.423
         >>> print(e126.nominal_power)
         7500000
@@ -170,11 +179,7 @@ class WindTurbine(object):
                         data = np.vstack((data, np.array(
                             [float(col), float(wpp_df[col])])))
             data = np.delete(data, 0, 0)
-            if self.fetch_curve == 'power_curve':
-                df = pd.DataFrame(data, columns=['wind_speed', 'power'])
-            if self.fetch_curve == 'power_coefficient_curve':
-                df = pd.DataFrame(data, columns=['wind_speed',
-                                                 'power coefficient'])
+            df = pd.DataFrame(data, columns=['wind_speed', 'values'])
             nominal_power = wpp_df['p_nom'].iloc[0]
             return df, nominal_power
         if self.fetch_curve == 'power_curve':

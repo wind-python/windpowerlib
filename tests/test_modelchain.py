@@ -13,7 +13,8 @@ class TestModelChain:
     def setup_class(self):
         self.test_turbine = {'hub_height': 100,
                              'rotor_diameter': 80,
-                             'object_name': 'ENERCON E 126 7500'}
+                             'object_name': 'ENERCON E 126 7500',
+                             'fetch_curve': 'power_curve'}
 
     def test_temperature_hub(self):
         # Test modelchain with temperature_model='linear_gradient'
