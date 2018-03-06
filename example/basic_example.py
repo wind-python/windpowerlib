@@ -14,8 +14,8 @@ try:
 except ImportError:
     plt = None
 
-from windpowerlib.modelchain import ModelChain
-from windpowerlib.wind_turbine import WindTurbine
+from windpowerlib import ModelChain
+from windpowerlib import WindTurbine
 
 # You can use the logging package to get logging messages from the windpowerlib
 # Change the logging level if you want more or less messages
