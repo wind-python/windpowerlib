@@ -216,7 +216,7 @@ class WindFarmModelChain(object):
                 summarized_power_curve_df['power'].values,
                 wake_losses_method=self.wake_losses_method,
                 wind_farm_efficiency=self.wind_farm.efficiency)
-        self.power_output = summarized_power_curve_df
+        self.wind_farm.power_curve = summarized_power_curve_df
     #        self.wind_farm.power_curve = power_output.summarized_power_curve(
     #            self.wind_farm.wind_turbine_fleet, smoothing=self.smoothing,
     #            density_correction=self.density_correction,
