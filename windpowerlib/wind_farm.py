@@ -154,11 +154,23 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
 
     Notes
     -----
-    TODO: Add references
+    The wind efficiency curves were calculated in the "Dena Netzstudie" and in
+    the disseration of Kaspar Knorr. For more information see [1]_ and [2]_.
+
+    References
+    ----------
+    .. [1] Kohler et.al.: "dena-Netzstudie II. Integration erneuerbarer
+            Energien in die deutsche Stromversorgung im Zeitraum 2015 – 2020
+            mit Ausblick 2025.", Deutsche Energie-Agentur GmbH (dena),
+            Tech. rept., 2010, p. 101
+    .. [2] Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
+             Windenergieeinspeisung für wetterdatenbasierte
+             Windleistungssimulationen". Universität Kassel, Diss., 2016,
+             p. 124
 
     """
     path = os.path.join(os.path.dirname(__file__), 'data',
-                       'wind_efficiency_curves.csv')
+                        'wind_efficiency_curves.csv')
     wind_efficiency_curves = pd.read_csv(path)
     wind_speed = pd.Series(np.arange(0, 25.5, 0.5))
     if 'dena' in curve_name:
@@ -187,7 +199,19 @@ def display_wind_efficiency_curves():
 
     Notes
     -----
-    TODO: Add references
+    The wind efficiency curves were calculated in the "Dena Netzstudie" and in
+    the disseration of Kaspar Knorr. For more information see [1]_ and [2]_.
+
+    References
+    ----------
+    .. [1] Kohler et.al.: "dena-Netzstudie II. Integration erneuerbarer
+            Energien in die deutsche Stromversorgung im Zeitraum 2015 – 2020
+            mit Ausblick 2025.", Deutsche Energie-Agentur GmbH (dena),
+            Tech. rept., 2010, p. 101
+    .. [2] Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
+             Windenergieeinspeisung für wetterdatenbasierte
+             Windleistungssimulationen". Universität Kassel, Diss., 2016,
+             p. 124
 
     """
     path = os.path.join(os.path.dirname(__file__), 'data',
@@ -212,10 +236,10 @@ def display_wind_efficiency_curves():
         knorr_df.plot(ax=ax, legend=True, marker='o', markersize=3)
         plt.ylabel('Wind farm efficiency')
         plt.show()
-        # fig.savefig('wind_eff_curves.pdf')
+#        fig.savefig('wind_eff_curves.pdf')
     else:
         print(dena_df)
         print(knorr_df)
-    
+
 if __name__ == "__main__":
     display_wind_efficiency_curves()
