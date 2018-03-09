@@ -17,6 +17,7 @@ try:
 except ImportError:
     plt = None
 
+
 class WindFarm(object):
     r"""
     Defines a standard set of wind farm attributes.

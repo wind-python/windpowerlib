@@ -97,7 +97,7 @@ class WindFarmModelChain(object):
     def __init__(self, wind_farm, cluster=False, density_correction=False,
                  wake_losses_method='constant_efficiency', smoothing=True,
                  block_width=0.5,
-                 standard_deviation_method='turbulence_intensity',  # NOTE if this is changed change if statement below
+                 standard_deviation_method='turbulence_intensity',
                  density_correction_order='before_summation', # TODO add to docstring
                  smoothing_order='before_summation', **kwargs):
 
@@ -159,7 +159,7 @@ class WindFarmModelChain(object):
                         kwargs['turbulence_intensity'] = turbulence_intensity
                     else:
                         raise ValueError(
-                            "`roughness_length` must be defined for using" +
+                            "`roughness_length` must be defined for using " +
                             "'turbulence_intensity' as " +
                             "`standard_deviation_method`")
             if self. density_correction:
@@ -170,9 +170,9 @@ class WindFarmModelChain(object):
                         "wind_farm_efficiency is needed if " +
                         "`wake_losses_method´ is '{0}', but ".format(
                             self.wake_losses_method) +
-                        " `wind_farm_efficiency` of {1} is {2}.".format(
-                                   self.wind_farm.object_name,
-                                   self.wind_farm.efficiency))
+                        " `wind_farm_efficiency` of {0} is {1}.".format(
+                            self.wind_farm.object_name,
+                            self.wind_farm.efficiency))
             # Get original power curve
             power_curve = pd.DataFrame(
                 turbine_type_dict['wind_turbine'].power_curve)
@@ -207,8 +207,8 @@ class WindFarmModelChain(object):
             pass # TODO: add density correction
         if (self.smoothing and self.smoothing_order == 'after_summation'):
             summarized_power_curve_df = power_output.smooth_power_curve(
-                    summarized_power_curve_df['wind_speed'],
-                    summarized_power_curve_df['power'], **kwargs)
+                summarized_power_curve_df['wind_speed'],
+                summarized_power_curve_df['power'], **kwargs)
         if (self.wake_losses_method == 'constant_efficiency' or
                 self.wake_losses_method == 'wind_efficiency_curve'):
             summarized_power_curve_df = power_output.wake_losses_to_power_curve(
@@ -216,7 +216,7 @@ class WindFarmModelChain(object):
                 summarized_power_curve_df['power'].values,
                 wake_losses_method=self.wake_losses_method,
                 wind_farm_efficiency=self.wind_farm.efficiency)
-        self.power_output = summarized_power_curve_df
+        self.wind_farm.power_curve = summarized_power_curve_df
     #        self.wind_farm.power_curve = power_output.summarized_power_curve(
     #            self.wind_farm.wind_turbine_fleet, smoothing=self.smoothing,
     #            density_correction=self.density_correction,
