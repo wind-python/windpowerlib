@@ -88,3 +88,14 @@ class WindTurbineCluster(object):
                 wind_farm in self.wind_farms) / self.get_installed_power())
         return self
 
+    def get_installed_power(self):
+        r"""
+        Calculates the installed power of a wind turbine cluster.
+
+        Returns
+        -------
+        float
+            Installed power of the wind turbine cluster.
+
+        """
+        return sum(wind_farm.installed_power for wind_farm in self.wind_farms)
