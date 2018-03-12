@@ -17,10 +17,10 @@ class WindFarmModelChain(object):
 
     Parameters
     ----------
-    wind_farm : WindFarm
-        A :class:`~.wind_farm.WindFarm` object representing the wind farm.
-    cluster : Boolean
-        TODO: add
+    wind_object : WindFarm or WindTurbineCluster
+        A :class:`~.wind_farm.WindFarm` object representing the wind farm or
+        a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
+        representing the wind turbine cluster.
     density_correction : Boolean
         If True a density correction will be applied to the power curves
         before the summation. Default: False.
@@ -41,10 +41,10 @@ class WindFarmModelChain(object):
 
     Attributes
     ----------
-    wind_farm : WindFarm
-        A :class:`~.wind_farm.WindFarm` object representing the wind farm.
-    cluster : Boolean
-        TODO: add
+    wind_object : WindFarm or WindTurbineCluster
+        A :class:`~.wind_farm.WindFarm` object representing the wind farm or
+        a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
+        representing the wind turbine cluster.
     density_correction : Boolean
         If True a density correction will be applied to the power curves
         before the summation. Default: False.
@@ -66,15 +66,13 @@ class WindFarmModelChain(object):
         Electrical power output of the wind turbine in W.
 
     """
-    def __init__(self, wind_farm, cluster=False, density_correction=False,
+    def __init__(self, wind_object, density_correction=False,  #TODO: parameter cluster_or_farm boolean ?
                  wake_losses_method='constant_efficiency', smoothing=True,
                  block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
                  density_correction_order='before_summation', # TODO add to docstring
                  smoothing_order='before_summation'):
-
-        self.wind_farm = wind_farm
-        self.cluster = cluster
+        self.wind_object = wind_object
         self.density_correction = density_correction
         self.wake_losses_method = wake_losses_method
         self.smoothing = smoothing
