@@ -118,19 +118,20 @@ class WindFarm(object):
             total_nominal_power)
         return self
 
-    def calculate_installed_power(self):
+    def get_installed_power(self):
         r"""
-        Calculates the mean power weighted hub height of a wind farm.
-
-        Assigns the hub height to the wind farm object.
+        Calculates the installed power of a wind farm.
 
         Returns
         -------
-        self
+        float
+            Installed power of the wind farm.
 
         """
-        # TODO: add (for clusters)
-        return self
+        return sum(
+            wind_dict['wind_turbine'].nominal_power *
+            wind_dict['number_of_turbines']
+            for wind_dict in self.wind_turbine_fleet)
 
 
 def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
