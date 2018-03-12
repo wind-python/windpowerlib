@@ -38,6 +38,16 @@ class TurbineClusterModelChain(object):
         distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
         Default in :py:func:`~.power_output.smooth_power_curve`:
         'turbulence_intensity'.
+    density_correction_order : String
+        Defines when the density correction takes place if `density_correction`
+        is True. Options: 'turbine_power_curves' (to the single turbine power
+        curves), 'wind_farm_power_curves' or 'cluster_power_curve'.
+        Default: 'wind_farm_power_curves'.
+    smoothing_order : String
+        Defines when the smoothing takes place if `smoothing` is True. Options:
+        'turbine_power_curves' (to the single turbine power curves),
+        'wind_farm_power_curves' or 'cluster_power_curve'.
+        Default: 'wind_farm_power_curves'.
 
     Attributes
     ----------
@@ -64,15 +74,25 @@ class TurbineClusterModelChain(object):
         'turbulence_intensity'.
     power_output : pandas.Series
         Electrical power output of the wind turbine in W.
+    density_correction_order : String
+        Defines when the density correction takes place if `density_correction`
+        is True. Options: 'turbine_power_curves' (to the single turbine power
+        curves), 'wind_farm_power_curves' or 'cluster_power_curve'.
+        Default: 'wind_farm_power_curves'.
+    smoothing_order : String
+        Defines when the smoothing takes place if `smoothing` is True. Options:
+        'turbine_power_curves' (to the single turbine power curves),
+        'wind_farm_power_curves' or 'cluster_power_curve'.
+        Default: 'wind_farm_power_curves'.
 
     """
     def __init__(self, wind_object, density_correction=False,  #TODO: parameter cluster_or_farm boolean ?
                  wake_losses_method='constant_efficiency', smoothing=True,
                  block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
-                 density_correction_order='wind_farm_power_curves', # TODO add to docstring
+                 density_correction_order='wind_farm_power_curves',
                  smoothing_order='wind_farm_power_curves'):
-# 'turbine_power_curves' 'wind_farm_power_curves' 'cluster_power_curve'
+ # TODO Fehler abfangen (falls cluster aber wind farm)
         self.wind_object = wind_object
         self.density_correction = density_correction
         self.wake_losses_method = wake_losses_method
@@ -89,9 +109,9 @@ class TurbineClusterModelChain(object):
 
     def wind_farm_power_curve(self, wind_farm, **kwargs):
         r"""
-        Caluclates the power curve of the wind farm.
+        Caluclates the power curve of a wind farm.
 
-        Depending on the parameters of the class the power cuvers are smoothed
+        Depending on the parameters of the class the power curves are smoothed
         and/or density corrected before or after the summation and/or a wind
         farm efficiency is applied after the summation. TODO: check entry
 
@@ -104,7 +124,8 @@ class TurbineClusterModelChain(object):
 
         Returns
         -------
-        self
+        summarized_power_curve_df : pd.DataFrame
+            Calculated power curve of the wind farm.
 
         """
         # Initialize data frame for power curve values
@@ -184,6 +205,7 @@ class TurbineClusterModelChain(object):
                     wake_losses_method=self.wake_losses_method,
                     wind_farm_efficiency=self.wind_object.efficiency))
         return summarized_power_curve_df
+
     def turbine_cluster_power_curve(self, **kwargs):
         r"""
         Caluclates the power curve of a wind turbine cluster.
@@ -191,8 +213,8 @@ class TurbineClusterModelChain(object):
         The turbine cluster power curve is calculated from the wind farm
         power curves of the wind farms within the cluster.
         Depending on the parameters of the class the power curves are smoothed
-        and/or density corrected before or after the summation and/or a wind
-        farm efficiency is applied after the summation. TODO: check entry
+        and/or density corrected after the summation of the wind farm power
+        curves.
 
         Other Parameters
         ---------------- # TODO: check entry
@@ -203,7 +225,8 @@ class TurbineClusterModelChain(object):
 
         Returns
         -------
-        self
+        summarized_power_curve_df : pd.DataFrame
+            Calculated power curve of the wind turbine cluster.
 
         """
         # Assign wind farm power curves to wind farms
@@ -211,8 +234,8 @@ class TurbineClusterModelChain(object):
             farm.power_curve = self.wind_farm_power_curve(farm, **kwargs)
         # Create data frame from power curves of all wind farms
         df = pd.concat([farm.power_curve.set_index(['wind_speed']).rename(
-            columns={'power': farm.object_name}) for farm in
-                        self.wind_object.wind_farms], axis=1)
+            columns={'power': farm.object_name}) for
+            farm in self.wind_object.wind_farms], axis=1)
         # Sum up power curves
         summarized_power_curve = pd.DataFrame(
             sum(df[item].interpolate(method='index') for item in list(df)))
@@ -234,6 +257,16 @@ class TurbineClusterModelChain(object):
 
     def assign_power_curve(self, **kwargs):
         r"""
+        Calculates summarized power curve of the `wind_object`.
+
+        Assigns the power curve to the object.
+
+        Other Parameters
+        ----------------
+        roughness_length : Float, optional.
+            Roughness length.
+        turbulence_intensity : Float, optional.
+            Turbulence intensity.
 
         """
         if isinstance(self.wind_object, wind_farm.WindFarm):

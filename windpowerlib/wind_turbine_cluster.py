@@ -7,8 +7,8 @@ The ``wind_turbine_cluster`` module is under development and is not working yet.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
+
 import numpy as np
-#from windpowerlib import wind_turbine
 
 
 class WindTurbineCluster(object):
@@ -19,7 +19,7 @@ class WindTurbineCluster(object):
     object_name : string
         Name of the wind turbine cluster.
     wind_farms : list
-        ...
+        Contains objects of the :class:`~.wind_farm.WindFarm`.
     coordinates : list or None
         List of coordinates [lat, lon] of location for loading data.
         Default: None.
@@ -29,7 +29,7 @@ class WindTurbineCluster(object):
     object_name : string
         Name of the wind turbine cluster.
     wind_farms : list
-        ...
+        Contains objects of the :class:`~.wind_farm.WindFarm`.
     coordinates : list or None
         List of coordinates [lat, lon] of location for loading data.
         Default: None.

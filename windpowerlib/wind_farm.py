@@ -28,8 +28,8 @@ class WindFarm(object):
         Name of the wind farm.
     wind_turbine_fleet : list of dictionaries
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
-        (contains wind turbine object) and 'number_of_turbines' (number of
-        turbine type in wind farm) as keys.
+        (contains a :class:`~.wind_turbine.WindTurbine` object) and
+        'number_of_turbines' (number of turbine type in wind farm) as keys.
     coordinates : list or None
         List of coordinates [lat, lon] of location for loading data.
         Default: None.
@@ -45,8 +45,8 @@ class WindFarm(object):
         Name of the wind farm.
     wind_turbine_fleet : list of dictionaries
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
-        (contains wind turbine object) and 'number_of_turbines' (number of
-        turbine type in wind farm) as keys.
+        (contains a :class:`~.wind_turbine.WindTurbine` object) and
+        'number_of_turbines' (number of turbine type in wind farm) as keys.
     coordinates : list or None
         List of coordinates [lat, lon] of location for loading data.
         Default: None.
@@ -60,7 +60,7 @@ class WindFarm(object):
     installed_power : float
         Installed power of the wind farm.
     power_curve : pandas.DataFrame or None
-        The calculated power curve of the wind turbine.
+        The calculated power curve of the wind farm.
     power_output : pandas.Series
         The calculated power output of the wind farm.
     """
@@ -89,7 +89,7 @@ class WindFarm(object):
 
         Notes
         -----
-        The following equation is used for the wind speed at site [1]_:
+        The following equation is used [1]_:
         .. math:: h_{WF} = e^{\sum\limits_{k}{ln(h_{WT,k})}
                            \frac{P_{N,k}}{\sum\limits_{k}{P_{N,k}}}}
 
@@ -222,7 +222,7 @@ def display_wind_efficiency_curves():
             curve_name).rename(
             columns={'efficiency': curve_name.replace('_', ' '),
                      'wind_speed': 'wind speed m/s'}).set_index(
-                'wind speed m/s')
+                         'wind speed m/s')
         curves_df = pd.concat([curves_df, efficiency_curve], axis=1)
     knorr_df = curves_df[[column_name for column_name in curves_df if
                           'knorr' in column_name]]
