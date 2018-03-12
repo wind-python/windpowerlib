@@ -70,8 +70,8 @@ class TurbineClusterModelChain(object):
                  wake_losses_method='constant_efficiency', smoothing=True,
                  block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
-                 density_correction_order='before_summation', # TODO add to docstring
-                 smoothing_order='before_summation'):
+                 density_correction_order='wind_farm_power_curves', # TODO add to docstring
+                 smoothing_order='wind_farm_power_curves'):
 # 'turbine_power_curves' 'wind_farm_power_curves' 'cluster_power_curve'
         self.wind_object = wind_object
         self.density_correction = density_correction
@@ -142,9 +142,10 @@ class TurbineClusterModelChain(object):
                 turbine_type_dict['wind_turbine'].power_curve)
             # Editions to power curve before the summation
             if (self.density_correction and
-                    self.density_correction_order == 'before_summation'):
+                    self.density_correction_order == 'turbine_power_curves'):
                 pass # TODO: add density correction
-            if (self.smoothing and self.smoothing_order == 'before_summation'):
+            if (self.smoothing and
+                    self.smoothing_order == 'turbine_power_curves'):
                 power_curve = power_output.smooth_power_curve(
                     power_curve['wind_speed'], power_curve['power'], **kwargs)
             # Add power curves of all turbines of same type to data frame after
@@ -167,9 +168,10 @@ class TurbineClusterModelChain(object):
         summarized_power_curve_df.columns = ['wind_speed', 'power']
         # Editions to power curve after the summation
         if (self.density_correction and
-                self.density_correction_order == 'after_summation'):
+                self.density_correction_order == 'wind_farm_power_curves'):
             pass # TODO: add density correction
-        if (self.smoothing and self.smoothing_order == 'after_summation'):
+        if (self.smoothing and
+                self.smoothing_order == 'wind_farm_power_curves'):
             summarized_power_curve_df = power_output.smooth_power_curve(
                 summarized_power_curve_df['wind_speed'],
                 summarized_power_curve_df['power'], **kwargs)
