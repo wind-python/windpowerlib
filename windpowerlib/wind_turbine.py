@@ -35,7 +35,7 @@ class WindTurbine(object):
         in m/s and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
         Power curve of the wind turbine. DataFrame/dictionary must have
-        'wind_speed' and 'values' columns/keys with wind speeds in m/s and the
+        'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
         The nominal output of the wind turbine in W.
