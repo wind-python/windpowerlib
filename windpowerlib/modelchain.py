@@ -9,7 +9,7 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 import logging
-from . import wind_speed, density, temperature, power_output, tools
+from windpowerlib import wind_speed, density, temperature, power_output, tools
 
 
 class ModelChain(object):
@@ -88,7 +88,8 @@ class ModelChain(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'object_name': 'ENERCON E 126 7500'}
+    ...    'object_name': 'ENERCON E 126 7500',
+    ...    'fetch_curve': 'power_curve'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> modelchain_data = {'density_model': 'ideal_gas'}
     >>> e126_mc = modelchain.ModelChain(e126, **modelchain_data)
