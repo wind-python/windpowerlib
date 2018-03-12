@@ -1,6 +1,6 @@
 """
-The ``power_output`` module contains functions to calculate the power output
-of a wind turbine.
+The ``power_curves`` module contains functions apply calculations to the power
+curve of a wind turbine, wind farm or wind turbine cluster.
 
 """
 
