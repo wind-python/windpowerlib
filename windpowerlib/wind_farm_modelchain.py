@@ -180,11 +180,12 @@ class WindFarmModelChain(object):
                 summarized_power_curve_df['power'], **kwargs)
         if (self.wake_losses_method == 'constant_efficiency' or
                 self.wake_losses_method == 'wind_efficiency_curve'):
-            summarized_power_curve_df = power_output.wake_losses_to_power_curve(
-                summarized_power_curve_df['wind_speed'].values, # TODO check
-                summarized_power_curve_df['power'].values,
-                wake_losses_method=self.wake_losses_method,
-                wind_farm_efficiency=self.wind_farm.efficiency)
+            summarized_power_curve_df = (
+                power_output.wake_losses_to_power_curve(
+                    summarized_power_curve_df['wind_speed'].values,
+                    summarized_power_curve_df['power'].values,
+                    wake_losses_method=self.wake_losses_method,
+                    wind_farm_efficiency=self.wind_farm.efficiency))
         self.wind_farm.power_curve = summarized_power_curve_df
     #        self.wind_farm.power_curve = power_output.summarized_power_curve(
     #            self.wind_farm.wind_turbine_fleet, smoothing=self.smoothing,
@@ -240,30 +241,31 @@ class WindFarmModelChain(object):
         Other Parameters
         ----------------
         wind_speed_model : string
-            Parameter to define which model to use to calculate the wind speed at
-            hub height. Valid options are 'logarithmic', 'hellman' and
+            Parameter to define which model to use to calculate the wind speed
+            at hub height. Valid options are 'logarithmic', 'hellman' and
             'interpolation_extrapolation'.
         temperature_model : string
-            Parameter to define which model to use to calculate the temperature of
-            air at hub height. Valid options are 'linear_gradient' and
+            Parameter to define which model to use to calculate the temperature
+            of air at hub height. Valid options are 'linear_gradient' and
             'interpolation_extrapolation'.
         density_model : string
-            Parameter to define which model to use to calculate the density of air
-            at hub height. Valid options are 'barometric', 'ideal_gas' and
+            Parameter to define which model to use to calculate the density of
+            air at hub height. Valid options are 'barometric', 'ideal_gas' and
             'interpolation_extrapolation'.
         power_output_model : string
-            Parameter to define which model to use to calculate the turbine power
-            output. Valid options are 'power_curve' and 'power_coefficient_curve'.
+            Parameter to define which model to use to calculate the turbine
+            power output. Valid options are 'power_curve' and
+            'power_coefficient_curve'.
         density_correction : boolean
-            If the parameter is True the density corrected power curve is used for
-            the calculation of the turbine power output.
+            If the parameter is True the density corrected power curve is used
+            for the calculation of the turbine power output.
         obstacle_height : float
-            Height of obstacles in the surrounding area of the wind turbine in m.
-            Set `obstacle_height` to zero for wide spread obstacles.
+            Height of obstacles in the surrounding area of the wind turbine in
+            m. Set `obstacle_height` to zero for wide spread obstacles.
         hellman_exp : float
-            The Hellman exponent, which combines the increase in wind speed due to
-            stability of atmospheric conditions and surface roughness into one
-            constant.
+            The Hellman exponent, which combines the increase in wind speed due
+            to stability of atmospheric conditions and surface roughness into
+            one constant.
         roughness_length : Float, optional.
             Roughness length.
         turbulence_intensity : Float, optional.
