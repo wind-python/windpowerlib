@@ -107,11 +107,6 @@ class WindFarmModelChain(object):
         self
 
         """
-        # Create kwargs # TODO: not needed see below delete!
-        # if 'turbulence_intensity' in kwargs:
-        #     kwargs['turbulence_intensity'] = kwargs['turbulence_intensity']
-        # if 'roughness_length' in kwargs:
-        #     kwargs['roughness_length'] = kwargs['roughness_length']
         # Initialize data frame for power curve values
         df = pd.DataFrame()
         for turbine_type_dict in self.wind_farm.wind_turbine_fleet:
@@ -187,12 +182,6 @@ class WindFarmModelChain(object):
                     wake_losses_method=self.wake_losses_method,
                     wind_farm_efficiency=self.wind_farm.efficiency))
         self.wind_farm.power_curve = summarized_power_curve_df
-    #        self.wind_farm.power_curve = power_output.summarized_power_curve(
-    #            self.wind_farm.wind_turbine_fleet, smoothing=self.smoothing,
-    #            density_correction=self.density_correction,
-    #            wake_losses_method=self.wake_losses_method,
-    #            block_width=self.block_width,
-    #            standard_deviation_method=self.standard_deviation_method, **kwargs)
         return self
 
     def get_modelchain_data(self, **kwargs):
