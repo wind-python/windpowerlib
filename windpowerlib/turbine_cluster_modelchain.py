@@ -232,6 +232,29 @@ class TurbineClusterModelChain(object):
                 summarized_power_curve_df['power'], **kwargs)
         return summarized_power_curve_df
 
+    def assign_power_curve(self, **kwargs):
+        r"""
+
+        """
+        if isinstance(self.wind_object, wind_farm.WindFarm):
+            # Assign mean hub height to wind farm (`wind_object`)
+            self.wind_object.mean_hub_height()
+            # Assign wind farm power curve to wind farm (`wind_object`)
+            self.wind_object.power_curve = self.wind_farm_power_curve(
+                self.wind_object, **kwargs)
+        if isinstance(self.wind_object,
+                      wind_turbine_cluster.WindTurbineCluster):
+            for farm in self.wind_object.wind_farms:
+                # Assign mean hub height to wind farm
+                farm.mean_hub_height()
+                # Assign installed power to wind farm
+                farm.installed_power = (
+                    farm.get_installed_power())
+            # Assign mean hub height to turbine cluster
+            self.wind_object.mean_hub_height()
+            # Assign cluster power curve to turbine cluster (`wind_object`)
+            self.wind_object.power_curve = self.turbine_cluster_power_curve(
+                **kwargs)
         return self
 
     def get_modelchain_data(self, **kwargs):
