@@ -251,6 +251,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                        block_width=0.5,
                        standard_deviation_method='turbulence_intensity',
                        mean_gauss=0, **kwargs):
+    # TODO: All functions in this module have to work without pandas
     r"""
     Smoothes the input power curve values by using a gaussian distribution.
 
@@ -355,7 +356,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 #        os.path.dirname(__file__), '../Plots/power_curves',
 #        '{0}_{1}_{2}.png'.format(kwargs['object_name'],
 #                                 standard_deviation_method, block_width))))
-#    plt.close()
+#    plt.close() # TODO: delete plot later
     return smoothed_power_curve_df
 
 
@@ -426,124 +427,3 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
                 wake_losses_method) +
             "'constant_efficiency' or 'wind_efficiency_curve'")
     return power_curve_df
-
-
-def summarized_power_curve(wind_turbine_fleet, smoothing=True,
-                           density_correction=False, wake_losses_method=None,
-                           **kwargs):
-    r"""
-    Creates a summarized power curve for a wind turbine fleet.
-
-    Power curve is created by summing up all power curves. Depending on the
-    input paramters the power cuvers are smoothed before the summation and/or
-    a wind farm efficiency is applied after the summation.
-
-    Parameters
-    ----------
-    wind_turbine_fleet : List of Dictionaries
-        Dictionaries with the keys 'wind_turbine' (contains
-        :class:`~.wind_turbine.WindTurbine` object) and 'number_of_turbines'
-        (contains number of turbine type in 'wind_turbine' key).
-    smoothing : Boolean
-        If True the power curves will be smoothed before the summation.
-        Default: True.
-    density_correction : Boolean
-        If True a density correction will be applied to the power curves
-        before the summation. Default: False.
-    wake_losses_method : String
-        Defines the method for talking wake losses within the farm into
-        consideration. Default: None.
-
-    Other Parameters
-    ----------------
-    block_width : Float, optional
-        Width of the moving block.
-        Default in :py:func:`~.smooth_power_curve`: 0.5.
-    standard_deviation_method : String, optional
-        Method for calculating the standard deviation for the gaussian
-        distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
-        Default in :py:func:`~.smooth_power_curve`:  'turbulence_intensity'.
-    turbulence_intensity : Float, optional
-        Turbulence intensity at hub height of the wind turbine the power curve
-        is smoothed for. If this parameter is not given the turbulence
-        intensity is calculated via the `roughness_length`.
-    roughness_length : Float, optional
-        Roughness length. Only needed if `turbulence_intensity` is not given
-        and `standard_deviation_method` is 'turbulence_intensity' or not given.
-    wind_farm_efficiency : Float or pd.DataFrame or Dictionary, optional
-        Efficiency of the wind farm. Either constant (float) or wind efficiency
-        curve (pd.DataFrame or Dictionary) contianing 'wind_speed' and
-        'efficiency' columns/keys with wind speeds in m/s and the
-        corresponding dimensionless wind farm efficiency.
-
-    Returns
-    -------
-    summarized_power_curve_df : pd.DataFrame
-        Summarized power curve. DataFrame has 'wind_speed' and
-        'power' columns with wind speeds in m/s and the corresponding power
-        curve value in W.
-
-    """
-    # Initialize data frame for power curve values
-    df = pd.DataFrame()
-    for turbine_type_dict in wind_turbine_fleet:
-        # Start power curve
-        power_curve = pd.DataFrame(
-            turbine_type_dict['wind_turbine'].power_curve)
-        if smoothing:
-            if ('standard_deviation_method' not in kwargs or
-                    kwargs['standard_deviation_method'] ==
-                    'turbulence_intensity'):
-                if 'turbulence_intensity' not in kwargs:
-                    if 'roughness_length' in kwargs:
-                        # Calculate turbulence intensity and write to kwargs
-                        turbulence_intensity = (
-                            tools.estimate_turbulence_intensity(
-                                turbine_type_dict['wind_turbine'].hub_height,
-                                kwargs['roughness_length']))
-                        kwargs['turbulence_intensity'] = turbulence_intensity
-                    else:
-                        raise ValueError(
-                            "`roughness_length` must be defined for using" +
-                            "'turbulence_intensity' as " +
-                            "`standard_deviation_method`")
-            # Get smoothed power curve
-            power_curve = smooth_power_curve(power_curve['wind_speed'],
-                                             power_curve['power'], **kwargs)
-        if density_correction:
-            pass  # TODO: add
-        # Add power curves of all turbines of same type to data frame after
-        # renaming columns
-        power_curve.columns = ['wind_speed',
-                               turbine_type_dict['wind_turbine'].object_name]
-        df = pd.concat([df, pd.DataFrame(
-            power_curve.set_index(['wind_speed']) *
-            turbine_type_dict['number_of_turbines'])], axis=1)
-        # Rename back TODO: copy()
-        power_curve.columns = ['wind_speed', 'power']
-    # Sum up power curves of all turbine types
-    summarized_power_curve = pd.DataFrame(
-        sum(df[item].interpolate(method='index') for item in list(df)))
-    summarized_power_curve.columns = ['power']
-    # Take wake losses into consideration if `wake_losses_method` not None
-    if wake_losses_method is None:
-        # Create DataFrame of the above power curve data
-        summarized_power_curve_df = pd.DataFrame(
-            data=[list(summarized_power_curve.index),
-                  list(summarized_power_curve['power'].values)]).transpose()
-        # Rename columns of DataFrame
-        summarized_power_curve_df.columns = ['wind_speed', 'power']
-    elif (wake_losses_method == 'constant_efficiency' or
-          wake_losses_method == 'wind_efficiency_curve'):
-        try:
-            kwargs['wind_farm_efficiency']
-        except KeyError:
-            raise KeyError("'wind_farm_efficiency' must be in kwargs when " +
-                           "`wake_losses_method´ is '{0}'".format(
-                               wake_losses_method))
-        summarized_power_curve_df = wake_losses_to_power_curve(
-            summarized_power_curve.index,
-            summarized_power_curve['power'].values,
-            wake_losses_method=wake_losses_method,
-            wind_farm_efficiency=kwargs['wind_farm_efficiency'])
-    return summarized_power_curve_df
