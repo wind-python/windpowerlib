@@ -302,7 +302,7 @@ class WindFarmModelChain(object):
         # Assign mean hub height of wind farm
         self.wind_farm.mean_hub_height()
         # Assign wind farm power curve to wind farm
-        self.wind_farm_power_curve(weather_df=weather_df, **kwargs)
+        self.wind_farm_power_curve(**kwargs)
         # Get modelchain parameters
         modelchain_data = self.get_modelchain_data(**kwargs)
         # Run modelchain
