@@ -72,6 +72,7 @@ class WindFarmModelChain(object):
                  standard_deviation_method='turbulence_intensity',
                  density_correction_order='before_summation', # TODO add to docstring
                  smoothing_order='before_summation'):
+
         self.wind_farm = wind_farm
         self.cluster = cluster
         self.density_correction = density_correction
