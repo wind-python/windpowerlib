@@ -53,3 +53,38 @@ class WindTurbineCluster(object):
         self.installed_power = None
         self.power_curve = None
         self.power_output = None
+
+    def mean_hub_height(self):
+        r"""
+        Calculates the mean power weighted hub height of the turbine cluster.
+
+        Assigns the hub height to the wind turbine cluster object.
+
+        Returns
+        -------
+        self
+
+        Notes
+        -----
+        The following equation is used [1]_:
+        .. math:: h_{WF} = e^{\sum\limits_{k}{ln(h_{WT,k})}
+                           \frac{P_{N,k}}{\sum\limits_{k}{P_{N,k}}}}
+
+        with:
+            :math:`h_{WF}`: mean hub height of wind farm,
+            :math:`h_{WT,k}`: hub height of the k-th wind turbine of a wind
+            farm, :math:`P_{N,k}`: nominal power of the k-th wind turbine,
+
+        References
+        ----------
+        .. [1]  Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
+                 Windenergieeinspeisung für wetterdatenbasierte
+                 Windleistungssimulationen". Universität Kassel, Diss., 2016,
+                 p. 35
+
+        """
+        self.hub_height = np.exp(
+            sum(np.log(wind_farm.hub_height) * wind_farm.installed_power for
+                wind_farm in self.wind_farms) / self.get_installed_power())
+        return self
+
