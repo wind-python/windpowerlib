@@ -357,14 +357,8 @@ class TurbineClusterModelChain(object):
         'wind_speed'
 
         """
-        if isinstance(self.wind_object, wind_farm.WindFarm):
-            # Assign mean hub height to wind farm
-            self.wind_object.mean_hub_height()
-            # Assign wind farm power curve to wind farm
-            self.wind_farm_power_curve(**kwargs)
-        if isinstance(self.wind_object,
-                      wind_turbine_cluster.WindTurbineCluster):
-            pass
+        # Assign power curve to wind_object
+        self.assign_power_curve(**kwargs)
         # Get modelchain parameters
         modelchain_data = self.get_modelchain_data(**kwargs)
         # Run modelchain
