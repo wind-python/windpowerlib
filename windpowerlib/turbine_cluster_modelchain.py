@@ -183,7 +183,7 @@ class TurbineClusterModelChain(object):
                     summarized_power_curve_df['power'].values,
                     wake_losses_method=self.wake_losses_method,
                     wind_farm_efficiency=self.wind_object.efficiency))
-        self.wind_object.power_curve = summarized_power_curve_df
+        return summarized_power_curve_df
         return self
 
     def get_modelchain_data(self, **kwargs):
