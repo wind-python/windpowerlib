@@ -284,7 +284,7 @@ class WindFarmModelChain(object):
         'wind_speed'
 
         """
-        # Assign mean hub height of wind farm
+        # Assign mean hub height to wind farm
         self.wind_farm.mean_hub_height()
         # Assign wind farm power curve to wind farm
         self.wind_farm_power_curve(**kwargs)
