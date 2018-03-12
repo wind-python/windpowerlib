@@ -1,5 +1,5 @@
 """
-The ``wind_farm_modelchain`` module contains functions and classes of the
+The ``turbine_cluster_modelchain`` module contains functions and classes of the
 windpowerlib. TODO: adapt
 
 """
@@ -11,7 +11,7 @@ from . import modelchain, power_output, tools
 import pandas as pd
 
 
-class WindFarmModelChain(object):
+class TurbineClusterModelChain(object):
     r"""
     Model to determine the output of a wind farm or wind turbine cluster.
 
@@ -72,6 +72,7 @@ class WindFarmModelChain(object):
                  standard_deviation_method='turbulence_intensity',
                  density_correction_order='before_summation', # TODO add to docstring
                  smoothing_order='before_summation'):
+# 'turbine_power_curves' 'wind_farm_power_curves' 'cluster_power_curve'
         self.wind_object = wind_object
         self.density_correction = density_correction
         self.wake_losses_method = wake_losses_method
@@ -283,10 +284,13 @@ class WindFarmModelChain(object):
         'wind_speed'
 
         """
-        # Assign mean hub height to wind farm
-        self.wind_farm.mean_hub_height()
-        # Assign wind farm power curve to wind farm
+        if isinstance(wind_object, windpowerlib.wind_farm.WindFarm):
+            # Assign mean hub height to wind farm
+            self.wind_farm.mean_hub_height()
+            # Assign wind farm power curve to wind farm
         self.wind_farm_power_curve(**kwargs)
+        if isinstance(
+            wind_object, windpowerlib.wind_turbine_cluster.WindTurbineCluster):
         # Get modelchain parameters
         modelchain_data = self.get_modelchain_data(**kwargs)
         # Run modelchain
