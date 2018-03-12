@@ -39,34 +39,6 @@ class WindFarmModelChain(object):
         Default in :py:func:`~.power_output.smooth_power_curve`:
         'turbulence_intensity'.
 
-    Other Parameters
-    ----------------
-    wind_speed_model : string
-        Parameter to define which model to use to calculate the wind speed at
-        hub height. Valid options are 'logarithmic', 'hellman' and
-        'interpolation_extrapolation'.
-    temperature_model : string
-        Parameter to define which model to use to calculate the temperature of
-        air at hub height. Valid options are 'linear_gradient' and
-        'interpolation_extrapolation'.
-    density_model : string
-        Parameter to define which model to use to calculate the density of air
-        at hub height. Valid options are 'barometric', 'ideal_gas' and
-        'interpolation_extrapolation'.
-    power_output_model : string
-        Parameter to define which model to use to calculate the turbine power
-        output. Valid options are 'power_curve' and 'power_coefficient_curve'.
-    density_correction : boolean
-        If the parameter is True the density corrected power curve is used for
-        the calculation of the turbine power output.
-    obstacle_height : float
-        Height of obstacles in the surrounding area of the wind turbine in m.
-        Set `obstacle_height` to zero for wide spread obstacles.
-    hellman_exp : float
-        The Hellman exponent, which combines the increase in wind speed due to
-        stability of atmospheric conditions and surface roughness into one
-        constant.
-
     Attributes
     ----------
     wind_farm : WindFarm
@@ -99,8 +71,7 @@ class WindFarmModelChain(object):
                  block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
                  density_correction_order='before_summation', # TODO add to docstring
-                 smoothing_order='before_summation', **kwargs):
-
+                 smoothing_order='before_summation'):
         self.wind_farm = wind_farm
         self.cluster = cluster
         self.density_correction = density_correction
@@ -270,6 +241,31 @@ class WindFarmModelChain(object):
 
         Other Parameters
         ----------------
+        wind_speed_model : string
+            Parameter to define which model to use to calculate the wind speed at
+            hub height. Valid options are 'logarithmic', 'hellman' and
+            'interpolation_extrapolation'.
+        temperature_model : string
+            Parameter to define which model to use to calculate the temperature of
+            air at hub height. Valid options are 'linear_gradient' and
+            'interpolation_extrapolation'.
+        density_model : string
+            Parameter to define which model to use to calculate the density of air
+            at hub height. Valid options are 'barometric', 'ideal_gas' and
+            'interpolation_extrapolation'.
+        power_output_model : string
+            Parameter to define which model to use to calculate the turbine power
+            output. Valid options are 'power_curve' and 'power_coefficient_curve'.
+        density_correction : boolean
+            If the parameter is True the density corrected power curve is used for
+            the calculation of the turbine power output.
+        obstacle_height : float
+            Height of obstacles in the surrounding area of the wind turbine in m.
+            Set `obstacle_height` to zero for wide spread obstacles.
+        hellman_exp : float
+            The Hellman exponent, which combines the increase in wind speed due to
+            stability of atmospheric conditions and surface roughness into one
+            constant.
         roughness_length : Float, optional.
             Roughness length.
         turbulence_intensity : Float, optional.
