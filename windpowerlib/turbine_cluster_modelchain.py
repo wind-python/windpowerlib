@@ -87,7 +87,7 @@ class TurbineClusterModelChain(object):
 # TODO: if a wind turbine of wind farm does not have power curve but cp curve:
     # calculate power curve from cp curve
 
-    def wind_farm_power_curve(self, **kwargs):
+    def wind_farm_power_curve(self, wind_farm, **kwargs):
         r"""
         Caluclates the power curve of the wind farm.
 
@@ -109,7 +109,7 @@ class TurbineClusterModelChain(object):
         """
         # Initialize data frame for power curve values
         df = pd.DataFrame()
-        for turbine_type_dict in self.wind_object.wind_turbine_fleet:
+        for turbine_type_dict in wind_farm.wind_turbine_fleet:
             # Check if all needed parameters are available
             if self.smoothing:
                 if (self.standard_deviation_method == 'turbulence_intensity'
