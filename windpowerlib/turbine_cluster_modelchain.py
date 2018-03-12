@@ -109,7 +109,7 @@ class TurbineClusterModelChain(object):
         """
         # Initialize data frame for power curve values
         df = pd.DataFrame()
-        for turbine_type_dict in self.wind_farm.wind_turbine_fleet:
+        for turbine_type_dict in self.wind_object.wind_turbine_fleet:
             # Check if all needed parameters are available
             if self.smoothing:
                 if (self.standard_deviation_method == 'turbulence_intensity'
@@ -129,14 +129,14 @@ class TurbineClusterModelChain(object):
             if self. density_correction:
                 pass # TODO: any restrictions? density needed
             if self.wake_losses_method is not None:
-                if self.wind_farm.efficiency is None: # TODO if not...
+                if self.wind_object.efficiency is None: # TODO if not...
                     raise KeyError(
                         "wind_farm_efficiency is needed if " +
                         "`wake_losses_method´ is '{0}', but ".format(
                             self.wake_losses_method) +
                         " `wind_farm_efficiency` of {0} is {1}.".format(
-                            self.wind_farm.object_name,
-                            self.wind_farm.efficiency))
+                            self.wind_object.object_name,
+                            self.wind_object.efficiency))
             # Get original power curve
             power_curve = pd.DataFrame(
                 turbine_type_dict['wind_turbine'].power_curve)
@@ -180,8 +180,8 @@ class TurbineClusterModelChain(object):
                     summarized_power_curve_df['wind_speed'].values,
                     summarized_power_curve_df['power'].values,
                     wake_losses_method=self.wake_losses_method,
-                    wind_farm_efficiency=self.wind_farm.efficiency))
-        self.wind_farm.power_curve = summarized_power_curve_df
+                    wind_farm_efficiency=self.wind_object.efficiency))
+        self.wind_object.power_curve = summarized_power_curve_df
         return self
 
     def get_modelchain_data(self, **kwargs):
@@ -284,17 +284,18 @@ class TurbineClusterModelChain(object):
         'wind_speed'
 
         """
-        if isinstance(wind_object, windpowerlib.wind_farm.WindFarm):
+        if isinstance(self.wind_object, wind_farm.WindFarm):
             # Assign mean hub height to wind farm
-            self.wind_farm.mean_hub_height()
+            self.wind_object.mean_hub_height()
             # Assign wind farm power curve to wind farm
-        self.wind_farm_power_curve(**kwargs)
-        if isinstance(
-            wind_object, windpowerlib.wind_turbine_cluster.WindTurbineCluster):
+            self.wind_farm_power_curve(**kwargs)
+        if isinstance(self.wind_object,
+                      wind_turbine_cluster.WindTurbineCluster):
+            pass
         # Get modelchain parameters
         modelchain_data = self.get_modelchain_data(**kwargs)
         # Run modelchain
         mc = modelchain.ModelChain(
-            self.wind_farm, **modelchain_data).run_model(weather_df)
+            self.wind_object, **modelchain_data).run_model(weather_df)
         self.power_output = mc.power_output
         return self
