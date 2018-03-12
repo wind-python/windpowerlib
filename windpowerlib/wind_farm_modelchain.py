@@ -117,11 +117,9 @@ class WindFarmModelChain(object):
         for turbine_type_dict in self.wind_farm.wind_turbine_fleet:
             # Check if all needed parameters are available
             if self.smoothing:
-                if ('standard_deviation_method' not in kwargs or
-                        kwargs['standard_deviation_method'] ==
-                        'turbulence_intensity'):
-                    if ('turbulence_intensity' not in kwargs and
-                            'roughness_length' in kwargs):
+                if (self.standard_deviation_method == 'turbulence_intensity'
+                        and 'turbulence_intensity' not in kwargs):
+                    if 'roughness_length' in kwargs:
                         # Calculate turbulence intensity and write to kwargs
                         turbulence_intensity = (
                             tools.estimate_turbulence_intensity(
