@@ -86,7 +86,7 @@ class TurbineClusterModelChain(object):
         Default: 'wind_farm_power_curves'.
 
     """
-    def __init__(self, wind_object, density_correction=False,  #TODO: parameter cluster_or_farm boolean ?
+    def __init__(self, wind_object, density_correction=False,
                  wake_losses_method='constant_efficiency', smoothing=True,
                  block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
@@ -158,7 +158,7 @@ class TurbineClusterModelChain(object):
                             "'turbulence_intensity' as " +
                             "`standard_deviation_method`")
             if self. density_correction:
-                pass # TODO: any restrictions? density needed
+                pass # TODO: restrictions (density needed)
             if self.wake_losses_method is not None:
                 if self.wind_object.efficiency is None: # TODO if not...
                     raise KeyError(
@@ -183,7 +183,7 @@ class TurbineClusterModelChain(object):
             # renaming columns
             power_curve.columns = ['wind_speed', turbine_type_dict[
                 'wind_turbine'].object_name]
-            df = pd.concat([df, pd.DataFrame(
+            df = pd.concat([df, pd.DataFrame(  # TODO: merge without renaming
                 power_curve.set_index(['wind_speed']) *
                 turbine_type_dict['number_of_turbines'])], axis=1)
             # Rename back TODO: copy()
@@ -227,7 +227,7 @@ class TurbineClusterModelChain(object):
         curves.
 
         Other Parameters
-        ---------------- # TODO: check entry
+        ----------------
         roughness_length : Float, optional.
             Roughness length.
         turbulence_intensity : Float, optional.
