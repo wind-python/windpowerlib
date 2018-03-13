@@ -255,9 +255,8 @@ class TurbineClusterModelChain(object):
             data=[list(summarized_power_curve.index),
                   list(summarized_power_curve['power'].values)]).transpose()
         summarized_power_curve_df.columns = ['wind_speed', 'power']
-        if (self.density_correction and
-                self.density_correction_order == 'cluster_power_curve'):
-            pass # TODO: add density correction
+        # Edition to power curve. Note: density correction is done in the
+        # function run_model()
         if (self.smoothing and
                 self.smoothing_order == 'cluster_power_curve'):
             summarized_power_curve_df = power_curve.smooth_power_curve(
@@ -404,6 +403,10 @@ class TurbineClusterModelChain(object):
         self.assign_power_curve(**kwargs)
         # Get modelchain parameters
         modelchain_data = self.get_modelchain_data(**kwargs)
+        # Density correction to cluster power curve # TODO test
+        if (self.density_correction and
+                self.density_correction_order == 'cluster_power_curve'):
+            modelchain_data['density_correction'] = True
         # Run modelchain
         mc = modelchain.ModelChain(
             self.wind_object, **modelchain_data).run_model(weather_df)
