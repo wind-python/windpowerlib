@@ -7,8 +7,7 @@ windpowerlib. TODO: adapt
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
-from . import (modelchain, power_output, tools, wind_farm,
-               power_curve, wind_turbine_cluster)
+from . import modelchain, tools, wind_farm, power_curve, wind_turbine_cluster
 import pandas as pd
 
 
