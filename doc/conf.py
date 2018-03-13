@@ -61,7 +61,7 @@ master_doc = 'index'
 # General information about the project.
 project = u'windpowerlib'
 copyright = u'2016, oemof developer group'
-author = u'Uwe Krien, oemof developing group'
+author = u'oemof developing group'
 
 import windpowerlib
 
@@ -285,7 +285,7 @@ texinfo_documents = [
 
 # Bibliographic Dublin Core info.
 epub_title = u'windpowerlib'
-epub_author = u'Uwe Krien, oemof developing group'
+epub_author = u'oemof developing group'
 epub_publisher = u'oemof developing group'
 epub_copyright = u'2016, oemof developing group'
 
