@@ -93,7 +93,7 @@ class TurbineClusterModelChain(object):
                  standard_deviation_method='turbulence_intensity',
                  density_correction_order='wind_farm_power_curves',
                  smoothing_order='wind_farm_power_curves'):
- # TODO Fehler abfangen (falls cluster aber wind farm)
+
         self.wind_object = wind_object
         self.density_correction = density_correction
         self.wake_losses_method = wake_losses_method
@@ -105,7 +105,16 @@ class TurbineClusterModelChain(object):
 
         self.power_output = None
 
-# TODO: if a wind turbine of wind farm does not have power curve but cp curve:
+        if (isinstance(self.wind_object, wind_farm.WindFarm) and
+                self.density_correction_order == 'cluster_power_curve' or
+                self.smoothing_order == 'cluster_power_curve'):
+            raise ValueError("`density_correction_order` and " +
+                             "`smoothing_order` can only be " +
+                             "'cluster_power_curve' if you calculate a " +
+                             "cluster but `wind_object` is an object of the " +
+                             "class WindFarm.")
+
+# TODO: if a wind turbine of wind farm does not have a power curve but a cp curve:
     # calculate power curve from cp curve
 
     def wind_farm_power_curve(self, wind_farm, **kwargs):
