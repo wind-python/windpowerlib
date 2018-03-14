@@ -5,7 +5,7 @@ __version__ = '0.0.6'
 from windpowerlib import density
 from windpowerlib import modelchain
 from windpowerlib import power_output
-from windpowerlib import power_curve
+from windpowerlib import power_curves
 from windpowerlib import temperature
 from windpowerlib import tools
 from windpowerlib import wind_speed
