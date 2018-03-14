@@ -60,8 +60,8 @@ def linear_interpolation_extrapolation(df, target_height):
     ...                                              'wind_speed']),
     ...                                    np.array([10, 80])])
     >>> round(linear_interpolation_extrapolation(
-    ...     weather_df['wind_speed'], 100)[0], 10)
-    6.8571428571
+    ...     weather_df['wind_speed'], 100)[0], 2)
+    6.86
 
     """
     # find closest heights
@@ -71,53 +71,3 @@ def linear_interpolation_extrapolation(df, target_height):
     return ((df[heights_sorted[1]] - df[heights_sorted[0]]) /
             (heights_sorted[1] - heights_sorted[0]) *
             (target_height - heights_sorted[0]) + df[heights_sorted[0]])
-
-
-def gaussian_distribution(function_variable, standard_deviation, mean=0):
-    r"""
-    Normal distribution or gaussian distribution.
-
-    Parameters
-    ----------
-    function_variable : Float
-        Variable of the gaussian distribution.
-    standard_deviation : Float
-        Standard deviation of the gaussian distribution.
-    mean : Float
-        Defines the offset of the gaussian distribution function. Default: 0.
-
-    Returns
-    -------
-    pandas.Series or numpy.array
-        Wind speed at hub height. Data type depends on type of `wind_speed`.
-
-    Notes
-    -----
-    The following equation is used [1]_:
-
-    .. math:: f(x) = \frac{1}{\sigma \sqrt{2 \pi}} exp
-                     \left[ -\frac{(x-\mu)^2}{2 \sigma^2}  \right]
-
-    with:
-        # TODO: add variables
-
-    References
-    ----------
-    .. [1] Berendsen, H.: "A Student's Guide to Data and Error Analysis".
-             New York, Cambridge University Press, 2011, p. 37
-    
-    # TODO: add references
-
-    """
-    return (1 / (standard_deviation * np.sqrt(2 * np.pi)) *
-            np.exp(-(function_variable - mean)**2 /
-                   (2 * standard_deviation**2)))
-
-
-def estimate_turbulence_intensity(height, roughness_length):
-    """
-    Calculate turbulence intensity.
-
-    """
-    # TODO: Search other possibilities for TI.
-    return 1 / (np.log(height / roughness_length))

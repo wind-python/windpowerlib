@@ -10,8 +10,6 @@ __license__ = "GPLv3"
 import numpy as np
 import pandas as pd
 from windpowerlib import tools
-from matplotlib import pyplot as plt
-import os
 
 
 def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
