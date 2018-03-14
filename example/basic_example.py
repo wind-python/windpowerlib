@@ -14,8 +14,8 @@ try:
 except ImportError:
     plt = None
 
-from windpowerlib.modelchain import ModelChain
-from windpowerlib.wind_turbine import WindTurbine
+from windpowerlib import ModelChain
+from windpowerlib import WindTurbine
 
 # You can use the logging package to get logging messages from the windpowerlib
 # Change the logging level if you want more or less messages
@@ -97,7 +97,7 @@ def initialise_wind_turbines():
     # specification of own wind turbine (Note: power coefficient values and
     # nominal power have to be in Watt)
     myTurbine = {
-        'turbine_name': 'myTurbine',
+        'object_name': 'myTurbine',
         'nominal_power': 3e6,  # in W
         'hub_height': 105,  # in m
         'rotor_diameter': 90,  # in m
@@ -110,12 +110,13 @@ def initialise_wind_turbines():
     my_turbine = WindTurbine(**myTurbine)
 
     # specification of wind turbine where power curve is provided
-    # if you want to use the power coefficient curve add
-    # {'fetch_curve': 'power_coefficient_curve'} to the dictionary
+    # if you want to use the power coefficient curve change the value of
+    # 'fetch_curve' to 'power_coefficient_curve'
     enerconE126 = {
-        'turbine_name': 'ENERCON E 126 7500',  # turbine name as in register
+        'object_name': 'ENERCON E 126 7500',  # turbine name as in register
         'hub_height': 135,  # in m
-        'rotor_diameter': 127  # in m
+        'rotor_diameter': 127,  # in m
+        'fetch_curve': 'power_curve'  # fetch power curve
     }
     # initialise WindTurbine object
     e126 = WindTurbine(**enerconE126)
