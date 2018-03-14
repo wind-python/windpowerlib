@@ -9,6 +9,7 @@ __license__ = "GPLv3"
 
 import numpy as np
 import pandas as pd
+from windpowerlib import tools
 
 
 def power_coefficient_curve(wind_speed, power_coefficient_curve_wind_speeds,
