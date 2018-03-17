@@ -169,12 +169,16 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
     """
     path = os.path.join(os.path.dirname(__file__), 'data',
                         'wind_efficiency_curves.csv')
+    # Read all curves from file
     wind_efficiency_curves = pd.read_csv(path)
+    # Create wind speed series with standard wind speeds in 0.5 m/s step size
     wind_speed = pd.Series(np.arange(0, 25.5, 0.5))
+    # Get x values depending on curve name
     if 'dena' in curve_name:
         x_values = wind_efficiency_curves['x_dena']
     if 'knorr' in curve_name:
         x_values = wind_efficiency_curves['x_knorr']
+    # Interpolate between the x values and create data frame
     efficiency = np.interp(
         wind_speed, x_values.dropna(),
         wind_efficiency_curves[curve_name].dropna())
@@ -216,16 +220,21 @@ def display_wind_efficiency_curves():
     """
     path = os.path.join(os.path.dirname(__file__), 'data',
                         'wind_efficiency_curves.csv')
+    # Read all curves from file
     wind_efficiency_curves = pd.read_csv(path)
+    # Initialize data frame for plot
     curves_df = pd.DataFrame()
     for curve_name in [col for col in list(wind_efficiency_curves) if
                        'x_' not in col]:
+        # Get wind efficiency curve for standard wind speeds from
+        # read_wind_efficiency_curve() and add to data frame
         efficiency_curve = read_wind_efficiency_curve(
             curve_name).rename(
             columns={'efficiency': curve_name.replace('_', ' '),
                      'wind_speed': 'wind speed m/s'}).set_index(
                          'wind speed m/s')
         curves_df = pd.concat([curves_df, efficiency_curve], axis=1)
+    # Create separate data frames for origin of curve
     knorr_df = curves_df[[column_name for column_name in curves_df if
                           'knorr' in column_name]]
     dena_df = curves_df[[column_name for column_name in curves_df if
