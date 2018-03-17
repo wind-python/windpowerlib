@@ -164,7 +164,7 @@ class TurbineClusterModelChain(object):
             if self. density_correction:
                 pass # TODO: restrictions (density needed)
             if self.wake_losses_method is not None:
-                if self.wind_object.efficiency is None: # TODO if not...
+                if wind_farm.efficiency is None:
                     raise KeyError(
                         "wind_farm_efficiency is needed if " +
                         "`wake_losses_method´ is '{0}', but ".format(
