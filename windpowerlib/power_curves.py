@@ -126,7 +126,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
 
 def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
-                               wake_losses_method='constant_efficiency',
+                               wake_losses_method='wind_efficiency_curve',
                                wind_farm_efficiency=None):
     r"""
     Applies wake losses depending on the method to a power curve.
@@ -141,7 +141,8 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         `power_curve_wind_speeds`.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
-        consideration. Default: 'constant_efficiency'.
+        consideration. Options: 'wind_efficiency_curve', 'constant_efficiency'.
+        Default: 'wind_efficiency_curve'.
     wind_farm_efficiency : Float or pd.DataFrame or Dictionary
         Efficiency of the wind farm. Either constant (float) or wind efficiency
         curve (pd.DataFrame or Dictionary) contianing 'wind_speed' and
@@ -188,7 +189,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         power_curve_df.columns = ['wind_speed', 'power']
     else:
         raise ValueError(
-            "`wake_losses_method` is {0} but should be None, ".format(
+            "`wake_losses_method` is {0} but should be ".format(
                 wake_losses_method) +
             "'constant_efficiency' or 'wind_efficiency_curve'")
     return power_curve_df

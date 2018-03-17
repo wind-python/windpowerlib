@@ -27,7 +27,8 @@ class TurbineClusterModelChain(object):
         before the summation. Default: False.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
-        consideration. Default: 'constant_efficiency'.
+        consideration. Options: 'wind_efficiency_curve', 'constant_efficiency'
+        or None. Default: 'wind_efficiency_curve'.
     smoothing : Boolean
         If True the power curves will be smoothed before the summation.
         Default: True.
@@ -61,7 +62,8 @@ class TurbineClusterModelChain(object):
         before the summation. Default: False.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
-        consideration. Default: 'constant_efficiency'.
+        consideration. Options: 'wind_efficiency_curve', 'constant_efficiency'
+        or None. Default: 'wind_efficiency_curve'.
     smoothing : Boolean
         If True the power curves will be smoothed before the summation.
         Default: True.
@@ -88,7 +90,7 @@ class TurbineClusterModelChain(object):
 
     """
     def __init__(self, wind_object, density_correction=False,
-                 wake_losses_method='constant_efficiency', smoothing=True,
+                 wake_losses_method='wind_efficiency_curve', smoothing=True,
                  block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
                  density_correction_order='wind_farm_power_curves',
