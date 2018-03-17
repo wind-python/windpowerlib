@@ -193,6 +193,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
             "'constant_efficiency' or 'wind_efficiency_curve'")
     return power_curve_df
 
+
 def density_correct_power_curve(density, power_curve_wind_speeds,
                                 power_curve_values):
     r"""
@@ -220,8 +221,8 @@ def density_correct_power_curve(density, power_curve_wind_speeds,
 
     Notes
     -----
-    The following equation is used for the wind speed at site
-    [1]_, [2]_, [3]_:
+    The following equation is used for the site specific power curve wind
+    speeds [1]_, [2]_, [3]_:
 
     .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}
                        {\rho_{site}}\right)^{p(v)}

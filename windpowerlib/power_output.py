@@ -188,8 +188,8 @@ def power_curve_density_correction(wind_speed, power_curve_wind_speeds,
 
     Notes
     -----
-    The following equation is used for the wind speed at site
-    [1]_, [2]_, [3]_:
+    The following equation is used for the site specific power curve wind
+    speeds [1]_, [2]_, [3]_:
 
     .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}
                        {\rho_{site}}\right)^{p(v)}
