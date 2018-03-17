@@ -159,7 +159,8 @@ class TurbineClusterModelChain(object):
                         raise ValueError(
                             "`roughness_length` must be defined for using " +
                             "'turbulence_intensity' as " +
-                            "`standard_deviation_method`")
+                            "`standard_deviation_method` if " +
+                            "`turbulence_intensity` is not given")
             if self. density_correction:
                 pass # TODO: restrictions (density needed)
             if self.wake_losses_method is not None:
