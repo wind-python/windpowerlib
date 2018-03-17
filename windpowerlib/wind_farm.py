@@ -189,6 +189,7 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
                 curve_name))
         plt.ylabel('efficiency')
         plt.show()
+        efficiency_curve.set_index('wind speed')
     return efficiency_curve
 
 
