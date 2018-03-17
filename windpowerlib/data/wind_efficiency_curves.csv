@@ -1,4 +1,4 @@
-x_knorr,y_knorr_mean,y_knorr_extreme1,y_knorr_extreme2,y_knorr_extreme3,x_dena,y_dena_mean,y_dena_extreme2,y_dena_extreme1
+x_knorr,knorr_mean,knorr_extreme1,knorr_extreme2,knorr_extreme3,x_dena,dena_mean,dena_extreme2,dena_extreme1
 0.0224,1,0.999963,1,1,0.9238,0.99496,0.990716,0.987041
 0.0455,1,0.999816,1,1,0.9661,0.994957,0.990705,0.987035
 0.057,1,0.999742,0.999989,1,0.9819,0.994955,0.990701,0.987033

@@ -175,8 +175,9 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
         x_values = wind_efficiency_curves['x_dena']
     if 'knorr' in curve_name:
         x_values = wind_efficiency_curves['x_knorr']
-    efficiency = np.interp(wind_speed, x_values,
-                           wind_efficiency_curves['y_{}'.format(curve_name)])
+    efficiency = np.interp(
+        wind_speed, x_values.dropna(),
+        wind_efficiency_curves[curve_name].dropna())
     efficiency_curve = pd.DataFrame(data=[wind_speed.values,
                                           efficiency],).transpose()
     efficiency_curve.columns = ['wind_speed', 'efficiency']
@@ -216,8 +217,8 @@ def display_wind_efficiency_curves():
                         'wind_efficiency_curves.csv')
     wind_efficiency_curves = pd.read_csv(path)
     curves_df = pd.DataFrame()
-    for curve_name in [col.replace('y_', '') for
-                       col in list(wind_efficiency_curves) if 'x_' not in col]:
+    for curve_name in [col for col in list(wind_efficiency_curves) if
+                       'x_' not in col]:
         efficiency_curve = read_wind_efficiency_curve(
             curve_name).rename(
             columns={'efficiency': curve_name.replace('_', ' '),
