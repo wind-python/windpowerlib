@@ -151,8 +151,9 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
     Returns
     -------
     power_curve_df : pd.DataFrame
-        With wind farm efficiency reduced power curve. DataFrame power curve
-        values in W with the corresponding wind speeds in m/s.
+        With wind farm efficiency reduced power curve. DataFrame has 
+        'wind_speed' and 'power' columns with wind speeds in m/s and the
+        corresponding power curve value in W.
 
     Notes
     -----
