@@ -124,6 +124,11 @@ class TestModelChain:
         test_mc_3 = mc.ModelChain(
             wt.WindTurbine(**self.test_turbine),
             wind_speed_model='interpolation_extrapolation')
+        # Test modelchain with
+        # wind_speed_model='log_interpolation_extrapolation'
+        test_mc_4 = mc.ModelChain(
+            wt.WindTurbine(**self.test_turbine),
+            wind_speed_model='log_interpolation_extrapolation')
 
         # Parameters for tests
         wind_speed_8m = np.array([[4.0], [5.0]])
@@ -145,6 +150,8 @@ class TestModelChain:
         assert_series_equal(test_mc_2.wind_speed_hub(weather_df), v_wind_exp)
         v_wind_exp = pd.Series(data=[50.0, 74.0])
         assert_series_equal(test_mc_3.wind_speed_hub(weather_df), v_wind_exp)
+        v_wind_exp = pd.Series(data=[15.3188511585, 21.9782767378])
+        assert_series_equal(test_mc_4.wind_speed_hub(weather_df), v_wind_exp)
 
         # wind_speed is given at hub height
         weather_df.columns = [np.array(['wind_speed', 'wind_speed',
