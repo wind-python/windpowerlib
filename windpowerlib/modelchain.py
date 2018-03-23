@@ -23,7 +23,8 @@ class ModelChain(object):
     wind_speed_model : string
         Parameter to define which model to use to calculate the wind speed at
         hub height. Valid options are 'logarithmic', 'hellman' and
-        'interpolation_extrapolation'. Default: 'logarithmic'.
+        'interpolation_extrapolation', 'log_interpolation_extrapolation'.
+        Default: 'logarithmic'.
     temperature_model : string
         Parameter to define which model to use to calculate the temperature of
         air at hub height. Valid options are 'linear_gradient' and
@@ -55,7 +56,8 @@ class ModelChain(object):
     wind_speed_model : string
         Parameter to define which model to use to calculate the wind speed at
         hub height. Valid options are 'logarithmic', 'hellman' and
-        'interpolation_extrapolation'. Default: 'logarithmic'.
+        'interpolation_extrapolation', 'log_interpolation_extrapolation'.
+        Default: 'logarithmic'.
     temperature_model : string
         Parameter to define which model to use to calculate the temperature of
         air at hub height. Valid options are 'linear_gradient' and
@@ -299,6 +301,11 @@ class ModelChain(object):
             logging.debug('Calculating wind speed using linear inter- or '
                           'extrapolation.')
             wind_speed_hub = tools.linear_interpolation_extrapolation(
+                weather_df['wind_speed'], self.wind_turbine.hub_height)
+        elif self.wind_speed_model == 'log_interpolation_extrapolation':
+            logging.debug('Calculating wind speed using logarithmic inter- or '
+                          'extrapolation.')
+            wind_speed_hub = tools.logarithmic_interpolation_extrapolation(
                 weather_df['wind_speed'], self.wind_turbine.hub_height)
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
