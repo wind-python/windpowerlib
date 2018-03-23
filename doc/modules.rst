@@ -14,6 +14,16 @@ Classes
    modelchain.ModelChain
 
 
+Temperature
+==============
+
+Function for calculating air temperature at hub height.
+
+.. autosummary::
+   :toctree: temp/
+
+   temperature.linear_gradient
+
 Density
 ==============
 
@@ -22,11 +32,9 @@ Functions for calculating air density at hub height.
 .. autosummary::
    :toctree: temp/
 
-   density.temperature_gradient
-   density.temperature_interpol
-   density.rho_barometric
-   density.rho_ideal_gas
-   
+   density.barometric
+   density.ideal_gas
+  
 
 Wind speed
 ==============
@@ -36,8 +44,8 @@ Functions for calculating wind speed at hub height.
 .. autosummary::
    :toctree: temp/
 
-   wind_speed.logarithmic_wind_profile
-   wind_speed.v_wind_hellman
+   wind_speed.logarithmic_profile
+   wind_speed.hellman
    
 
 Wind turbine data
@@ -63,10 +71,9 @@ Functions for calculating power output of a wind turbine.
 .. autosummary::
    :toctree: temp/
 
-   power_output.cp_curve
-   power_output.cp_curve_density_corr
-   power_output.p_curve
-   power_output.p_curve_density_corr
+   power_output.power_coefficient_curve
+   power_output.power_curve
+   power_output.power_curve_density_correction
 
 
 ModelChain
@@ -91,8 +98,9 @@ Methods of the ModelChain object.
 .. autosummary::
    :toctree: temp/
 
-   modelchain.ModelChain.rho_hub
-   modelchain.ModelChain.v_wind_hub
+   modelchain.ModelChain.temperature_hub
+   modelchain.ModelChain.density_hub
+   modelchain.ModelChain.wind_speed_hub
    modelchain.ModelChain.turbine_power_output
 
 
@@ -104,8 +112,7 @@ Additional functions used in the windpowerlib.
 .. autosummary::
    :toctree: temp/
 
-   tools.smallest_difference
-   tools.linear_extra_interpolation
+   tools.linear_interpolation_extrapolation
 
 
 Example

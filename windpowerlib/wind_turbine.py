@@ -21,87 +21,95 @@ class WindTurbine(object):
 
     Parameters
     ----------
-    turbine_name : string
+    object_name : string
         Name of the wind turbine type.
         Use get_turbine_types() to see a list of all wind turbines for which
         power (coefficient) curve data is provided.
     hub_height : float
         Hub height of the wind turbine in m.
-    d_rotor : float
+    rotor_diameter : None or float
         Diameter of the rotor in m.
-    cp_values : pandas.DataFrame
-        Power coefficient curve of the wind turbine.
-        The indices of the DataFrame are the corresponding wind speeds of the
-        power coefficient curve, the power coefficient values are listed in
-        the column 'cp'. Default: None.
-    p_values : pandas.DataFrame
-        Power curve of the wind turbine.
-        The indices of the DataFrame are the corresponding wind speeds of the
-        power curve, the power values are listed in the column 'p'.
-        Default: None.
-    nominal_power : float
+    power_coefficient_curve : None, pandas.DataFrame or dictionary
+        Power coefficient curve of the wind turbine. DataFrame/dictionary must
+        have 'wind_speed' and 'power_coefficient' columns/keys with wind speeds
+        in m/s and the corresponding power coefficients. Default: None.
+    power_curve : None, pandas.DataFrame or dictionary
+        Power curve of the wind turbine. DataFrame/dictionary must have
+        'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
+        corresponding power curve value in W. Default: None.
+    nominal_power : None or float
         The nominal output of the wind turbine in W.
     fetch_curve : string
-        Parameter to specify whether the power or power coefficient curve
-        should be retrieved from the provided turbine data. Default: 'p'.
+        Parameter to specify whether a power or power coefficient curve
+        should be retrieved from the provided turbine data. Valid options are
+        'power_curve' and 'power_coefficient_curve'. Default: None.
 
     Attributes
     ----------
-    turbine_name : string
+    object_name : string
         Name of the wind turbine type.
         Use get_turbine_types() to see a list of all wind turbines for which
         power (coefficient) curve data is provided.
     hub_height : float
         Hub height of the wind turbine in m.
-    d_rotor : float
+    rotor_diameter : None or float
         Diameter of the rotor in m.
-    cp_values : pandas.DataFrame
-        Power coefficient curve of the wind turbine.
-        The indices of the DataFrame are the corresponding wind speeds of the
-        power coefficient curve, the power coefficient values are listed in
-        the column 'cp'. Default: None.
-    p_values : pandas.DataFrame
-        Power curve of the wind turbine.
-        Indices are the wind speeds of the power curve in m/s, the
-        corresponding power values in W are in the column 'p'.
-        Default: None.
-    nominal_power : float
+    power_coefficient_curve : None, pandas.DataFrame or dictionary
+        Power coefficient curve of the wind turbine. DataFrame/dictionary must
+        have 'wind_speed' and 'power coefficient' columns/keys with wind speeds
+        in m/s and the corresponding power coefficients. Default: None.
+    power_curve : None, pandas.DataFrame or dictionary
+        Power curve of the wind turbine. DataFrame/dictionary must have
+        'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
+        corresponding power curve value in W. Default: None.
+    nominal_power : None or float
         The nominal output of the wind turbine in W.
     fetch_curve : string
-        Parameter to specify whether the power or power coefficient curve
-        should be retrieved from the provided turbine data. Default: 'p'.
+        Parameter to specify whether a power or power coefficient curve
+        should be retrieved from the provided turbine data. Valid options are
+        'power_curve' and 'power_coefficient_curve'. Default: None.
     power_output : pandas.Series
         The calculated power output of the wind turbine.
+
+    Notes
+    ------
+    Your wind turbine object should have a power coefficient or power curve.
+    You can set the `fetch_curve` parameter if you don't want to provide one
+    yourself but want to automatically fetch a curve from the data set
+    provided along with the windpowerlib.
 
     Examples
     --------
     >>> from windpowerlib import wind_turbine
     >>> enerconE126 = {
     ...    'hub_height': 135,
-    ...    'd_rotor': 127,
-    ...    'turbine_name': 'ENERCON E 126 7500'}
+    ...    'rotor_diameter': 127,
+    ...    'object_name': 'ENERCON E 126 7500',
+    ...    'fetch_curve': 'power_curve'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-    >>> print(e126.d_rotor)
-    127
+    >>> print(e126.nominal_power)
+    7500000
 
     """
 
-    def __init__(self, turbine_name, hub_height, d_rotor, cp_values=None,
-                 p_values=None, nominal_power=None, fetch_curve='p'):
+    def __init__(self, object_name, hub_height, rotor_diameter=None,
+                 power_coefficient_curve=None, power_curve=None,
+                 nominal_power=None, fetch_curve=None):
 
-        self.turbine_name = turbine_name
+        self.object_name = object_name
         self.hub_height = hub_height
-        self.d_rotor = d_rotor
-        self.cp_values = cp_values
-        self.p_values = p_values
+        self.rotor_diameter = rotor_diameter
+        self.power_coefficient_curve = power_coefficient_curve
+        self.power_curve = power_curve
         self.nominal_power = nominal_power
         self.fetch_curve = fetch_curve
 
         self.power_output = None
 
-        if (self.cp_values is None and self.p_values is None):
+        if self.power_coefficient_curve is None and self.power_curve is None:
             self.fetch_turbine_data()
 
+    # ToDo: Have fetch_curve as an input to this function.
     def fetch_turbine_data(self):
         r"""
         Fetches data of the requested wind turbine.
@@ -123,13 +131,14 @@ class WindTurbine(object):
         >>> from windpowerlib import wind_turbine
         >>> enerconE126 = {
         ...    'hub_height': 135,
-        ...    'd_rotor': 127,
-        ...    'turbine_name': 'ENERCON E 126 7500'}
+        ...    'rotor_diameter': 127,
+        ...    'object_name': 'ENERCON E 126 7500',
+        ...    'fetch_curve': 'power_coefficient_curve'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.cp_values.cp[5.0])
+        >>> print(e126.power_coefficient_curve['power coefficient'][5])
         0.423
         >>> print(e126.nominal_power)
-        7500000.0
+        7500000
 
         """
 
@@ -142,20 +151,23 @@ class WindTurbine(object):
 
             Returns
             -------
-            Tuple (pd.DataFrame, float)
-                Power curve or power coefficient curve (pd.DataFrame)
+            Tuple (pandas.DataFrame, float)
+                Power curve or power coefficient curve (pandas.DataFrame)
                 and nominal power (float).
+                Power (coefficient) curve DataFrame contains power coefficient
+                curve values (dimensionless) or power curve values in W with
+                the corresponding wind speeds in m/s.
 
             """
             df = read_turbine_data(filename=filename)
-            wpp_df = df[df.turbine_id == self.turbine_name]
+            wpp_df = df[df.turbine_id == self.object_name]
             # if turbine not in data file
             if wpp_df.shape[0] == 0:
                 pd.set_option('display.max_rows', len(df))
                 logging.info('Possible types: \n{0}'.format(df.turbine_id))
                 pd.reset_option('display.max_rows')
                 sys.exit('Cannot find the wind converter type: {0}'.format(
-                    self.turbine_name))
+                    self.object_name))
             # if turbine in data file write power (coefficient) curve values
             # to 'data' array
             ncols = ['turbine_id', 'p_nom', 'source', 'modificationtimestamp']
@@ -167,17 +179,23 @@ class WindTurbine(object):
                         data = np.vstack((data, np.array(
                             [float(col), float(wpp_df[col])])))
             data = np.delete(data, 0, 0)
-            df = pd.DataFrame(data, columns=['v_wind', self.fetch_curve])
-            df.set_index('v_wind', drop=True, inplace=True)
-            nominal_power = wpp_df['p_nom'].iloc[0] * 1000.0
+            if self.fetch_curve == 'power_curve':
+                df = pd.DataFrame(data, columns=['wind_speed', 'power'])
+            if self.fetch_curve == 'power_coefficient_curve':
+                df = pd.DataFrame(data, columns=['wind_speed',
+                                                 'power coefficient'])
+            nominal_power = wpp_df['p_nom'].iloc[0]
             return df, nominal_power
-        if self.fetch_curve == 'p':
-            filename = 'p_curves.csv'
-            p_values, p_nom = restructure_data()
-            self.p_values = p_values * 1000.0
+        if self.fetch_curve == 'power_curve':
+            filename = 'power_curves.csv'
+            self.power_curve, p_nom = restructure_data()
+        elif self.fetch_curve == 'power_coefficient_curve':
+            filename = 'power_coefficient_curves.csv'
+            self.power_coefficient_curve, p_nom = restructure_data()
         else:
-            filename = 'cp_curves.csv'
-            self.cp_values, p_nom = restructure_data()
+            raise ValueError("'{0}' is an invalid value. ".format(
+                             self.fetch_curve) + "`fetch_curve` must be " +
+                             "'power_curve' or 'power_coefficient_curve'.")
         if self.nominal_power is None:
             self.nominal_power = p_nom
         return self
@@ -185,7 +203,7 @@ class WindTurbine(object):
 
 def read_turbine_data(**kwargs):
     r"""
-    Fetches power coefficient curve or power curve from a file.
+    Fetches power (coefficient) curves from a file.
 
     The data files are provided along with the windpowerlib and are located in
     the directory windpowerlib/data.
@@ -195,20 +213,23 @@ def read_turbine_data(**kwargs):
     datapath : string, optional
         Path where the data file is stored. Default: './data'
     filename : string, optional
-        Name of data file. Default: 'p_curves.csv'
+        Name of data file. Provided data files are 'power_curves.csv' and
+        'power_coefficient_curves.csv'. Default: 'power_curves.csv'.
 
     Returns
     -------
     pandas.DataFrame
-        Power coefficient curve values or power curve values with the
-        corresponding wind speeds as indices.
+        Power coefficient curve values (dimensionless) or power curve values
+        in kW with corresponding wind speeds in m/s of all available wind
+        turbines with turbine name in column 'turbine_id', turbine nominal
+        power in column 'p_nom'.
 
     """
     if 'datapath' not in kwargs:
         kwargs['datapath'] = os.path.join(os.path.dirname(__file__), 'data')
 
     if 'filename' not in kwargs:
-        kwargs['filename'] = 'p_curves.csv'
+        kwargs['filename'] = 'power_curves.csv'
 
     df = pd.read_csv(os.path.join(kwargs['datapath'], kwargs['filename']),
                      index_col=0)
@@ -224,16 +245,24 @@ def get_turbine_types(print_out=True, **kwargs):
     Parameters
     ----------
     print_out : boolean
-        Directly prints the list of types if set to True. Default: True
+        Directly prints the list of types if set to True. Default: True.
+
+    Other Parameters
+    ----------------
+    datapath : string, optional
+        Path where the data file is stored. Default: './data'
+    filename : string, optional
+        Name of data file. Provided data files are 'power_curves.csv' and
+        'power_coefficient_curves.csv'. Default: 'power_curves.csv'.
 
     Examples
     --------
     >>> from windpowerlib import wind_turbine
-    >>> valid_types_df = wind_turbine.get_turbine_types(print_out=False)
-    >>> print(valid_types_df.iloc[5])
-    turbine_id    DEWIND D8 2000
-    p_nom                   2000
-    Name: 5, dtype: object
+    >>> turbines = wind_turbine.get_turbine_types(print_out=False)
+    >>> print(turbines[turbines["turbine_id"].str.contains("ENERCON")].iloc[0])
+    turbine_id    ENERCON E 101 3000
+    p_nom                    3000000
+    Name: 25, dtype: object
 
     """
     df = read_turbine_data(**kwargs)

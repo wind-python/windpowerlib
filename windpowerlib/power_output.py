@@ -11,35 +11,46 @@ import numpy as np
 import pandas as pd
 
 
-def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
+def power_coefficient_curve(wind_speed, power_coefficient_curve_wind_speeds,
+                            power_coefficient_curve_values, rotor_diameter,
+                            density, density_correction=False):
     r"""
-    Calculates the turbine power output using a cp curve.
+    Calculates the turbine power output using a power coefficient curve.
 
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.ModelChain` class
-    is 'cp_values' and the parameter `density_corr` is False.
+    instance of the :class:`~.modelchain.ModelChain` class is
+    'power_coefficient_curve'. If the parameter `density_correction` is True
+    the density corrected power curve (See
+    :py:func:`~.power_curve_density_correction`) is used.
 
     Parameters
     ----------
-    v_wind : pandas.Series or numpy.array
+    wind_speed : pandas.Series or numpy.array
         Wind speed at hub height in m/s.
-    rho_hub : pandas.Series or numpy.array
+    power_coefficient_curve_wind_speeds : pandas.Series or numpy.array
+        Wind speeds in m/s for which the power coefficients are provided in
+        `power_coefficient_curve_values`.
+    power_coefficient_curve_values : pandas.Series or numpy.array
+        Power coefficients corresponding to wind speeds in
+        `power_coefficient_curve_wind_speeds`.
+    rotor_diameter : float
+        Rotor diameter in m.
+    density : pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
-    d_rotor : float
-        Diameter of rotor in m.
-    cp_values : pandas.DataFrame
-        Power coefficient curve of the wind turbine.
-        Indices are the wind speeds of the power coefficient curve in m/s, the
-        corresponding power coefficient values are in the column 'cp'.
+    density_correction : boolean
+        If the parameter is True the density corrected power curve is used for
+        the calculation of the turbine power output. Default: False.
 
     Returns
     -------
     pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
+        Data type depends on type of `wind_speed`.
 
     Notes
     -----
-    The following equation is used [1]_, [2]_:
+    The following equation is used if the parameter `density_corr` is False
+    [1]_, [2]_:
 
     .. math:: P=\frac{1}{8}\cdot\rho_{hub}\cdot d_{rotor}^{2}
         \cdot\pi\cdot v_{wind}^{3}\cdot cp\left(v_{wind}\right)
@@ -49,7 +60,8 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
         v: wind speed [m/s], cp: power coefficient
 
     It is assumed that the power output for wind speeds above the maximum
-    wind speed given in the power coefficient curve is zero.
+    and below the minimum wind speed given in the power coefficient curve is
+    zero.
 
     References
     ----------
@@ -59,124 +71,120 @@ def cp_curve(v_wind, rho_hub, d_rotor, cp_values):
             Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 542
 
     """
-    # cp time series
-    cp_time_series = np.interp(v_wind, cp_values.index, cp_values.cp,
-                               left=0, right=0)
-    # Convert rho_hub to np.array if v_wind is np.array
-    if (isinstance(v_wind, np.ndarray) and isinstance(rho_hub, pd.Series)):
-        rho_hub = np.array(rho_hub)
-    power_output = (1 / 8 * rho_hub * d_rotor ** 2 * np.pi
-                    * np.power(v_wind, 3) * cp_time_series)
-    # Power_output as pd.Series if v_wind is pd.Series
-    if isinstance(v_wind, pd.Series):
-        power_output = pd.Series(data=power_output, index=v_wind.index,
-                                 name='feedin_wind_turbine')
+    if density_correction is False:
+        power_coefficient_time_series = np.interp(
+            wind_speed, power_coefficient_curve_wind_speeds,
+            power_coefficient_curve_values, left=0, right=0)
+        power_output = (1 / 8 * density * rotor_diameter ** 2 * np.pi *
+                        np.power(wind_speed, 3) *
+                        power_coefficient_time_series)
+        # Power_output as pd.Series if wind_speed is pd.Series (else: np.array)
+        if isinstance(wind_speed, pd.Series):
+            power_output = pd.Series(data=power_output, index=wind_speed.index,
+                                     name='feedin_wind_turbine')
+        else:
+            power_output = np.array(power_output)
+    elif density_correction is True:
+        power_curve_values = (1 / 8 * 1.225 * rotor_diameter ** 2 * np.pi *
+                              np.power(power_coefficient_curve_wind_speeds,
+                                       3) *
+                              power_coefficient_curve_values)
+        power_output = power_curve_density_correction(
+            wind_speed, power_coefficient_curve_wind_speeds,
+            power_curve_values, density)
+    else:
+        raise TypeError("'{0}' is an invalid type. ".format(type(
+                        density_correction)) + "`density_correction` must " +
+                        "be Boolean (True or False).")
     return power_output
 
 
-def cp_curve_density_corr(v_wind, rho_hub, d_rotor, cp_values):
-    r"""
-    Calculates the turbine power output using a density corrected cp curve.
-
-    This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.ModelChain` class
-    is 'cp_values' and the parameter `density_corr` is True.
-
-    Parameters
-    ----------
-    v_wind : pandas.Series or numpy.array
-        Wind speed at hub height in m/s.
-    rho_hub : pandas.Series or numpy.array
-        Density of air at hub height in kg/m³.
-    d_rotor : float
-        Diameter of the rotor in m.
-    cp_values : pandas.DataFrame
-        Power coefficient curve of the wind turbine.
-        Indices are the wind speeds of the power coefficient curve in m/s, the
-        corresponding power coefficient values are in the column 'cp'.
-
-    Returns
-    -------
-    pandas.Series or numpy.array
-        Electrical power of the wind turbine in W.
-
-    Notes
-    -----
-    See :py:func:`cp_curve` for further information on how the power values
-    are calculated and :py:func:`p_curve_density_corr` for further
-    information on how the density correction is implemented.
-
-    It is assumed that the power output for wind speeds above the maximum
-    wind speed given in the power coefficient curve is zero.
-
-    """
-    p_values = (1 / 8 * 1.225 * d_rotor ** 2 * np.pi *
-                np.power(cp_values.index, 3) * cp_values.cp)
-    p_values = pd.DataFrame(data=np.array(p_values), index=cp_values.index,
-                            columns=['p'])
-    return p_curve_density_corr(v_wind, rho_hub, p_values)
-
-
-def p_curve(v_wind, p_values):
+def power_curve(wind_speed, power_curve_wind_speeds, power_curve_values,
+                density=None, density_correction=False):
     r"""
     Calculates the turbine power output using a power curve.
 
     This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.ModelChain` class is 'p_values' and
-    the parameter `density_corr` is False.
+    instance of the :class:`~.modelchain.ModelChain` class is 'power_curve'. If
+    the parameter `density_correction` is True the density corrected power
+    curve (See :py:func:`~.power_curve_density_correction`) is used.
 
     Parameters
     ----------
-    v_wind : pandas.Series or numpy.array
+    wind_speed : pandas.Series or numpy.array
         Wind speed at hub height in m/s.
-    p_values : pandas.DataFrame
-        Power curve of the wind turbine.
-        Indices are the wind speeds of the power curve in m/s, the
-        corresponding power values in W are in the column 'p'.
+    power_curve_wind_speeds : pandas.Series or numpy.array
+        Wind speeds in m/s for which the power curve values are provided in
+        `power_curve_values`.
+    power_curve_values : pandas.Series or numpy.array
+        Power curve values corresponding to wind speeds in
+        `power_curve_wind_speeds`.
+    density : pandas.Series or numpy.array
+        Density of air at hub height in kg/m³. This parameter is needed
+        if `density_correction` is True. Default: None.
+    density_correction : boolean
+        If the parameter is True the density corrected power curve is used for
+        the calculation of the turbine power output. In this case `density`
+        cannot be None. Default: False.
 
     Returns
     -------
     pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
+        Data type depends on type of `wind_speed`.
 
     Notes
     -------
     It is assumed that the power output for wind speeds above the maximum
-    wind speed given in the power curve is zero.
+    and below the minimum wind speed given in the power curve is zero.
 
     """
-    power_output = np.interp(v_wind, p_values.index, p_values.p,
-                             left=0, right=0)
-    # Power_output as pd.Series if v_wind is pd.Series
-    if isinstance(v_wind, pd.Series):
-        power_output = pd.Series(data=power_output, index=v_wind.index,
-                                 name='feedin_wind_turbine')
+    if density_correction is False:
+        power_output = np.interp(wind_speed, power_curve_wind_speeds,
+                                 power_curve_values, left=0, right=0)
+        # Power_output as pd.Series if wind_speed is pd.Series (else: np.array)
+        if isinstance(wind_speed, pd.Series):
+            power_output = pd.Series(data=power_output, index=wind_speed.index,
+                                     name='feedin_wind_turbine')
+        else:
+            power_output = np.array(power_output)
+    elif density_correction is True:
+        power_output = power_curve_density_correction(
+            wind_speed, power_curve_wind_speeds, power_curve_values, density)
+    else:
+        raise TypeError("'{0}' is an invalid type. ".format(type(
+                        density_correction)) + "`density_correction` must " +
+                        "be Boolean (True or False).")
     return power_output
 
 
-def p_curve_density_corr(v_wind, rho_hub, p_values):
+def power_curve_density_correction(wind_speed, power_curve_wind_speeds,
+                                   power_curve_values, density):
+    # possible TODO: add density correction for stall controlled wind turbines
     r"""
     Calculates the turbine power output using a density corrected power curve.
 
-    This function is carried out when the parameter `power_output_model` of an
-    instance of the :class:`~.modelchain.ModelChain` class is 'p_values' and
-    the parameter `density_corr` is True.
+    This function is carried out when the parameter `density_correction` of an
+    instance of the :class:`~.modelchain.ModelChain` class is True.
 
     Parameters
     ----------
-    v_wind : pandas.Series or numpy.array
-        Wind speed time series at hub height in m/s.
-    rho_hub : pandas.Series or numpy.array
+    wind_speed : pandas.Series or numpy.array
+        Wind speed at hub height in m/s.
+    power_curve_wind_speeds : pandas.Series or numpy.array
+        Wind speeds in m/s for which the power curve values are provided in
+        `power_curve_values`.
+    power_curve_values : pandas.Series or numpy.array
+        Power curve values corresponding to wind speeds in
+        `power_curve_wind_speeds`.
+    density : pandas.Series or numpy.array
         Density of air at hub height in kg/m³.
-    p_values : pandas.DataFrame
-        Power curve of the wind turbine.
-        Indices are the wind speeds of the power curve in m/s, the
-        corresponding power values in W are in the column 'p'.
 
     Returns
     -------
     pandas.Series or numpy.array
         Electrical power output of the wind turbine in W.
+        Data type depends on type of `wind_speed`.
 
     Notes
     -----
@@ -203,7 +211,7 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
     and :math:`\rho_{site}` the density at site conditions (and hub height).
 
     It is assumed that the power output for wind speeds above the maximum
-    wind speed given in the power curve is zero.
+    and below the minimum wind speed given in the power curve is zero.
 
     References
     ----------
@@ -218,18 +226,18 @@ def p_curve_density_corr(v_wind, rho_hub, p_values):
             at Reiner Lemoine Institute, 2014, p. 13
 
     """
-    # Convert rho_hub to np.array if v_wind is np.array
-    if (isinstance(v_wind, np.ndarray) and isinstance(rho_hub, pd.Series)):
-        rho_hub = np.array(rho_hub)
-    power_output = [(np.interp(v_wind[i],
-                               p_values.index * (1.225 / rho_hub[i])**(
-                                   np.interp(p_values.index,
-                                             [7.5, 12.5], [1/3, 2/3])),
-                               p_values.p, left=0, right=0))
-                    for i in range(len(v_wind))]
-    # Power_output as pd.Series if v_wind is pd.Series
-    if isinstance(v_wind, pd.Series):
-        power_output = pd.Series(data=power_output, index=v_wind.index,
+    if density is None:
+        raise TypeError("`density` is None. For the calculation with a " +
+                        "density corrected power curve density at hub " +
+                        "height is needed.")
+    power_output = [(np.interp(
+        wind_speed[i], power_curve_wind_speeds * (1.225 / density[i]) ** (
+            np.interp(power_curve_wind_speeds, [7.5, 12.5], [1/3, 2/3])),
+        power_curve_values, left=0, right=0)) for i in range(len(wind_speed))]
+
+    # Power_output as pd.Series if wind_speed is pd.Series (else: np.array)
+    if isinstance(wind_speed, pd.Series):
+        power_output = pd.Series(data=power_output, index=wind_speed.index,
                                  name='feedin_wind_turbine')
     else:
         power_output = np.array(power_output)

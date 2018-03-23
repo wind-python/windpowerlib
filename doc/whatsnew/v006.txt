@@ -1,25 +1,29 @@
-v0.0.6 ()
+v0.0.6 (July 07, 2017)
 +++++++++++++++++++++++++
-
-New features
-############
-
 
 Documentation
 #############
 
+ * added basic usage section and jupyter notebook
 
 Testing
 ####### 
 
-
-Bug fixes
-#########
-
+ * added tests for different data types and wind_turbine module
+ * added example to tests
+ * added and fixed doctests
 
 Other changes
 #############
-
+ 
+ * various API changes due to having better comprehensible function and variable names
+ * renamed Modelchain to ModelChain
+ * moved functions for temperature calculation to temperature module
+ * new function for interpolation and extrapolation
 
 Contributors
 ############
+
+ * Sabine Haas
+ * Birgit Schachler
+ * Uwe Krien

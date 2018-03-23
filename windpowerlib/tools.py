@@ -1,5 +1,5 @@
 """
-The ``tools`` module contains a collection of functions used in the
+The ``tools`` module contains a collection of helper functions used in the
 windpowerlib.
 
 """
@@ -8,95 +8,193 @@ windpowerlib.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
+import numpy as np
 
-def smallest_difference(data_frame, comp_value, column_name):
+
+def linear_interpolation_extrapolation(df, target_height):
     r"""
-    Selects a value with the smallest difference to a comparative value.
+    Linear inter- or extrapolates between the values of a data frame.
 
-    Additionally returns a corresponding value. This function is for example
-    used in :py:func:`~.modelchain.v_wind_hub` of the
-    :class:`~.modelchain.ModelChain` to choose the wind speed data that is
-    close to the hub height of the examined wind turbine. In this case the
-    column of the data frame contains wind speed time series and the indices
-    are the corresponding heights for which these time series apply.
+    This function can be used for the inter-/extrapolation of a parameter
+    (e.g wind speed) available at two or more different heights, to approximate
+    the value at hub height. The function is carried out when the parameter
+    `wind_speed_model`, `density_model` or `temperature_model` of an
+    instance of the :class:`~.modelchain.ModelChain` class is
+    'interpolation_extrapolation'.
 
     Parameters
     ----------
-    data_frame : DataFrame
-        Indices are the values of which the smallest difference to `comp_value`
-        will be found, the corresponding values are in the column
-        specified by `column_name` and they can be floats, pd.Series or
-        np.arrays.
-    comp_value : float
-        Comparative value.
-    column_name : string
-        Name of the column in the `data_frame` that contains the
-        correponding values.
+    df : pandas.DataFrame
+        DataFrame with time series for parameter that is to be interpolated or
+        extrapolated. The columns of the DataFrame are the different heights
+        for which the parameter is available. If more than two heights are
+        given, the two closest heights are used. See example below on how the
+        DataFrame should look like and how the function can be used.
+    target_height : float
+        Height for which the parameter is approximated (e.g. hub height).
 
     Returns
     -------
-    Tuple(float, pd.Series or np.array or float)
-        Closest value to comparative value as float and its corresponding value
-        as float.
-
-    """
-    diff = []
-    for index in sorted(data_frame.index):
-        diff.append(abs(comp_value - index))
-    closest_value = sorted(data_frame.index)[diff.index(min(diff))]
-    corresp_value = data_frame[column_name][closest_value]
-    return (closest_value, corresp_value)
-
-
-def linear_extra_interpolation(data_frame, requested_height, column_name):
-    r"""
-    Inter- or extrapolates between the values of a data frame.
-
-    This function can for example be used for the interpolation of a wind
-    speed, density or temperature.
-
-    Parameters
-    ----------
-    data_frame : DataFrame
-        Indices are the values between which will be interpolated or from which
-        will be extrapolated, the corresponding values are in the column
-        specified by `column_name` and they can be floats, pd.Series or
-        np.arrays.
-    requested_height : float
-        Height for which the interpolation takes place (e.g. hub height of wind
-        turbine).
-    column_name : string
-        Name of the column in the DataFrame `data_frame` that contains the
-        correponding values.
-
-    Returns
-    -------
-    interpolant : pandas.Series, numpy.array or float
-        Result of the interpolation (e.g. density at hub height).
+    pandas.Series
+        Result of the inter-/extrapolation (e.g. wind speed at hub height).
 
     Notes
     -----
 
-    For the interpolation np.interp() is used and the following equation is
-    used for extrapolation:
+    For the inter- and extrapolation the following equation is used:
 
-    .. math:: interpolant = (value_2 - value_1) / (height_2 - height_1) *
-              (height_{requested} - height_1) + value_1
+    .. math:: f(x) = \frac{(f(x_2) - f(x_1))}{(x_2 - x_1)} \cdot (x - x_1) + f(x_1)
 
-    with:
-        :math:`height_2`: largest/smallest index of data frame,
-        :math:`height_1`: second largest/smallest index of data frame,
-        :math:`value_2`: corresponding value to `height_2`,
-        :math:`value_1`: correponding value to `height_1`,
-        :math:`height_{requested}` : height for which the interpolation takes
-        place
+    Examples
+    ---------
+    >>> import numpy as np
+    >>> import pandas as pd
+    >>> wind_speed_10m = np.array([[3], [4]])
+    >>> wind_speed_80m = np.array([[6], [6]])
+    >>> weather_df = pd.DataFrame(np.hstack((wind_speed_10m,
+    ...                                      wind_speed_80m)),
+    ...                           index=pd.date_range('1/1/2012',
+    ...                                               periods=2,
+    ...                                               freq='H'),
+    ...                           columns=[np.array(['wind_speed',
+    ...                                              'wind_speed']),
+    ...                                    np.array([10, 80])])
+    >>> round(linear_interpolation_extrapolation(
+    ...     weather_df['wind_speed'], 100)[0], 2)
+    6.86
 
     """
-    height_2, value_2 = smallest_difference(data_frame, requested_height,
-                                            column_name)
-    data_frame_2 = data_frame.drop(height_2)
-    height_1, value_1 = smallest_difference(data_frame_2, requested_height,
-                                            column_name)
-    interpolant = ((value_2 - value_1) / (height_2 - height_1) *
-                   (requested_height - height_1) + value_1)
-    return interpolant
+    # find closest heights
+    heights_sorted = df.columns[
+        sorted(range(len(df.columns)),
+               key=lambda i: abs(df.columns[i] - target_height))]
+    return ((df[heights_sorted[1]] - df[heights_sorted[0]]) /
+            (heights_sorted[1] - heights_sorted[0]) *
+            (target_height - heights_sorted[0]) + df[heights_sorted[0]])
+
+
+def logarithmic_interpolation_extrapolation(df, target_height):
+    r"""
+    Logarithmic inter- or extrapolates between the values of a data frame.
+
+    This function can be used for the inter-/extrapolation of the wind speed if
+    it is available at two or more different heights, to approximate
+    the value at hub height. The function is carried out when the parameter
+    `wind_speed_model` :class:`~.modelchain.ModelChain` class is
+    'log_interpolation_extrapolation'.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        DataFrame with time series for parameter that is to be interpolated or
+        extrapolated. The columns of the DataFrame are the different heights
+        for which the parameter is available. If more than two heights are
+        given, the two closest heights are used. See example in
+        :py:func:`~.linear_interpolation_extrapolation` on how the
+        DataFrame should look like and how the function can be used.
+    target_height : float
+        Height for which the parameter is approximated (e.g. hub height).
+
+    Returns
+    -------
+    pandas.Series
+        Result of the inter-/extrapolation (e.g. wind speed at hub height).
+
+    Notes
+    -----
+
+    For the logarithmic inter- and extrapolation the following equation is
+    used [1]_:
+
+    .. math:: f(x) = \frac{\ln(x) \cdot (f(x_2) - f(x_1)) - f(x_2) \cdot \ln(x_1) + f(x_1) \cdot \ln(x_2)}{\ln(x_2) - \ln(x_1)}
+
+    References
+    ----------
+    .. [1] Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
+             Windenergieeinspeisung für wetterdatenbasierte
+             Windleistungssimulationen". Universität Kassel, Diss., 2016,
+             p. 83
+
+    """
+    # find closest heights
+    heights_sorted = df.columns[
+        sorted(range(len(df.columns)),
+               key=lambda i: abs(df.columns[i] - target_height))]
+    return ((np.log(target_height) *
+             (df[heights_sorted[1]] - df[heights_sorted[0]]) -
+             df[heights_sorted[1]] * np.log(heights_sorted[0]) +
+             df[heights_sorted[0]] * np.log(heights_sorted[1])) /
+            (np.log(heights_sorted[1]) - np.log(heights_sorted[0])))
+
+
+def gaussian_distribution(function_variable, standard_deviation, mean=0):
+    r"""
+    Normal distribution or gaussian distribution.
+
+    Parameters
+    ----------
+    function_variable : Float
+        Variable of the gaussian distribution.
+    standard_deviation : Float
+        Standard deviation of the gaussian distribution.
+    mean : Float
+        Defines the offset of the gaussian distribution function. Default: 0.
+
+    Returns
+    -------
+    pandas.Series or numpy.array
+        Wind speed at hub height. Data type depends on type of `wind_speed`.
+
+    Notes
+    -----
+    The following equation is used [1]_:
+
+    .. math:: f(x) = \frac{1}{\sigma \sqrt{2 \pi}} exp
+                     \left[ -\frac{(x-\mu)^2}{2 \sigma^2}  \right]
+
+    with:
+        # TODO: add variables
+
+    References
+    ----------
+    .. [1] Berendsen, H.: "A Student's Guide to Data and Error Analysis".
+             New York, Cambridge University Press, 2011, p. 37
+
+    # TODO: add references
+
+    """
+    return (1 / (standard_deviation * np.sqrt(2 * np.pi)) *
+            np.exp(-(function_variable - mean)**2 /
+                   (2 * standard_deviation**2)))
+
+
+def estimate_turbulence_intensity(height, roughness_length):
+    """
+    Calculate turbulence intensity.
+
+    Parameters
+    ----------
+    height : Float
+        Height above ground in m at which the turbulence intensity is
+        calculated.
+    roughness_length : pandas.Series or numpy.array or float
+        Roughness length.
+
+    Notes
+    -----
+    The following equation is used [1]_:
+
+    .. math:: TI = \frac{1}{ln \left(\frac{h}{z_\text{0}} \right)}
+
+    with:
+        TI: turbulence intensity, h: height, :math:`z_{0}`: roughness length
+
+    References
+    ----------
+    .. [1] Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
+             Windenergieeinspeisung für wetterdatenbasierte
+             Windleistungssimulationen". Universität Kassel, Diss., 2016,
+             p. 88
+
+    """
+    return 1 / (np.log(height / roughness_length))

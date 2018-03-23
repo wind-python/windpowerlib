@@ -61,6 +61,10 @@ If you are interested in wind models and want to help improve the existing model
 As the windpowerlib started with contributors from the `oemof developer group <https://github.com/orgs/oemof/teams/oemof-developer-group>`_ we use the same 
 `developer rules <http://oemof.readthedocs.io/en/stable/developing_oemof.html>`_.
 
+Citing the windpowerlib
+========================
+
+We use the zenodo project to get a DOI for each version. `Search zenodo for the right citation of your windpowerlib version <https://zenodo.org/search?page=1&size=20&q=windpowerlib>`_.
 
 License
 ============
