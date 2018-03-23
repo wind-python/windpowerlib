@@ -1,130 +1,77 @@
-from windpowerlib.tools import smallest_difference, linear_extra_interpolation
 import pandas as pd
-import numpy as np
 from pandas.util.testing import assert_series_equal
-from numpy.testing import assert_array_equal
+
+from windpowerlib.tools import (linear_interpolation_extrapolation,
+                                logarithmic_interpolation_extrapolation)
 
 
 class TestTools:
 
-    def test_smallest_difference(self):
-        weather = pd.DataFrame(data={'v_wind': [4.0, 5.0, 6.0]},
-                               index=[100, 150, 200])
-        weather_series = pd.DataFrame(data={'v_wind': [
-            pd.Series(data=[4.0, 5.0, 6.0]),
-            pd.Series(data=[8.0, 10.0, 14.0]),
-            pd.Series(data=[16.0, 20.0, 28.0])]}, index=[100, 150, 200])
-        weather_arr = pd.DataFrame(data={'v_wind': [
-            np.array(weather_series['v_wind'][weather_series.index[0]]),
-            np.array(weather_series['v_wind'][weather_series.index[1]]),
-            np.array(weather_series['v_wind'][weather_series.index[2]])]},
-                                   index=weather_series.index)
-        parameters = {'comp_value': 100,
-                      'column_name': 'v_wind'}
+    def test_linear_interpolation_extrapolation(self):
+        parameters = {'target_height': 80}
+        df = pd.DataFrame(data={10: [2.0, 2.0, 3.0],
+                                80: [4.0, 5.0, 6.0],
+                                200: [5.0, 8.0, 10.0]},
+                          index=[0, 1, 2])
+        # target_height is equal to height given in a column of the DataFrame
+        exp_output = pd.Series(data=[4.0, 5.0, 6.0])
+        assert_series_equal(linear_interpolation_extrapolation(
+            df, **parameters), exp_output)
+        # target_height is between heights given in the columns of the
+        # DataFrame
+        exp_output = pd.Series(data=[4.5, 6.5, 8.0])
+        parameters['target_height'] = 140
+        assert_series_equal(linear_interpolation_extrapolation(
+            df, **parameters), exp_output)
+        exp_output = pd.Series(data=[4.285714, 5.428571, 6.428571])
+        parameters['target_height'] = 90
+        assert_series_equal(linear_interpolation_extrapolation(
+            df, **parameters), exp_output)
+        # target_height is greater than the heights given in the columns of the
+        # DataFrame
+        exp_output = pd.Series(data=[5.333333, 9.0, 11.333333])
+        parameters['target_height'] = 240
+        assert_series_equal(linear_interpolation_extrapolation(
+            df, **parameters), exp_output)
+        # target_height is smaller than the heights given in the columns of the
+        # DataFrame
+        exp_output = pd.Series(data=[1.857143, 1.785714, 2.785714])
+        parameters['target_height'] = 5
+        assert_series_equal(linear_interpolation_extrapolation(
+            df, **parameters), exp_output)
 
-        # comparative value is an index of data frame
-        exp_output = (100, 4.0)
-        assert smallest_difference(weather, **parameters) == exp_output
-        exp_series = pd.Series(data=[4.0, 5.0, 6.0])
-        assert_series_equal(smallest_difference(weather_series,
-                                                **parameters)[1], exp_series)
-        exp_arr = np.array(exp_series)
-        assert_array_equal(smallest_difference(weather_arr,
-                                               **parameters)[1], exp_arr)
-        # comparative value between indices of data frame
-        exp_output = (150, 5.0)
-        parameters['comp_value'] = 175
-        assert smallest_difference(weather, **parameters) == exp_output
-        exp_series = pd.Series(data=[8.0, 10.0, 14.0])
-        assert_series_equal(smallest_difference(weather_series,
-                                                **parameters)[1], exp_series)
-        exp_arr = np.array(exp_series)
-        assert_array_equal(smallest_difference(weather_arr,
-                                               **parameters)[1], exp_arr)
-        # comparative value > indices of data frame
-        exp_output = (200, 6.0)
-        parameters['comp_value'] = 250
-        assert smallest_difference(weather, **parameters) == exp_output
-        exp_series = pd.Series(data=[16.0, 20.0, 28.0])
-        assert_series_equal(smallest_difference(weather_series,
-                                                **parameters)[1], exp_series)
-        exp_arr = np.array(exp_series)
-        assert_array_equal(smallest_difference(weather_arr,
-                                               **parameters)[1], exp_arr)
-        # comparative value < indices of data frame
-        exp_output = (100, 4.0)
-        parameters['comp_value'] = 90
-        assert smallest_difference(weather, **parameters) == exp_output
-        exp_series = pd.Series(data=[4.0, 5.0, 6.0])
-        assert_series_equal(smallest_difference(weather_series,
-                                                **parameters)[1], exp_series)
-        exp_arr = np.array(exp_series)
-        assert_array_equal(smallest_difference(weather_arr,
-                                               **parameters)[1], exp_arr)
-
-    def test_linear_extra_interpolation(self):
-        parameters = {'requested_height': 100,
-                      'column_name': 'v_wind'}
-        weather = pd.DataFrame(data={'v_wind': [4.0, 5.0, 6.0]},
-                               index=[100, 150, 200])
-        weather_series = pd.DataFrame(data={'v_wind': [
-            pd.Series(data=[4.0, 5.0, 6.0]),
-            pd.Series(data=[8.0, 10.0, 14.0]),
-            pd.Series(data=[16.0, 20.0, 28.0])]}, index=[100, 150, 200])
-        weather_arr = pd.DataFrame(data={'v_wind': [
-            np.array(weather_series['v_wind'][weather_series.index[0]]),
-            np.array(weather_series['v_wind'][weather_series.index[1]]),
-            np.array(weather_series['v_wind'][weather_series.index[2]])]},
-                                   index=weather_series.index)
-
-        # requested_height is an index of data frame
-        exp_output = 4.0
-        assert (linear_extra_interpolation(weather, **parameters) ==
-                exp_output)
-        exp_series = pd.Series(data=[4.0, 5.0, 6.0])
-        assert_series_equal(linear_extra_interpolation(weather_series,
-                                                       **parameters),
-                            exp_series)
-        exp_arr = np.array(exp_series)
-        assert_array_equal(linear_extra_interpolation(weather_arr,
-                                                      **parameters),
-                           exp_arr)
-        # requested_height is between indices of data frame
-        exp_output = 5.5
-        parameters['requested_height'] = 175
-        assert (linear_extra_interpolation(weather, **parameters) ==
-                exp_output)
-        exp_series = pd.Series(data=[12.0, 15.0, 21.0])
-        assert_series_equal(linear_extra_interpolation(weather_series,
-                                                       **parameters),
-                            exp_series)
-        exp_arr = np.array(exp_series)
-        assert_array_equal(linear_extra_interpolation(weather_arr,
-                                                      **parameters),
-                           exp_arr)
-        # requested_height > indices of data frame
-        exp_output = 7.0
-        parameters['requested_height'] = 250
-        assert (linear_extra_interpolation(weather, **parameters) ==
-                exp_output)
-        exp_series = pd.Series(data=[24.0, 30.0, 42.0])
-        assert_series_equal(linear_extra_interpolation(weather_series,
-                                                       **parameters),
-                            exp_series)
-        exp_arr = np.array(exp_series)
-        assert_array_equal(linear_extra_interpolation(weather_arr,
-                                                      **parameters),
-                           exp_arr)
-        # requested_height is < indices of data frame
-        exp_output = 3.5
-        parameters['requested_height'] = 75
-        assert (linear_extra_interpolation(weather, **parameters) ==
-                exp_output)
-        exp_series = pd.Series(data=[2.0, 2.5, 2.0])
-        assert_series_equal(linear_extra_interpolation(weather_series,
-                                                       **parameters),
-                            exp_series)
-        exp_arr = np.array(exp_series)
-        assert_array_equal(linear_extra_interpolation(weather_arr,
-                                                      **parameters),
-                           exp_arr)
+    def test_logarithmic_interpolation_extrapolation(self):
+        parameters = {'target_height': 80}
+        df = pd.DataFrame(data={10: [2.0, 2.0, 3.0],
+                                80: [4.0, 5.0, 6.0],
+                                200: [5.0, 8.0, 10.0]},
+                          index=[0, 1, 2])
+        # target_height is equal to height given in a column of the DataFrame
+        exp_output = pd.Series(data=[4.0, 5.0, 6.0])
+        assert_series_equal(logarithmic_interpolation_extrapolation(
+            df, **parameters), exp_output)
+        # target_height is between heights given in the columns of the
+        # DataFrame
+        exp_output = pd.Series(
+            data=[4.61074042165, 6.83222126494, 8.44296168659])
+        parameters['target_height'] = 140
+        assert_series_equal(logarithmic_interpolation_extrapolation(
+            df, **parameters), exp_output)
+        exp_output = pd.Series(
+            data=[4.11328333429, 5.16992500144, 6.16992500144])
+        parameters['target_height'] = 90
+        assert_series_equal(logarithmic_interpolation_extrapolation(
+            df, **parameters), exp_output)
+        # target_height is greater than the heights given in the columns of the
+        # DataFrame
+        exp_output = pd.Series(
+            data=[5.19897784672, 8.59693354015, 10.7959113869])
+        parameters['target_height'] = 240
+        assert_series_equal(logarithmic_interpolation_extrapolation(
+            df, **parameters), exp_output)
+        # target_height is smaller than the heights given in the columns of the
+        # DataFrame
+        exp_output = pd.Series(data=[1.33333333333, 1.0, 2.0])
+        parameters['target_height'] = 5
+        assert_series_equal(logarithmic_interpolation_extrapolation(
+            df, **parameters), exp_output)
