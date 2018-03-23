@@ -8,8 +8,9 @@ Contents:
    :glob:   
    
    getting_started
+   basic_example_notebook
    whats_new
-   modules.rst
+   modules
 
 
 Indices and tables

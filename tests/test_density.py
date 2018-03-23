@@ -1,82 +1,63 @@
-from windpowerlib.density import (temperature_gradient, temperature_interpol,
-                                  rho_barometric, rho_ideal_gas)
 import pandas as pd
-from pandas.util.testing import assert_series_equal
-from numpy.testing import assert_array_equal, assert_allclose
 import numpy as np
+from pandas.util.testing import assert_series_equal
+from numpy.testing import assert_allclose
+
+from windpowerlib.density import barometric, ideal_gas
 
 
-class TestDensityTemperature:
+class TestDensity:
 
-    @classmethod
-    def setup_class(self):
-        self.h_hub = 100
-        self.weather = {'temp_air': pd.Series(data=[267, 268]),
-                        'temp_air_2': pd.Series(data=[267, 266]),
-                        'pressure': pd.Series(data=[101125, 101000])}
-        self.data_height = {'temp_air': 2,
-                            'temp_air_2': 10,
-                            'pressure': 0}
+    def test_barometric(self):
+        parameters = {'pressure': pd.Series(data=[101125, 101000]),
+                      'pressure_height': 0,
+                      'hub_height': 100,
+                      'temperature_hub_height': pd.Series(data=[267, 268])}
 
-    def test_temperature_gradient(self):
-        # Test pandas.Series
-        temp_hub_exp = pd.Series(data=[266.363, 267.36300])
-        assert_series_equal(temperature_gradient(self.weather['temp_air'],
-                                                 self.data_height['temp_air'],
-                                                 self.h_hub),
-                            temp_hub_exp)
-        # Test numpy array
-        assert_array_equal(
-            temperature_gradient(np.array(self.weather['temp_air']),
-                                 self.data_height['temp_air'],
-                                 self.h_hub),
-            temp_hub_exp)
-
-    def test_temperature_interpol(self):
-        # Test pandas.Series
-        temp_hub_exp = pd.Series(data=[267.0, 243.5])
-        assert_series_equal(
-            temperature_interpol(self.weather['temp_air'],
-                                 self.weather['temp_air_2'],
-                                 self.data_height['temp_air'],
-                                 self.data_height['temp_air_2'],
-                                 self.h_hub),
-            temp_hub_exp)
-        # Test numpy array
-        assert_array_equal(
-            temperature_interpol(np.array(self.weather['temp_air']),
-                                 np.array(self.weather['temp_air_2']),
-                                 self.data_height['temp_air'],
-                                 self.data_height['temp_air_2'],
-                                 self.h_hub),
-            temp_hub_exp)
-
-    def test_rho_barometric(self):
-        # Test pandas.Series
+        # Test pressure as pd.Series and temperature_hub_height as pd.Series
+        # and np.array
         rho_exp = pd.Series(data=[1.30305336, 1.29656645])
-        assert_series_equal(rho_barometric(self.weather['pressure'],
-                                           self.data_height['pressure'],
-                                           self.h_hub,
-                                           self.weather['temp_air']),
-                            rho_exp)
-        # Test numpy array
-        assert_allclose(rho_barometric(np.array(self.weather['pressure']),
-                                       self.data_height['pressure'],
-                                       self.h_hub,
-                                       np.array(self.weather['temp_air'])),
-                        rho_exp)
+        assert_series_equal(barometric(**parameters), rho_exp)
+        parameters['temperature_hub_height'] = np.array(
+            parameters['temperature_hub_height'])
+        assert_series_equal(barometric(**parameters), rho_exp)
 
-    def test_rho_ideal_gas(self):
-        # Test pandas.Series
+        # Test pressure as np.array and temperature_hub_height as pd.Series
+        parameters['pressure'] = np.array(parameters['pressure'])
+        parameters['temperature_hub_height'] = pd.Series(
+            data=parameters['temperature_hub_height'])
+        assert_series_equal(barometric(**parameters), rho_exp)
+
+        # Test pressure as np.array and temperature_hub_height as np.array
+        rho_exp = np.array([1.30305336, 1.29656645])
+        parameters['temperature_hub_height'] = np.array(
+            parameters['temperature_hub_height'])
+        assert_allclose(barometric(**parameters), rho_exp)
+        assert isinstance(barometric(**parameters), np.ndarray)
+
+    def test_ideal_gas(self):
+        parameters = {'pressure': pd.Series(data=[101125, 101000]),
+                      'pressure_height': 0,
+                      'hub_height': 100,
+                      'temperature_hub_height': pd.Series(data=[267, 268])}
+
+        # Test pressure as pd.Series and temperature_hub_height as pd.Series
+        # and np.array
         rho_exp = pd.Series(data=[1.30309439, 1.29660728])
-        assert_series_equal(rho_ideal_gas(self.weather['pressure'],
-                                          self.data_height['pressure'],
-                                          self.h_hub,
-                                          self.weather['temp_air']),
-                            rho_exp)
-        # Test numpy array
-        assert_allclose(rho_ideal_gas(np.array(self.weather['pressure']),
-                                      self.data_height['pressure'],
-                                      self.h_hub,
-                                      np.array(self.weather['temp_air'])),
-                        rho_exp)
+        assert_series_equal(ideal_gas(**parameters), rho_exp)
+        parameters['temperature_hub_height'] = np.array(
+            parameters['temperature_hub_height'])
+        assert_series_equal(ideal_gas(**parameters), rho_exp)
+
+        # Test pressure as np.array and temperature_hub_height as pd.Series
+        parameters['pressure'] = np.array(parameters['pressure'])
+        parameters['temperature_hub_height'] = pd.Series(
+            data=parameters['temperature_hub_height'])
+        assert_allclose(ideal_gas(**parameters), rho_exp)
+
+        # Test pressure as np.array and temperature_hub_height as np.array
+        rho_exp = np.array([1.30309439, 1.29660728])
+        parameters['temperature_hub_height'] = np.array(
+            parameters['temperature_hub_height'])
+        assert_allclose(ideal_gas(**parameters), rho_exp)
+        assert isinstance(ideal_gas(**parameters), np.ndarray)
