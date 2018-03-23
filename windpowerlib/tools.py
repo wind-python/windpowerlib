@@ -105,7 +105,7 @@ def gaussian_distribution(function_variable, standard_deviation, mean=0):
     ----------
     .. [1] Berendsen, H.: "A Student's Guide to Data and Error Analysis".
              New York, Cambridge University Press, 2011, p. 37
-    
+
     # TODO: add references
 
     """
@@ -118,6 +118,29 @@ def estimate_turbulence_intensity(height, roughness_length):
     """
     Calculate turbulence intensity.
 
+    Parameters
+    ----------
+    height : Float
+        Height above ground in m at which the turbulence intensity is
+        calculated.
+    roughness_length : pandas.Series or numpy.array or float
+        Roughness length.
+
+    Notes
+    -----
+    The following equation is used [1]_:
+
+    .. math:: TI = \frac{1}{ln \left(\frac{h}{z_\text{0}} \right)}
+
+    with:
+        TI: turbulence intensity, h: height, :math:`z_{0}`: roughness length
+
+    References
+    ----------
+    .. [1] Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
+             Windenergieeinspeisung für wetterdatenbasierte
+             Windleistungssimulationen". Universität Kassel, Diss., 2016,
+             p. 88
+
     """
-    # TODO: Search other possibilities for TI.
     return 1 / (np.log(height / roughness_length))

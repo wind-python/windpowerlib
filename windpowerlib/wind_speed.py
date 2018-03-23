@@ -42,7 +42,7 @@ def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
 
     Notes
     -----
-    The following equation is used [1]_:
+    The following equation is used [1]_, [2]_, [3]_:
 
     .. math:: v_{wind,hub}=v_{wind,data}\cdot
         \frac{\ln\left(\frac{h_{hub}-d}{z_{0}}\right)}{\ln\left(
