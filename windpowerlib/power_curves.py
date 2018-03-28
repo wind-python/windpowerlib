@@ -260,8 +260,6 @@ def density_correct_power_curve(density, power_curve_wind_speeds,
             at Reiner Lemoine Institute, 2014, p. 13
 
     """
-    # TODO: is this error raising needed? Density does not have default value
-    # e.g. there would be an error message also without the next lines.
     if density is None:
         raise TypeError("`density` is None. For the calculation with a " +
                         "density corrected power curve mean density at hub " +
