@@ -127,6 +127,11 @@ class TurbineClusterModelChain(object):
         and/or density corrected before or after the summation and/or a wind
         farm efficiency is applied after the summation. TODO: check entry
 
+        Parameters
+        ----------
+        wind_farm : WindFarm
+            A :class:`~.wind_farm.WindFarm` object representing the wind farm.
+
         Other Parameters
         ----------------
         roughness_length : Float, optional.
