@@ -96,7 +96,7 @@ class WindFarm(object):
         with:
             :math:`h_{WF}`: mean hub height of wind farm,
             :math:`h_{WT,k}`: hub height of the k-th wind turbine of a wind
-            farm, :math:`P_{N,k}`: nominal power of the k-th wind turbine,
+            farm, :math:`P_{N,k}`: nominal power of the k-th wind turbine
 
         References
         ----------
