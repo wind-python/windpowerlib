@@ -13,7 +13,7 @@ from windpowerlib import tools
 
 
 def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
-                       block_width=0.5,
+                       block_width=0.5, wind_speeds_block_range=15.0, # TODO wind_speeds_block_range delete later
                        standard_deviation_method='turbulence_intensity',
                        mean_gauss=0, **kwargs):
     r"""
@@ -87,7 +87,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     for power_curve_wind_speed in power_curve_wind_speeds:
         # Create array of wind speeds for the moving block
         wind_speeds_block = (
-            np.arange(-15.0, 15.0 + block_width, block_width) +
+            np.arange(-wind_speeds_block_range, wind_speeds_block_range + block_width, block_width) +
             power_curve_wind_speed)
         # Get standard deviation for gaussian filter
         standard_deviation = (
