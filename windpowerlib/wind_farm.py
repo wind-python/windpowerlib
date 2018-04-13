@@ -138,8 +138,8 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
     ----------
     curve_name : String
         Specifies the curve.
-        Possibilities: 'dena_mean', 'knorr_mean', 'dena_extrem1',
-        'dena_extreme2, 'knorr_extreme1', 'knorr_extreme2', 'knorr_extreme3'.
+        Possibilities: 'dena_mean', 'knorr_mean', 'dena_extreme1',
+        'dena_extreme2', 'knorr_extreme1', 'knorr_extreme2', 'knorr_extreme3'.
         Default: 'dena_mean'.
     plot : Boolean
         If True the wind efficiency curve is plotted. Default: False.
@@ -171,19 +171,7 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
                         'wind_efficiency_curves.csv')
     # Read all curves from file
     wind_efficiency_curves = pd.read_csv(path)
-    # Create wind speed series with standard wind speeds in 0.5 m/s step size
-    wind_speed = pd.Series(np.arange(0, 25.5, 0.5))
-    # Get x values depending on curve name
-    if 'dena' in curve_name:
-        x_values = wind_efficiency_curves['x_dena']
-    if 'knorr' in curve_name:
-        x_values = wind_efficiency_curves['x_knorr']
-    # Interpolate between the x values and create data frame
-    efficiency = np.interp(
-        wind_speed, x_values.dropna(),
-        wind_efficiency_curves[curve_name].dropna())
-    efficiency_curve = pd.DataFrame(data=[wind_speed.values,
-                                          efficiency],).transpose()
+    efficiency_curve = wind_efficiency_curves[['wind_speed', curve_name]]
     efficiency_curve.columns = ['wind_speed', 'efficiency']
     if plot:
         efficiency_curve.rename(columns={'wind_speed': 'wind speed m/s'},
@@ -191,9 +179,8 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
         efficiency_curve.set_index('wind speed m/s').plot(
             legend=False, title="Wind efficiency curve '{}'".format(
                 curve_name))
-        plt.ylabel('efficiency')
+        plt.ylabel('Efficiency')
         plt.show()
-        efficiency_curve.set_index('wind speed')
     return efficiency_curve
 
 
