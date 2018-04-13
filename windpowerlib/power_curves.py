@@ -32,7 +32,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         Width of the moving block. Default: 0.5.
     standard_deviation_method : String
         Method for calculating the standard deviation for the gaussian
-        distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
+        distribution. Options: 'turbulence_intensity', 'Staffell'.
         Default: 'turbulence_intensity'.
 
     Other Parameters
@@ -40,8 +40,6 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     turbulence intensity : Float, optional
         Turbulence intensity at hub height of the wind turbine the power curve
         is smoothed for.
-    area_dimension : Float, optional
-        Dimension of the area the feed-in is calculated for in km.
 
     Returns
     -------
@@ -72,14 +70,6 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
             raise ValueError("Turbulence intensity must be defined for " +
                              "using 'turbulence_intensity' as " +
                              "`standard_deviation_method`")
-    elif standard_deviation_method == 'Norgaard':
-        if 'area_dimension' not in kwargs:
-            raise ValueError("area_dimension must be defined when " +
-                             "'Norgaard' is being used as method.")  # TODO raise error if no TI
-        standard_deviation_df = pd.read_csv(
-            os.path.join(os.path.dirname(__file__),
-                         'data/Norgaard_standard_deviation.csv'), index_col=0)
-        normalized_standard_deviation = 0.09
     elif standard_deviation_method == 'Staffell':
         normalized_standard_deviation = 0.2
     # Initialize list for power curve values
