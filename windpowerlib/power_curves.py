@@ -10,6 +10,7 @@ __license__ = "GPLv3"
 import numpy as np
 import pandas as pd
 from windpowerlib import tools
+import os
 
 
 def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
@@ -39,6 +40,8 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     turbulence intensity : Float, optional
         Turbulence intensity at hub height of the wind turbine the power curve
         is smoothed for.
+    area_dimension : Float, optional
+        Dimension of the area the feed-in is calculated for in km.
 
     Returns
     -------
@@ -70,7 +73,13 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                              "using 'turbulence_intensity' as " +
                              "`standard_deviation_method`")
     elif standard_deviation_method == 'Norgaard':
-        pass # TODO add
+        if 'area_dimension' not in kwargs:
+            raise ValueError("area_dimension must be defined when " +
+                             "'Norgaard' is being used as method.")  # TODO raise error if no TI
+        standard_deviation_df = pd.read_csv(
+            os.path.join(os.path.dirname(__file__),
+                         'data/Norgaard_standard_deviation.csv'), index_col=0)
+        normalized_standard_deviation = 0.09
     elif standard_deviation_method == 'Staffell':
         normalized_standard_deviation = 0.2
     # Initialize list for power curve values
@@ -110,15 +119,15 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
               smoothed_power_curve_values]).transpose()
     # Rename columns of DataFrame
     smoothed_power_curve_df.columns = ['wind_speed', 'power']
-#    # Plot power curves
-#    fig = plt.figure()
-#    plt.plot(power_curve_wind_speeds.values, power_curve_values.values)
-#    plt.plot(power_curve_wind_speeds.values, smoothed_power_curve_values)
-#    fig.savefig(os.path.abspath(os.path.join(
-#        os.path.dirname(__file__), '../Plots/power_curves',
-#        '{0}_{1}_{2}.png'.format(kwargs['object_name'],
-#                                 standard_deviation_method, block_width))))
-#    plt.close() # TODO: delete plot later
+    # # Plot power curves
+    # fig = plt.figure()
+    # plt.plot(power_curve_wind_speeds.values, power_curve_values.values)
+    # plt.plot(power_curve_wind_speeds.values, smoothed_power_curve_values)
+    # fig.savefig(os.path.abspath(os.path.join(
+    #     os.path.dirname(__file__), '../Plots/power_curves',
+    #     '{0}_{1}_{2}.png'.format(kwargs['object_name'],
+    #                              standard_deviation_method, block_width))))
+    # plt.close() # TODO: delete plot later
     return smoothed_power_curve_df
 
 
