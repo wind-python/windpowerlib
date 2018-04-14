@@ -37,7 +37,7 @@ class TurbineClusterModelChain(object):
         Default in :py:func:`~.power_curves.smooth_power_curve`: 0.5.
     standard_deviation_method : String, optional
         Method for calculating the standard deviation for the gaussian
-        distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
+        distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell_Pfenninger'.
         Default in :py:func:`~.power_curves.smooth_power_curve`:
         'turbulence_intensity'.
     density_correction_order : String
@@ -72,7 +72,7 @@ class TurbineClusterModelChain(object):
         Default in :py:func:`~.power_curves.smooth_power_curve`: 0.5.
     standard_deviation_method : String, optional
         Method for calculating the standard deviation for the gaussian
-        distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell'.
+        distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell_Pfenninger'.
         Default in :py:func:`~.power_curves.smooth_power_curve`:
         'turbulence_intensity'.
     power_output : pandas.Series
