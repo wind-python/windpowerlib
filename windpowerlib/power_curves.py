@@ -32,7 +32,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         Width of the moving block. Default: 0.5.
     standard_deviation_method : String
         Method for calculating the standard deviation for the gaussian
-        distribution. Options: 'turbulence_intensity', 'Staffell'.
+        distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell_Pfenninger'.
         Default: 'turbulence_intensity'.
 
     Other Parameters
@@ -70,7 +70,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
             raise ValueError("Turbulence intensity must be defined for " +
                              "using 'turbulence_intensity' as " +
                              "`standard_deviation_method`")
-    elif standard_deviation_method == 'Staffell':
+    elif standard_deviation_method == 'Staffell_Pfenninger':
         normalized_standard_deviation = 0.2
     # Initialize list for power curve values
     smoothed_power_curve_values = []
@@ -89,7 +89,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         # Get standard deviation for gaussian filter
         standard_deviation = (
             (power_curve_wind_speed * normalized_standard_deviation + 0.6)
-            if standard_deviation_method is 'Staffell'
+            if standard_deviation_method is 'Staffell_Pfenninger'
             else power_curve_wind_speed * normalized_standard_deviation)
         # Get the smoothed value of the power output
         smoothed_value = sum(
