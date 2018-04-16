@@ -228,7 +228,9 @@ class TurbineClusterModelChain(object):
                 self.smoothing_order == 'wind_farm_power_curves'):
             summarized_power_curve_df = power_curves.smooth_power_curve(
                 summarized_power_curve_df['wind_speed'],
-                summarized_power_curve_df['power'], **kwargs)
+                summarized_power_curve_df['power'],
+                standard_deviation_method=self.standard_deviation_method,
+                **kwargs)
         if (self.wake_losses_method == 'constant_efficiency' or
                 self.wake_losses_method == 'wind_efficiency_curve'):
             summarized_power_curve_df = (
