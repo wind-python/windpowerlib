@@ -74,8 +74,9 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         normalized_standard_deviation = 0.2
     # Initialize list for power curve values
     smoothed_power_curve_values = []
-    # Append wind speeds to `power_curve_wind_speeds` until 40 m/s
-    while (power_curve_wind_speeds.values[-1] < 40.0):
+    # Append wind speeds to `power_curve_wind_speeds` until last value + range
+    maximum_value = power_curve_wind_speeds.values[-1] + wind_speed_range
+    while (power_curve_wind_speeds.values[-1] < maximum_value):
         power_curve_wind_speeds = power_curve_wind_speeds.append(
             pd.Series(power_curve_wind_speeds.iloc[-1] + 0.5,
                       index=[power_curve_wind_speeds.index[-1] + 1]))
