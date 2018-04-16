@@ -118,9 +118,6 @@ class TurbineClusterModelChain(object):
                              "cluster but `wind_object` is an object of the " +
                              "class WindFarm.")
 
-# TODO: if a wind turbine of wind farm does not have a power curve but a cp curve:
-    # calculate power curve from cp curve
-
     def wind_farm_power_curve(self, wind_farm, **kwargs):
         r"""
         Caluclates the power curve of a wind farm.
