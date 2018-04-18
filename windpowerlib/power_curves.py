@@ -84,10 +84,10 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
             pd.Series(0.0, index=[power_curve_values.index[-1] + 1]))
     for power_curve_wind_speed in power_curve_wind_speeds:
         # Create array of wind speeds for the moving block
-        # TODO: rename to wind speed range everywhere!!
-        wind_speeds_block = (
-            np.arange(-wind_speed_range, wind_speed_range + block_width, block_width) +
-            power_curve_wind_speed)
+        wind_speeds_block = (np.arange(-wind_speed_range,
+                                       wind_speed_range + block_width,
+                                       block_width) +
+                             power_curve_wind_speed)
         # Get standard deviation for gaussian filter
         standard_deviation = (
             (power_curve_wind_speed * normalized_standard_deviation + 0.6)
