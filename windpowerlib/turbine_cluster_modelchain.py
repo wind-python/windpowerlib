@@ -197,7 +197,9 @@ class TurbineClusterModelChain(object):
             if (self.smoothing and
                     self.smoothing_order == 'turbine_power_curves'):
                 power_curve = power_curves.smooth_power_curve(
-                    power_curve['wind_speed'], power_curve['power'], **kwargs)
+                    power_curve['wind_speed'], power_curve['power'],
+                    standard_deviation_method=self.standard_deviation_method,
+                    **kwargs)
             # Add power curves of all turbines of same type to data frame after
             # renaming columns
             power_curve.columns = ['wind_speed', turbine_type_dict[
