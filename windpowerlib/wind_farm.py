@@ -96,7 +96,7 @@ class WindFarm(object):
         with:
             :math:`h_{WF}`: mean hub height of wind farm,
             :math:`h_{WT,k}`: hub height of the k-th wind turbine of a wind
-            farm, :math:`P_{N,k}`: nominal power of the k-th wind turbine,
+            farm, :math:`P_{N,k}`: nominal power of the k-th wind turbine
 
         References
         ----------
@@ -138,8 +138,8 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
     ----------
     curve_name : String
         Specifies the curve.
-        Possibilities: 'dena_mean', 'knorr_mean', 'dena_extrem1',
-        'dena_extreme2, 'knorr_extreme1', 'knorr_extreme2', 'knorr_extreme3'.
+        Possibilities: 'dena_mean', 'knorr_mean', 'dena_extreme1',
+        'dena_extreme2', 'knorr_extreme1', 'knorr_extreme2', 'knorr_extreme3'.
         Default: 'dena_mean'.
     plot : Boolean
         If True the wind efficiency curve is plotted. Default: False.
@@ -169,16 +169,9 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
     """
     path = os.path.join(os.path.dirname(__file__), 'data',
                         'wind_efficiency_curves.csv')
+    # Read all curves from file
     wind_efficiency_curves = pd.read_csv(path)
-    wind_speed = pd.Series(np.arange(0, 25.5, 0.5))
-    if 'dena' in curve_name:
-        x_values = wind_efficiency_curves['x_dena']
-    if 'knorr' in curve_name:
-        x_values = wind_efficiency_curves['x_knorr']
-    efficiency = np.interp(wind_speed, x_values,
-                           wind_efficiency_curves['y_{}'.format(curve_name)])
-    efficiency_curve = pd.DataFrame(data=[wind_speed.values,
-                                          efficiency],).transpose()
+    efficiency_curve = wind_efficiency_curves[['wind_speed', curve_name]]
     efficiency_curve.columns = ['wind_speed', 'efficiency']
     if plot:
         efficiency_curve.rename(columns={'wind_speed': 'wind speed m/s'},
@@ -186,7 +179,7 @@ def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
         efficiency_curve.set_index('wind speed m/s').plot(
             legend=False, title="Wind efficiency curve '{}'".format(
                 curve_name))
-        plt.ylabel('efficiency')
+        plt.ylabel('Efficiency')
         plt.show()
     return efficiency_curve
 
@@ -214,16 +207,21 @@ def display_wind_efficiency_curves():
     """
     path = os.path.join(os.path.dirname(__file__), 'data',
                         'wind_efficiency_curves.csv')
+    # Read all curves from file
     wind_efficiency_curves = pd.read_csv(path)
+    # Initialize data frame for plot
     curves_df = pd.DataFrame()
-    for curve_name in [col.replace('y_', '') for
-                       col in list(wind_efficiency_curves) if 'x_' not in col]:
+    for curve_name in [col for col in list(wind_efficiency_curves) if
+                       'x_' not in col]:
+        # Get wind efficiency curve for standard wind speeds from
+        # read_wind_efficiency_curve() and add to data frame
         efficiency_curve = read_wind_efficiency_curve(
             curve_name).rename(
             columns={'efficiency': curve_name.replace('_', ' '),
                      'wind_speed': 'wind speed m/s'}).set_index(
                          'wind speed m/s')
         curves_df = pd.concat([curves_df, efficiency_curve], axis=1)
+    # Create separate data frames for origin of curve
     knorr_df = curves_df[[column_name for column_name in curves_df if
                           'knorr' in column_name]]
     dena_df = curves_df[[column_name for column_name in curves_df if

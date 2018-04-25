@@ -67,13 +67,13 @@ class WindTurbineCluster(object):
         Notes
         -----
         The following equation is used [1]_:
-        .. math:: h_{WF} = e^{\sum\limits_{k}{ln(h_{WT,k})}
+        .. math:: h_{WTC} = e^{\sum\limits_{k}{ln(h_{WF,k})}
                            \frac{P_{N,k}}{\sum\limits_{k}{P_{N,k}}}}
 
         with:
-            :math:`h_{WF}`: mean hub height of wind farm,
-            :math:`h_{WT,k}`: hub height of the k-th wind turbine of a wind
-            farm, :math:`P_{N,k}`: nominal power of the k-th wind turbine,
+            :math:`h_{WTC}`: mean hub height of wind turbine cluster,
+            :math:`h_{WF,k}`: hub height of the k-th wind farm of the cluster,
+            :math:`P_{N,k}`: nominal power of the k-th wind farm
 
         References
         ----------

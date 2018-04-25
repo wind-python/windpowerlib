@@ -310,8 +310,8 @@ class ModelChain(object):
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
                 self.wind_speed_model) + "`wind_speed_model` must be "
-                "'logarithmic', 'hellman' or "
-                "'interpolation_extrapolation'.")
+                "'logarithmic', 'hellman', 'interpolation_extrapolation' " +
+                "or 'log_interpolation_extrapolation'.")
         return wind_speed_hub
 
     def turbine_power_output(self, wind_speed_hub, density_hub):
