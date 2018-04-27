@@ -22,9 +22,6 @@ class TurbineClusterModelChain(object):
         A :class:`~.wind_farm.WindFarm` object representing the wind farm or
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
-    density_correction : Boolean
-        If True a density correction will be applied to the power curves
-        before the summation. Default: False.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
         consideration. Options: 'wind_efficiency_curve', 'constant_efficiency'
@@ -41,11 +38,6 @@ class TurbineClusterModelChain(object):
         'Staffell_Pfenninger'.
         Default in :py:func:`~.power_curves.smooth_power_curve`:
         'turbulence_intensity'.
-    density_correction_order : String
-        Defines when the density correction takes place if `density_correction`
-        is True. Options: 'turbine_power_curves' (to the single turbine power
-        curves), 'wind_farm_power_curves' or 'cluster_power_curve'.
-        Default: 'wind_farm_power_curves'.
     smoothing_order : String
         Defines when the smoothing takes place if `smoothing` is True. Options:
         'turbine_power_curves' (to the single turbine power curves),
@@ -58,9 +50,6 @@ class TurbineClusterModelChain(object):
         A :class:`~.wind_farm.WindFarm` object representing the wind farm or
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
-    density_correction : Boolean
-        If True a density correction will be applied to the power curves
-        before the summation. Default: False.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
         consideration. Options: 'wind_efficiency_curve', 'constant_efficiency'
@@ -79,11 +68,6 @@ class TurbineClusterModelChain(object):
         'turbulence_intensity'.
     power_output : pandas.Series
         Electrical power output of the wind turbine in W.
-    density_correction_order : String
-        Defines when the density correction takes place if `density_correction`
-        is True. Options: 'turbine_power_curves' (to the single turbine power
-        curves), 'wind_farm_power_curves' or 'cluster_power_curve'.
-        Default: 'wind_farm_power_curves'.
     smoothing_order : String
         Defines when the smoothing takes place if `smoothing` is True. Options:
         'turbine_power_curves' (to the single turbine power curves),
@@ -91,29 +75,23 @@ class TurbineClusterModelChain(object):
         Default: 'wind_farm_power_curves'.
 
     """
-    def __init__(self, wind_object, density_correction=False,
-                 wake_losses_method='wind_efficiency_curve', smoothing=True,
-                 block_width=0.5,
+    def __init__(self, wind_object, wake_losses_method='wind_efficiency_curve',
+                 smoothing=True, block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
-                 density_correction_order='wind_farm_power_curves',
                  smoothing_order='wind_farm_power_curves'):
 
         self.wind_object = wind_object
-        self.density_correction = density_correction
         self.wake_losses_method = wake_losses_method
         self.smoothing = smoothing
         self.block_width = block_width
         self.standard_deviation_method = standard_deviation_method
-        self.density_correction_order = density_correction_order
         self.smoothing_order = smoothing_order
 
         self.power_output = None
 
         if (isinstance(self.wind_object, wind_farm.WindFarm) and
-                self.density_correction_order == 'cluster_power_curve' or
                 self.smoothing_order == 'cluster_power_curve'):
-            raise ValueError("`density_correction_order` and " +
-                             "`smoothing_order` can only be " +
+            raise ValueError("`smoothing_order` can only be " +
                              "'cluster_power_curve' if you calculate a " +
                              "cluster but `wind_object` is an object of the " +
                              "class WindFarm.")
@@ -130,15 +108,6 @@ class TurbineClusterModelChain(object):
         ----------
         wind_farm : WindFarm
             A :class:`~.wind_farm.WindFarm` object representing the wind farm.
-
-#        density_df : pandas.DataFrame
-#            DataFrame with time series for density `density` in kg/m³.
-#            The columns of the DataFrame are a MultiIndex where the first level
-#            contains the variable name (density) and the second level
-#            contains the height at which it applies (e.g. 10, if it was
-#            measured at a height of 10 m).
-#            See :py:func:`~.run_model()` for an example on how to
-#            create the density_df DataFrame.
 
         Other Parameters
         ----------------
@@ -174,8 +143,6 @@ class TurbineClusterModelChain(object):
                             "'turbulence_intensity' as " +
                             "`standard_deviation_method` if " +
                             "`turbulence_intensity` is not given")
-#            if self. density_correction:
-#                pass # TODO: restrictions (density needed)
             if self.wake_losses_method is not None:
                 if wind_farm.efficiency is None:
                     raise KeyError(
@@ -189,11 +156,6 @@ class TurbineClusterModelChain(object):
             power_curve = pd.DataFrame(
                 turbine_type_dict['wind_turbine'].power_curve)
             # Editions to power curve before the summation
-#            if (self.density_correction and
-#                    self.density_correction_order == 'turbine_power_curves'):
-#                power_curve = power_curves.density_correct_power_curve(
-#                    density_df, power_curve['wind_speed'], # Note: density at hub height has to be passed
-#                    power_curve['power'])
             if (self.smoothing and
                     self.smoothing_order == 'turbine_power_curves'):
                 power_curve = power_curves.smooth_power_curve(
@@ -219,12 +181,6 @@ class TurbineClusterModelChain(object):
                   list(summarized_power_curve['power'].values)]).transpose()
         summarized_power_curve_df.columns = ['wind_speed', 'power']
         # Editions to power curve after the summation
-#        if (self.density_correction and
-#                self.density_correction_order == 'wind_farm_power_curves'):
-#            summarized_power_curve_df = (
-#                power_curves.density_correct_power_curve(
-#                    density_df, summarized_power_curve_df['wind_speed'],
-#                    summarized_power_curve_df['power'])) # Note: density at hub height has to be passed
         if (self.smoothing and
                 self.smoothing_order == 'wind_farm_power_curves'):
             summarized_power_curve_df = power_curves.smooth_power_curve(
@@ -429,14 +385,6 @@ class TurbineClusterModelChain(object):
         self.assign_power_curve(**kwargs)
         # Get modelchain parameters
         modelchain_data = self.get_modelchain_data(**kwargs)
-        # Density correction to cluster power curve # TODO test
-        if (self.density_correction and
-                self.density_correction_order == 'wind_farm_power_curves'):
-            # Note actually for 'cluster_power_curve'. however, probably the
-            # density correcton will always be done at the end
-            modelchain_data['density_correction'] = True
-        else:
-            modelchain_data['density_correction'] = False
         # Run modelchain
         mc = modelchain.ModelChain(
             self.wind_object, **modelchain_data).run_model(weather_df)
