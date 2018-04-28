@@ -9,7 +9,8 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 import logging
-from windpowerlib import wind_speed, density, temperature, power_output, tools
+from windpowerlib import (wind_speed, density, temperature, power_output,
+                          tools, wake_losses)
 
 
 class ModelChain(object):
@@ -365,7 +366,7 @@ class ModelChain(object):
                              "`power_output_model` must be " +
                              "'power_curve' or 'power_coefficient_curve'.")
 
-    def run_model(self, weather_df):
+    def run_model(self, weather_df, wind_efficiency_curve_name=None):
         r"""
         Runs the model.
 
@@ -382,6 +383,7 @@ class ModelChain(object):
             contains the height at which it applies (e.g. 10, if it was
             measured at a height of 10 m). See below for an example on how to
             create the weather_df DataFrame.
+        wind_efficiency_curve_name # TODO explain if stays
 
         Returns
         -------
@@ -411,6 +413,11 @@ class ModelChain(object):
         density_hub = (None if (self.power_output_model == 'power_curve' and
                                 self.density_correction is False)
                        else self.density_hub(weather_df))
+        # Reduce wind speed if wind efficiency curve name if given
+        if wind_efficiency_curve_name is not None: # TODO raise error if wind efficiency curve is used for wind turbine
+            wind_speed_hub = wake_losses.reduce_wind_speed(
+                wind_speed_hub,
+                wind_efficiency_curve_name=wind_efficiency_curve_name)
         self.power_output = self.turbine_power_output(wind_speed_hub,
                                                       density_hub)
         return self
