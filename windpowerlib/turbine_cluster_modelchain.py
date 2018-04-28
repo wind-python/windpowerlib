@@ -24,8 +24,9 @@ class TurbineClusterModelChain(object):
         representing the wind turbine cluster.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
-        consideration. Options: 'wind_efficiency_curve', 'constant_efficiency'
-        or None. Default: 'wind_efficiency_curve'.
+        consideration. Options: 'power_efficiency_curve',
+        'constant_efficiency', 'dena_mean', 'knorr_mean' or None. # TODO all curves in WPL
+        Default: 'dena_mean'.
     smoothing : Boolean
         If True the power curves will be smoothed before the summation.
         Default: True.
@@ -52,8 +53,9 @@ class TurbineClusterModelChain(object):
         representing the wind turbine cluster.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
-        consideration. Options: 'wind_efficiency_curve', 'constant_efficiency'
-        or None. Default: 'wind_efficiency_curve'.
+        consideration. Options: 'power_efficiency_curve',
+        'constant_efficiency', 'dena_mean', 'knorr_mean' or None. # TODO all curves in WPL
+        Default: 'dena_mean'.
     smoothing : Boolean
         If True the power curves will be smoothed before the summation.
         Default: True.
@@ -75,7 +77,7 @@ class TurbineClusterModelChain(object):
         Default: 'wind_farm_power_curves'.
 
     """
-    def __init__(self, wind_object, wake_losses_method='wind_efficiency_curve',
+    def __init__(self, wind_object, wake_losses_method='dena_mean',
                  smoothing=True, block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
                  smoothing_order='wind_farm_power_curves'):
@@ -140,15 +142,16 @@ class TurbineClusterModelChain(object):
                             "'turbulence_intensity' as " +
                             "`standard_deviation_method` if " +
                             "`turbulence_intensity` is not given")
-            if self.wake_losses_method is not None:
-                if wind_farm.efficiency is None:
-                    raise KeyError(
-                        "wind_farm_efficiency is needed if " +
-                        "`wake_losses_method´ is '{0}', but ".format(
-                            self.wake_losses_method) +
-                        " `wind_farm_efficiency` of {0} is {1}.".format(
-                            self.wind_object.object_name,
-                            self.wind_object.efficiency))
+            if ((self.wake_losses_method == 'power_efficiency_curves' or
+                    self.wake_losses_method == 'constant_efficiency') and
+                    wind_farm.efficiency is None):
+                raise KeyError(
+                    "wind farm efficiency is needed if " +
+                    "`wake_losses_method´ is '{0}', but ".format(
+                        self.wake_losses_method) +
+                    " `efficiency` of {0} is {1}.".format(
+                        self.wind_object.object_name,
+                        self.wind_object.efficiency))
             # Get original power curve
             power_curve = pd.DataFrame(
                 turbine_type_dict['wind_turbine'].power_curve)
@@ -188,7 +191,7 @@ class TurbineClusterModelChain(object):
                 standard_deviation_method=self.standard_deviation_method,
                 **kwargs)
         if (self.wake_losses_method == 'constant_efficiency' or
-                    self.wake_losses_method == 'wind_efficiency_curve'):
+                    self.wake_losses_method == 'power_efficiency_curve'):
             summarized_power_curve_df = (
                 power_curves.wake_losses_to_power_curve(
                     summarized_power_curve_df['wind_speed'].values,
@@ -196,6 +199,7 @@ class TurbineClusterModelChain(object):
                     wake_losses_method=self.wake_losses_method,
                     wind_farm_efficiency=self.wind_object.efficiency))
         return summarized_power_curve_df
+
     def turbine_cluster_power_curve(self, **kwargs):
         r"""
         Caluclates the power curve of a wind turbine cluster.
@@ -384,7 +388,23 @@ class TurbineClusterModelChain(object):
         # Get modelchain parameters
         modelchain_data = self.get_modelchain_data(**kwargs)
         # Run modelchain
+        if (self.wake_losses_method != 'power_efficiency_curve' and
+                self.wake_losses_method != 'constant_efficiency' and
+                isinstance(self.wind_object, wind_farm.WindFarm)):
+            # Assign efficiency of wind farm to variable passed to modelchain
+            wind_efficiency_curve_name = self.wake_losses_method
+        elif (self.wake_losses_method != 'power_efficiency_curve' and
+                self.wake_losses_method != 'constant_efficiency' and
+                isinstance(self.wind_object,
+                           wind_turbine_cluster.WindTurbineCluster)):
+            raise ValueError("´wake_losses_method´ 'wind_efficiency_curve'" +
+                             "cannot be applied to object of " +
+                             "WindTurbineCluster object.")
+        else:
+            wind_efficiency_curve_name = None
         mc = modelchain.ModelChain(
-            self.wind_object, **modelchain_data).run_model(weather_df)
+            self.wind_object, **modelchain_data).run_model(
+                weather_df,
+                wind_efficiency_curve_name=wind_efficiency_curve_name)
         self.power_output = mc.power_output
         return self
