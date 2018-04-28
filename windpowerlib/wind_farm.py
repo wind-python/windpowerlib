@@ -8,6 +8,8 @@ wind farm.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
+from windpowerlib import tools
+from windpowerlib import power_curves
 import numpy as np
 import pandas as pd
 import os
@@ -129,113 +131,123 @@ class WindFarm(object):
             wind_dict['number_of_turbines']
             for wind_dict in self.wind_turbine_fleet)
 
+    def power_curve(self, wake_losses_method='wind_efficiency_curve',
+                  smoothing=True, block_width=0.5,
+                  standard_deviation_method='turbulence_intensity',
+                  smoothing_order='wind_farm_power_curves',
+                  **kwargs):
+        r"""
+        Calculates the power curve of a wind farm.
 
-def read_wind_efficiency_curve(curve_name='dena_mean', plot=False):
-    r"""
-    Reads the in `curve_name` specified wind efficiency curve.
+        The wind farm power curve is calculated by aggregating the wind turbine
+        power curves of the wind farm.
+        Depending on the parameters the wind turbine power curves are smoothed
+        before or after the summation and/or a wind farm efficiency is applied
+        after the summation. TODO: check entry
 
-    Parameters
-    ----------
-    curve_name : String
-        Specifies the curve.
-        Possibilities: 'dena_mean', 'knorr_mean', 'dena_extreme1',
-        'dena_extreme2', 'knorr_extreme1', 'knorr_extreme2', 'knorr_extreme3'.
-        Default: 'dena_mean'.
-    plot : Boolean
-        If True the wind efficiency curve is plotted. Default: False.
+        Parameters
+        ----------
+        wake_losses_method : String
+            Defines the method for talking wake losses within the farm into
+            consideration. Options: 'wind_efficiency_curve', 'constant_efficiency'
+            or None. Default: 'wind_efficiency_curve'.
+        smoothing : Boolean
+            If True the power curves will be smoothed before the summation.
+            Default: True.
+        block_width : Float, optional
+            Width of the moving block.
+            Default in :py:func:`~.power_curves.smooth_power_curve`: 0.5.
+        standard_deviation_method : String, optional
+            Method for calculating the standard deviation for the gaussian
+            distribution. Options: 'turbulence_intensity',
+            'Staffell_Pfenninger'.
+            Default in :py:func:`~.power_curves.smooth_power_curve`:
+            'turbulence_intensity'.
 
-    Returns
-    -------
-    efficiency_curve : pd.DataFrame
-        Wind efficiency curve. Contains 'wind_speed' and 'efficiency' columns
-        with wind speed in m/s and wind farm efficiency (dimensionless).
+        Other Parameters
+        ----------------
+        roughness_length : Float, optional.
+            Roughness length.
+        turbulence_intensity : Float, optional.
+            Turbulence intensity.
 
-    Notes
-    -----
-    The wind efficiency curves were calculated in the "Dena Netzstudie" and in
-    the disseration of Kaspar Knorr. For more information see [1]_ and [2]_.
+        Returns
+        -------
+        self
 
-    References
-    ----------
-    .. [1] Kohler et.al.: "dena-Netzstudie II. Integration erneuerbarer
-            Energien in die deutsche Stromversorgung im Zeitraum 2015 – 2020
-            mit Ausblick 2025.", Deutsche Energie-Agentur GmbH (dena),
-            Tech. rept., 2010, p. 101
-    .. [2] Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
-             Windenergieeinspeisung für wetterdatenbasierte
-             Windleistungssimulationen". Universität Kassel, Diss., 2016,
-             p. 124
+        """
+        # Initialize data frame for power curve values
+        df = pd.DataFrame()
+        for turbine_type_dict in self.wind_turbine_fleet:
+            # Check if all needed parameters are available
+            if smoothing:
+                if (standard_deviation_method == 'turbulence_intensity' and
+                        'turbulence_intensity' not in kwargs):
+                    if 'roughness_length' in kwargs:
+                        # Calculate turbulence intensity and write to kwargs
+                        turbulence_intensity = (
+                            tools.estimate_turbulence_intensity(
+                                turbine_type_dict['wind_turbine'].hub_height,
+                                kwargs['roughness_length']))
+                        kwargs['turbulence_intensity'] = turbulence_intensity
+                    else:
+                        raise ValueError(
+                            "`roughness_length` must be defined for using " +
+                            "'turbulence_intensity' as " +
+                            "`standard_deviation_method` if " +
+                            "`turbulence_intensity` is not given")
+            if wake_losses_method is not None:
+                if self.efficiency is None:
+                    raise KeyError(
+                        "wind_farm_efficiency is needed if " +
+                        "`wake_losses_method´ is '{0}', but ".format(
+                            wake_losses_method) +
+                        " `wind_farm_efficiency` of {0} is {1}.".format(
+                            self.object_name, self.efficiency))
+            # Get original power curve
+            power_curve = pd.DataFrame(
+                turbine_type_dict['wind_turbine'].power_curve)
+            # Editions to power curve before the summation
+            if (smoothing and smoothing_order == 'turbine_power_curves'):
+                power_curve = power_curves.smooth_power_curve(
+                    power_curve['wind_speed'], power_curve['power'],
+                    standard_deviation_method=standard_deviation_method,
+                    **kwargs)
+            # Add power curves of all turbines of same type to data frame after
+            # renaming columns
+            power_curve.columns = ['wind_speed', turbine_type_dict[
+                'wind_turbine'].object_name]
+            df = pd.concat([df, pd.DataFrame(  # TODO: merge without renaming
+                power_curve.set_index(['wind_speed']) *
+                turbine_type_dict['number_of_turbines'])], axis=1)
+            # Rename back TODO: copy()
+            power_curve.columns = ['wind_speed', 'power']
+        # Sum up power curves of all turbine types
+        summarized_power_curve = pd.DataFrame(
+            sum(df[item].interpolate(method='index') for item in list(df)))
+        summarized_power_curve.columns = ['power']
+        # Return wind speed (index) to a column of the data frame
+        summarized_power_curve_df = pd.DataFrame(
+            data=[list(summarized_power_curve.index),
+                  list(summarized_power_curve['power'].values)]).transpose()
+        summarized_power_curve_df.columns = ['wind_speed', 'power']
+        # Editions to power curve after the summation
+        if (smoothing and
+                smoothing_order == 'wind_farm_power_curves'):
+            summarized_power_curve_df = power_curves.smooth_power_curve(
+                summarized_power_curve_df['wind_speed'],
+                summarized_power_curve_df['power'],
+                standard_deviation_method=standard_deviation_method,
+                **kwargs)
+        if (wake_losses_method == 'constant_efficiency' or
+                wake_losses_method == 'wind_efficiency_curve'):
+            summarized_power_curve_df = (
+                power_curves.wake_losses_to_power_curve(
+                    summarized_power_curve_df['wind_speed'].values,
+                    summarized_power_curve_df['power'].values,
+                    wake_losses_method=wake_losses_method,
+                    wind_farm_efficiency=self.efficiency))
+        self.power_curve = summarized_power_curve_df
+        return self
 
-    """
-    path = os.path.join(os.path.dirname(__file__), 'data',
-                        'wind_efficiency_curves.csv')
-    # Read all curves from file
-    wind_efficiency_curves = pd.read_csv(path)
-    efficiency_curve = wind_efficiency_curves[['wind_speed', curve_name]]
-    efficiency_curve.columns = ['wind_speed', 'efficiency']
-    if plot:
-        efficiency_curve.rename(columns={'wind_speed': 'wind speed m/s'},
-                                inplace=True)
-        efficiency_curve.set_index('wind speed m/s').plot(
-            legend=False, title="Wind efficiency curve '{}'".format(
-                curve_name))
-        plt.ylabel('Efficiency')
-        plt.show()
-    return efficiency_curve
-
-
-def display_wind_efficiency_curves():
-    r"""
-    Plots or prints all efficiency curves available in the windpowerlib.
-
-    Notes
-    -----
-    The wind efficiency curves were calculated in the "Dena Netzstudie" and in
-    the disseration of Kaspar Knorr. For more information see [1]_ and [2]_.
-
-    References
-    ----------
-    .. [1] Kohler et.al.: "dena-Netzstudie II. Integration erneuerbarer
-            Energien in die deutsche Stromversorgung im Zeitraum 2015 – 2020
-            mit Ausblick 2025.", Deutsche Energie-Agentur GmbH (dena),
-            Tech. rept., 2010, p. 101
-    .. [2] Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
-             Windenergieeinspeisung für wetterdatenbasierte
-             Windleistungssimulationen". Universität Kassel, Diss., 2016,
-             p. 124
-
-    """
-    path = os.path.join(os.path.dirname(__file__), 'data',
-                        'wind_efficiency_curves.csv')
-    # Read all curves from file
-    wind_efficiency_curves = pd.read_csv(path)
-    # Initialize data frame for plot
-    curves_df = pd.DataFrame()
-    for curve_name in [col for col in list(wind_efficiency_curves) if
-                       'x_' not in col]:
-        # Get wind efficiency curve for standard wind speeds from
-        # read_wind_efficiency_curve() and add to data frame
-        efficiency_curve = read_wind_efficiency_curve(
-            curve_name).rename(
-            columns={'efficiency': curve_name.replace('_', ' '),
-                     'wind_speed': 'wind speed m/s'}).set_index(
-                         'wind speed m/s')
-        curves_df = pd.concat([curves_df, efficiency_curve], axis=1)
-    # Create separate data frames for origin of curve
-    knorr_df = curves_df[[column_name for column_name in curves_df if
-                          'knorr' in column_name]]
-    dena_df = curves_df[[column_name for column_name in curves_df if
-                         'dena' in column_name]]
-    if plt:
-        fig, ax = plt.subplots()
-        dena_df.plot(ax=ax, legend=True, marker='x', markersize=3)
-        knorr_df.plot(ax=ax, legend=True, marker='o', markersize=3)
-        plt.ylabel('Wind farm efficiency')
-        plt.show()
-#        fig.savefig('wind_eff_curves.pdf')
-    else:
-        print(dena_df)
-        print(knorr_df)
-
-if __name__ == "__main__":
-    display_wind_efficiency_curves()
+    # TODO: rename to wind_farm_power_curve
