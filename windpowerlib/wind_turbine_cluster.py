@@ -99,3 +99,57 @@ class WindTurbineCluster(object):
 
         """
         return sum(wind_farm.installed_power for wind_farm in self.wind_farms)
+
+
+    def power_curve(self, wake_losses_method='wind_efficiency_curve',
+                    smoothing=True, block_width=0.5,
+                  standard_deviation_method='turbulence_intensity',
+                  smoothing_order='wind_farm_power_curves',
+                  **kwargs):
+        r"""
+        Calculates the power curve of a wind turbine cluster.
+
+        The turbine cluster power curve is calculated by aggregating the wind
+        farm power curves of the turbine cluster.
+        Depending on the parameters of the class the power curves are smoothed
+        and/or density corrected after the summation of the wind farm power
+        curves.
+
+        Other Parameters
+        ----------------
+        roughness_length : Float, optional.
+            Roughness length.
+        turbulence_intensity : Float, optional.
+            Turbulence intensity.
+
+        Returns
+        -------
+        summarized_power_curve_df : pd.DataFrame
+            Calculated power curve of the wind turbine cluster.
+
+        """
+        # TODO adapt
+        # Assign wind farm power curves to wind farms
+        for farm in self.wind_object.wind_farms:
+            farm.power_curve = self.wind_farm_power_curve(farm, **kwargs)
+        # Create data frame from power curves of all wind farms
+        df = pd.concat([farm.power_curve.set_index(['wind_speed']).rename(
+            columns={'power': farm.object_name}) for
+            farm in self.wind_object.wind_farms], axis=1)
+        # Sum up power curves
+        summarized_power_curve = pd.DataFrame(
+            sum(df[item].interpolate(method='index') for item in list(df)))
+        summarized_power_curve.columns = ['power']
+        # Return wind speed (index) to a column of the data frame
+        summarized_power_curve_df = pd.DataFrame(
+            data=[list(summarized_power_curve.index),
+                  list(summarized_power_curve['power'].values)]).transpose()
+        summarized_power_curve_df.columns = ['wind_speed', 'power']
+        # Edition to power curve. Note: density correction is done in the
+        # function run_model()
+        if (self.smoothing and
+                self.smoothing_order == 'cluster_power_curve'):
+            summarized_power_curve_df = power_curves.smooth_power_curve(
+                summarized_power_curve_df['wind_speed'],
+                summarized_power_curve_df['power'], **kwargs)
+        return summarized_power_curve_df
