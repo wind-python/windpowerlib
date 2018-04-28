@@ -28,9 +28,9 @@ class WindFarm(object):
         Default: None.
     efficiency : Float or pd.DataFrame or Dictionary
         Efficiency of the wind farm. Either constant (float) or wind efficiency
-        curve (pd.DataFrame or Dictionary) containing 'wind_speed' and
-        'efficiency' columns/keys with wind speeds in m/s and the
-        corresponding dimensionless wind farm efficiency. Default: None.
+        curve or power efficiency curve (pd.DataFrame) containing
+        'wind_speed' and 'efficiency' columns/keys with wind speeds in m/s and
+        the corresponding dimensionless wind farm efficiency. Default: None.
 
     Attributes
     ----------
