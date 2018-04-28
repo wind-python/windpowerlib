@@ -1,6 +1,6 @@
 """
-The ``power_curves`` module contains functions apply calculations to the power
-curve of a wind turbine, wind farm or wind turbine cluster.
+The ``power_curves`` module contains functions for applying calculations to the
+power curve of a wind turbine, wind farm or wind turbine cluster.
 
 """
 
