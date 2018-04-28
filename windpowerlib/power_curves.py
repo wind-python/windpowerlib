@@ -124,7 +124,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
 
 def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
-                               wake_losses_method='efficiency_curve',
+                               wake_losses_method='power_efficiency_curve',
                                wind_farm_efficiency=None):
     r"""
     Applies wake losses depending on the method to a power curve.
@@ -139,8 +139,8 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         `power_curve_wind_speeds`.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
-        consideration. Options: 'efficiency_curve', 'constant_efficiency'.
-        Default: 'efficiency_curve'.
+        consideration. Options: 'power_efficiency_curve', 'constant_efficiency'.
+        Default: 'power_efficiency_curve'.
     wind_farm_efficiency : Float or pd.DataFrame or Dictionary
         Efficiency of the wind farm. Either constant (float) or efficiency
         curve (pd.DataFrame or Dictionary) containing 'wind_speed' and
@@ -171,7 +171,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
             raise TypeError("'wind_farm_efficiency' must be float if " +
                             "`wake_losses_method´ is '{0}'")
         power_curve_df['power'] = power_curve_values * wind_farm_efficiency
-    elif wake_losses_method == 'efficiency_curve':
+    elif wake_losses_method == 'power_efficiency_curve':
         if (not isinstance(wind_farm_efficiency, dict) and
                 not isinstance(wind_farm_efficiency, pd.DataFrame)):
             raise TypeError(
@@ -191,7 +191,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         raise ValueError(
             "`wake_losses_method` is {0} but should be ".format(
                 wake_losses_method) +
-            "'constant_efficiency' or 'efficiency_curve'")
+            "'constant_efficiency' or 'power_efficiency_curve'")
     return power_curve_df
 
 
