@@ -15,7 +15,7 @@ try:
 except ImportError:
     plt = None
 
-def reduce_wind_speed(wind_speed, wind_efficiency_curve='dena_mean'):
+def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     """
     Reduces wind speed by a wind efficiency curve.
 
@@ -27,7 +27,7 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve='dena_mean'):
     ----------
     wind_speed
 
-    wind_efficiency_curve
+    wind_efficiency_curve_name
 
     Returns
     -------
@@ -38,9 +38,11 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve='dena_mean'):
     """
     # Get wind efficiency curve
     wind_efficiency_curve = get_wind_efficiency_curve(
-            curve_name=wind_efficiency_curve)
+            curve_name=wind_efficiency_curve_name)
     # Get by wind efficiency reduced wind speed
-    reduced_wind_speed = wind_speed * np.interp(wind_speed, wind_efficiency_curve['wind_speed'], wind_efficiency_curve['efficiency'])
+    reduced_wind_speed = wind_speed * np.interp(
+        wind_speed, wind_efficiency_curve['wind_speed'],
+        wind_efficiency_curve['efficiency'])
     if isinstance(wind_speed, pd.Series):
         reduced_wind_speed = pd.Series(data=wind_speed, index=wind_speed.index,
                                        name='reduced_wind_speed')
