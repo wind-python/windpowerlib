@@ -96,6 +96,106 @@ class TurbineClusterModelChain(object):
                              "cluster but `wind_object` is an object of the " +
                              "class WindFarm.")
 
+    def wind_farm_power_curve(self, wind_farm, **kwargs):
+        r"""
+        Caluclates the power curve of a wind farm.
+        Depending on the parameters of the class the power curves are smoothed
+        and/or density corrected before or after the summation and/or a wind
+        farm efficiency is applied after the summation. TODO: check entry
+        Parameters
+        ----------
+        wind_farm : WindFarm
+            A :class:`~.wind_farm.WindFarm` object representing the wind farm.
+        Other Parameters
+        ----------------
+        roughness_length : Float, optional.
+            Roughness length.
+        turbulence_intensity : Float, optional.
+            Turbulence intensity.
+        Returns
+        -------
+        summarized_power_curve_df : pd.DataFrame
+            Calculated power curve of the wind farm.
+        """
+        # Initialize data frame for power curve values
+        df = pd.DataFrame()
+        for turbine_type_dict in wind_farm.wind_turbine_fleet:
+            # Check if all needed parameters are available
+            if self.smoothing:
+                if (self.standard_deviation_method ==
+                        'turbulence_intensity' and
+                            'turbulence_intensity' not in kwargs):
+                    if 'roughness_length' in kwargs:
+                        # Calculate turbulence intensity and write to kwargs
+                        turbulence_intensity = (
+                            tools.estimate_turbulence_intensity(
+                                turbine_type_dict[
+                                    'wind_turbine'].hub_height,
+                                kwargs['roughness_length']))
+                        kwargs[
+                            'turbulence_intensity'] = turbulence_intensity
+                    else:
+                        raise ValueError(
+                            "`roughness_length` must be defined for using " +
+                            "'turbulence_intensity' as " +
+                            "`standard_deviation_method` if " +
+                            "`turbulence_intensity` is not given")
+            if self.wake_losses_method is not None:
+                if wind_farm.efficiency is None:
+                    raise KeyError(
+                        "wind_farm_efficiency is needed if " +
+                        "`wake_losses_method´ is '{0}', but ".format(
+                            self.wake_losses_method) +
+                        " `wind_farm_efficiency` of {0} is {1}.".format(
+                            self.wind_object.object_name,
+                            self.wind_object.efficiency))
+            # Get original power curve
+            power_curve = pd.DataFrame(
+                turbine_type_dict['wind_turbine'].power_curve)
+            # Editions to power curve before the summation
+            if (self.smoothing and
+                        self.smoothing_order == 'turbine_power_curves'):
+                power_curve = power_curves.smooth_power_curve(
+                    power_curve['wind_speed'], power_curve['power'],
+                    standard_deviation_method=self.standard_deviation_method,
+                    **kwargs)
+            # Add power curves of all turbines of same type to data frame after
+            # renaming columns
+            power_curve.columns = ['wind_speed', turbine_type_dict[
+                'wind_turbine'].object_name]
+            df = pd.concat(
+                [df, pd.DataFrame(  # TODO: merge without renaming
+                    power_curve.set_index(['wind_speed']) *
+                    turbine_type_dict['number_of_turbines'])], axis=1)
+            # Rename back TODO: copy()
+            power_curve.columns = ['wind_speed', 'power']
+        # Sum up power curves of all turbine types
+        summarized_power_curve = pd.DataFrame(
+            sum(df[item].interpolate(method='index') for item in list(df)))
+        summarized_power_curve.columns = ['power']
+        # Return wind speed (index) to a column of the data frame
+        summarized_power_curve_df = pd.DataFrame(
+            data=[list(summarized_power_curve.index),
+                  list(
+                      summarized_power_curve['power'].values)]).transpose()
+        summarized_power_curve_df.columns = ['wind_speed', 'power']
+        # Editions to power curve after the summation
+        if (self.smoothing and
+                    self.smoothing_order == 'wind_farm_power_curves'):
+            summarized_power_curve_df = power_curves.smooth_power_curve(
+                summarized_power_curve_df['wind_speed'],
+                summarized_power_curve_df['power'],
+                standard_deviation_method=self.standard_deviation_method,
+                **kwargs)
+        if (self.wake_losses_method == 'constant_efficiency' or
+                    self.wake_losses_method == 'wind_efficiency_curve'):
+            summarized_power_curve_df = (
+                power_curves.wake_losses_to_power_curve(
+                    summarized_power_curve_df['wind_speed'].values,
+                    summarized_power_curve_df['power'].values,
+                    wake_losses_method=self.wake_losses_method,
+                    wind_farm_efficiency=self.wind_object.efficiency))
+        return summarized_power_curve_df
     def turbine_cluster_power_curve(self, **kwargs):
         r"""
         Caluclates the power curve of a wind turbine cluster.
