@@ -153,7 +153,7 @@ class WindFarm(object):
         smoothing : Boolean
             If True the power curves will be smoothed before the summation.
             Default: True.
-        block_width : Float, optional
+        block_width : Float
             Width of the moving block.
             Default in :py:func:`~.power_curves.smooth_power_curve`: 0.5.
         standard_deviation_method : String, optional

@@ -160,20 +160,17 @@ class TurbineClusterModelChain(ModelChain):
         weather_df : pandas.DataFrame
             DataFrame with time series for wind speed `wind_speed` in m/s, and
             roughness length `roughness_length` in m, as well as optionally
-            temperature `temperature` in K, pressure `pressure` in Pa and
-            density `density` in kg/m³ depending on `power_output_model` and
-            `density_model chosen`.
+            temperature `temperature` in K, pressure `pressure` in Pa,
+            density `density` in kg/m³ and turbulence intensity
+            `turbulence_intensity` depending on `power_output_model`,
+            `density_model` and `standard_deviation_model` chosen.
             The columns of the DataFrame are a MultiIndex where the first level
             contains the variable name (e.g. wind_speed) and the second level
             contains the height at which it applies (e.g. 10, if it was
             measured at a height of 10 m). See below for an example on how to
             create the weather_df DataFrame.
 
-       #TODO other parameters?
-        roughness_length : Float, optional.
-            Roughness length.
-        turbulence_intensity : Float, optional.
-            Turbulence intensity.
+# TODO rename method to model (wake_losses_method)
 
         Returns
         -------
@@ -203,7 +200,7 @@ class TurbineClusterModelChain(ModelChain):
         turbulence_intensity = (
             weather_df['turbulence_intensity'].values.mean() if
             'turbulence_intensity' in
-            weather_df.columns.get_level_values(0) else None) # TODO adapt
+            weather_df.columns.get_level_values(0) else None)
         # Assign power curve
         if (self.wake_losses_method == 'power_efficiency_curve' or
                 self.wake_losses_method == 'constant_efficiency' or

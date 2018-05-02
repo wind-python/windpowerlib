@@ -32,7 +32,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         Width of the moving block. Default: 0.5.
     standard_deviation_method : String
         Method for calculating the standard deviation for the gaussian
-        distribution. Options: 'turbulence_intensity', 'Norgaard', 'Staffell_Pfenninger'.
+        distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
         Default: 'turbulence_intensity'.
 
     Other Parameters
