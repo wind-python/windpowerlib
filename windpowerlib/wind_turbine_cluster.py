@@ -147,7 +147,7 @@ class WindTurbineCluster(object):
 
         Returns
         -------
-        summarized_power_curve_df : pd.DataFrame
+        cluster_power_curve : pd.DataFrame
             Calculated power curve of the wind turbine cluster.
 
         """
@@ -167,10 +167,10 @@ class WindTurbineCluster(object):
             columns={'power': farm.object_name}) for
             farm in self.wind_farms], axis=1)
         # Sum up power curves
-        summarized_power_curve = pd.DataFrame(
+        cluster_power_curve = pd.DataFrame(
             # TODO rename to aggregated_power_curve
             df.interpolate(method='index').sum(axis=1))
-        summarized_power_curve.columns = ['power']
+        cluster_power_curve.columns = ['power']
         # Return wind speed (index) to a column of the data frame
-        summarized_power_curve.reset_index('wind_speed', inplace=True)
-        return summarized_power_curve
+        cluster_power_curve.reset_index('wind_speed', inplace=True)
+        return cluster_power_curve
