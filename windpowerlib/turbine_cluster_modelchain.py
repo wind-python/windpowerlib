@@ -202,8 +202,14 @@ class TurbineClusterModelChain(ModelChain):
             'turbulence_intensity' in
             weather_df.columns.get_level_values(0) else None) # TODO adapt
         # Assign power curve
+        if (self.wake_losses_method == 'power_efficiency_curve' or
+                self.wake_losses_method == 'constant_efficiency' or
+                self.wake_losses_method is None):
+            wake_losses_method_to_power_curve = self.wake_losses_method
+        else:
+            wake_losses_method_to_power_curve = None
         self.wind_object.assign_power_curve(
-            wake_losses_method=self.wake_losses_method,
+            wake_losses_method=wake_losses_method_to_power_curve,
             smoothing=self.smoothing, block_width=self.block_width,
             standard_deviation_method=self.standard_deviation_method,
             smoothing_order=self.smoothing_order,
