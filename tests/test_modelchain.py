@@ -218,18 +218,6 @@ class TestModelChain:
         test_mc.run_model(weather_df)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
-        # Ideal gas equation and density corrected power coefficient curve
-        power_output_exp = pd.Series(data=[569117.952419, 1302746.06501],
-                                     name='feedin')
-        test_modelchain = {'wind_speed_model': 'hellman',
-                           'density_model': 'ideal_gas',
-                           'power_output_model': 'power_coefficient_curve',
-                           'density_correction': True}
-        test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
-                                **test_modelchain)
-        test_mc.run_model(weather_df)
-        assert_series_equal(test_mc.power_output, power_output_exp)
-
         # Raise ValueErrors due to wrong spelling of parameters
         with pytest.raises(ValueError):
             test_modelchain['power_output_model'] = 'wrong_spelling'
@@ -255,12 +243,6 @@ class TestModelChain:
         # Raise TypeErrors due to wrong type of `density_correction`
         with pytest.raises(TypeError):
             test_modelchain = {'power_output_model': 'power_curve',
-                               'density_correction': 'wrong_type'}
-            test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
-                                    **test_modelchain)
-            test_mc.run_model(weather_df)
-        with pytest.raises(TypeError):
-            test_modelchain = {'power_output_model': 'power_coefficient_curve',
                                'density_correction': 'wrong_type'}
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                     **test_modelchain)
