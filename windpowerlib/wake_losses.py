@@ -15,6 +15,7 @@ try:
 except ImportError:
     plt = None
 
+
 def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     """
     Reduces wind speed by a wind efficiency curve.
@@ -86,11 +87,21 @@ def get_wind_efficiency_curve(curve_name='dena_mean'):
              p. 124
 
     """
+    if curve_name.split('_')[0] not in ['dena', 'knorr']:
+        raise ValueError("Wrong wind efficiency curve name. Must be one of " +
+                         "the following: 'dena_mean', 'knorr_mean' " +  # TODO add names
+                         "but is {}".format(curve_name))
     path = os.path.join(os.path.dirname(__file__), 'data',
                         'wind_efficiency_curves_{}.csv'.format(
                             curve_name.split('_')[0]))
     # Read all curves from file
     wind_efficiency_curves = pd.read_csv(path)
+    # Raise error if wind efficiency curve specified in 'curve_name' does not
+    # exist
+    if curve_name not in list(wind_efficiency_curves):
+        raise ValueError("Efficiency curve name does not exist. Must be " +
+                         "'dena_mean', 'knorr_mean' " +  # TODO add names
+                         "but is {}".format(curve_name))
     efficiency_curve = wind_efficiency_curves[['wind_speed', curve_name]]
     efficiency_curve.columns = ['wind_speed', 'efficiency']
     return efficiency_curve
