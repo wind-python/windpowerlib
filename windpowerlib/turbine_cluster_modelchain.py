@@ -157,48 +157,40 @@ class TurbineClusterModelChain(object):
                 turbine_type_dict['wind_turbine'].power_curve)
             # Editions to power curve before the summation
             if (self.smoothing and
-                        self.smoothing_order == 'turbine_power_curves'):
+                    self.smoothing_order == 'turbine_power_curves'):
                 power_curve = power_curves.smooth_power_curve(
                     power_curve['wind_speed'], power_curve['power'],
                     standard_deviation_method=self.standard_deviation_method,
                     **kwargs)
-            # Add power curves of all turbines of same type to data frame after
-            # renaming columns
-            power_curve.columns = ['wind_speed', turbine_type_dict[
-                'wind_turbine'].object_name]
+            # Add power curves of all turbine types to data frame
+            # (multiplied by turbine amount)
             df = pd.concat(
-                [df, pd.DataFrame(  # TODO: merge without renaming
+                [df, pd.DataFrame(
                     power_curve.set_index(['wind_speed']) *
                     turbine_type_dict['number_of_turbines'])], axis=1)
-            # Rename back TODO: copy()
-            power_curve.columns = ['wind_speed', 'power']
-        # Sum up power curves of all turbine types
-        summarized_power_curve = pd.DataFrame(
-            sum(df[item].interpolate(method='index') for item in list(df)))
+        # Sum up all power curves
+        summarized_power_curve = pd.DataFrame(  # TODO rename to aggregated_power_curve
+            df.interpolate(method='index').sum(axis=1))
         summarized_power_curve.columns = ['power']
         # Return wind speed (index) to a column of the data frame
-        summarized_power_curve_df = pd.DataFrame(
-            data=[list(summarized_power_curve.index),
-                  list(
-                      summarized_power_curve['power'].values)]).transpose()
-        summarized_power_curve_df.columns = ['wind_speed', 'power']
+        summarized_power_curve.reset_index('wind_speed', inplace=True)
         # Editions to power curve after the summation
         if (self.smoothing and
-                    self.smoothing_order == 'wind_farm_power_curves'):
-            summarized_power_curve_df = power_curves.smooth_power_curve(
-                summarized_power_curve_df['wind_speed'],
-                summarized_power_curve_df['power'],
+                self.smoothing_order == 'wind_farm_power_curves'):
+            summarized_power_curve = power_curves.smooth_power_curve(
+                summarized_power_curve['wind_speed'],
+                summarized_power_curve['power'],
                 standard_deviation_method=self.standard_deviation_method,
                 **kwargs)
         if (self.wake_losses_method == 'constant_efficiency' or
-                    self.wake_losses_method == 'power_efficiency_curve'):
-            summarized_power_curve_df = (
+                self.wake_losses_method == 'power_efficiency_curve'):
+            summarized_power_curve = (
                 power_curves.wake_losses_to_power_curve(
-                    summarized_power_curve_df['wind_speed'].values,
-                    summarized_power_curve_df['power'].values,
+                    summarized_power_curve['wind_speed'].values,
+                    summarized_power_curve['power'].values,
                     wake_losses_method=self.wake_losses_method,
                     wind_farm_efficiency=self.wind_object.efficiency))
-        return summarized_power_curve_df
+        return summarized_power_curve
 
     def turbine_cluster_power_curve(self, **kwargs):
         r"""
