@@ -133,7 +133,8 @@ class WindFarm(object):
     def assign_power_curve(self, wake_losses_method='wind_efficiency_curve',
                            smoothing=True, block_width=0.5,
                            standard_deviation_method='turbulence_intensity',
-                           smoothing_order='wind_farm_power_curves', **kwargs):
+                           smoothing_order='wind_farm_power_curves',
+                           turbulence_intensity=None, **kwargs):
         r"""
         Calculates the power curve of a wind farm.
 
@@ -165,13 +166,13 @@ class WindFarm(object):
         Defines when the smoothing takes place if `smoothing` is True. Options:
         'turbine_power_curves' (to the single turbine power curves),
         'wind_farm_power_curves'. Default: 'wind_farm_power_curves'.
+        turbulence_intensity : Float
+            Turbulence intensity. Default: None.
 
         Other Parameters
         ----------------
         roughness_length : Float, optional.
             Roughness length.
-        turbulence_intensity : Float, optional.
-            Turbulence intensity.
 
         Returns
         -------
@@ -193,7 +194,7 @@ class WindFarm(object):
             # Check if all needed parameters are available
             if smoothing:
                 if (standard_deviation_method == 'turbulence_intensity' and
-                        'turbulence_intensity' not in kwargs):
+                        turbulence_intensity is None):
                     if 'roughness_length' in kwargs:
                         # Calculate turbulence intensity and write to kwargs
                         turbulence_intensity = (
