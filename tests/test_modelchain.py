@@ -190,7 +190,7 @@ class TestModelChain:
 
         # Test with default parameters of modelchain (power curve)
         power_output_exp = pd.Series(data=[1731887.39768, 3820152.27489],
-                                     name='feedin')
+                                     name='feedin_power_plant')
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine))
         test_mc.run_model(weather_df)
         assert_series_equal(test_mc.power_output, power_output_exp)
@@ -200,7 +200,7 @@ class TestModelChain:
                            'power_output_model': 'power_curve',
                            'density_correction': True}
         power_output_exp = pd.Series(data=[1433937.37959, 3285183.55084],
-                                     name='feedin')
+                                     name='feedin_power_plant')
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                 **test_modelchain)
         test_mc.run_model(weather_df)
@@ -208,7 +208,7 @@ class TestModelChain:
 
         # Test with power coefficient curve and hellman
         power_output_exp = pd.Series(data=[559060.36156, 1251143.98621],
-                                     name='feedin')
+                                     name='feedin_power_plant')
         test_turbine['fetch_curve'] = 'power_coefficient_curve'
         test_modelchain = {'wind_speed_model': 'hellman',
                            'power_output_model': 'power_coefficient_curve',

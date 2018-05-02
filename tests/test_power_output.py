@@ -23,7 +23,7 @@ class TestPowerOutput:
         # Test wind_speed as pd.Series with density and power_coefficient_curve
         # as pd.Series and np.array
         power_output_exp = pd.Series(data=[0.0, 244615.399, 0.0],
-                                     name='feedin')
+                                     name='feedin_power_plant')
         assert_series_equal(power_coefficient_curve(**parameters),
                             power_output_exp)
         parameters['density'] = np.array(parameters['density'])
@@ -68,7 +68,7 @@ class TestPowerOutput:
         # Test wind_speed as pd.Series and power_curve as pd.Series and
         # np.array
         power_output_exp = pd.Series(data=[0.0, 450.0, 0.0],
-                                     name='feedin')
+                                     name='feedin_power_plant')
         assert_series_equal(power_curve(**parameters), power_output_exp)
         parameters['power_curve_values'] = np.array(
             parameters['power_curve_values'])
@@ -109,7 +109,7 @@ class TestPowerOutput:
         # Test wind_speed as pd.Series with density and power_curve as
         # np. array and pd.Series
         power_output_exp = pd.Series(data=[0.0, 461.00290572, 0.0],
-                                     name='feedin')
+                                     name='feedin_power_plant')
         parameters['wind_speed'] = pd.Series(data=parameters['wind_speed'])
         assert_series_equal(power_curve(**parameters), power_output_exp)
         parameters['density'] = pd.Series(data=parameters['density'])
@@ -139,7 +139,7 @@ class TestPowerOutput:
         # Test wind_speed as pd.Series with density and power_curve as
         # pd.Series and np.array
         power_output_exp = pd.Series(data=[0.0, 461.00290572, 0.0],
-                                     name='feedin')
+                                     name='feedin_power_plant')
         assert_series_equal(power_curve_density_correction(**parameters),
                             power_output_exp)
         parameters['density'] = np.array(parameters['density'])

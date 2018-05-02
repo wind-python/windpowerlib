@@ -127,7 +127,7 @@ def power_curve(wind_speed, power_curve_wind_speeds, power_curve_values,
         # Power_output as pd.Series if wind_speed is pd.Series (else: np.array)
         if isinstance(wind_speed, pd.Series):
             power_output = pd.Series(data=power_output, index=wind_speed.index,
-                                     name='feedin')
+                                     name='feedin_power_plant')
         else:
             power_output = np.array(power_output)
     elif density_correction is True:
@@ -220,7 +220,7 @@ def power_curve_density_correction(wind_speed, power_curve_wind_speeds,
     # Power_output as pd.Series if wind_speed is pd.Series (else: np.array)
     if isinstance(wind_speed, pd.Series):
         power_output = pd.Series(data=power_output, index=wind_speed.index,
-                                 name='feedin')
+                                 name='feedin_power_plant')
     else:
         power_output = np.array(power_output)
     return power_output
