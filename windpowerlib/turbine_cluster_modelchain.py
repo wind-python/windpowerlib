@@ -196,26 +196,19 @@ class TurbineClusterModelChain(ModelChain):
         'wind_speed'
 
         """
-        if isinstance(self.wind_object,
-                      wind_turbine_cluster.WindTurbineCluster):
-            # Assign wind farm power curve of each wind farm
-            for farm in self.wind_object.wind_farms:
-                # Assign hub heights (needed for power curve and later for
-                # hub height of turbine cluster)
-                farm.mean_hub_height()
-                # Assign installed power to wind farm (needed for turbine
-                # cluster hub height
-                farm.installed_power = (
-                    farm.get_installed_power())
-                # Assign power curve
-                farm.assign_power_curve(
-                    wake_losses_method=self.wake_losses_method,
-                    smoothing=self.smoothing, block_width=self.block_width,
-                    standard_deviation_method=self.standard_deviation_method,
-                    smoothing_order=self.smoothing_order)
-
+        # Set turbulence intensity for assigning power curve
+        turbulence_intensity = (
+            weather_df['turbulence_intensity'].mean() if
+            'turbulence_intensity' in
+            weather_df.columns.get_level_values(0) else None) # TODO adapt
         # Assign power curve
-        self.wind_object.assign_power_curve()
+        self.wind_object.assign_power_curve(
+            wake_losses_method=self.wake_losses_method,
+            smoothing=self.smoothing, block_width=self.block_width,
+            standard_deviation_method=self.standard_deviation_method,
+            smoothing_order=self.smoothing_order,
+            roughness_lenth=weather_df['roughness_length'][0].mean(),
+            turbulence_intensity=turbulence_intensity) 
         # Assign mean hub height
         self.wind_object.mean_hub_height()
 
