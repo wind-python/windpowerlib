@@ -198,7 +198,7 @@ class TurbineClusterModelChain(ModelChain):
         """
         # Set turbulence intensity for assigning power curve
         turbulence_intensity = (
-            weather_df['turbulence_intensity'].mean() if
+            weather_df['turbulence_intensity'].values.mean() if
             'turbulence_intensity' in
             weather_df.columns.get_level_values(0) else None) # TODO adapt
         # Assign power curve
@@ -207,8 +207,8 @@ class TurbineClusterModelChain(ModelChain):
             smoothing=self.smoothing, block_width=self.block_width,
             standard_deviation_method=self.standard_deviation_method,
             smoothing_order=self.smoothing_order,
-            roughness_lenth=weather_df['roughness_length'][0].mean(),
-            turbulence_intensity=turbulence_intensity) 
+            roughness_length=weather_df['roughness_length'].values.mean(),
+            turbulence_intensity=turbulence_intensity)
         # Assign mean hub height
         self.wind_object.mean_hub_height()
 
