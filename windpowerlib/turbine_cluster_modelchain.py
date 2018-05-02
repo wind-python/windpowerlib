@@ -224,7 +224,8 @@ class TurbineClusterModelChain(ModelChain):
                                 self.density_correction is False)
                        else self.density_hub(weather_df))
         if (self.wake_losses_method != 'power_efficiency_curve' and
-                self.wake_losses_method != 'constant_efficiency'):
+                self.wake_losses_method != 'constant_efficiency' and
+                self.wake_losses_method is not None):
             # Reduce wind speed with wind efficiency curve
             wind_speed_hub = wake_losses.reduce_wind_speed(
                 wind_speed_hub,
