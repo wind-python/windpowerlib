@@ -366,7 +366,7 @@ class ModelChain(object):
                              "`power_output_model` must be " +
                              "'power_curve' or 'power_coefficient_curve'.")
 
-    def run_model(self, weather_df, wind_efficiency_curve_name=None):
+    def run_model(self, weather_df):
         r"""
         Runs the model.
 
