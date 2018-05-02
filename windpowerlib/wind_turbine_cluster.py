@@ -153,6 +153,10 @@ class WindTurbineCluster(object):
         """
         # Assign wind farm power curves to wind farms of wind turbine cluster
         for farm in self.wind_farms:
+            # Assign hub heights (needed for power curve and later for
+            # hub height of turbine cluster)
+            farm.mean_hub_height()
+            # Assign wind farm power curve
             farm.power_curve = farm.assign_power_curve(
                 wake_losses_method=wake_losses_method,
                 smoothing=smoothing, block_width=block_width,
