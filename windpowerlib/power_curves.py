@@ -1,6 +1,6 @@
 """
-The ``power_curves`` module contains functions apply calculations to the power
-curve of a wind turbine, wind farm or wind turbine cluster.
+The ``power_curves`` module contains functions for applying calculations to the
+power curve of a wind turbine, wind farm or wind turbine cluster.
 
 """
 
@@ -124,7 +124,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
 
 def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
-                               wake_losses_method='wind_efficiency_curve',
+                               wake_losses_method='power_efficiency_curve',
                                wind_farm_efficiency=None):
     r"""
     Applies wake losses depending on the method to a power curve.
@@ -139,13 +139,14 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         `power_curve_wind_speeds`.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
-        consideration. Options: 'wind_efficiency_curve', 'constant_efficiency'.
-        Default: 'wind_efficiency_curve'.
+        consideration. Options: 'power_efficiency_curve', 'constant_efficiency'.
+        Default: 'power_efficiency_curve'.
     wind_farm_efficiency : Float or pd.DataFrame or Dictionary
-        Efficiency of the wind farm. Either constant (float) or wind efficiency
-        curve (pd.DataFrame or Dictionary) contianing 'wind_speed' and
+        Efficiency of the wind farm. Either constant (float) or efficiency
+        curve (pd.DataFrame or Dictionary) containing 'wind_speed' and
         'efficiency' columns/keys with wind speeds in m/s and the
-        corresponding dimensionless wind farm efficiency. Default: None.
+        corresponding dimensionless wind farm efficiency (reduction of power).
+        Default: None.
 
     Returns
     -------
@@ -168,14 +169,16 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
     if wake_losses_method == 'constant_efficiency':
         if not isinstance(wind_farm_efficiency, float):
             raise TypeError("'wind_farm_efficiency' must be float if " +
-                            "`wake_losses_method´ is '{0}'")
+                            "`wake_losses_method´ is '{}'".format(
+                                wake_losses_method))
         power_curve_df['power'] = power_curve_values * wind_farm_efficiency
-    elif wake_losses_method == 'wind_efficiency_curve':
+    elif wake_losses_method == 'power_efficiency_curve':
         if (not isinstance(wind_farm_efficiency, dict) and
                 not isinstance(wind_farm_efficiency, pd.DataFrame)):
             raise TypeError(
                 "'wind_farm_efficiency' must be a dictionary or " +
-                "pd.DataFrame if `wake_losses_method´ is '{0}'")
+                "pd.DataFrame if `wake_losses_method´ is '{}'".format(
+                                wake_losses_method))
         df = pd.concat([power_curve_df.set_index('wind_speed'),
                         wind_farm_efficiency.set_index('wind_speed')], axis=1)
         # Add by efficiency reduced power column (nan values of efficiency
@@ -188,9 +191,9 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         power_curve_df.columns = ['wind_speed', 'power']
     else:
         raise ValueError(
-            "`wake_losses_method` is {0} but should be ".format(
+            "`wake_losses_method` is {} but should be ".format(
                 wake_losses_method) +
-            "'constant_efficiency' or 'wind_efficiency_curve'")
+            "'constant_efficiency' or 'power_efficiency_curve'")
     return power_curve_df
 
 
