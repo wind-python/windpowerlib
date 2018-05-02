@@ -7,8 +7,10 @@ The ``wind_turbine_cluster`` module is under development and is not working yet.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
+from windpowerlib import power_curves
 
 import numpy as np
+import pandas as pd
 
 
 class WindTurbineCluster(object):
@@ -100,12 +102,10 @@ class WindTurbineCluster(object):
         """
         return sum(wind_farm.installed_power for wind_farm in self.wind_farms)
 
-
-    def power_curve(self, wake_losses_method='wind_efficiency_curve',
-                    smoothing=True, block_width=0.5,
-                  standard_deviation_method='turbulence_intensity',
-                  smoothing_order='wind_farm_power_curves',
-                  **kwargs):
+    def assign_power_curve(self, wake_losses_method='wind_efficiency_curve',
+                           smoothing=True, block_width=0.5,
+                           standard_deviation_method='turbulence_intensity',
+                           smoothing_order='wind_farm_power_curves', **kwargs):
         r"""
         Calculates the power curve of a wind turbine cluster.
 
@@ -114,6 +114,29 @@ class WindTurbineCluster(object):
         Depending on the parameters of the class the power curves are smoothed
         and/or density corrected after the summation of the wind farm power
         curves.
+
+        Parameters
+        ----------
+        wake_losses_method : String
+            Defines the method for talking wake losses within the farm into
+            consideration. Options: 'wind_efficiency_curve',
+            'constant_efficiency' or None. Default: 'wind_efficiency_curve'.
+        smoothing : Boolean
+            If True the power curves will be smoothed before the summation.
+            Default: True.
+        block_width : Float, optional
+            Width of the moving block.
+            Default in :py:func:`~.power_curves.smooth_power_curve`: 0.5.
+        standard_deviation_method : String, optional
+            Method for calculating the standard deviation for the gaussian
+            distribution. Options: 'turbulence_intensity',
+            'Staffell_Pfenninger'.
+            Default in :py:func:`~.power_curves.smooth_power_curve`:
+            'turbulence_intensity'.
+        smoothing_order : String
+        Defines when the smoothing takes place if `smoothing` is True. Options:
+        'turbine_power_curves' (to the single turbine power curves),
+        'wind_farm_power_curves'. Default: 'wind_farm_power_curves'.
 
         Other Parameters
         ----------------
@@ -128,28 +151,22 @@ class WindTurbineCluster(object):
             Calculated power curve of the wind turbine cluster.
 
         """
-        # TODO adapt
-        # Assign wind farm power curves to wind farms
-        for farm in self.wind_object.wind_farms:
-            farm.power_curve = self.wind_farm_power_curve(farm, **kwargs)
+        # Assign wind farm power curves to wind farms of wind turbine cluster
+        for farm in self.wind_farms:
+            farm.power_curve = farm.assign_power_curve(
+                wake_losses_method=wake_losses_method,
+                smoothing=smoothing, block_width=block_width,
+                standard_deviation_method=standard_deviation_method,
+                smoothing_order=smoothing_order, **kwargs)
         # Create data frame from power curves of all wind farms
         df = pd.concat([farm.power_curve.set_index(['wind_speed']).rename(
             columns={'power': farm.object_name}) for
-            farm in self.wind_object.wind_farms], axis=1)
+            farm in self.wind_farms], axis=1)
         # Sum up power curves
         summarized_power_curve = pd.DataFrame(
-            sum(df[item].interpolate(method='index') for item in list(df)))
+            # TODO rename to aggregated_power_curve
+            df.interpolate(method='index').sum(axis=1))
         summarized_power_curve.columns = ['power']
         # Return wind speed (index) to a column of the data frame
-        summarized_power_curve_df = pd.DataFrame(
-            data=[list(summarized_power_curve.index),
-                  list(summarized_power_curve['power'].values)]).transpose()
-        summarized_power_curve_df.columns = ['wind_speed', 'power']
-        # Edition to power curve. Note: density correction is done in the
-        # function run_model()
-        if (self.smoothing and
-                self.smoothing_order == 'cluster_power_curve'):
-            summarized_power_curve_df = power_curves.smooth_power_curve(
-                summarized_power_curve_df['wind_speed'],
-                summarized_power_curve_df['power'], **kwargs)
-        return summarized_power_curve_df
+        summarized_power_curve.reset_index('wind_speed', inplace=True)
+        return summarized_power_curve
