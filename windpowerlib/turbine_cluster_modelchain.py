@@ -80,6 +80,9 @@ class TurbineClusterModelChain(ModelChain):
         A :class:`~.wind_farm.WindFarm` object representing the wind farm or
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
+    wind_turbine : WindFarm or WindTurbineCluster
+        A shallow copy of `wind_object` which is necessary to use all functions
+        of the superclass ~.modelchain.ModelChain`.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
         consideration. Options: 'power_efficiency_curve',
@@ -135,7 +138,7 @@ class TurbineClusterModelChain(ModelChain):
                  smoothing=True, block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
                  smoothing_order='wind_farm_power_curves', **kwargs):
-        super(TurbineClusterModelChain, self).__init__(wind_turbine=None,
+        super(TurbineClusterModelChain, self).__init__(wind_turbine=wind_object,
                                                        **kwargs)
 
         self.wind_object = wind_object
