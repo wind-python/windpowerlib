@@ -105,7 +105,8 @@ class WindTurbineCluster(object):
     def assign_power_curve(self, wake_losses_method='wind_efficiency_curve',
                            smoothing=True, block_width=0.5,
                            standard_deviation_method='turbulence_intensity',
-                           smoothing_order='wind_farm_power_curves', **kwargs):
+                           smoothing_order='wind_farm_power_curves',
+                           turbulence_intensity=None, **kwargs):
         r"""
         Calculates the power curve of a wind turbine cluster.
 
@@ -137,13 +138,13 @@ class WindTurbineCluster(object):
         Defines when the smoothing takes place if `smoothing` is True. Options:
         'turbine_power_curves' (to the single turbine power curves),
         'wind_farm_power_curves'. Default: 'wind_farm_power_curves'.
+        turbulence_intensity : Float
+            Turbulence intensity. Default: None.
 
         Other Parameters
         ----------------
         roughness_length : Float, optional.
             Roughness length.
-        turbulence_intensity : Float, optional.
-            Turbulence intensity.
 
         Returns
         -------
@@ -161,7 +162,8 @@ class WindTurbineCluster(object):
                 wake_losses_method=wake_losses_method,
                 smoothing=smoothing, block_width=block_width,
                 standard_deviation_method=standard_deviation_method,
-                smoothing_order=smoothing_order, **kwargs)
+                smoothing_order=smoothing_order,
+                turbulence_intensity=turbulence_intensity, **kwargs)
         # Create data frame from power curves of all wind farms
         df = pd.concat([farm.power_curve.set_index(['wind_speed']).rename(
             columns={'power': farm.object_name}) for
