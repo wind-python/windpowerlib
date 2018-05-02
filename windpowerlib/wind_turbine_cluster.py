@@ -7,7 +7,6 @@ The ``wind_turbine_cluster`` module is under development and is not working yet.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
-from windpowerlib import power_curves
 
 import numpy as np
 import pandas as pd

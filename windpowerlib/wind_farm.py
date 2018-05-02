@@ -11,12 +11,6 @@ __license__ = "GPLv3"
 from windpowerlib import tools, power_curves
 import numpy as np
 import pandas as pd
-import os
-
-try:
-    from matplotlib import pyplot as plt
-except ImportError:
-    plt = None
 
 
 class WindFarm(object):

@@ -10,7 +10,6 @@ __license__ = "GPLv3"
 from windpowerlib import (tools, wind_farm, power_curves, wind_turbine_cluster,
                           wake_losses)
 from windpowerlib.modelchain import ModelChain
-import pandas as pd
 
 
 class TurbineClusterModelChain(ModelChain):

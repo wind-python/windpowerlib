@@ -10,7 +10,6 @@ __license__ = "GPLv3"
 import numpy as np
 import pandas as pd
 from windpowerlib import tools
-import os
 
 
 def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
@@ -111,15 +110,6 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
               smoothed_power_curve_values]).transpose()
     # Rename columns of DataFrame
     smoothed_power_curve_df.columns = ['wind_speed', 'power']
-    # # Plot power curves
-    # fig = plt.figure()
-    # plt.plot(power_curve_wind_speeds.values, power_curve_values.values)
-    # plt.plot(power_curve_wind_speeds.values, smoothed_power_curve_values)
-    # fig.savefig(os.path.abspath(os.path.join(
-    #     os.path.dirname(__file__), '../Plots/power_curves',
-    #     '{0}_{1}_{2}.png'.format(kwargs['object_name'],
-    #                              standard_deviation_method, block_width))))
-    # plt.close() # TODO: delete plot later
     return smoothed_power_curve_df
 
 
