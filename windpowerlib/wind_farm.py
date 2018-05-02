@@ -232,29 +232,25 @@ class WindFarm(object):
                         power_curve.set_index(['wind_speed']) *
                         turbine_type_dict['number_of_turbines'])], axis=1)
         # Sum up all power curves
-        summarized_power_curve = pd.DataFrame(
+            wind_farm_power_curve = pd.DataFrame(
             df.interpolate(method='index').sum(axis=1))
-        summarized_power_curve.columns = ['power']
+        wind_farm_power_curve.columns = ['power']
         # Return wind speed (index) to a column of the data frame
-        summarized_power_curve_df = pd.DataFrame(
-            data=[list(summarized_power_curve.index),
-                  list(summarized_power_curve['power'].values)]).transpose()
-        summarized_power_curve_df.columns = ['wind_speed', 'power']
+        wind_farm_power_curve.reset_index('wind_speed', inplace=True)
         # Editions to power curve after the summation
         if smoothing and smoothing_order == 'wind_farm_power_curves':
-            summarized_power_curve_df = power_curves.smooth_power_curve(
-                summarized_power_curve_df['wind_speed'],
-                summarized_power_curve_df['power'],
+            wind_farm_power_curve = power_curves.smooth_power_curve(
+                wind_farm_power_curve['wind_speed'],
+                wind_farm_power_curve['power'],
                 standard_deviation_method=standard_deviation_method,
                 block_width=block_width, **kwargs)
         if (wake_losses_method == 'constant_efficiency' or
                 wake_losses_method == 'wind_efficiency_curve'):
-            summarized_power_curve_df = (
+            wind_farm_power_curve = (
                 power_curves.wake_losses_to_power_curve(
-                    summarized_power_curve_df['wind_speed'].values,
-                    summarized_power_curve_df['power'].values,
+                    wind_farm_power_curve['wind_speed'].values,
+                    wind_farm_power_curve['power'].values,
                     wake_losses_method=wake_losses_method,
                     wind_farm_efficiency=self.efficiency))
-        self.power_curve = summarized_power_curve_df
+        self.power_curve = wind_farm_power_curve
         return self
-    # TODO: rename to wind_farm_power_curve
