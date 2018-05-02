@@ -76,13 +76,10 @@ class TurbineClusterModelChain(ModelChain):
 
     Attributes
     ----------
-    wind_object : WindFarm or WindTurbineCluster
+    power_plant : WindFarm or WindTurbineCluster
         A :class:`~.wind_farm.WindFarm` object representing the wind farm or
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
-    wind_turbine : WindFarm or WindTurbineCluster
-        A shallow copy of `wind_object` which is necessary to use all functions
-        of the superclass ~.modelchain.ModelChain`.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
         consideration. Options: 'power_efficiency_curve',
@@ -134,14 +131,13 @@ class TurbineClusterModelChain(ModelChain):
         one constant.
 
     """
-    def __init__(self, wind_object, wake_losses_method='dena_mean',
+    def __init__(self, power_plant, wake_losses_method='dena_mean',
                  smoothing=True, block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
                  smoothing_order='wind_farm_power_curves', **kwargs):
-        super(TurbineClusterModelChain, self).__init__(wind_turbine=wind_object,
-                                                       **kwargs)
+        super(TurbineClusterModelChain, self).__init__(**kwargs)
 
-        self.wind_object = wind_object
+        self.power_plant = power_plant
         self.wake_losses_method = wake_losses_method
         self.smoothing = smoothing
         self.block_width = block_width
@@ -208,7 +204,7 @@ class TurbineClusterModelChain(ModelChain):
             wake_losses_method_to_power_curve = self.wake_losses_method
         else:
             wake_losses_method_to_power_curve = None
-        self.wind_object.assign_power_curve(
+        self.power_plant.assign_power_curve(
             wake_losses_method=wake_losses_method_to_power_curve,
             smoothing=self.smoothing, block_width=self.block_width,
             standard_deviation_method=self.standard_deviation_method,
@@ -216,7 +212,7 @@ class TurbineClusterModelChain(ModelChain):
             roughness_length=weather_df['roughness_length'].values.mean(),
             turbulence_intensity=turbulence_intensity)
         # Assign mean hub height
-        self.wind_object.mean_hub_height()
+        self.power_plant.mean_hub_height()
 
         # Run modelchain
         wind_speed_hub = self.wind_speed_hub(weather_df)
