@@ -178,6 +178,15 @@ class WindFarm(object):
         self
 
         """
+        # Check if all wind turbines have a power curve as attribute
+        for item in self.wind_turbine_fleet:
+            if item['wind_turbine'].power_curve is None:
+                raise ValueError("For an aggregated wind farm power curve " +
+                                 "each wind turbine needs a power curve " +
+                                 "but `power_curve` of wind turbine " +
+                                 "{} is {}.".format(
+                                     item['wind_turbine'].object_name,
+                                     item['wind_turbine'].power_curve))
         # Initialize data frame for power curve values
         df = pd.DataFrame()
         for turbine_type_dict in self.wind_turbine_fleet:
