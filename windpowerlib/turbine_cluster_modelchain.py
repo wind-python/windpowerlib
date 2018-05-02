@@ -135,7 +135,7 @@ class TurbineClusterModelChain(ModelChain):
                  smoothing=True, block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
                  smoothing_order='wind_farm_power_curves', **kwargs):
-        super(TurbineClusterModelChain, self).__init__(**kwargs)
+        super(TurbineClusterModelChain, self).__init__(power_plant, **kwargs)
 
         self.power_plant = power_plant
         self.wake_losses_method = wake_losses_method
