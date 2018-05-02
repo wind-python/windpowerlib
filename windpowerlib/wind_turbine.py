@@ -43,6 +43,9 @@ class WindTurbine(object):
         Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
         'power_curve' and 'power_coefficient_curve'. Default: None.
+    coordinates : list or None
+        List of coordinates [lat, lon] of location for loading data.
+        Default: None.
 
     Attributes
     ----------
@@ -68,6 +71,9 @@ class WindTurbine(object):
         Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
         'power_curve' and 'power_coefficient_curve'. Default: None.
+    coordinates : list or None
+        List of coordinates [lat, lon] of location for loading data.
+        Default: None.
     power_output : pandas.Series
         The calculated power output of the wind turbine.
 
@@ -94,7 +100,7 @@ class WindTurbine(object):
 
     def __init__(self, object_name, hub_height, rotor_diameter=None,
                  power_coefficient_curve=None, power_curve=None,
-                 nominal_power=None, fetch_curve=None):
+                 nominal_power=None, fetch_curve=None, coordinates=None):
 
         self.object_name = object_name
         self.hub_height = hub_height
@@ -103,6 +109,7 @@ class WindTurbine(object):
         self.power_curve = power_curve
         self.nominal_power = nominal_power
         self.fetch_curve = fetch_curve
+        self.coordinates = coordinates
 
         self.power_output = None
 
