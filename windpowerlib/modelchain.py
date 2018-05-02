@@ -358,8 +358,7 @@ class ModelChain(object):
                             'wind_speed'],
                         self.wind_turbine.power_coefficient_curve[
                             'power coefficient'],
-                        self.wind_turbine.rotor_diameter, density_hub,
-                        self.density_correction))
+                        self.wind_turbine.rotor_diameter, density_hub))
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
                              self.power_output_model) +
