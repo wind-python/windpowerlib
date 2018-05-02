@@ -86,7 +86,7 @@ class WindTurbineCluster(object):
 
         """
         self.hub_height = np.exp(
-            sum(np.log(wind_farm.hub_height) * wind_farm.installed_power for
+            sum(np.log(wind_farm.hub_height) * wind_farm.get_installed_power() for
                 wind_farm in self.wind_farms) / self.get_installed_power())
         return self
 
