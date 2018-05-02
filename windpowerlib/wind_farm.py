@@ -8,8 +8,7 @@ wind farm.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
-from windpowerlib import tools
-from windpowerlib import power_curves
+from windpowerlib import tools, power_curves
 import numpy as np
 import pandas as pd
 import os
@@ -131,11 +130,10 @@ class WindFarm(object):
             wind_dict['number_of_turbines']
             for wind_dict in self.wind_turbine_fleet)
 
-    def power_curve(self, wake_losses_method='wind_efficiency_curve',
-                  smoothing=True, block_width=0.5,
-                  standard_deviation_method='turbulence_intensity',
-                  smoothing_order='wind_farm_power_curves',
-                  **kwargs):
+    def assign_power_curve(self, wake_losses_method='wind_efficiency_curve',
+                           smoothing=True, block_width=0.5,
+                           standard_deviation_method='turbulence_intensity',
+                           smoothing_order='wind_farm_power_curves', **kwargs):
         r"""
         Calculates the power curve of a wind farm.
 
@@ -149,8 +147,8 @@ class WindFarm(object):
         ----------
         wake_losses_method : String
             Defines the method for talking wake losses within the farm into
-            consideration. Options: 'wind_efficiency_curve', 'constant_efficiency'
-            or None. Default: 'wind_efficiency_curve'.
+            consideration. Options: 'wind_efficiency_curve',
+            'constant_efficiency' or None. Default: 'wind_efficiency_curve'.
         smoothing : Boolean
             If True the power curves will be smoothed before the summation.
             Default: True.
@@ -163,6 +161,10 @@ class WindFarm(object):
             'Staffell_Pfenninger'.
             Default in :py:func:`~.power_curves.smooth_power_curve`:
             'turbulence_intensity'.
+        smoothing_order : String
+        Defines when the smoothing takes place if `smoothing` is True. Options:
+        'turbine_power_curves' (to the single turbine power curves),
+        'wind_farm_power_curves'. Default: 'wind_farm_power_curves'.
 
         Other Parameters
         ----------------
@@ -208,23 +210,20 @@ class WindFarm(object):
             power_curve = pd.DataFrame(
                 turbine_type_dict['wind_turbine'].power_curve)
             # Editions to power curve before the summation
-            if (smoothing and smoothing_order == 'turbine_power_curves'):
+            if smoothing and smoothing_order == 'turbine_power_curves':
                 power_curve = power_curves.smooth_power_curve(
                     power_curve['wind_speed'], power_curve['power'],
                     standard_deviation_method=standard_deviation_method,
-                    **kwargs)
-            # Add power curves of all turbines of same type to data frame after
-            # renaming columns
-            power_curve.columns = ['wind_speed', turbine_type_dict[
-                'wind_turbine'].object_name]
-            df = pd.concat([df, pd.DataFrame(  # TODO: merge without renaming
-                power_curve.set_index(['wind_speed']) *
-                turbine_type_dict['number_of_turbines'])], axis=1)
-            # Rename back TODO: copy()
-            power_curve.columns = ['wind_speed', 'power']
-        # Sum up power curves of all turbine types
+                    block_width=block_width, **kwargs)
+            # Add power curves of all turbine types to data frame
+            # (multiplied by turbine amount)
+            df = pd.concat(
+                    [df, pd.DataFrame(
+                        power_curve.set_index(['wind_speed']) *
+                        turbine_type_dict['number_of_turbines'])], axis=1)
+        # Sum up all power curves
         summarized_power_curve = pd.DataFrame(
-            sum(df[item].interpolate(method='index') for item in list(df)))
+            df.interpolate(method='index').sum(axis=1))
         summarized_power_curve.columns = ['power']
         # Return wind speed (index) to a column of the data frame
         summarized_power_curve_df = pd.DataFrame(
@@ -232,13 +231,12 @@ class WindFarm(object):
                   list(summarized_power_curve['power'].values)]).transpose()
         summarized_power_curve_df.columns = ['wind_speed', 'power']
         # Editions to power curve after the summation
-        if (smoothing and
-                smoothing_order == 'wind_farm_power_curves'):
+        if smoothing and smoothing_order == 'wind_farm_power_curves':
             summarized_power_curve_df = power_curves.smooth_power_curve(
                 summarized_power_curve_df['wind_speed'],
                 summarized_power_curve_df['power'],
                 standard_deviation_method=standard_deviation_method,
-                **kwargs)
+                block_width=block_width, **kwargs)
         if (wake_losses_method == 'constant_efficiency' or
                 wake_losses_method == 'wind_efficiency_curve'):
             summarized_power_curve_df = (
@@ -249,5 +247,4 @@ class WindFarm(object):
                     wind_farm_efficiency=self.efficiency))
         self.power_curve = summarized_power_curve_df
         return self
-
     # TODO: rename to wind_farm_power_curve
