@@ -13,7 +13,7 @@ class TestModelChain:
     def setup_class(self):
         self.test_turbine = {'hub_height': 100,
                              'rotor_diameter': 80,
-                             'object_name': 'ENERCON E 126 7500',
+                             'name': 'ENERCON E 126 7500',
                              'fetch_curve': 'power_curve'}
 
     def test_temperature_hub(self):
@@ -185,7 +185,7 @@ class TestModelChain:
 
         test_turbine = {'hub_height': 100,
                         'rotor_diameter': 80,
-                        'object_name': 'ENERCON E 126 7500',
+                        'name': 'ENERCON E 126 7500',
                         'fetch_curve': 'power_curve'}
 
         # Test with default parameters of modelchain (power curve)
@@ -270,7 +270,7 @@ class TestModelChain:
         with pytest.raises(TypeError):
             test_turbine = {'hub_height': 100,
                             'rotor_diameter': 80,
-                            'object_name': 'ENERCON E 126 7500',
+                            'name': 'ENERCON E 126 7500',
                             'fetch_curve': 'power_curve'}
             test_modelchain = {'power_output_model': 'power_coefficient_curve',
                                'density_correction': True}
@@ -280,7 +280,7 @@ class TestModelChain:
         with pytest.raises(TypeError):
             test_turbine = {'hub_height': 100,
                             'rotor_diameter': 80,
-                            'object_name': 'ENERCON E 126 7500',
+                            'name': 'ENERCON E 126 7500',
                             'fetch_curve': 'power_coefficient_curve'}
             test_modelchain = {'power_output_model': 'power_curve',
                                'density_corr': True}
