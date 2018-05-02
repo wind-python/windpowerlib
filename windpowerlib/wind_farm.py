@@ -25,7 +25,7 @@ class WindFarm(object):
 
     Parameters
     ----------
-    object_name : string
+    name : string
         Name of the wind farm.
     wind_turbine_fleet : list of dictionaries
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
@@ -42,7 +42,7 @@ class WindFarm(object):
 
     Attributes
     ----------
-    object_name : string
+    name : string
         Name of the wind farm.
     wind_turbine_fleet : list of dictionaries
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
@@ -65,10 +65,10 @@ class WindFarm(object):
     power_output : pandas.Series
         The calculated power output of the wind farm.
     """
-    def __init__(self, object_name, wind_turbine_fleet, coordinates=None,
+    def __init__(self, name, wind_turbine_fleet, coordinates=None,
                  efficiency=None):
 
-        self.object_name = object_name
+        self.name = name
         self.wind_turbine_fleet = wind_turbine_fleet
         self.coordinates = coordinates
         self.efficiency = efficiency
@@ -186,7 +186,7 @@ class WindFarm(object):
                                  "each wind turbine needs a power curve " +
                                  "but `power_curve` of wind turbine " +
                                  "{} is {}.".format(
-                                     item['wind_turbine'].object_name,
+                                     item['wind_turbine'].name,
                                      item['wind_turbine'].power_curve))
         # Initialize data frame for power curve values
         df = pd.DataFrame()
@@ -215,7 +215,7 @@ class WindFarm(object):
                         "`wake_losses_method´ is '{0}', but ".format(
                             wake_losses_method) +
                         " `wind_farm_efficiency` of {0} is {1}.".format(
-                            self.object_name, self.efficiency))
+                            self.name, self.efficiency))
             # Get original power curve
             power_curve = pd.DataFrame(
                 turbine_type_dict['wind_turbine'].power_curve)

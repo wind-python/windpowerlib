@@ -18,7 +18,7 @@ class WindTurbineCluster(object):
 
     Parameters
     ----------
-    object_name : string
+    name : string
         Name of the wind turbine cluster.
     wind_farms : list
         Contains objects of the :class:`~.wind_farm.WindFarm`.
@@ -28,7 +28,7 @@ class WindTurbineCluster(object):
 
      Attributes
     ----------
-    object_name : string
+    name : string
         Name of the wind turbine cluster.
     wind_farms : list
         Contains objects of the :class:`~.wind_farm.WindFarm`.
@@ -45,9 +45,9 @@ class WindTurbineCluster(object):
         The calculated power output of the wind turbine cluster.
 
     """
-    def __init__(self, object_name, wind_farms, coordinates=None):
+    def __init__(self, name, wind_farms, coordinates=None):
 
-        self.object_name = object_name
+        self.name = name
         self.wind_farms = wind_farms
         self.coordinates = coordinates
 
@@ -166,7 +166,7 @@ class WindTurbineCluster(object):
                 turbulence_intensity=turbulence_intensity, **kwargs)
         # Create data frame from power curves of all wind farms
         df = pd.concat([farm.power_curve.set_index(['wind_speed']).rename(
-            columns={'power': farm.object_name}) for
+            columns={'power': farm.name}) for
             farm in self.wind_farms], axis=1)
         # Sum up power curves
         cluster_power_curve = pd.DataFrame(
