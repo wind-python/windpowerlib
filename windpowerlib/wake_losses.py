@@ -1,5 +1,5 @@
 """
-The ``wake_losses`` module contains functions to TODO: add
+The ``wake_losses`` module contains functions for the modelling of wake losses.
 
 """
 

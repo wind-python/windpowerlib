@@ -129,8 +129,8 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         `power_curve_wind_speeds`.
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
-        consideration. Options: 'power_efficiency_curve', 'constant_efficiency'.
-        Default: 'power_efficiency_curve'.
+        consideration. Options: 'power_efficiency_curve',
+        'constant_efficiency'. Default: 'power_efficiency_curve'.
     wind_farm_efficiency : Float or pd.DataFrame or Dictionary
         Efficiency of the wind farm. Either constant (float) or efficiency
         curve (pd.DataFrame or Dictionary) containing 'wind_speed' and
@@ -141,7 +141,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
     Returns
     -------
     power_curve_df : pd.DataFrame
-        With wind farm efficiency reduced power curve. DataFrame has 
+        With wind farm efficiency reduced power curve. DataFrame has
         'wind_speed' and 'power' columns with wind speeds in m/s and the
         corresponding power curve value in W.
 

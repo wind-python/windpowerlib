@@ -25,8 +25,9 @@ class TurbineClusterModelChain(ModelChain):
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
         consideration. Options: 'power_efficiency_curve',
-        'constant_efficiency', 'dena_mean', 'knorr_mean' or None. # TODO all curves in WPL
-        Default: 'dena_mean'.
+        'constant_efficiency', 'dena_mean', 'knorr_mean', 'dena_extreme1',
+        'dena_extreme2', 'knorr_extreme1', 'knorr_extreme2', 'knorr_extreme3'
+        or None. Default: 'dena_mean'.
     smoothing : Boolean
         If True the power curves will be smoothed before the summation.
         Default: True.
@@ -82,8 +83,9 @@ class TurbineClusterModelChain(ModelChain):
     wake_losses_method : String
         Defines the method for talking wake losses within the farm into
         consideration. Options: 'power_efficiency_curve',
-        'constant_efficiency', 'dena_mean', 'knorr_mean' or None. # TODO all curves in WPL
-        Default: 'dena_mean'.
+        'constant_efficiency', 'dena_mean', 'knorr_mean', 'dena_extreme1',
+        'dena_extreme2', 'knorr_extreme1', 'knorr_extreme2', 'knorr_extreme3'
+        or None. Default: 'dena_mean'.
     smoothing : Boolean
         If True the power curves will be smoothed before the summation.
         Default: True.
