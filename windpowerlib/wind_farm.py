@@ -226,8 +226,8 @@ class WindFarm(object):
                         power_curve.set_index(['wind_speed']) *
                         turbine_type_dict['number_of_turbines'])], axis=1)
         # Sum up all power curves
-            wind_farm_power_curve = pd.DataFrame(
-            df.interpolate(method='index').sum(axis=1))
+        wind_farm_power_curve = pd.DataFrame(
+        df.interpolate(method='index').sum(axis=1))
         wind_farm_power_curve.columns = ['power']
         # Return wind speed (index) to a column of the data frame
         wind_farm_power_curve.reset_index('wind_speed', inplace=True)
