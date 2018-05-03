@@ -168,7 +168,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
             raise TypeError(
                 "'wind_farm_efficiency' must be a dictionary or " +
                 "pd.DataFrame if `wake_losses_method´ is '{}'".format(
-                                wake_losses_method))
+                    wake_losses_method))
         df = pd.concat([power_curve_df.set_index('wind_speed'),
                         wind_farm_efficiency.set_index('wind_speed')], axis=1)
         # Add by efficiency reduced power column (nan values of efficiency

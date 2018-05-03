@@ -39,14 +39,15 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     """
     # Get wind efficiency curve
     wind_efficiency_curve = get_wind_efficiency_curve(
-            curve_name=wind_efficiency_curve_name)
+        curve_name=wind_efficiency_curve_name)
     # Get by wind efficiency reduced wind speed
     reduced_wind_speed = wind_speed * np.interp(
         wind_speed, wind_efficiency_curve['wind_speed'],
         wind_efficiency_curve['efficiency'])
     if isinstance(wind_speed, pd.Series):
-        reduced_wind_speed = pd.Series(data=wind_speed, index=wind_speed.index,
-                                       name='reduced_wind_speed')
+        reduced_wind_speed = pd.Series(
+            data=reduced_wind_speed, index=wind_speed.index,
+            name='reduced_wind_speed')
     return reduced_wind_speed
 
 
@@ -163,4 +164,4 @@ def display_wind_efficiency_curves():
         print(knorr_df)
 
 if __name__ == "__main__":
-   display_wind_efficiency_curves()
+    display_wind_efficiency_curves()
