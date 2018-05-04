@@ -44,10 +44,6 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     reduced_wind_speed = wind_speed * np.interp(
         wind_speed, wind_efficiency_curve['wind_speed'],
         wind_efficiency_curve['efficiency'])
-    if isinstance(wind_speed, pd.Series):
-        reduced_wind_speed = pd.Series(
-            data=reduced_wind_speed, index=wind_speed.index,
-            name='reduced_wind_speed')
     return reduced_wind_speed
 
 
