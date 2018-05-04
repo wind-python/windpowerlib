@@ -185,7 +185,7 @@ class WindFarm(object):
         # Initialize data frame for power curve values
         df = pd.DataFrame()
         for turbine_type_dict in self.wind_turbine_fleet:
-            # Check if all needed parameters are available
+            # Check if all needed parameters are available and/or assign them
             if smoothing:
                 if (standard_deviation_method == 'turbulence_intensity' and
                         turbulence_intensity is None):
