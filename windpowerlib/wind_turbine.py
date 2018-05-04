@@ -21,7 +21,7 @@ class WindTurbine(object):
 
     Parameters
     ----------
-    object_name : string
+    name : string
         Name of the wind turbine type.
         Use get_turbine_types() to see a list of all wind turbines for which
         power (coefficient) curve data is provided.
@@ -43,10 +43,13 @@ class WindTurbine(object):
         Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
         'power_curve' and 'power_coefficient_curve'. Default: None.
+    coordinates : list or None
+        List of coordinates [lat, lon] of location for loading data.
+        Default: None.
 
     Attributes
     ----------
-    object_name : string
+    name : string
         Name of the wind turbine type.
         Use get_turbine_types() to see a list of all wind turbines for which
         power (coefficient) curve data is provided.
@@ -68,6 +71,9 @@ class WindTurbine(object):
         Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
         'power_curve' and 'power_coefficient_curve'. Default: None.
+    coordinates : list or None
+        List of coordinates [lat, lon] of location for loading data.
+        Default: None.
     power_output : pandas.Series
         The calculated power output of the wind turbine.
 
@@ -84,7 +90,7 @@ class WindTurbine(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'object_name': 'ENERCON E 126 7500',
+    ...    'name': 'ENERCON E 126 7500',
     ...    'fetch_curve': 'power_curve'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> print(e126.nominal_power)
@@ -92,17 +98,18 @@ class WindTurbine(object):
 
     """
 
-    def __init__(self, object_name, hub_height, rotor_diameter=None,
+    def __init__(self, name, hub_height, rotor_diameter=None,
                  power_coefficient_curve=None, power_curve=None,
-                 nominal_power=None, fetch_curve=None):
+                 nominal_power=None, fetch_curve=None, coordinates=None):
 
-        self.object_name = object_name
+        self.name = name
         self.hub_height = hub_height
         self.rotor_diameter = rotor_diameter
         self.power_coefficient_curve = power_coefficient_curve
         self.power_curve = power_curve
         self.nominal_power = nominal_power
         self.fetch_curve = fetch_curve
+        self.coordinates = coordinates
 
         self.power_output = None
 
@@ -132,7 +139,7 @@ class WindTurbine(object):
         >>> enerconE126 = {
         ...    'hub_height': 135,
         ...    'rotor_diameter': 127,
-        ...    'object_name': 'ENERCON E 126 7500',
+        ...    'name': 'ENERCON E 126 7500',
         ...    'fetch_curve': 'power_coefficient_curve'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
         >>> print(e126.power_coefficient_curve['power coefficient'][5])
@@ -160,14 +167,14 @@ class WindTurbine(object):
 
             """
             df = read_turbine_data(filename=filename)
-            wpp_df = df[df.turbine_id == self.object_name]
+            wpp_df = df[df.turbine_id == self.name]
             # if turbine not in data file
             if wpp_df.shape[0] == 0:
                 pd.set_option('display.max_rows', len(df))
                 logging.info('Possible types: \n{0}'.format(df.turbine_id))
                 pd.reset_option('display.max_rows')
                 sys.exit('Cannot find the wind converter type: {0}'.format(
-                    self.object_name))
+                    self.name))
             # if turbine in data file write power (coefficient) curve values
             # to 'data' array
             ncols = ['turbine_id', 'p_nom', 'source', 'modificationtimestamp']

@@ -97,7 +97,7 @@ def initialise_wind_turbines():
     # specification of own wind turbine (Note: power coefficient values and
     # nominal power have to be in Watt)
     myTurbine = {
-        'object_name': 'myTurbine',
+        'name': 'myTurbine',
         'nominal_power': 3e6,  # in W
         'hub_height': 105,  # in m
         'rotor_diameter': 90,  # in m
@@ -113,7 +113,7 @@ def initialise_wind_turbines():
     # if you want to use the power coefficient curve change the value of
     # 'fetch_curve' to 'power_coefficient_curve'
     enerconE126 = {
-        'object_name': 'ENERCON E 126 7500',  # turbine name as in register
+        'name': 'ENERCON E 126 7500',  # turbine name as in register
         'hub_height': 135,  # in m
         'rotor_diameter': 127,  # in m
         'fetch_curve': 'power_curve'  # fetch power curve

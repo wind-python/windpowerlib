@@ -1,5 +1,5 @@
 """
-The ``wake_losses`` module contains functions to TODO: add
+The ``wake_losses`` module contains functions for the modelling of wake losses.
 
 """
 
@@ -14,6 +14,7 @@ try:
     from matplotlib import pyplot as plt
 except ImportError:
     plt = None
+
 
 def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     """
@@ -38,14 +39,11 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     """
     # Get wind efficiency curve
     wind_efficiency_curve = get_wind_efficiency_curve(
-            curve_name=wind_efficiency_curve_name)
+        curve_name=wind_efficiency_curve_name)
     # Get by wind efficiency reduced wind speed
     reduced_wind_speed = wind_speed * np.interp(
         wind_speed, wind_efficiency_curve['wind_speed'],
         wind_efficiency_curve['efficiency'])
-    if isinstance(wind_speed, pd.Series):
-        reduced_wind_speed = pd.Series(data=wind_speed, index=wind_speed.index,
-                                       name='reduced_wind_speed')
     return reduced_wind_speed
 
 
@@ -86,11 +84,24 @@ def get_wind_efficiency_curve(curve_name='dena_mean'):
              p. 124
 
     """
+    possible_curve_names = ['dena_mean', 'knorr_mean', 'dena_extreme1',
+                            'dena_extreme2', 'knorr_extreme1',
+                            'knorr_extreme2', 'knorr_extreme3']
+    if curve_name.split('_')[0] not in ['dena', 'knorr']:
+        raise ValueError("Wrong wind efficiency curve name. Must be one of " +
+                         "the following: {}".format(possible_curve_names) +
+                         "but is {}".format(curve_name))
     path = os.path.join(os.path.dirname(__file__), 'data',
                         'wind_efficiency_curves_{}.csv'.format(
                             curve_name.split('_')[0]))
     # Read all curves from file
     wind_efficiency_curves = pd.read_csv(path)
+    # Raise error if wind efficiency curve specified in 'curve_name' does not
+    # exist
+    if curve_name not in list(wind_efficiency_curves):
+        raise ValueError("Efficiency curve name does not exist. Must be one" +
+                         "of the following: {}".format(possible_curve_names) +
+                         "but is {}".format(curve_name))
     efficiency_curve = wind_efficiency_curves[['wind_speed', curve_name]]
     efficiency_curve.columns = ['wind_speed', 'efficiency']
     return efficiency_curve
@@ -149,4 +160,4 @@ def display_wind_efficiency_curves():
         print(knorr_df)
 
 if __name__ == "__main__":
-   display_wind_efficiency_curves()
+    display_wind_efficiency_curves()

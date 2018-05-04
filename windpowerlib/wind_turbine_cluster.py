@@ -9,6 +9,7 @@ __license__ = "GPLv3"
 
 
 import numpy as np
+import pandas as pd
 
 
 class WindTurbineCluster(object):
@@ -16,7 +17,7 @@ class WindTurbineCluster(object):
 
     Parameters
     ----------
-    object_name : string
+    name : string
         Name of the wind turbine cluster.
     wind_farms : list
         Contains objects of the :class:`~.wind_farm.WindFarm`.
@@ -26,7 +27,7 @@ class WindTurbineCluster(object):
 
      Attributes
     ----------
-    object_name : string
+    name : string
         Name of the wind turbine cluster.
     wind_farms : list
         Contains objects of the :class:`~.wind_farm.WindFarm`.
@@ -43,9 +44,9 @@ class WindTurbineCluster(object):
         The calculated power output of the wind turbine cluster.
 
     """
-    def __init__(self, object_name, wind_farms, coordinates=None):
+    def __init__(self, name, wind_farms, coordinates=None):
 
-        self.object_name = object_name
+        self.name = name
         self.wind_farms = wind_farms
         self.coordinates = coordinates
 
@@ -84,7 +85,7 @@ class WindTurbineCluster(object):
 
         """
         self.hub_height = np.exp(
-            sum(np.log(wind_farm.hub_height) * wind_farm.installed_power for
+            sum(np.log(wind_farm.hub_height) * wind_farm.get_installed_power() for
                 wind_farm in self.wind_farms) / self.get_installed_power())
         return self
 
@@ -99,3 +100,78 @@ class WindTurbineCluster(object):
 
         """
         return sum(wind_farm.installed_power for wind_farm in self.wind_farms)
+
+    def assign_power_curve(self, wake_losses_model='wind_efficiency_curve',
+                           smoothing=True, block_width=0.5,
+                           standard_deviation_method='turbulence_intensity',
+                           smoothing_order='wind_farm_power_curves',
+                           turbulence_intensity=None, **kwargs):
+        r"""
+        Calculates the power curve of a wind turbine cluster.
+
+        The turbine cluster power curve is calculated by aggregating the wind
+        farm power curves of the turbine cluster.
+        Depending on the parameters of the class the power curves are smoothed
+        and/or density corrected after the summation of the wind farm power
+        curves.
+
+        Parameters
+        ----------
+        wake_losses_model : String
+            Defines the method for talking wake losses within the farm into
+            consideration. Options: 'wind_efficiency_curve',
+            'constant_efficiency' or None. Default: 'wind_efficiency_curve'.
+        smoothing : Boolean
+            If True the power curves will be smoothed before the summation.
+            Default: True.
+        block_width : Float, optional
+            Width of the moving block.
+            Default in :py:func:`~.power_curves.smooth_power_curve`: 0.5.
+        standard_deviation_method : String, optional
+            Method for calculating the standard deviation for the gaussian
+            distribution. Options: 'turbulence_intensity',
+            'Staffell_Pfenninger'.
+            Default in :py:func:`~.power_curves.smooth_power_curve`:
+            'turbulence_intensity'.
+        smoothing_order : String
+        Defines when the smoothing takes place if `smoothing` is True. Options:
+        'turbine_power_curves' (to the single turbine power curves),
+        'wind_farm_power_curves'. Default: 'wind_farm_power_curves'.
+        turbulence_intensity : Float
+            Turbulence intensity. Default: None.
+
+        Other Parameters
+        ----------------
+        roughness_length : Float, optional.
+            Roughness length.
+
+        Returns
+        -------
+        cluster_power_curve : pd.DataFrame
+            Calculated power curve of the wind turbine cluster.
+
+        """
+        # Assign wind farm power curves to wind farms of wind turbine cluster
+        for farm in self.wind_farms:
+            # Assign hub heights (needed for power curve and later for
+            # hub height of turbine cluster)
+            farm.mean_hub_height()
+            # Assign wind farm power curve
+            farm.power_curve = farm.assign_power_curve(
+                wake_losses_model=wake_losses_model,
+                smoothing=smoothing, block_width=block_width,
+                standard_deviation_method=standard_deviation_method,
+                smoothing_order=smoothing_order,
+                turbulence_intensity=turbulence_intensity, **kwargs)
+        # Create data frame from power curves of all wind farms
+        df = pd.concat([farm.power_curve.set_index(['wind_speed']).rename(
+            columns={'power': farm.name}) for
+            farm in self.wind_farms], axis=1)
+        # Sum up power curves
+        cluster_power_curve = pd.DataFrame(
+            # TODO rename to aggregated_power_curve
+            df.interpolate(method='index').sum(axis=1))
+        cluster_power_curve.columns = ['power']
+        # Return wind speed (index) to a column of the data frame
+        cluster_power_curve.reset_index('wind_speed', inplace=True)
+        return cluster_power_curve
