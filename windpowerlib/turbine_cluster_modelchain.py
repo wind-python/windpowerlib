@@ -21,7 +21,7 @@ class TurbineClusterModelChain(ModelChain):
         A :class:`~.wind_farm.WindFarm` object representing the wind farm or
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
-    wake_losses_method : String
+    wake_losses_model : String
         Defines the method for talking wake losses within the farm into
         consideration. Options: 'power_efficiency_curve',
         'constant_efficiency', 'dena_mean', 'knorr_mean', 'dena_extreme1',
@@ -79,7 +79,7 @@ class TurbineClusterModelChain(ModelChain):
         A :class:`~.wind_farm.WindFarm` object representing the wind farm or
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
-    wake_losses_method : String
+    wake_losses_model : String
         Defines the method for talking wake losses within the farm into
         consideration. Options: 'power_efficiency_curve',
         'constant_efficiency', 'dena_mean', 'knorr_mean', 'dena_extreme1',
@@ -131,14 +131,14 @@ class TurbineClusterModelChain(ModelChain):
         one constant.
 
     """
-    def __init__(self, power_plant, wake_losses_method='dena_mean',
+    def __init__(self, power_plant, wake_losses_model='dena_mean',
                  smoothing=True, block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
                  smoothing_order='wind_farm_power_curves', **kwargs):
         super(TurbineClusterModelChain, self).__init__(power_plant, **kwargs)
 
         self.power_plant = power_plant
-        self.wake_losses_method = wake_losses_method
+        self.wake_losses_model = wake_losses_model
         self.smoothing = smoothing
         self.block_width = block_width
         self.standard_deviation_method = standard_deviation_method
@@ -165,8 +165,6 @@ class TurbineClusterModelChain(ModelChain):
             contains the height at which it applies (e.g. 10, if it was
             measured at a height of 10 m). See below for an example on how to
             create the weather_df DataFrame.
-
-# TODO rename method to model (wake_losses_method)
 
         Returns
         -------
@@ -198,14 +196,14 @@ class TurbineClusterModelChain(ModelChain):
             'turbulence_intensity' in
             weather_df.columns.get_level_values(0) else None)
         # Assign power curve
-        if (self.wake_losses_method == 'power_efficiency_curve' or
-                self.wake_losses_method == 'constant_efficiency' or
-                self.wake_losses_method is None):
-            wake_losses_method_to_power_curve = self.wake_losses_method
+        if (self.wake_losses_model == 'power_efficiency_curve' or
+                self.wake_losses_model == 'constant_efficiency' or
+                self.wake_losses_model is None):
+            wake_losses_model_to_power_curve = self.wake_losses_model
         else:
-            wake_losses_method_to_power_curve = None
+            wake_losses_model_to_power_curve = None
         self.power_plant.assign_power_curve(
-            wake_losses_method=wake_losses_method_to_power_curve,
+            wake_losses_model=wake_losses_model_to_power_curve,
             smoothing=self.smoothing, block_width=self.block_width,
             standard_deviation_method=self.standard_deviation_method,
             smoothing_order=self.smoothing_order,
@@ -219,13 +217,13 @@ class TurbineClusterModelChain(ModelChain):
         density_hub = (None if (self.power_output_model == 'power_curve' and
                                 self.density_correction is False)
                        else self.density_hub(weather_df))
-        if (self.wake_losses_method != 'power_efficiency_curve' and
-                self.wake_losses_method != 'constant_efficiency' and
-                self.wake_losses_method is not None):
+        if (self.wake_losses_model != 'power_efficiency_curve' and
+                self.wake_losses_model != 'constant_efficiency' and
+                self.wake_losses_model is not None):
             # Reduce wind speed with wind efficiency curve
             wind_speed_hub = wake_losses.reduce_wind_speed(
                 wind_speed_hub,
-                wind_efficiency_curve_name=self.wake_losses_method)
+                wind_efficiency_curve_name=self.wake_losses_model)
         self.power_output = self.turbine_power_output(wind_speed_hub,
                                                       density_hub)
         return self

@@ -101,7 +101,7 @@ class WindTurbineCluster(object):
         """
         return sum(wind_farm.installed_power for wind_farm in self.wind_farms)
 
-    def assign_power_curve(self, wake_losses_method='wind_efficiency_curve',
+    def assign_power_curve(self, wake_losses_model='wind_efficiency_curve',
                            smoothing=True, block_width=0.5,
                            standard_deviation_method='turbulence_intensity',
                            smoothing_order='wind_farm_power_curves',
@@ -117,7 +117,7 @@ class WindTurbineCluster(object):
 
         Parameters
         ----------
-        wake_losses_method : String
+        wake_losses_model : String
             Defines the method for talking wake losses within the farm into
             consideration. Options: 'wind_efficiency_curve',
             'constant_efficiency' or None. Default: 'wind_efficiency_curve'.
@@ -158,7 +158,7 @@ class WindTurbineCluster(object):
             farm.mean_hub_height()
             # Assign wind farm power curve
             farm.power_curve = farm.assign_power_curve(
-                wake_losses_method=wake_losses_method,
+                wake_losses_model=wake_losses_model,
                 smoothing=smoothing, block_width=block_width,
                 standard_deviation_method=standard_deviation_method,
                 smoothing_order=smoothing_order,

@@ -124,7 +124,7 @@ class WindFarm(object):
             wind_dict['number_of_turbines']
             for wind_dict in self.wind_turbine_fleet)
 
-    def assign_power_curve(self, wake_losses_method='power_efficiency_curve',
+    def assign_power_curve(self, wake_losses_model='power_efficiency_curve',
                            smoothing=True, block_width=0.5,
                            standard_deviation_method='turbulence_intensity',
                            smoothing_order='wind_farm_power_curves',
@@ -140,7 +140,7 @@ class WindFarm(object):
 
         Parameters
         ----------
-        wake_losses_method : String
+        wake_losses_model : String
             Defines the method for talking wake losses within the farm into
             consideration. Options: 'power_efficiency_curve',
             'constant_efficiency' or None. Default: 'power_efficiency_curve'.
@@ -202,12 +202,12 @@ class WindFarm(object):
                             "'turbulence_intensity' as " +
                             "`standard_deviation_method` if " +
                             "`turbulence_intensity` is not given")
-            if wake_losses_method is not None:
+            if wake_losses_model is not None:
                 if self.efficiency is None:
                     raise KeyError(
                         "wind_farm_efficiency is needed if " +
-                        "`wake_losses_method´ is '{0}', but ".format(
-                            wake_losses_method) +
+                        "`wake_losses_model´ is '{0}', but ".format(
+                            wake_losses_model) +
                         " `wind_farm_efficiency` of {0} is {1}.".format(
                             self.name, self.efficiency))
             # Get original power curve
@@ -238,13 +238,13 @@ class WindFarm(object):
                 wind_farm_power_curve['power'],
                 standard_deviation_method=standard_deviation_method,
                 block_width=block_width, **kwargs)
-        if (wake_losses_method == 'constant_efficiency' or
-                wake_losses_method == 'wind_efficiency_curve'):
+        if (wake_losses_model == 'constant_efficiency' or
+                wake_losses_model == 'wind_efficiency_curve'):
             wind_farm_power_curve = (
                 power_curves.wake_losses_to_power_curve(
                     wind_farm_power_curve['wind_speed'].values,
                     wind_farm_power_curve['power'].values,
-                    wake_losses_method=wake_losses_method,
+                    wake_losses_model=wake_losses_model,
                     wind_farm_efficiency=self.efficiency))
         self.power_curve = wind_farm_power_curve
         return self

@@ -115,7 +115,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
 
 def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
-                               wake_losses_method='power_efficiency_curve',
+                               wake_losses_model='power_efficiency_curve',
                                wind_farm_efficiency=None):
     r"""
     Applies wake losses depending on the method to a power curve.
@@ -128,7 +128,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
     power_curve_values : pandas.Series or numpy.array
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
-    wake_losses_method : String
+    wake_losses_model : String
         Defines the method for talking wake losses within the farm into
         consideration. Options: 'power_efficiency_curve',
         'constant_efficiency'. Default: 'power_efficiency_curve'.
@@ -157,19 +157,19 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
               list(power_curve_values)]).transpose()
     # Rename columns of DataFrame
     power_curve_df.columns = ['wind_speed', 'power']
-    if wake_losses_method == 'constant_efficiency':
+    if wake_losses_model == 'constant_efficiency':
         if not isinstance(wind_farm_efficiency, float):
             raise TypeError("'wind_farm_efficiency' must be float if " +
-                            "`wake_losses_method´ is '{}'".format(
-                                wake_losses_method))
+                            "`wake_losses_model´ is '{}'".format(
+                                wake_losses_model))
         power_curve_df['power'] = power_curve_values * wind_farm_efficiency
-    elif wake_losses_method == 'power_efficiency_curve':
+    elif wake_losses_model == 'power_efficiency_curve':
         if (not isinstance(wind_farm_efficiency, dict) and
                 not isinstance(wind_farm_efficiency, pd.DataFrame)):
             raise TypeError(
                 "'wind_farm_efficiency' must be a dictionary or " +
-                "pd.DataFrame if `wake_losses_method´ is '{}'".format(
-                    wake_losses_method))
+                "pd.DataFrame if `wake_losses_model´ is '{}'".format(
+                    wake_losses_model))
         df = pd.concat([power_curve_df.set_index('wind_speed'),
                         wind_farm_efficiency.set_index('wind_speed')], axis=1)
         # Add by efficiency reduced power column (nan values of efficiency
@@ -182,7 +182,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         power_curve_df.columns = ['wind_speed', 'power']
     else:
         raise ValueError(
-            "`wake_losses_method` is {} but should be ".format(
-                wake_losses_method) +
+            "`wake_losses_model` is {} but should be ".format(
+                wake_losses_model) +
             "'constant_efficiency' or 'power_efficiency_curve'")
     return power_curve_df
