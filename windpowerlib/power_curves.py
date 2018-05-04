@@ -63,7 +63,8 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     """
     # Specify normalized standard deviation
     if standard_deviation_method == 'turbulence_intensity':
-        if 'turbulence_intensity' in kwargs:
+        if ('turbulence_intensity' in kwargs and
+                kwargs['turbulence_intensity'] is not np.nan):
             normalized_standard_deviation = kwargs['turbulence_intensity']
         else:
             raise ValueError("Turbulence intensity must be defined for " +
