@@ -209,7 +209,7 @@ class TurbineClusterModelChain(ModelChain):
             smoothing=self.smoothing, block_width=self.block_width,
             standard_deviation_method=self.standard_deviation_method,
             smoothing_order=self.smoothing_order,
-            roughness_length=weather_df['roughness_length'].values.mean(),
+            roughness_length=weather_df['roughness_length'][0].mean(),
             turbulence_intensity=turbulence_intensity)
         # Assign mean hub height
         self.power_plant.mean_hub_height()
