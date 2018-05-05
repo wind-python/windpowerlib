@@ -248,7 +248,7 @@ class WindFarm(object):
                 standard_deviation_method=standard_deviation_method,
                 block_width=block_width, **kwargs)
         if (wake_losses_model == 'constant_efficiency' or
-                wake_losses_model == 'wind_efficiency_curve'):
+                wake_losses_model == 'power_efficiency_curve'):
             wind_farm_power_curve = (
                 power_curves.wake_losses_to_power_curve(
                     wind_farm_power_curve['wind_speed'].values,
