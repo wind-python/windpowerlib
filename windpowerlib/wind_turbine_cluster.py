@@ -147,8 +147,7 @@ class WindTurbineCluster(object):
 
         Returns
         -------
-        cluster_power_curve : pd.DataFrame
-            Calculated power curve of the wind turbine cluster.
+        self
 
         """
         # Assign wind farm power curves to wind farms of wind turbine cluster
@@ -174,4 +173,5 @@ class WindTurbineCluster(object):
         cluster_power_curve.columns = ['power']
         # Return wind speed (index) to a column of the data frame
         cluster_power_curve.reset_index('wind_speed', inplace=True)
-        return cluster_power_curve
+        self.power_curve = cluster_power_curve
+        return self
