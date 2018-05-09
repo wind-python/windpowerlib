@@ -128,7 +128,8 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                 power_curve_wind_speed - wind_speed,
                 standard_deviation, mean_gauss)
             for wind_speed in wind_speeds_block)
-        # Add value to list - add 0 if `smoothed_value` is nan.
+        # Add value to list - add zero if `smoothed_value` is nan as Gauss
+        # distribution is not defined for zero.
         smoothed_power_curve_values.append(0 if np.isnan(smoothed_value)
                                            else smoothed_value)
     # Create smoothed power curve data frame
