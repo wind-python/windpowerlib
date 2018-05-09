@@ -17,29 +17,29 @@ class TurbineClusterModelChain(ModelChain):
 
     Parameters
     ----------
-    wind_object : WindFarm or WindTurbineCluster
+    power_plant : WindFarm or WindTurbineCluster
         A :class:`~.wind_farm.WindFarm` object representing the wind farm or
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
-    wake_losses_model : String
+    wake_losses_model : string
         Defines the method for talking wake losses within the farm into
-        consideration. Options: 'power_efficiency_curve',
-        'constant_efficiency', 'dena_mean', 'knorr_mean', 'dena_extreme1',
-        'dena_extreme2', 'knorr_extreme1', 'knorr_extreme2', 'knorr_extreme3'
-        or None. Default: 'dena_mean'.
-    smoothing : Boolean
-        If True the power curves will be smoothed before the summation.
+        consideration. Options: None, 'power_efficiency_curve' or
+        'constant_efficiency' or the name of a wind efficiency curve like
+        'dena_mean'. Default: 'dena_mean'.
+        Use :py:func:`~.wake_losses.display_wind_efficiency_curves`: to see a
+        list of all provided wind efficiency curves.
+    smoothing : boolean
+        If True the power curves will be smoothed before or after the
+        aggregation of power curves depending on `smoothing_order`.
         Default: False.
-    block_width : Float, optional
-        Width of the moving block.
-        Default in :py:func:`~.power_curves.smooth_power_curve`: 0.5.
-    standard_deviation_method : String, optional
-        Method for calculating the standard deviation for the gaussian
-        distribution. Options: 'turbulence_intensity', 'Norgaard',
-        'Staffell_Pfenninger'.
-        Default in :py:func:`~.power_curves.smooth_power_curve`:
-        'turbulence_intensity'.
-    smoothing_order : String
+    block_width : float
+        Width between the wind speeds in the sum of the equation in
+        :py:func:`~.power_curves.smooth_power_curve`:. Default: 0.5.
+    standard_deviation_method : string
+        Method for calculating the standard deviation for the Gauss
+        distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
+        Default: 'turbulence_intensity'.
+    smoothing_order : string
         Defines when the smoothing takes place if `smoothing` is True. Options:
         'turbine_power_curves' (to the single turbine power curves),
         'wind_farm_power_curves'. Default: 'wind_farm_power_curves'.
@@ -79,30 +79,32 @@ class TurbineClusterModelChain(ModelChain):
         A :class:`~.wind_farm.WindFarm` object representing the wind farm or
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
-    wake_losses_model : String
+    wake_losses_model : string
         Defines the method for talking wake losses within the farm into
-        consideration. Options: 'power_efficiency_curve',
-        'constant_efficiency', 'dena_mean', 'knorr_mean', 'dena_extreme1',
-        'dena_extreme2', 'knorr_extreme1', 'knorr_extreme2', 'knorr_extreme3'
-        or None. Default: 'dena_mean'.
-    smoothing : Boolean
-        If True the power curves will be smoothed before the summation.
+        consideration. Options: None, 'power_efficiency_curve' or
+        'constant_efficiency' or the name of a wind efficiency curve like
+        'dena_mean'. Default: 'dena_mean'.
+        Use :py:func:`~.wake_losses.display_wind_efficiency_curves`: to see a
+        list of all provided wind efficiency curves.
+    smoothing : boolean
+        If True the power curves will be smoothed before or after the
+        aggregation of power curves depending on `smoothing_order`.
         Default: False.
-    block_width : Float, optional
-        Width of the moving block.
-        Default in :py:func:`~.power_curves.smooth_power_curve`: 0.5.
-    standard_deviation_method : String, optional
-        Method for calculating the standard deviation for the gaussian
-        distribution. Options: 'turbulence_intensity', 'Norgaard',
-        'Staffell_Pfenninger'.
-        Default in :py:func:`~.power_curves.smooth_power_curve`:
-        'turbulence_intensity'.
-    power_output : pandas.Series
-        Electrical power output of the wind turbine in W.
-    smoothing_order : String
+    block_width : float
+        Width between the wind speeds in the sum of the equation in
+        :py:func:`~.power_curves.smooth_power_curve`:. Default: 0.5.
+    standard_deviation_method : string
+        Method for calculating the standard deviation for the Gauss
+        distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
+        Default: 'turbulence_intensity'.
+    smoothing_order : string
         Defines when the smoothing takes place if `smoothing` is True. Options:
         'turbine_power_curves' (to the single turbine power curves),
         'wind_farm_power_curves'. Default: 'wind_farm_power_curves'.
+    power_output : pandas.Series
+        Electrical power output of the wind turbine in W.
+    pandas.DataFrame or None
+        The calculated power curve of the wind farm.
     wind_speed_model : string
         Parameter to define which model to use to calculate the wind speed
         at hub height. Valid options are 'logarithmic', 'hellman' and

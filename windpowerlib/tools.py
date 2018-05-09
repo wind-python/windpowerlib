@@ -43,7 +43,8 @@ def linear_interpolation_extrapolation(df, target_height):
 
     For the inter- and extrapolation the following equation is used:
 
-    .. math:: f(x) = \frac{(f(x_2) - f(x_1))}{(x_2 - x_1)} \cdot (x - x_1) + f(x_1)
+    .. math:: f(x) = \frac{(f(x_2) - f(x_1))}{(x_2 - x_1)} \cdot
+        (x - x_1) + f(x_1)
 
     Examples
     ---------
@@ -106,7 +107,8 @@ def logarithmic_interpolation_extrapolation(df, target_height):
     For the logarithmic inter- and extrapolation the following equation is
     used [1]_:
 
-    .. math:: f(x) = \frac{\ln(x) \cdot (f(x_2) - f(x_1)) - f(x_2) \cdot \ln(x_1) + f(x_1) \cdot \ln(x_2)}{\ln(x_2) - \ln(x_1)}
+    .. math:: f(x) = \frac{\ln(x) \cdot (f(x_2) - f(x_1)) - f(x_2) \cdot
+        \ln(x_1) + f(x_1) \cdot \ln(x_2)}{\ln(x_2) - \ln(x_1)}
 
     References
     ----------
@@ -131,6 +133,9 @@ def gauss_distribution(function_variable, standard_deviation, mean=0):
     r"""
     Gauss distribution.
 
+    The Gauss distribution is used in the function
+    :py:func:`~.power_curves.smooth_power_curve`: for power curve smoothing.
+
     Parameters
     ----------
     function_variable : float
@@ -143,7 +148,8 @@ def gauss_distribution(function_variable, standard_deviation, mean=0):
     Returns
     -------
     pandas.Series or numpy.array
-        Wind speed at hub height. Data type depends on type of `wind_speed`.
+        Wind speed at hub height. Data type depends on the type of
+        `wind_speed`.
 
     Notes
     -----
@@ -160,8 +166,6 @@ def gauss_distribution(function_variable, standard_deviation, mean=0):
     .. [1] Berendsen, H.: "A Student's Guide to Data and Error Analysis".
              New York, Cambridge University Press, 2011, p. 37
 
-    # TODO: add references
-
     """
     return (1 / (standard_deviation * np.sqrt(2 * np.pi)) *
             np.exp(-(function_variable - mean)**2 /
@@ -170,11 +174,11 @@ def gauss_distribution(function_variable, standard_deviation, mean=0):
 
 def estimate_turbulence_intensity(height, roughness_length):
     """
-    Calculate turbulence intensity.
+    Estimate turbulence intensity by the roughness length.
 
     Parameters
     ----------
-    height : Float
+    height : float
         Height above ground in m at which the turbulence intensity is
         calculated.
     roughness_length : pandas.Series or numpy.array or float
@@ -184,7 +188,7 @@ def estimate_turbulence_intensity(height, roughness_length):
     -----
     The following equation is used [1]_:
 
-    .. math:: TI = \frac{1}{ln \left(\frac{h}{z_\text{0}} \right)}
+    .. math:: TI \approx \frac{1}{ln \left(\frac{h}{z_\text{0}} \right)}
 
     with:
         TI: turbulence intensity, h: height, :math:`z_{0}`: roughness length

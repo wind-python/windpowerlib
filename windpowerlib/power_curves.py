@@ -1,6 +1,7 @@
 """
-The ``power_curves`` module contains functions for applying alterations to the
-power curve of a wind turbine, wind farm or wind turbine cluster.
+The ``power_curves`` module contains functions for applying alterations like
+power curve smoohting or reducing power values by an efficiency to the power
+curve of a wind turbine, wind farm or wind turbine cluster.
 
 """
 
@@ -21,14 +22,15 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
     Parameters
     ----------
-    power_curve_wind_speeds : pandas.Series
+    power_curve_wind_speeds : pandas.Series or numpy.array
         Wind speeds in m/s for which the power curve values are provided in
         `power_curve_values`.
     power_curve_values : pandas.Series or numpy.array
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
     block_width : float
-        Width of the moving block. Default: 0.5.
+        Width between the wind speeds in the sum of the equation shown below in
+        Notes. Default: 0.5.
     wind_speed_range : float
         The sum in the equation below is taken for this wind speed range below
         and above the power curve wind speed. Default: 15.0.
@@ -36,7 +38,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         Method for calculating the standard deviation for the Gauss
         distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
         Default: 'turbulence_intensity'.
-    mean_gauss : float or integer
+    mean_gauss : float
         Mean of the Gaus distribution in
         :py:func:`~.tools.gauss_distribution`:. Default: 0.
 
@@ -49,9 +51,8 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     Returns
     -------
     smoothed_power_curve_df : pd.DataFrame
-        Smoothed power curve. DataFrame has 'wind_speed' and
-        'power' columns with wind speeds in m/s and the corresponding power
-        curve value in W.
+        Smoothed power curve. DataFrame has 'wind_speed' and 'power' columns
+        with wind speeds in m/s and the corresponding power curve value in W.
 
     Notes
     -----
@@ -60,17 +61,19 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         P_{smoothed}(v_{std}) = \sum\limits_{v_i}^{} \Delta v_i \cdot P(v_i)
         \cdot \frac{1}{\sigma \sqrt{2 \pi}}
         \exp \left[-\frac{(v_{std} - v_i -\mu)^2}{2 \sigma^2} \right]
-    
+
     with:
         P: power [W], v: wind speed [m/s],
-        :math:`\sigma`: standard deviation (Gauss), :math: `\mu`: mean (Gauss),
-        
+        :math:`\sigma`: standard deviation (Gauss), :math: `\mu`: mean (Gauss)
+
         :math:`P_{smoothed}` is the smoothed power curve value,
         :math:`v_{std}` is the standard wind speed in the power curve,
         :math: `\Delta v_i` is the interval length between
         :math: `$v_\text{i}$` and :math: `$v_\text{i+1}$`
-    
-    This way of smoothing power curves is also used in [2]_ and [3]_.
+
+    Power curve smoothing is applied to take account for the spatial
+    distribution of wind speed. This way of smoothing power curves is also used
+    in [2]_ and [3]_.
 
     References
     ----------
@@ -99,7 +102,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         normalized_standard_deviation = 0.2
     # Initialize list for power curve values
     smoothed_power_curve_values = []
-    # Append wind speeds to `power_curve_wind_speeds` until last value + range
+    # Append wind speeds to `power_curve_wind_speeds`
     maximum_value = power_curve_wind_speeds.values[-1] + wind_speed_range
     while (power_curve_wind_speeds.values[-1] < maximum_value):
         power_curve_wind_speeds = power_curve_wind_speeds.append(
@@ -108,11 +111,10 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         power_curve_values = power_curve_values.append(
             pd.Series(0.0, index=[power_curve_values.index[-1] + 1]))
     for power_curve_wind_speed in power_curve_wind_speeds:
-        # Create array of wind speeds for the moving block
-        wind_speeds_block = (np.arange(-wind_speed_range,
-                                       wind_speed_range + block_width,
-                                       block_width) +
-                             power_curve_wind_speed)
+        # Create array of wind speeds for the sum
+        wind_speeds_block = (np.arange(
+            -wind_speed_range, wind_speed_range + block_width, block_width) +
+            power_curve_wind_speed)
         # Get standard deviation for Gauss function
         standard_deviation = (
             (power_curve_wind_speed * normalized_standard_deviation + 0.6)
@@ -126,15 +128,14 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                 power_curve_wind_speed - wind_speed,
                 standard_deviation, mean_gauss)
             for wind_speed in wind_speeds_block)
-        # Add value to list - add 0 if `smoothed_value` is nan. This occurs
-        # because the Gauss distribution is not defined for 0.
+        # Add value to list - add 0 if `smoothed_value` is nan.
         smoothed_power_curve_values.append(0 if np.isnan(smoothed_value)
                                            else smoothed_value)
-    # Create smoothed power curve DataFrame
+    # Create smoothed power curve data frame
     smoothed_power_curve_df = pd.DataFrame(
         data=[list(power_curve_wind_speeds.values),
               smoothed_power_curve_values]).transpose()
-    # Rename columns of DataFrame
+    # Rename columns of the data frame
     smoothed_power_curve_df.columns = ['wind_speed', 'power']
     return smoothed_power_curve_df
 
@@ -147,7 +148,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
 
     Parameters
     ----------
-    power_curve_wind_speeds : pandas.Series
+    power_curve_wind_speeds : pandas.Series or numpy.array
         Wind speeds in m/s for which the power curve values are provided in
         `power_curve_values`.
     power_curve_values : pandas.Series or numpy.array
@@ -157,10 +158,9 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         Efficiency of the wind farm. Either constant (float) or efficiency
         curve (pd.DataFrame) containing 'wind_speed' and 'efficiency' columns
         with wind speeds in m/s and the corresponding dimensionless wind farm
-        efficiency (reduction of power).
-        Default: None.
+        efficiency (reduction of power). Default: None.
     wake_losses_model : String
-        Defines the method for talking wake losses within the farm into
+        Defines the method for taking wake losses within the farm into
         consideration. Options: 'power_efficiency_curve',
         'constant_efficiency'. Default: 'power_efficiency_curve'.
 
@@ -193,8 +193,8 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
                     wake_losses_model, wind_farm_efficiency))
         df = pd.concat([power_curve_df.set_index('wind_speed'),
                         wind_farm_efficiency.set_index('wind_speed')], axis=1)
-        # Add by efficiency reduced power column (nan values of efficiency
-        # are interpolated)
+        # Add column with reduced power (nan values of efficiency are
+        # interpolated)
         df['reduced_power'] = df['power'] * df['efficiency'].interpolate(
             method='index')
         reduced_power = df['reduced_power'].dropna()
