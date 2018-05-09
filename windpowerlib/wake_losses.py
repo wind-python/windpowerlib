@@ -128,32 +128,28 @@ def display_wind_efficiency_curves():
              p. 124
 
     """
-    path = os.path.join(os.path.dirname(__file__), 'data',
-                        'wind_efficiency_curves.csv')
-    # Read all curves from file
-    wind_efficiency_curves = pd.read_csv(path)
-    # Initialize data frame for plot
-    curves_df = pd.DataFrame()
-    for curve_name in [col for col in list(wind_efficiency_curves) if
-                       'x_' not in col]:
-        # Get wind efficiency curve for standard wind speeds from
-        # read_wind_efficiency_curve() and add to data frame
-        efficiency_curve = get_wind_efficiency_curve(
-            curve_name).rename(
-            columns={'efficiency': curve_name.replace('_', ' '),
-                     'wind_speed': 'wind speed m/s'}).set_index(
-                         'wind speed m/s')
-        curves_df = pd.concat([curves_df, efficiency_curve], axis=1)
+    origins = ['dena', 'knorr']
+    paths = [os.path.join(os.path.dirname(__file__), 'data',
+                          'wind_efficiency_curves_{}.csv'.format(origin)) for
+             origin in origins]
+    # Read wind efficiency curves from files
     # Create separate data frames for origin of curve
-    knorr_df = curves_df[[column_name for column_name in curves_df if
-                          'knorr' in column_name]]
-    dena_df = curves_df[[column_name for column_name in curves_df if
-                         'dena' in column_name]]
+    dena_df = pd.read_csv(paths[0])
+    knorr_df = pd.read_csv(paths[1])
+    # Print names of all available curves
+    curves_list = [col for col in dena_df if 'wind_speed' not in col]
+    curves_list.extend([col for col in knorr_df if 'wind_speed' not in col])
+    print("Names of the provided wind efficiency curves are the " +
+          "following: {}".format(curves_list))
     if plt:
+        # Create data frames for plot
+        dena_df.set_index('wind_speed', inplace=True)
+        knorr_df.set_index('wind_speed', inplace=True)
         fig, ax = plt.subplots()
-        dena_df.plot(ax=ax, legend=True, marker='x', markersize=3)
-        knorr_df.plot(ax=ax, legend=True, marker='o', markersize=3)
+        dena_df.plot(ax=ax, legend=True)
+        knorr_df.plot(ax=ax, legend=True)
         plt.ylabel('Wind farm efficiency')
+        plt.xlabel('Wind speed m/s')
         plt.show()
     else:
         print(dena_df)
