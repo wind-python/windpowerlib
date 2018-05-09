@@ -204,10 +204,10 @@ class WindFarm(object):
             if wake_losses_model is not None:
                 if self.efficiency is None:
                     raise KeyError(
-                        "wind_farm_efficiency is needed if " +
+                        "`efficiency` is needed if " +
                         "`wake_losses_model´ is '{0}', but ".format(
                             wake_losses_model) +
-                        " `wind_farm_efficiency` of {0} is {1}.".format(
+                        "`efficiency` of {0} is {1}.".format(
                             self.name, self.efficiency))
             # Get original power curve
             power_curve = pd.DataFrame(
