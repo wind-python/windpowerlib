@@ -1,5 +1,5 @@
 """
-The ``power_curves`` module contains functions for applying calculations to the
+The ``power_curves`` module contains functions for applying alterations to the
 power curve of a wind turbine, wind farm or wind turbine cluster.
 
 """
@@ -17,7 +17,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                        standard_deviation_method='turbulence_intensity',
                        mean_gauss=0, **kwargs):
     r"""
-    Smoothes the input power curve values by using a gaussian distribution.
+    Smoothes the input power curve values by using a Gauss distribution.
 
     Parameters
     ----------
@@ -27,18 +27,24 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     power_curve_values : pandas.Series or numpy.array
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
-    block_width : Float
+    block_width : float
         Width of the moving block. Default: 0.5.
-    standard_deviation_method : String
-        Method for calculating the standard deviation for the gaussian
+    wind_speed_range : float
+        The sum in the equation below is taken for this wind speed range below
+        and above the power curve wind speed. Default: 15.0.
+    standard_deviation_method : string
+        Method for calculating the standard deviation for the Gauss
         distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
         Default: 'turbulence_intensity'.
+    mean_gauss : float or integer
+        Mean of the Gaus distribution in
+        :py:func:`~.tools.gaussian_distribution`:. Default: 0.
 
     Other Parameters
     ----------------
-    turbulence intensity : Float, optional
-        Turbulence intensity at hub height of the wind turbine the power curve
-        is smoothed for.
+    turbulence intensity : float, optional
+        Turbulence intensity at hub height of the wind turbine, wind farm or
+        wind turbine cluster the power curve is smoothed for.
 
     Returns
     -------
@@ -49,8 +55,22 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
     Notes
     -----
-    The following equation is used [1]_:
-        # TODO: add equation
+    The following equation is used to calculated the power curves values of the
+    smoothed power curve [1]_:
+        P_{smoothed}(v_{std}) = \sum\limits_{v_i}^{} \Delta v_i \cdot P(v_i)
+        \cdot \frac{1}{\sigma \sqrt{2 \pi}}
+        \exp \left[-\frac{(v_{std} - v_i -\mu)^2}{2 \sigma^2} \right]
+    
+    with:
+        P: power [W], v: wind speed [m/s],
+        :math:`\sigma`: standard deviation (Gauss), :math: `\mu`: mean (Gauss),
+        
+        :math:`P_{smoothed}` is the smoothed power curve value,
+        :math:`v_{std}` is the standard wind speed in the power curve,
+        :math: `\Delta v_i` is the interval length between
+        :math: `$v_\text{i}$` and :math: `$v_\text{i+1}$`
+    
+    This way of smoothing power curves is also used in [2]_ and [3]_.
 
     References
     ----------
@@ -58,8 +78,13 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
              Windenergieeinspeisung für wetterdatenbasierte
              Windleistungssimulationen". Universität Kassel, Diss., 2016,
              p. 106
+    .. [2]  Nørgaard, P. and Holttinen, H.: "A Multi-Turbine and Power Curve
+             Approach". Nordic Wind Power Conference, 1.–2.3.2004, 2000
+    .. [3]  Kohler, S. and Agricola, A.-Cl. and Seidl, H.:
+             "dena-Netzstudie II. Integration erneuerbarer Energien in die
+             deutsche Stromversorgung im Zeitraum 2015 – 2020 mit Ausblick
+             2025". Technical report, 2010.
 
-    # TODO: add references
     """
     # Specify normalized standard deviation
     if standard_deviation_method == 'turbulence_intensity':
@@ -88,7 +113,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                                        wind_speed_range + block_width,
                                        block_width) +
                              power_curve_wind_speed)
-        # Get standard deviation for gaussian filter
+        # Get standard deviation for Gauss function
         standard_deviation = (
             (power_curve_wind_speed * normalized_standard_deviation + 0.6)
             if standard_deviation_method is 'Staffell_Pfenninger'
@@ -102,7 +127,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                 standard_deviation, mean_gauss)
             for wind_speed in wind_speeds_block)
         # Add value to list - add 0 if `smoothed_value` is nan. This occurs
-        # because the gaussian distribution is not defined for 0.
+        # because the Gauss distribution is not defined for 0.
         smoothed_power_curve_values.append(0 if np.isnan(smoothed_value)
                                            else smoothed_value)
     # Create smoothed power curve DataFrame
@@ -115,10 +140,10 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
 
 def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
-                               wake_losses_model='power_efficiency_curve',
-                               wind_farm_efficiency=None):
+                               wind_farm_efficiency,
+                               wake_losses_model='power_efficiency_curve'):
     r"""
-    Applies wake losses depending on the method to a power curve.
+    Reduces the power values of a power curve by an efficiency (curve).
 
     Parameters
     ----------
@@ -128,27 +153,23 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
     power_curve_values : pandas.Series or numpy.array
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
+    wind_farm_efficiency : float or pd.DataFrame
+        Efficiency of the wind farm. Either constant (float) or efficiency
+        curve (pd.DataFrame) containing 'wind_speed' and 'efficiency' columns
+        with wind speeds in m/s and the corresponding dimensionless wind farm
+        efficiency (reduction of power).
+        Default: None.
     wake_losses_model : String
         Defines the method for talking wake losses within the farm into
         consideration. Options: 'power_efficiency_curve',
         'constant_efficiency'. Default: 'power_efficiency_curve'.
-    wind_farm_efficiency : Float or pd.DataFrame or Dictionary
-        Efficiency of the wind farm. Either constant (float) or efficiency
-        curve (pd.DataFrame or Dictionary) containing 'wind_speed' and
-        'efficiency' columns/keys with wind speeds in m/s and the
-        corresponding dimensionless wind farm efficiency (reduction of power).
-        Default: None.
 
     Returns
     -------
     power_curve_df : pd.DataFrame
-        With wind farm efficiency reduced power curve. DataFrame has
-        'wind_speed' and 'power' columns with wind speeds in m/s and the
-        corresponding power curve value in W.
-
-    Notes
-    -----
-    TODO add
+        Power curve with power values reduced by a wind farm efficiency.
+        DataFrame has 'wind_speed' and 'power' columns with wind speeds in m/s
+        and the corresponding power curve value in W.
 
     """
     # Create power curve DataFrame

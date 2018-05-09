@@ -132,11 +132,10 @@ class WindFarm(object):
         r"""
         Calculates the power curve of a wind farm.
 
-        The wind farm power curve is calculated by aggregating the wind turbine
-        power curves of the wind farm.
-        Depending on the parameters the wind turbine power curves are smoothed
-        before or after the summation and/or a wind farm efficiency is applied
-        after the summation. TODO: check entry
+        The wind farm power curve is calculated by aggregating the power curves
+        of all wind turbines in the wind farm. Depending on the parameters the
+        wind turbine power curves are smoothed before or after the summation
+        and/or a wind farm efficiency is applied after the summation.
 
         Parameters
         ----------

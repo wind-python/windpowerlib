@@ -1,6 +1,6 @@
 """
 The ``turbine_cluster_modelchain`` module contains functions and classes of the
-windpowerlib. TODO: adapt
+windpowerlib.
 
 """
 

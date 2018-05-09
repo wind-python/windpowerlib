@@ -129,16 +129,16 @@ def logarithmic_interpolation_extrapolation(df, target_height):
 
 def gaussian_distribution(function_variable, standard_deviation, mean=0):
     r"""
-    Normal distribution or gaussian distribution.
+    Gauss distribution.
 
     Parameters
     ----------
-    function_variable : Float
+    function_variable : float
         Variable of the gaussian distribution.
-    standard_deviation : Float
-        Standard deviation of the gaussian distribution.
+    standard_deviation : float
+        Standard deviation of the Gauss distribution.
     mean : Float
-        Defines the offset of the gaussian distribution function. Default: 0.
+        Defines the offset of the Gauss distribution. Default: 0.
 
     Returns
     -------
@@ -150,10 +150,10 @@ def gaussian_distribution(function_variable, standard_deviation, mean=0):
     The following equation is used [1]_:
 
     .. math:: f(x) = \frac{1}{\sigma \sqrt{2 \pi}} exp
-                     \left[ -\frac{(x-\mu)^2}{2 \sigma^2}  \right]
+                     \left[-\frac{(x-\mu)^2}{2 \sigma^2} \right]
 
     with:
-        # TODO: add variables
+        :math:`\sigma`: standard deviation, :math: `\mu`: mean
 
     References
     ----------
