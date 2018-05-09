@@ -127,7 +127,7 @@ def logarithmic_interpolation_extrapolation(df, target_height):
             (np.log(heights_sorted[1]) - np.log(heights_sorted[0])))
 
 
-def gaussian_distribution(function_variable, standard_deviation, mean=0):
+def gauss_distribution(function_variable, standard_deviation, mean=0):
     r"""
     Gauss distribution.
 

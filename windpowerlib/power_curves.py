@@ -38,7 +38,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         Default: 'turbulence_intensity'.
     mean_gauss : float or integer
         Mean of the Gaus distribution in
-        :py:func:`~.tools.gaussian_distribution`:. Default: 0.
+        :py:func:`~.tools.gauss_distribution`:. Default: 0.
 
     Other Parameters
     ----------------
@@ -122,7 +122,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         smoothed_value = sum(
             block_width * np.interp(wind_speed, power_curve_wind_speeds,
                                     power_curve_values, left=0, right=0) *
-            tools.gaussian_distribution(
+            tools.gauss_distribution(
                 power_curve_wind_speed - wind_speed,
                 standard_deviation, mean_gauss)
             for wind_speed in wind_speeds_block)
