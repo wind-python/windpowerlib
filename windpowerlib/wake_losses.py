@@ -88,9 +88,9 @@ def get_wind_efficiency_curve(curve_name='dena_mean'):
                             'dena_extreme2', 'knorr_extreme1',
                             'knorr_extreme2', 'knorr_extreme3']
     if curve_name.split('_')[0] not in ['dena', 'knorr']:
-        raise ValueError("Wrong wind efficiency curve name. Must be one of " +
-                         "the following: {}".format(possible_curve_names) +
-                         "but is {}".format(curve_name))
+        raise ValueError("`curve_name` must be one of the following: " +
+                         "{} but is {}".format(possible_curve_names,
+                                               curve_name))
     path = os.path.join(os.path.dirname(__file__), 'data',
                         'wind_efficiency_curves_{}.csv'.format(
                             curve_name.split('_')[0]))
