@@ -125,7 +125,7 @@ class WindFarm(object):
             for wind_dict in self.wind_turbine_fleet)
 
     def assign_power_curve(self, wake_losses_model='power_efficiency_curve',
-                           smoothing=True, block_width=0.5,
+                           smoothing=False, block_width=0.5,
                            standard_deviation_method='turbulence_intensity',
                            smoothing_order='wind_farm_power_curves',
                            turbulence_intensity=None, **kwargs):
@@ -146,7 +146,7 @@ class WindFarm(object):
             'constant_efficiency' or None. Default: 'power_efficiency_curve'.
         smoothing : Boolean
             If True the power curves will be smoothed before the summation.
-            Default: True.
+            Default: False.
         block_width : Float
             Width of the moving block.
             Default in :py:func:`~.power_curves.smooth_power_curve`: 0.5.

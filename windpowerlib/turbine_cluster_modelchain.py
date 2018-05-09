@@ -29,7 +29,7 @@ class TurbineClusterModelChain(ModelChain):
         or None. Default: 'dena_mean'.
     smoothing : Boolean
         If True the power curves will be smoothed before the summation.
-        Default: True.
+        Default: False.
     block_width : Float, optional
         Width of the moving block.
         Default in :py:func:`~.power_curves.smooth_power_curve`: 0.5.
@@ -87,7 +87,7 @@ class TurbineClusterModelChain(ModelChain):
         or None. Default: 'dena_mean'.
     smoothing : Boolean
         If True the power curves will be smoothed before the summation.
-        Default: True.
+        Default: False.
     block_width : Float, optional
         Width of the moving block.
         Default in :py:func:`~.power_curves.smooth_power_curve`: 0.5.
@@ -132,7 +132,7 @@ class TurbineClusterModelChain(ModelChain):
 
     """
     def __init__(self, power_plant, wake_losses_model='dena_mean',
-                 smoothing=True, block_width=0.5,
+                 smoothing=False, block_width=0.5,
                  standard_deviation_method='turbulence_intensity',
                  smoothing_order='wind_farm_power_curves', **kwargs):
         super(TurbineClusterModelChain, self).__init__(power_plant, **kwargs)
