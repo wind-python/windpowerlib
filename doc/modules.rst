@@ -11,7 +11,10 @@ Classes
    :toctree: temp/
 
    wind_turbine.WindTurbine
+   wind_farm.WindFarm
+   wind_turbine_cluster.WindTurbineCluster
    modelchain.ModelChain
+   turbine_cluster_modelchain.TurbineClusterModelChain
 
 
 Temperature
@@ -76,6 +79,18 @@ Functions for calculating power output of a wind turbine.
    power_output.power_curve_density_correction
 
 
+Alteration of power curves
+==============
+
+Functions for smoothing power curves or applying wake losses.
+
+.. autosummary::
+   :toctree: temp/
+
+   power_curves.smooth_power_curve
+   power_curves.wake_losses_to_power_curve
+
+
 ModelChain
 ==============
 
@@ -104,6 +119,35 @@ Methods of the ModelChain object.
    modelchain.ModelChain.turbine_power_output
 
 
+TurbineClusterModelChain
+==============
+The TurbineClusterModelChain inherits all functions from the ModelChain.
+
+Creating a TurbineClusterModelChain object.
+
+.. autosummary::
+   :toctree: temp/
+
+   turbine_cluster_modelchain.TurbineClusterModelChain
+
+Running the TurbineClusterModelChain.
+
+.. autosummary::
+   :toctree: temp/
+
+   turbine_cluster_modelchain.TurbineClusterModelChain.run_model
+
+Methods of the TurbineClusterModelChain object.
+
+.. autosummary::
+   :toctree: temp/
+
+   turbine_cluster_modelchain.TurbineClusterModelChain.temperature_hub
+   turbine_cluster_modelchain.TurbineClusterModelChain.density_hub
+   turbine_cluster_modelchain.TurbineClusterModelChain.wind_speed_hub
+   turbine_cluster_modelchain.TurbineClusterModelChain.turbine_power_output
+
+
 Tools
 ==============
 
@@ -113,6 +157,9 @@ Additional functions used in the windpowerlib.
    :toctree: temp/
 
    tools.linear_interpolation_extrapolation
+   tools.logarithmic_interpolation_extrapolation
+   tools.gauss_distribution
+   tools.estimate_turbulence_intensity
 
 
 Example
