@@ -58,7 +58,8 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     -----
     The following equation is used to calculated the power curves values of the
     smoothed power curve [1]_:
-    .. math:: P_{smoothed}(v_{std}) = \sum\limits_{v_i} \Delta v_i \cdot P(v_i)
+
+    .. math:: P_{smoothed}(v_{std})=\sum\limits_{v_i}\Delta v_i\cdot P(v_i)
         \cdot \frac{1}{\sigma \sqrt{2 \pi}}
         \exp \left[-\frac{(v_{std} - v_i -\mu)^2}{2 \sigma^2} \right]
 
@@ -68,8 +69,8 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
         :math:`P_{smoothed}` is the smoothed power curve value,
         :math:`v_{std}` is the standard wind speed in the power curve,
-        :math: `\Delta v_i` is the interval length between
-        :math: `$v_\text{i}$` and :math: `$v_\text{i+1}$`
+        :math: `\Delta` :math: `v_i` is the interval length between
+        :math: `v_\text{i}` and :math: `v_\text{i+1}`
 
     Power curve smoothing is applied to take account for the spatial
     distribution of wind speed. This way of smoothing power curves is also used
