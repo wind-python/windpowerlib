@@ -156,7 +156,7 @@ def display_wind_efficiency_curves():
         dena_df.set_index('wind_speed', inplace=True)
         knorr_df.set_index('wind_speed', inplace=True)
         fig, ax = plt.subplots()
-        dena_df.plot(ax=ax, legend=True)
+        dena_df.plot(ax=ax, legend=True, linestyle='--')
         knorr_df.plot(ax=ax, legend=True)
         plt.ylabel('Wind farm efficiency')
         plt.xlabel('Wind speed m/s')
