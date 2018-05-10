@@ -140,7 +140,7 @@ def hellman(wind_speed, wind_speed_height, hub_height,
     onshore and a value of 1/9 for offshore. The Hellman exponent can also
     be calulated by the following equation [2]_, [3]_:
 
-    .. math:: \alpha = \frac{1}{ln\left(\frac{h_{hub}}{z_0} \right)}
+    .. math:: \alpha = \frac{1}{\ln\left(\frac{h_{hub}}{z_0} \right)}
 
     with:
         :math:`z_{0}`: roughness length
