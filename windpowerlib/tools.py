@@ -188,7 +188,7 @@ def estimate_turbulence_intensity(height, roughness_length):
     -----
     The following equation is used [1]_:
 
-    .. math:: TI \approx \frac{1}{ln \left(\frac{h}{z_\text{0}} \right)}
+    .. math:: TI = \frac{1}{ln \left(\frac{h}{z_\text{0}} \right)}
 
     with:
         TI: turbulence intensity, h: height, :math:`z_{0}`: roughness length

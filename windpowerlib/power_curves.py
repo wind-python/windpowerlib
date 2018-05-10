@@ -58,7 +58,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     -----
     The following equation is used to calculated the power curves values of the
     smoothed power curve [1]_:
-        P_{smoothed}(v_{std}) = \sum\limits_{v_i}^{} \Delta v_i \cdot P(v_i)
+    .. math:: P_{smoothed}(v_{std}) = \sum\limits_{v_i} \Delta v_i \cdot P(v_i)
         \cdot \frac{1}{\sigma \sqrt{2 \pi}}
         \exp \left[-\frac{(v_{std} - v_i -\mu)^2}{2 \sigma^2} \right]
 

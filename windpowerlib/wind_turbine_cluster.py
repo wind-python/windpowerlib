@@ -28,8 +28,8 @@ class WindTurbineCluster(object):
         Coordinates of location [lat, lon]. Can be practical for loading
         weather data. Default: None.
 
-     Attributes
-    -----------
+    Attributes
+    ----------
     name : string
         Name of the wind turbine cluster.
     wind_farms : list
