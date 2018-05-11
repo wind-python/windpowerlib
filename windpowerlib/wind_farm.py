@@ -122,7 +122,7 @@ class WindFarm(object):
         The installed power of wind farms is necessary when a
         :class:`~.wind_turbine_cluster.WindTurbineCluster` object is used and
         is power weighed mean hub height is calcuated with
-        :py:func:`~.wind_turbine_cluster.WindTurbineCluster.mean_hub_height`:.
+        :py:func:`~.wind_turbine_cluster.WindTurbineCluster.mean_hub_height`.
 
         Returns
         -------
@@ -162,7 +162,7 @@ class WindFarm(object):
             Default: False.
         block_width : float
             Width between the wind speeds in the sum of the equation in
-            :py:func:`~.power_curves.smooth_power_curve`:. Default: 0.5.
+            :py:func:`~.power_curves.smooth_power_curve`. Default: 0.5.
         standard_deviation_method : string
             Method for calculating the standard deviation for the Gauss
             distribution. Options: 'turbulence_intensity',

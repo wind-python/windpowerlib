@@ -40,7 +40,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         Default: 'turbulence_intensity'.
     mean_gauss : float
         Mean of the Gaus distribution in
-        :py:func:`~.tools.gauss_distribution`:. Default: 0.
+        :py:func:`~.tools.gauss_distribution`. Default: 0.
 
     Other Parameters
     ----------------
