@@ -26,7 +26,7 @@ class TurbineClusterModelChain(ModelChain):
         consideration. Options: None, 'power_efficiency_curve' or
         'constant_efficiency' or the name of a wind efficiency curve like
         'dena_mean'. Default: 'dena_mean'.
-        Use :py:func:`~.wake_losses.display_wind_efficiency_curves`: to see a
+        Use :py:func:`~.wake_losses.display_wind_efficiency_curves` to see a
         list of all provided wind efficiency curves.
     smoothing : boolean
         If True the power curves will be smoothed before or after the
@@ -34,7 +34,7 @@ class TurbineClusterModelChain(ModelChain):
         Default: False.
     block_width : float
         Width between the wind speeds in the sum of the equation in
-        :py:func:`~.power_curves.smooth_power_curve`:. Default: 0.5.
+        :py:func:`~.power_curves.smooth_power_curve`. Default: 0.5.
     standard_deviation_method : string
         Method for calculating the standard deviation for the Gauss
         distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
@@ -84,7 +84,7 @@ class TurbineClusterModelChain(ModelChain):
         consideration. Options: None, 'power_efficiency_curve' or
         'constant_efficiency' or the name of a wind efficiency curve like
         'dena_mean'. Default: 'dena_mean'.
-        Use :py:func:`~.wake_losses.display_wind_efficiency_curves`: to see a
+        Use :py:func:`~.wake_losses.display_wind_efficiency_curves` to see a
         list of all provided wind efficiency curves.
     smoothing : boolean
         If True the power curves will be smoothed before or after the
@@ -92,7 +92,7 @@ class TurbineClusterModelChain(ModelChain):
         Default: False.
     block_width : float
         Width between the wind speeds in the sum of the equation in
-        :py:func:`~.power_curves.smooth_power_curve`:. Default: 0.5.
+        :py:func:`~.power_curves.smooth_power_curve`. Default: 0.5.
     standard_deviation_method : string
         Method for calculating the standard deviation for the Gauss
         distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
