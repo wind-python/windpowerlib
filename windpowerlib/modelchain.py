@@ -93,7 +93,7 @@ class ModelChain(object):
     ...    'rotor_diameter': 127,
     ...    'name': 'ENERCON E 126 7500',
     ...    'fetch_curve': 'power_curve'}
-    >>> e126 = power_plant.WindTurbine(**enerconE126)
+    >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> modelchain_data = {'density_model': 'ideal_gas'}
     >>> e126_mc = modelchain.ModelChain(e126, **modelchain_data)
     >>> print(e126_mc.density_model)
