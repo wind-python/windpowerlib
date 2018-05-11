@@ -18,7 +18,7 @@ except ImportError:
 
 
 def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
-    """
+    r"""
     Reduces wind speed by a wind efficiency curve.
 
     The wind efficiency curves are provided in the windpowerlib and were
@@ -79,7 +79,7 @@ def get_wind_efficiency_curve(curve_name='dena_mean'):
     Notes
     -----
     The wind efficiency curves were generated in the "Dena Netzstudie" and in
-    the disseration of Kaspar Knorr. For more information see [1]_ and [2]_.
+    the dissertation of Kaspar Knorr. For more information see [1]_ and [2]_.
 
     References
     ----------
@@ -124,7 +124,7 @@ def display_wind_efficiency_curves():
     Notes
     -----
     The wind efficiency curves were generated in the "Dena Netzstudie" and in
-    the disseration of Kaspar Knorr. For more information see [1]_ and [2]_.
+    the dissertation of Kaspar Knorr. For more information see [1]_ and [2]_.
 
     References
     ----------
@@ -164,6 +164,7 @@ def display_wind_efficiency_curves():
     else:
         print(dena_df)
         print(knorr_df)
+
 
 if __name__ == "__main__":
     display_wind_efficiency_curves()

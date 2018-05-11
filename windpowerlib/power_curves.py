@@ -1,6 +1,6 @@
 """
 The ``power_curves`` module contains functions for applying alterations like
-power curve smoohting or reducing power values by an efficiency to the power
+power curve smoothing or reducing power values by an efficiency to the power
 curve of a wind turbine, wind farm or wind turbine cluster.
 
 """
@@ -18,7 +18,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                        standard_deviation_method='turbulence_intensity',
                        mean_gauss=0, **kwargs):
     r"""
-    Smoothes the input power curve values by using a Gauss distribution.
+    Smooths the input power curve values by using a Gauss distribution.
 
     Parameters
     ----------
@@ -29,8 +29,8 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
     block_width : float
-        Width between the wind speeds in the sum of the equation shown below in
-        Notes. Default: 0.5.
+        Width between the wind speeds in the sum of equation :eq:`power`.
+        Default: 0.5.
     wind_speed_range : float
         The sum in the equation below is taken for this wind speed range below
         and above the power curve wind speed. Default: 15.0.
@@ -39,7 +39,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
         Default: 'turbulence_intensity'.
     mean_gauss : float
-        Mean of the Gaus distribution in
+        Mean of the Gauss distribution in
         :py:func:`~.tools.gauss_distribution`. Default: 0.
 
     Other Parameters
@@ -58,18 +58,20 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     -----
     The following equation is used to calculated the power curves values of the
     smoothed power curve [1]_:
+
     .. math:: P_{smoothed}(v_{std}) = \sum\limits_{v_i} \Delta v_i \cdot P(v_i)
         \cdot \frac{1}{\sigma \sqrt{2 \pi}}
         \exp \left[-\frac{(v_{std} - v_i -\mu)^2}{2 \sigma^2} \right]
+       :label: power
 
     with:
         P: power [W], v: wind speed [m/s],
-        :math:`\sigma`: standard deviation (Gauss), :math: `\mu`: mean (Gauss)
+        :math:`\sigma`: standard deviation (Gauss), :math:`\mu`: mean (Gauss)
 
         :math:`P_{smoothed}` is the smoothed power curve value,
         :math:`v_{std}` is the standard wind speed in the power curve,
         :math: `\Delta v_i` is the interval length between
-        :math: `$v_\text{i}$` and :math: `$v_\text{i+1}$`
+        :math: `v_\text{i}` and :math: `v_\text{i+1}`
 
     Power curve smoothing is applied to take account for the spatial
     distribution of wind speed. This way of smoothing power curves is also used

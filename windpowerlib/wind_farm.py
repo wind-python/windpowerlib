@@ -172,6 +172,10 @@ class WindFarm(object):
             Options: 'turbine_power_curves' (to the single turbine power
             curves), 'wind_farm_power_curves'.
             Default: 'wind_farm_power_curves'.
+        turbulence_intensity : float
+            Turbulence intensity at hub height of the wind farm for power curve
+            smoothing with 'turbulence_intensity' method. Can be calculated
+            from `roughness_length` instead. Default: None.
 
         Other Parameters
         ----------------
