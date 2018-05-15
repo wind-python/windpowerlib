@@ -237,7 +237,7 @@ class WindFarm(object):
                     block_width=block_width, **kwargs)
             else:
                 # Add value zero to start and end of curve as otherwise there
-                # can occure problems at the aggregation
+                # can occure problems during the aggregation
                 if power_curve.iloc[0]['wind_speed'] != 0:
                     power_curve.loc[power_curve.index[0] - 0.5] = [
                         power_curve.index[0] - 0.5, 0.0]
