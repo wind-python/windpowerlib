@@ -102,6 +102,11 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                              "`standard_deviation_method`")
     elif standard_deviation_method == 'Staffell_Pfenninger':
         normalized_standard_deviation = 0.2
+    else:
+        raise ValueError("{} is no valid `standard_deviation_method`. Valid "
+                         + "options are 'turbulence_intensity', or "
+                         + "'Staffell_Pfenninger'".format(
+            standard_deviation_method))
     # Initialize list for power curve values
     smoothed_power_curve_values = []
     # Append wind speeds to `power_curve_wind_speeds`
