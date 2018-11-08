@@ -97,7 +97,7 @@ def initialise_wind_turbines():
     # specification of own wind turbine (Note: power coefficient values and
     # nominal power have to be in Watt)
     myTurbine = {
-        'name': 'myTurbine',
+        'turbine_name': 'myTurbine',
         'nominal_power': 3e6,  # in W
         'hub_height': 105,  # in m
         'rotor_diameter': 90,  # in m
