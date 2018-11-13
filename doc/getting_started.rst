@@ -14,7 +14,7 @@ For a quick start see the :ref:`examplereference-label` section.
 Documentation
 ==============
 
-Full documentation can be found at `readthedocs <https://windpowerlib.readthedocs.io/en/stable/>`_.
+Full documentation can be found at `readthedocs <http://windpowerlib.readthedocs.org>`_.
 
 Use the `project site <http://readthedocs.org/projects/windpowerlib>`_ of readthedocs to choose the version of the documentation. 
 Go to the `download page <http://readthedocs.org/projects/windpowerlib/downloads/>`_ to download different versions and formats (pdf, html, epub) of the documentation.
