@@ -4,13 +4,13 @@ Introduction
 The windpowerlib is a library that provides a set of functions and classes to calculate the power output of wind turbines. It was originally part of the 
 `feedinlib <https://github.com/oemof/feedinlib>`_ (windpower and pv) but was taken out to build up a community concentrating on wind power models.
 
-For a quick start see the `Examples and basic usage <http://windpowerlib.readthedocs.io/en/latest/getting_started.html#examplereference-label>`_ section.
+For a quick start see the `Examples and basic usage <http://windpowerlib.readthedocs.io/en/stable/getting_started.html#examplereference-label>`_ section.
 
 
 Documentation
 ==============
 
-Full documentation can be found at `readthedocs <http://windpowerlib.readthedocs.org>`_.
+Full documentation can be found at `readthedocs <https://windpowerlib.readthedocs.io/en/stable/>`_.
 
 Use the `project site <http://readthedocs.org/projects/windpowerlib>`_ of readthedocs to choose the version of the documentation. 
 Go to the `download page <http://readthedocs.org/projects/windpowerlib/downloads/>`_ to download different versions and formats (pdf, html, epub) of the documentation.
@@ -31,7 +31,7 @@ Please see the `installation page <http://oemof.readthedocs.io/en/stable/install
 Optional Packages
 ~~~~~~~~~~~~~~~~~
 
-To see the plots of the windpowerlib example in the `Examples and basic usage <http://windpowerlib.readthedocs.io/en/latest/getting_started.html#examplereference-label>`_ section you should `install the matplotlib package <http://matplotlib.org/users/installing.html>`_.
+To see the plots of the windpowerlib example in the `Examples and basic usage <http://windpowerlib.readthedocs.io/en/stable/getting_started.html#examplereference-label>`_ section you should `install the matplotlib package <http://matplotlib.org/users/installing.html>`_.
 Matplotlib can be installed using pip3 though some Linux users reported that it is easier and more stable to use the pre-built packages of your Linux distribution.
 
 
@@ -40,11 +40,11 @@ Matplotlib can be installed using pip3 though some Linux users reported that it 
 Examples and basic usage
 =========================
 
-The basic usage of the windpowerlib is shown `here <http://windpowerlib.readthedocs.io/en/latest/basic_example_notebook.html>`_. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
+The basic usage of the windpowerlib is shown `here <http://windpowerlib.readthedocs.io/en/stable/basic_example_notebook.html>`_. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
 
- * `Python script <https://raw.githubusercontent.com/wind-python/windpowerlib/dev/example/basic_example.py>`_
+ * `Python script <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/basic_example.py>`_
  * `Jupyter notebook <https://raw.githubusercontent.com/wind-python/windpowerlib/features/revise_example/example/basic_example.ipynb>`_
- * `Example data file <https://raw.githubusercontent.com/wind-python/windpowerlib/dev/example/weather.csv>`_
+ * `Example data file <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/weather.csv>`_
 
 
 To run the examples you first have to install the windpowerlib. To run the notebook you also need to install notebook using pip3. To launch jupyter notebook type ``jupyter notebook`` in terminal.
