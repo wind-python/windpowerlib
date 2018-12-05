@@ -61,6 +61,25 @@ class WindFarm(object):
     power_output : pandas.Series
         The calculated power output of the wind farm.
 
+    Examples TODO: test example
+    --------
+    >>> from windpowerlib import wind_farm
+    >>> from windpowerlib import wind_turbine
+    >>> enerconE126 = {
+    ...    'hub_height': 135,
+    ...    'rotor_diameter': 127,
+    ...    'name': 'ENERCON E 126 7500',
+    ...    'fetch_curve': 'power_curve'}
+    >>> e126 = wind_turbine.WindTurbine(**enerconE126)
+    >>> example_farm_data = {
+    ...    'name': 'example_farm',
+    ...    'wind_turbine_fleet': [{'wind_turbine': e126,
+    ...                            'number_of_turbines': 6}]}
+    >>> example_farm = wind_farm.WindFarm(**example_farm_data)
+    >>> example_farm.installed_power = get_installed_power()
+    >>> print(example_farm.installed_power)
+    45000000
+
     """
     def __init__(self, name, wind_turbine_fleet, coordinates=None,
                  efficiency=None):
