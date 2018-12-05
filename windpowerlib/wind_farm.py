@@ -99,9 +99,10 @@ class WindFarm(object):
         Calculates the mean hub height of the wind farm.
 
         The mean hub height of a wind farm is necessary for power output
-        calculations with an aggregated wind farm power curve. Hub heights of
-        wind turbines with higher nominal power weigh more than others.
-        Assigns the hub height to the wind farm object.
+        calculations with an aggregated wind farm power curve containing wind
+        turbines with different hub heights. Hub heights of wind turbines with
+        higher nominal power weigh more than others. Assigns the hub height to
+        the wind farm object.
 
         Returns
         -------
@@ -140,7 +141,7 @@ class WindFarm(object):
 
         The installed power of wind farms is necessary when a
         :class:`~.wind_turbine_cluster.WindTurbineCluster` object is used and
-        is power weighed mean hub height is calcuated with
+        it's power weighed mean hub height is calculated with
         :py:func:`~.wind_turbine_cluster.WindTurbineCluster.mean_hub_height`.
 
         Returns
