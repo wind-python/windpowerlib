@@ -258,12 +258,16 @@ class WindFarm(object):
             else:
                 # Add value zero to start and end of curve as otherwise there
                 # can occure problems during the aggregation
-                if power_curve.iloc[0]['wind_speed'] != 0:
-                    power_curve.loc[power_curve.index[0] - 0.5] = [
-                        power_curve.index[0] - 0.5, 0.0]
+                if power_curve.iloc[0]['wind_speed'] != 0.0:
+                    power_curve = pd.concat(
+                        [power_curve, pd.DataFrame(data={
+                            'power': [0.0], 'wind_speed': [0.0]})])
                 if power_curve.iloc[-1]['power'] != 0.0:
-                    power_curve.loc[power_curve.index[-1] + 0.5] = [
-                        power_curve.index[-1] + 0.5, 0.0]
+                    power_curve = pd.concat(
+                        [power_curve, pd.DataFrame(data={
+                            'power': [0.0],
+                            'wind_speed': [power_curve['wind_speed'].loc[
+                                               power_curve.index[-1]] + 0.5]})])
             # Add power curves of all turbine types to data frame
             # (multiplied by turbine amount)
             df = pd.concat(
