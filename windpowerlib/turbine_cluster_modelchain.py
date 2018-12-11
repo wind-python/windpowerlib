@@ -149,6 +149,59 @@ class TurbineClusterModelChain(ModelChain):
         self.power_curve = None
         self.power_output = None
 
+    def assign_power_curve(self, weather_df):
+        r"""
+        Calculates the power curve of the wind turbine cluster.
+
+        The power curve is aggregated from the wind farms' and wind turbines'
+        power curves by using :func:`power_plant.assign_power_curve`. Depending
+        on the parameters of the WindTurbineCluster power curves are smoothed
+        and/or wake losses are taken into account.
+
+        Parameters
+        ----------
+        weather_df : pandas.DataFrame
+            DataFrame with time series for wind speed `wind_speed` in m/s, and
+            roughness length `roughness_length` in m, as well as optionally
+            temperature `temperature` in K, pressure `pressure` in Pa,
+            density `density` in kg/m³ and turbulence intensity
+            `turbulence_intensity` depending on `power_output_model`,
+            `density_model` and `standard_deviation_model` chosen.
+            The columns of the DataFrame are a MultiIndex where the first level
+            contains the variable name (e.g. wind_speed) and the second level
+            contains the height at which it applies (e.g. 10, if it was
+            measured at a height of 10 m).  See documentation of
+            :func:`TurbineClusterModelChain.run_model` for an example on how
+            to create the weather_df DataFrame.
+
+        Returns
+        -------
+        self
+
+        """
+
+        # Set turbulence intensity for assigning power curve
+        turbulence_intensity = (
+            weather_df['turbulence_intensity'].values.mean() if
+            'turbulence_intensity' in
+            weather_df.columns.get_level_values(0) else None)
+        # Assign power curve
+        if (self.wake_losses_model == 'power_efficiency_curve' or
+                self.wake_losses_model == 'constant_efficiency' or
+                self.wake_losses_model is None):
+            wake_losses_model_to_power_curve = self.wake_losses_model
+        else:
+            wake_losses_model_to_power_curve = None
+        self.power_plant.assign_power_curve(
+            wake_losses_model=wake_losses_model_to_power_curve,
+            smoothing=self.smoothing, block_width=self.block_width,
+            standard_deviation_method=self.standard_deviation_method,
+            smoothing_order=self.smoothing_order,
+            roughness_length=weather_df['roughness_length'][0].mean(),
+            turbulence_intensity=turbulence_intensity)
+
+        return self
+
     def run_model(self, weather_df):
         r"""
         Runs the model.
@@ -192,29 +245,9 @@ class TurbineClusterModelChain(ModelChain):
         'wind_speed'
 
         """
-        # Set turbulence intensity for assigning power curve
-        turbulence_intensity = (
-            weather_df['turbulence_intensity'].values.mean() if
-            'turbulence_intensity' in
-            weather_df.columns.get_level_values(0) else None)
-        # Assign power curve
-        if (self.wake_losses_model == 'power_efficiency_curve' or
-                self.wake_losses_model == 'constant_efficiency' or
-                self.wake_losses_model is None):
-            wake_losses_model_to_power_curve = self.wake_losses_model
-        else:
-            wake_losses_model_to_power_curve = None
-        self.power_plant.assign_power_curve(
-            wake_losses_model=wake_losses_model_to_power_curve,
-            smoothing=self.smoothing, block_width=self.block_width,
-            standard_deviation_method=self.standard_deviation_method,
-            smoothing_order=self.smoothing_order,
-            roughness_length=weather_df['roughness_length'][0].mean(),
-            turbulence_intensity=turbulence_intensity)
-        # Assign mean hub height
-        self.power_plant.mean_hub_height()
 
-        # Run modelchain
+        self.assign_power_curve(weather_df)
+        self.power_plant.mean_hub_height()
         wind_speed_hub = self.wind_speed_hub(weather_df)
         density_hub = (None if (self.power_output_model == 'power_curve' and
                                 self.density_correction is False)
