@@ -51,6 +51,11 @@ To run the examples you first have to install the windpowerlib. To run the noteb
 This will open a browser window. Navigate to the directory containing the notebook to open it. See the jupyter notebook quick start guide for more information on `how to install <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/install.html>`_ and
 `how to run <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/execute.html>`_ jupyter notebooks.
 
+Further functionalities are shown in a second example. As the basic usage example it is available as jupyter notebook and as python script. The weather data in this example is the same as in the example above.
+
+ * :download:`Further example (Python script) <../example/further_example.py>`
+ * :download:`Further example (Jupyter notebook) <../example/further_example.ipynb>`
+ * :download:`Example data file <../example/weather.csv>`
 
 Contributing
 ==============
