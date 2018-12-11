@@ -1,7 +1,7 @@
 """
 The ``further_example`` module shows a further usage of the windpowerlib.
 
-In this example uses functions from the ``basic_example`` module where the
+This example uses functions from the ``basic_example`` module where the
 basic usage of the windpowerlib is shown.
 
 

@@ -1,9 +1,9 @@
 """
 The ``wind_turbine_cluster`` module contains the class WindTurbineCluster that
-implements a wind turbine cluster in the windpowerlib and functions needed for
-the modelling of a wind turbine cluster.
-A wind turbine cluster comprises wind farms belonging to the same weather
-data grid point.
+implements a wind turbine cluster in the windpowerlib and provides functions
+needed for modelling a wind turbine cluster.
+A wind turbine cluster comprises wind farms and wind turbines belonging to the
+same weather data point.
 
 """
 
