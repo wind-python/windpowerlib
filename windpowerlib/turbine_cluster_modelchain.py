@@ -7,6 +7,7 @@ windpowerlib.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
+import logging
 from windpowerlib import wake_losses
 from windpowerlib.modelchain import ModelChain
 
@@ -190,7 +191,14 @@ class TurbineClusterModelChain(ModelChain):
                 self.wake_losses_model == 'constant_efficiency' or
                 self.wake_losses_model is None):
             wake_losses_model_to_power_curve = self.wake_losses_model
+            if self.wake_losses_model is None:
+                logging.debug('Wake losses in wind farms not considered.')
+            else:
+                logging.debug('Wake losses considered with {}.'.format(
+                    self.wake_losses_model))
         else:
+            logging.debug('Wake losses considered by {} wind '.format(
+                self.wake_losses_model) + 'efficiency curve.')
             wake_losses_model_to_power_curve = None
         self.power_plant.assign_power_curve(
             wake_losses_model=wake_losses_model_to_power_curve,
@@ -199,6 +207,12 @@ class TurbineClusterModelChain(ModelChain):
             smoothing_order=self.smoothing_order,
             roughness_length=weather_df['roughness_length'][0].mean(),
             turbulence_intensity=turbulence_intensity)
+        # Further logging messages
+        if self.smoothing is None:
+            logging.debug('Aggregated power curve not smoothed.')
+        else:
+            logging.debug('Aggregated power curve smoothed by method: ' +
+                          self.standard_deviation_method)
 
         return self
 
