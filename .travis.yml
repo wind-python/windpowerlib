@@ -18,7 +18,8 @@ install:
 
 # command to run tests
 script:
-  - pytest --cov --cov-config .coveragerc
+  - coverage run --rcfile=.coveragerc --source windpowerlib -m py.test
+  - coverage report
 
 after_success:
   - coveralls
