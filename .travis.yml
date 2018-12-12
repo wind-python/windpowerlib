@@ -18,7 +18,7 @@ install:
 
 # command to run tests
 script:
-  - pytest --cov=windpowerlib --cov-config .coveragerc
+  - pytest --cov --cov-config .coveragerc
 
 after_success:
   - coveralls
