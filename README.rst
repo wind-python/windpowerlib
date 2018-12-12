@@ -1,3 +1,8 @@
+.. image:: https://travis-ci.org/wind-python/windpowerlib.svg?branch=dev
+    :target: https://travis-ci.org/wind-python/windpowerlib
+.. image:: https://coveralls.io/repos/github/wind-python/windpowerlib/badge.svg?branch=dev
+    :target: https://coveralls.io/github/wind-python/windpowerlib?branch=dev
+
 Introduction
 =============
 
@@ -19,13 +24,13 @@ Go to the `download page <http://readthedocs.org/projects/windpowerlib/downloads
 Installation
 ============
 
-If you have a working Python3 environment, use pypi to install the latest windpowerlib version.
+If you have a working Python3 environment, use pypi to install the latest windpowerlib version. We highly recommend to use virtual environments.
 
 ::
 
-    pip3 install windpowerlib
+    pip install windpowerlib
 
-So far, the windpowerlib is mainly tested on python 3.4 but seems to work down to 2.7. 
+So far, the windpowerlib is tested on python > 3.5 but seems to work down to 2.7.
 Please see the `installation page <http://oemof.readthedocs.io/en/stable/installation_and_setup.html>`_ of the oemof documentation for complete instructions on how to install python on your operating system.
 
 Optional Packages
