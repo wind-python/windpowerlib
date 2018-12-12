@@ -2,9 +2,10 @@ import os
 import subprocess
 import tempfile
 import nbformat
-
+import sys
 from example import basic_example as be
 from numpy.testing import assert_allclose
+import pytest
 
 
 class TestExamples:
@@ -42,8 +43,9 @@ class TestExamples:
 
         return nb, errors
 
+    @pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6")
     def test_basic_example_ipynb(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        nb, errors = self._notebook_run(os.path.join(dir_path,
-                                                     'basic_example.ipynb'))
+        nb, errors = self._notebook_run(
+            os.path.join(dir_path, 'basic_example.ipynb'))
         assert errors == []
