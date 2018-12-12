@@ -14,7 +14,7 @@ matrix:
 
 install:
   - pip install .
-  - pip install coveralls sphinx nbformat pytest-cov
+  - pip install coveralls sphinx nbformat pytest-cov jupyter
 
 # command to run tests
 script:
