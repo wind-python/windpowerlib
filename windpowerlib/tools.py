@@ -62,8 +62,8 @@ def linear_interpolation_extrapolation(df, target_height):
     ...                                    np.array([10, 80])])
     >>> value = linear_interpolation_extrapolation(
     ...     weather_df['wind_speed'], 100)[0]
-    >>> round(value * 100) / 100
-    6.86
+    >>> int(value * 1000) / 1000
+    6.857
 
     """
     # find closest heights
