@@ -1,0 +1,24 @@
+language: python
+
+matrix:
+  include:
+    - python: 3.5
+    - python: 3.6
+    - python: 3.7
+      dist: xenial
+      sudo: true
+
+# command to install dependencies
+#before_install:
+#  - sudo apt-get install coinor-cbc
+
+install:
+  - pip install .
+  - pip install coveralls, sphinx, nbformat, pytest-cov
+
+# command to run tests
+script:
+  - pytest --cov=windpowerlib --cov-config .coveragerc
+
+after_success:
+  - coveralls
