@@ -60,8 +60,9 @@ def linear_interpolation_extrapolation(df, target_height):
     ...                           columns=[np.array(['wind_speed',
     ...                                              'wind_speed']),
     ...                                    np.array([10, 80])])
-    >>> round(linear_interpolation_extrapolation(
-    ...     weather_df['wind_speed'], 100)[0], 2)
+    >>> value = linear_interpolation_extrapolation(
+    ...     weather_df['wind_speed'], 100)[0]
+    >>> round(value * 100) / 100
     6.86
 
     """
