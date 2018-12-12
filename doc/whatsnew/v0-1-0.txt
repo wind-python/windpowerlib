@@ -5,10 +5,15 @@ Documentation
 #############
 
 Testing
-####### 
+#######
+
+* Add continuous integration to automatically test the windpowerlib for
+    different python versions and to check the test coverage.
 
 Other changes
 #############
 
 Contributors
 ############
+
+* Uwe Krien
