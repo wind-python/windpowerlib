@@ -27,9 +27,9 @@ import logging
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-def initialise_wind_farm(my_turbine, e126):
+def initialise_wind_farms(my_turbine, e126):
     r"""
-    Initialises a :class:`~.wind_farm.WindFarm` object.
+    Initialises two :class:`~.wind_farm.WindFarm` objects.
 
     This function shows how to initialise a WindFarm object. You need to
     provide at least a name and a the wind farm's wind turbine fleet as done
@@ -212,7 +212,7 @@ def run_example():
     """
     weather = basic_example.get_weather_data('weather.csv')
     my_turbine, e126 = basic_example.initialise_wind_turbines()
-    example_farm, example_farm_2 = initialise_wind_farm(my_turbine, e126)
+    example_farm, example_farm_2 = initialise_wind_farms(my_turbine, e126)
     example_cluster = initialise_wind_turbine_cluster(example_farm,
                                                       example_farm_2)
     calculate_power_output(weather, example_farm, example_cluster)
