@@ -61,7 +61,7 @@ class WindFarm(object):
     power_output : pandas.Series
         The calculated power output of the wind farm.
 
-    Examples TODO: test example
+    Examples
     --------
     >>> from windpowerlib import wind_farm
     >>> from windpowerlib import wind_turbine
