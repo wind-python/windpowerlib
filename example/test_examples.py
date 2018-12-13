@@ -2,9 +2,10 @@ import os
 import subprocess
 import tempfile
 import nbformat
-
+import sys
 from example import basic_example as be
 from numpy.testing import assert_allclose
+import pytest
 
 
 class TestExamples:
@@ -18,7 +19,7 @@ class TestExamples:
         assert_allclose(1766.6870, (e126.power_output.sum() /
                                     e126.nominal_power), 0.01)
         assert_allclose(1882.7567, (my_turbine.power_output.sum() /
-                                        my_turbine.nominal_power), 0.01)
+                                    my_turbine.nominal_power), 0.01)
 
     def _notebook_run(self, path):
         """
@@ -42,8 +43,9 @@ class TestExamples:
 
         return nb, errors
 
+    @pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6")
     def test_basic_example_ipynb(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        nb, errors = self._notebook_run(os.path.join(dir_path,
-                                                     'basic_example.ipynb'))
+        nb, errors = self._notebook_run(
+            os.path.join(dir_path, 'basic_example.ipynb'))
         assert errors == []
