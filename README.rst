@@ -47,8 +47,8 @@ Examples and basic usage
 
 The basic usage of the windpowerlib is shown `here <http://windpowerlib.readthedocs.io/en/stable/basic_example_notebook.html>`_. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
 
- * `Python script <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/basic_example.py>`_
- * `Jupyter notebook <https://raw.githubusercontent.com/wind-python/windpowerlib/features/revise_example/example/basic_example.ipynb>`_
+ * `Basic example (Python script) <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/basic_example.py>`_
+ * `Basic example (Jupyter notebook) <https://raw.githubusercontent.com/wind-python/windpowerlib/features/revise_example/example/basic_example.ipynb>`_
  * `Example data file <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/weather.csv>`_
 
 
@@ -56,11 +56,12 @@ To run the examples you first have to install the windpowerlib. To run the noteb
 This will open a browser window. Navigate to the directory containing the notebook to open it. See the jupyter notebook quick start guide for more information on `how to install <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/install.html>`_ and
 `how to run <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/execute.html>`_ jupyter notebooks.
 
-Further functionalities are shown in a second example. As the basic usage example it is available as jupyter notebook and as python script. The weather data in this example is the same as in the example above.
+The usage of further functions are shown in a second example. As the basic usage example it is available as jupyter notebook and as python script. The weather data in this example is the same as in the example above.
 
- * :download:`Further example (Python script) <../example/further_example.py>`
- * :download:`Further example (Jupyter notebook) <../example/further_example.ipynb>`
- * :download:`Example data file <../example/weather.csv>`
+ * `Further example (Python script) <https://raw.githubusercontent.com/wind-python/windpowerlib/release_preparation/example/further_example.py>`_
+ * `Further example (Jupyter notebook) <https://raw.githubusercontent.com/wind-python/windpowerlib/release_preparation/example/basic_example.ipynb>`_
+ * `Example data file <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/weather.csv>`_
+
 
 Contributing
 ==============
