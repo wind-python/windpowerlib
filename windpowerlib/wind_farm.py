@@ -76,7 +76,7 @@ class WindFarm(object):
     ...    'wind_turbine_fleet': [{'wind_turbine': e126,
     ...                            'number_of_turbines': 6}]}
     >>> example_farm = wind_farm.WindFarm(**example_farm_data)
-    >>> example_farm.installed_power = get_installed_power()
+    >>> example_farm.installed_power = example_farm.get_installed_power()
     >>> print(example_farm.installed_power)
     45000000
 

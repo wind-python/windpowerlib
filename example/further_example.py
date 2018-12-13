@@ -15,7 +15,7 @@ try:
 except ImportError:
     plt = None
 
-import basic_example
+from . import basic_example
 from windpowerlib.turbine_cluster_modelchain import TurbineClusterModelChain
 from windpowerlib.wind_turbine_cluster import WindTurbineCluster
 from windpowerlib.wind_farm import WindFarm
