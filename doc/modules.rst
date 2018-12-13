@@ -66,10 +66,41 @@ power curve or power coefficient curve needed by the :py:class:`~wind_turbine.Wi
    wind_turbine.read_turbine_data
 
 
+Wind farm calculations
+======================
+
+Functions and methods to calculate the mean hub height, installed power as well
+as the aggregated power curve of a :py:class:`~wind_farm.WindFarm` object.
+
+
+.. autosummary::
+   :toctree: temp/
+
+   wind_farm.WindFarm.mean_hub_height
+   wind_farm.WindFarm.get_installed_power
+   wind_farm.WindFarm.assign_power_curve
+
+
+Wind turbine cluster calculations
+=================================
+
+Functions and methods to calculate the mean hub height, installed power as well
+as the aggregated power curve of a :py:class:`~wind_turbine_cluster.WindTurbineCluster` object.
+This is realized in a new module as the functions differ from the functions in
+the :py:class:`~wind_farm.WindFarm` class.
+
+.. autosummary::
+   :toctree: temp/
+
+   wind_farm.WindTurbineCluster.mean_hub_height
+   wind_farm.WindTurbineCluster.get_installed_power
+   wind_farm.WindTurbineCluster.assign_power_curve
+
+
 Power output
 ==============
 
-Functions for calculating power output of a wind turbine.
+Functions for calculating power output of a wind power plant.
 
 .. autosummary::
    :toctree: temp/
@@ -80,7 +111,7 @@ Functions for calculating power output of a wind turbine.
 
 
 Alteration of power curves
-==============
+==========================
 
 Functions for smoothing power curves or applying wake losses.
 
@@ -120,7 +151,7 @@ Methods of the ModelChain object.
 
 
 TurbineClusterModelChain
-==============
+========================
 The TurbineClusterModelChain inherits all functions from the ModelChain.
 
 Creating a TurbineClusterModelChain object.
@@ -162,9 +193,17 @@ Additional functions used in the windpowerlib.
    tools.estimate_turbulence_intensity
 
 
-Example
+Basic example
 ==============
 
 The basic example consists of the following functions.
 
 .. include:: example.rst
+
+Further example
+===============
+
+A further example consists of the following functions as well as uses functions
+of the basic example.
+
+.. include:: example_2.rst
