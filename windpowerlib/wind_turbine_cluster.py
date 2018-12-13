@@ -1,9 +1,9 @@
 """
 The ``wind_turbine_cluster`` module contains the class WindTurbineCluster that
-implements a wind turbine cluster in the windpowerlib and functions needed for
-the modelling of a wind turbine cluster.
-A wind turbine cluster comprises wind turbines belonging to the same weather
-data grid point.
+implements a wind turbine cluster in the windpowerlib and provides functions
+needed for modelling a wind turbine cluster.
+A wind turbine cluster comprises wind farms and wind turbines belonging to the
+same weather data point.
 
 """
 
@@ -105,6 +105,8 @@ class WindTurbineCluster(object):
             Installed power of the wind turbine cluster.
 
         """
+        for wind_farm in self.wind_farms:
+            wind_farm.installed_power = wind_farm.get_installed_power()
         return sum(wind_farm.installed_power for wind_farm in self.wind_farms)
 
     def assign_power_curve(self, wake_losses_model='power_efficiency_curve',
@@ -169,7 +171,7 @@ class WindTurbineCluster(object):
             # hub height of turbine cluster)
             farm.mean_hub_height()
             # Assign wind farm power curve
-            farm.power_curve = farm.assign_power_curve(
+            farm.assign_power_curve(
                 wake_losses_model=wake_losses_model,
                 smoothing=smoothing, block_width=block_width,
                 standard_deviation_method=standard_deviation_method,

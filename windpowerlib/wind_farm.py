@@ -61,6 +61,25 @@ class WindFarm(object):
     power_output : pandas.Series
         The calculated power output of the wind farm.
 
+    Examples TODO: test example
+    --------
+    >>> from windpowerlib import wind_farm
+    >>> from windpowerlib import wind_turbine
+    >>> enerconE126 = {
+    ...    'hub_height': 135,
+    ...    'rotor_diameter': 127,
+    ...    'name': 'ENERCON E 126 7500',
+    ...    'fetch_curve': 'power_curve'}
+    >>> e126 = wind_turbine.WindTurbine(**enerconE126)
+    >>> example_farm_data = {
+    ...    'name': 'example_farm',
+    ...    'wind_turbine_fleet': [{'wind_turbine': e126,
+    ...                            'number_of_turbines': 6}]}
+    >>> example_farm = wind_farm.WindFarm(**example_farm_data)
+    >>> example_farm.installed_power = get_installed_power()
+    >>> print(example_farm.installed_power)
+    45000000
+
     """
     def __init__(self, name, wind_turbine_fleet, coordinates=None,
                  efficiency=None):
@@ -80,9 +99,10 @@ class WindFarm(object):
         Calculates the mean hub height of the wind farm.
 
         The mean hub height of a wind farm is necessary for power output
-        calculations with an aggregated wind farm power curve. Hub heights of
-        wind turbines with higher nominal power weigh more than others.
-        Assigns the hub height to the wind farm object.
+        calculations with an aggregated wind farm power curve containing wind
+        turbines with different hub heights. Hub heights of wind turbines with
+        higher nominal power weigh more than others. Assigns the hub height to
+        the wind farm object.
 
         Returns
         -------
@@ -121,7 +141,7 @@ class WindFarm(object):
 
         The installed power of wind farms is necessary when a
         :class:`~.wind_turbine_cluster.WindTurbineCluster` object is used and
-        is power weighed mean hub height is calcuated with
+        it's power weighed mean hub height is calculated with
         :py:func:`~.wind_turbine_cluster.WindTurbineCluster.mean_hub_height`.
 
         Returns
@@ -238,12 +258,16 @@ class WindFarm(object):
             else:
                 # Add value zero to start and end of curve as otherwise there
                 # can occure problems during the aggregation
-                if power_curve.iloc[0]['wind_speed'] != 0:
-                    power_curve.loc[power_curve.index[0] - 0.5] = [
-                        power_curve.index[0] - 0.5, 0.0]
+                if power_curve.iloc[0]['wind_speed'] != 0.0:
+                    power_curve = pd.concat(
+                        [power_curve, pd.DataFrame(data={
+                            'power': [0.0], 'wind_speed': [0.0]})])
                 if power_curve.iloc[-1]['power'] != 0.0:
-                    power_curve.loc[power_curve.index[-1] + 0.5] = [
-                        power_curve.index[-1] + 0.5, 0.0]
+                    power_curve = pd.concat(
+                        [power_curve, pd.DataFrame(data={
+                            'power': [0.0],
+                            'wind_speed': [power_curve['wind_speed'].loc[
+                                               power_curve.index[-1]] + 0.5]})])
             # Add power curves of all turbine types to data frame
             # (multiplied by turbine amount)
             df = pd.concat(
