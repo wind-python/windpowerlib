@@ -74,11 +74,11 @@ def get_weather_data(filename='weather.csv', **kwargs):
     return weather_df
 
 
-def initialise_wind_turbines():
+def initialize_wind_turbines():
     r"""
-    Initialises two :class:`~.wind_turbine.WindTurbine` objects.
+    Initializes two :class:`~.wind_turbine.WindTurbine` objects.
 
-    Function shows two ways to initialise a WindTurbine object. You can either
+    Function shows two ways to initialize a WindTurbine object. You can either
     specify your own turbine, as done below for 'myTurbine', or fetch power
     and/or power coefficient curve data from data files provided by the
     windpowerlib, as done for the 'enerconE126'.
@@ -106,7 +106,7 @@ def initialise_wind_turbines():
                       0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],  # in W
                   'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]})  # in m/s
     }
-    # initialise WindTurbine object
+    # initialize WindTurbine object
     my_turbine = WindTurbine(**myTurbine)
 
     # specification of wind turbine where power curve is provided
@@ -118,7 +118,7 @@ def initialise_wind_turbines():
         'rotor_diameter': 127,  # in m
         'fetch_curve': 'power_curve'  # fetch power curve
     }
-    # initialise WindTurbine object
+    # initialize WindTurbine object
     e126 = WindTurbine(**enerconE126)
 
     return my_turbine, e126
@@ -147,7 +147,7 @@ def calculate_power_output(weather, my_turbine, e126):
     """
 
     # power output calculation for my_turbine
-    # initialise ModelChain with default parameters and use run_model method
+    # initialize ModelChain with default parameters and use run_model method
     # to calculate power output
     mc_my_turbine = ModelChain(my_turbine).run_model(weather)
     # write power output timeseries to WindTurbine object
@@ -168,7 +168,7 @@ def calculate_power_output(weather, my_turbine, e126):
         'density_correction': True,  # False (default) or True
         'obstacle_height': 0,  # default: 0
         'hellman_exp': None}  # None (default) or None
-    # initialise ModelChain with own specifications and use run_model method
+    # initialize ModelChain with own specifications and use run_model method
     # to calculate power output
     mc_e126 = ModelChain(e126, **modelchain_data).run_model(weather)
     # write power output time series to WindTurbine object
@@ -233,7 +233,7 @@ def run_basic_example():
 
     """
     weather = get_weather_data('weather.csv')
-    my_turbine, e126 = initialise_wind_turbines()
+    my_turbine, e126 = initialize_wind_turbines()
     calculate_power_output(weather, my_turbine, e126)
     plot_or_print(my_turbine, e126)
 

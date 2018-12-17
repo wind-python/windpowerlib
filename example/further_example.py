@@ -27,11 +27,11 @@ import logging
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-def initialise_wind_farms(my_turbine, e126):
+def initialize_wind_farms(my_turbine, e126):
     r"""
-    Initialises two :class:`~.wind_farm.WindFarm` objects.
+    Initializes two :class:`~.wind_farm.WindFarm` objects.
 
-    This function shows how to initialise a WindFarm object. You need to
+    This function shows how to initialize a WindFarm object. You need to
     provide at least a name and a the wind farm's wind turbine fleet as done
     below for 'example_farm'. Optionally you can provide a wind farm efficiency
     (which can be constant or dependent on the wind speed) and coordinates as
@@ -61,7 +61,7 @@ def initialise_wind_farms(my_turbine, e126):
                                 'number_of_turbines': 3}
                                ]}
 
-    # initialise WindFarm object
+    # initialize WindFarm object
     example_farm = WindFarm(**example_farm_data)
 
     # specification of wind farm data (2) containing a wind farm efficiency
@@ -75,17 +75,17 @@ def initialise_wind_farms(my_turbine, e126):
         'efficiency': 0.9,
         'coordinates': [52.2, 13.1]}
 
-    # initialise WindFarm object
+    # initialize WindFarm object
     example_farm_2 = WindFarm(**example_farm_2_data)
 
     return example_farm, example_farm_2
 
 
-def initialise_wind_turbine_cluster(example_farm, example_farm_2):
+def initialize_wind_turbine_cluster(example_farm, example_farm_2):
     r"""
-    Initialises a :class:`~.wind_turbine_cluster.WindTurbineCluster` object.
+    Initializes a :class:`~.wind_turbine_cluster.WindTurbineCluster` object.
 
-    Function shows how to initialise a WindTurbineCluster object. In this case
+    Function shows how to initialize a WindTurbineCluster object. In this case
     the cluster only contains two wind farms.
 
     Parameters
@@ -106,7 +106,7 @@ def initialise_wind_turbine_cluster(example_farm, example_farm_2):
         'name': 'example_cluster',
         'wind_farms': [example_farm, example_farm_2]}
 
-    # initialise WindTurbineCluster object
+    # initialize WindTurbineCluster object
     example_cluster = WindTurbineCluster(**example_cluster_data)
 
     return example_cluster
@@ -137,7 +137,7 @@ def calculate_power_output(weather, example_farm, example_cluster):
     # set efficiency of example_farm to apply wake losses
     example_farm.efficiency = 0.9
     # power output calculation for example_farm
-    # initialise TurbineClusterModelChain with default parameters and use
+    # initialize TurbineClusterModelChain with default parameters and use
     # run_model method to calculate power output
     mc_example_farm = TurbineClusterModelChain(example_farm).run_model(weather)
     # write power output time series to WindFarm object
@@ -172,7 +172,7 @@ def calculate_power_output(weather, example_farm, example_cluster):
         'density_correction': True,  # False (default) or True
         'obstacle_height': 0,  # default: 0
         'hellman_exp': None}  # None (default) or None
-    # initialise TurbineClusterModelChain with own specifications and use
+    # initialize TurbineClusterModelChain with own specifications and use
     # run_model method to calculate power output
     mc_example_cluster = TurbineClusterModelChain(
             example_cluster, **modelchain_data).run_model(weather)
@@ -211,9 +211,9 @@ def run_example():
 
     """
     weather = basic_example.get_weather_data('weather.csv')
-    my_turbine, e126 = basic_example.initialise_wind_turbines()
-    example_farm, example_farm_2 = initialise_wind_farms(my_turbine, e126)
-    example_cluster = initialise_wind_turbine_cluster(example_farm,
+    my_turbine, e126 = basic_example.initialize_wind_turbines()
+    example_farm, example_farm_2 = initialize_wind_farms(my_turbine, e126)
+    example_cluster = initialize_wind_turbine_cluster(example_farm,
                                                       example_farm_2)
     calculate_power_output(weather, example_farm, example_cluster)
     plot_or_print(example_farm, example_cluster)

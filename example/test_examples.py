@@ -14,7 +14,7 @@ class TestExamples:
     def test_basic_example_flh(self):
         # tests full load hours
         weather = be.get_weather_data('weather.csv')
-        my_turbine, e126 = be.initialise_wind_turbines()
+        my_turbine, e126 = be.initialize_wind_turbines()
         be.calculate_power_output(weather, my_turbine, e126)
 
         assert_allclose(1766.6870, (e126.power_output.sum() /
@@ -25,10 +25,10 @@ class TestExamples:
     def test_further_example_flh(self):
         # tests full load hours
         weather = be.get_weather_data('weather.csv')
-        my_turbine, e126 = be.initialise_wind_turbines()
-        example_farm, example_farm_2 = fe.initialise_wind_farms(my_turbine,
+        my_turbine, e126 = be.initialize_wind_turbines()
+        example_farm, example_farm_2 = fe.initialize_wind_farms(my_turbine,
                                                                 e126)
-        example_cluster = fe.initialise_wind_turbine_cluster(example_farm,
+        example_cluster = fe.initialize_wind_turbine_cluster(example_farm,
                                                              example_farm_2)
         fe.calculate_power_output(weather, example_farm, example_cluster)
         assert_allclose(1586.23527, (example_farm.power_output.sum() /
