@@ -87,9 +87,9 @@ As the windpowerlib started with contributors from the `oemof developer group <h
 
 **Generally the following steps are required when changing, adding or removing code:**
 
-* Add new tests if you have written new functions/classes
-* Add/change the documentation (new feature, API changes ...)
-* Add a whatsnew entry and your name to Contributors
+* Add new tests if you have written new functions/classes.
+* Add/change the documentation (new feature, API changes ...).
+* Add a whatsnew entry and your name to Contributors.
 * Check if all tests still work by simply executing pytest in your windpowerlib directory:
 
 .. role:: bash(code)

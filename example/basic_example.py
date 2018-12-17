@@ -150,7 +150,7 @@ def calculate_power_output(weather, my_turbine, e126):
     # initialize ModelChain with default parameters and use run_model method
     # to calculate power output
     mc_my_turbine = ModelChain(my_turbine).run_model(weather)
-    # write power output timeseries to WindTurbine object
+    # write power output time series to WindTurbine object
     my_turbine.power_output = mc_my_turbine.power_output
 
     # power output calculation for e126
