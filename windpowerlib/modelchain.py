@@ -285,7 +285,7 @@ class ModelChain(object):
             wind_speed_hub = wind_speed.logarithmic_profile(
                 weather_df['wind_speed'][closest_height], closest_height,
                 self.power_plant.hub_height,
-                weather_df['roughness_length'].ix[:, 0],
+                weather_df['roughness_length'].iloc[:, 0],
                 self.obstacle_height)
         elif self.wind_speed_model == 'hellman':
             logging.debug('Calculating wind speed using hellman equation.')
@@ -296,7 +296,7 @@ class ModelChain(object):
             wind_speed_hub = wind_speed.hellman(
                 weather_df['wind_speed'][closest_height], closest_height,
                 self.power_plant.hub_height,
-                weather_df['roughness_length'].ix[:, 0],
+                weather_df['roughness_length'].iloc[:, 0],
                 self.hellman_exp)
         elif self.wind_speed_model == 'interpolation_extrapolation':
             logging.debug('Calculating wind speed using linear inter- or '
