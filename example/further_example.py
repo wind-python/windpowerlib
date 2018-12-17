@@ -15,11 +15,10 @@ try:
 except ImportError:
     plt = None
 
-from . import basic_example
-from windpowerlib.turbine_cluster_modelchain import TurbineClusterModelChain
-from windpowerlib.wind_turbine_cluster import WindTurbineCluster
-from windpowerlib.wind_farm import WindFarm
-# TODO: change imports
+from example import basic_example
+from windpowerlib import WindFarm
+from windpowerlib import WindTurbineCluster
+from windpowerlib import TurbineClusterModelChain
 
 # You can use the logging package to get logging messages from the windpowerlib
 # Change the logging level if you want more or less messages
