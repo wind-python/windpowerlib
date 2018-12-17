@@ -6,7 +6,7 @@ Introduction
 =============
 
 The windpowerlib is a library that provides a set of functions and classes to calculate the power output of wind turbines. It was originally part of the 
-`feedinlib <https://github.com/oemof/feedinlib>`_ (windpower and pv) but was taken out to build up a community concentrating on wind power models.
+`feedinlib <https://github.com/oemof/feedinlib>`_ (windpower and photovoltaic) but was taken out to build up a community concentrating on wind power models.
 
 For a quick start see the :ref:`examplereference-label` section.
 
@@ -63,11 +63,38 @@ Further functionalities are shown in a second example. As the basic usage exampl
 Contributing
 ==============
 
-Clone/Fork: https://github.com/wind-python/windpowerlib
+We are warmly welcoming all who want to contribute to the windpowerlib. If you are interested in wind models and want to help improving the existing model do not hesitate to contact us.
 
-If you are interested in wind models and want to help improve the existing model do not hesitate to contact us.
-As the windpowerlib started with contributors from the `oemof developer group <https://github.com/orgs/oemof/teams/oemof-developer-group>`_ we use the same 
+Clone: https://github.com/wind-python/windpowerlib and install the cloned repository using pip:
+
+.. code:: bash
+
+  pip install -e /path/to/the/repository
+
+As the windpowerlib started with contributors from the `oemof developer group <https://github.com/orgs/oemof/teams/oemof-developer-group>`_ we use the same
 `developer rules <http://oemof.readthedocs.io/en/stable/developing_oemof.html>`_.
+
+**How to create a pull request:**
+
+* `Fork <https://help.github.com/articles/fork-a-repo>`_ the windpowerlib repository to your own github account.
+* Change, add or remove code.
+* Commit your changes.
+* Create a `pull request <https://guides.github.com/activities/hello-world/>`_ and describe what you will do and why.
+* Wait for approval.
+
+**Generally the following steps are required when changing, adding or removing code:**
+
+* Add new tests if you have written new functions/classes
+* Add/change the documentation (new feature, API changes ...)
+* Add a whatsnew entry and your name to Contributors
+* Check if all tests still work by simply executing pytest in your windpowerlib directory:
+
+.. role:: bash(code)
+   :language: bash
+
+.. code:: bash
+
+    pytest
 
 Citing the windpowerlib
 ========================
