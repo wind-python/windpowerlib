@@ -92,9 +92,9 @@ the :py:class:`~wind_farm.WindFarm` class.
 .. autosummary::
    :toctree: temp/
 
-   wind_farm.WindTurbineCluster.mean_hub_height
-   wind_farm.WindTurbineCluster.get_installed_power
-   wind_farm.WindTurbineCluster.assign_power_curve
+   wind_turbine_cluster.WindTurbineCluster.mean_hub_height
+   wind_turbine_cluster.WindTurbineCluster.get_installed_power
+   wind_turbine_cluster.WindTurbineCluster.assign_power_curve
 
 
 Power output
