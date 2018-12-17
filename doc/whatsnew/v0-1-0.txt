@@ -11,8 +11,7 @@ New classes
 New functions
 #############
 
- * power curve smoothing for taking into account the spatial distribution of
-    wind speed
+ * power curve smoothing for taking into account the spatial distribution of wind speed
  * application of wake losses to a power curve
  * application of wake losses to a wind speed time series
  * logarithmic interpolation/extrapolation for wind speed time series
