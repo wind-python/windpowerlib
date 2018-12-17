@@ -44,10 +44,10 @@ Matplotlib can be installed using pip3 though some Linux users reported that it 
 Examples and basic usage
 =========================
 
-The basic usage of the windpowerlib is shown in the :ref:`modelchain_example <basic_example_notebook.ipynb>`. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
+The basic usage of the windpowerlib is shown in the :ref:`modelchain_example <modelchain_example_notebook.ipynb>`. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
 
- * :download:`ModelChain example (Python script) <../example/basic_example.py>`
- * :download:`ModelChain example (Jupyter notebook) <../example/basic_example.ipynb>`
+ * :download:`ModelChain example (Python script) <../example/modelchain_example.py>`
+ * :download:`ModelChain example (Jupyter notebook) <../example/modelchain_example.ipynb>`
  * :download:`Example data file <../example/weather.csv>`
 
 To run the examples you first have to install the windpowerlib. To run the notebook you also need to install notebook using pip3. To launch jupyter notebook type ``jupyter notebook`` in terminal.
@@ -56,8 +56,8 @@ This will open a browser window. Navigate to the directory containing the notebo
 
 Further functionalities, like the modelling of wind farms and wind turbine clusters, are shown in a second example. As the ModelChain example it is available as jupyter notebook and as python script. The weather data in this example is the same as in the example above.
 
- * :download:`TurbineClusterModelChain example (Python script) <../example/further_example.py>`
- * :download:`TurbineClusterModelChain example (Jupyter notebook) <../example/further_example.ipynb>`
+ * :download:`TurbineClusterModelChain example (Python script) <../example/turbine_cluster_modelchain_example.py>`
+ * :download:`TurbineClusterModelChain example (Jupyter notebook) <../example/turbine_cluster_modelchain_example.ipynb>`
  * :download:`Example data file <../example/weather.csv>`
 
 Contributing
