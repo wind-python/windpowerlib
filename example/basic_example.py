@@ -204,20 +204,20 @@ def plot_or_print(my_turbine, e126):
     if plt:
         if e126.power_coefficient_curve is not None:
             e126.power_coefficient_curve.plot(
-                x='wind_speed', y='values', style='*',
+                x='wind_speed', y='power coefficient', style='*',
                 title='Enercon E126 power coefficient curve')
             plt.show()
         if e126.power_curve is not None:
-            e126.power_curve.plot(x='wind_speed', y='values', style='*',
+            e126.power_curve.plot(x='wind_speed', y='power', style='*',
                                   title='Enercon E126 power curve')
             plt.show()
         if my_turbine.power_coefficient_curve is not None:
             my_turbine.power_coefficient_curve.plot(
-                x='wind_speed', y='values', style='*',
+                x='wind_speed', y='power coefficient', style='*',
                 title='myTurbine power coefficient curve')
             plt.show()
         if my_turbine.power_curve is not None:
-            my_turbine.power_curve.plot(x='wind_speed', y='values', style='*',
+            my_turbine.power_curve.plot(x='wind_speed', y='power', style='*',
                                         title='myTurbine power curve')
             plt.show()
     else:
