@@ -193,17 +193,17 @@ Additional functions used in the windpowerlib.
    tools.estimate_turbulence_intensity
 
 
-Basic example
-==============
+ModelChain example
+==================
 
-The basic example consists of the following functions.
+The ``modelchain_example`` consists of the following functions.
 
 .. include:: example.rst
 
-Further example
-===============
+TurbineClusterModelChain example
+================================
 
-A further example consists of the following functions as well as uses functions
-of the basic example.
+The ``turbine_cluster_modelchain_example`` consists of the following functions
+as well as it uses functions of the ``modelchain_example``.
 
 .. include:: example_2.rst

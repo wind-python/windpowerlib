@@ -34,7 +34,7 @@ Documentation
 Other changes
 #############
  * removed deprecated attributes (.ix)
-
+ * renamed examples according to modelchains
 
 Contributors
 ############

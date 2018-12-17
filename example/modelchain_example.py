@@ -1,5 +1,11 @@
 """
-The ``basic_example`` module shows a simple usage of the windpowerlib.
+The ``modelchain_example`` module shows a simple usage of the windpowerlib by
+using the :class:`~.modelchain.ModelChain` class.
+
+There are mainly three steps. First you have to import your weather data, then
+you need to specify your wind turbine, and in the last step call the
+windpowerlib functions to calculate the feed-in time series.
+
 
 """
 
@@ -227,7 +233,7 @@ def plot_or_print(my_turbine, e126):
             print(e126.power_curve)
 
 
-def run_basic_example():
+def run_example():
     r"""
     Run the basic example.
 
@@ -239,4 +245,4 @@ def run_basic_example():
 
 
 if __name__ == "__main__":
-    run_basic_example()
+    run_example()

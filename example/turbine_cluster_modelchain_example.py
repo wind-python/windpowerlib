@@ -1,9 +1,11 @@
 """
-The ``further_example`` module shows a further usage of the windpowerlib.
+The ``turbine_cluster_modelchain_example`` module shows how to calculate the
+power output of wind farms and wind turbine clusters with the windpowerlib.
+A cluster can be useful if you want to calculate the feed-in of a region for
+which you want to use one single weather data point.
 
-This example uses functions from the ``basic_example`` module where the
-basic usage of the windpowerlib is shown.
-
+Functions that are used in the ``modelchain_example``, like the initialization
+of wind turbines, are imported and used without further explanations.
 
 """
 
@@ -15,7 +17,7 @@ try:
 except ImportError:
     plt = None
 
-from example import basic_example
+from example import modelchain_example as mc_e
 from windpowerlib import WindFarm
 from windpowerlib import WindTurbineCluster
 from windpowerlib import TurbineClusterModelChain
@@ -209,8 +211,8 @@ def run_example():
     Run the example.
 
     """
-    weather = basic_example.get_weather_data('weather.csv')
-    my_turbine, e126 = basic_example.initialize_wind_turbines()
+    weather = mc_e.get_weather_data('weather.csv')
+    my_turbine, e126 = mc_e.initialize_wind_turbines()
     example_farm, example_farm_2 = initialize_wind_farms(my_turbine, e126)
     example_cluster = initialize_wind_turbine_cluster(example_farm,
                                                       example_farm_2)

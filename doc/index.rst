@@ -8,7 +8,7 @@ Contents:
    :glob:   
    
    getting_started
-   examples_basic_and_further
+   examples
    whats_new
    modules
 
