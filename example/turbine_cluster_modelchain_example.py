@@ -1,9 +1,11 @@
 """
-The ``further_example`` module shows a further usage of the windpowerlib.
+The ``turbine_cluster_modelchain_example`` module shows how to calculate the
+power output of wind farms and wind turbine clusters with the windpowerlib.
+A cluster can be useful if you want to calculate the feed-in of a region for
+which you want to use one single weather data point.
 
-This example uses functions from the ``basic_example`` module where the
-basic usage of the windpowerlib is shown.
-
+Functions that are used in the ``modelchain_example``, like the initialization
+of wind turbines, are imported and used without further explanations.
 
 """
 
@@ -15,11 +17,10 @@ try:
 except ImportError:
     plt = None
 
-from . import basic_example
-from windpowerlib.turbine_cluster_modelchain import TurbineClusterModelChain
-from windpowerlib.wind_turbine_cluster import WindTurbineCluster
-from windpowerlib.wind_farm import WindFarm
-# TODO: change imports
+from example import modelchain_example as mc_e
+from windpowerlib import WindFarm
+from windpowerlib import WindTurbineCluster
+from windpowerlib import TurbineClusterModelChain
 
 # You can use the logging package to get logging messages from the windpowerlib
 # Change the logging level if you want more or less messages
@@ -27,11 +28,11 @@ import logging
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-def initialise_wind_farms(my_turbine, e126):
+def initialize_wind_farms(my_turbine, e126):
     r"""
-    Initialises two :class:`~.wind_farm.WindFarm` objects.
+    Initializes two :class:`~.wind_farm.WindFarm` objects.
 
-    This function shows how to initialise a WindFarm object. You need to
+    This function shows how to initialize a WindFarm object. You need to
     provide at least a name and a the wind farm's wind turbine fleet as done
     below for 'example_farm'. Optionally you can provide a wind farm efficiency
     (which can be constant or dependent on the wind speed) and coordinates as
@@ -61,7 +62,7 @@ def initialise_wind_farms(my_turbine, e126):
                                 'number_of_turbines': 3}
                                ]}
 
-    # initialise WindFarm object
+    # initialize WindFarm object
     example_farm = WindFarm(**example_farm_data)
 
     # specification of wind farm data (2) containing a wind farm efficiency
@@ -75,17 +76,17 @@ def initialise_wind_farms(my_turbine, e126):
         'efficiency': 0.9,
         'coordinates': [52.2, 13.1]}
 
-    # initialise WindFarm object
+    # initialize WindFarm object
     example_farm_2 = WindFarm(**example_farm_2_data)
 
     return example_farm, example_farm_2
 
 
-def initialise_wind_turbine_cluster(example_farm, example_farm_2):
+def initialize_wind_turbine_cluster(example_farm, example_farm_2):
     r"""
-    Initialises a :class:`~.wind_turbine_cluster.WindTurbineCluster` object.
+    Initializes a :class:`~.wind_turbine_cluster.WindTurbineCluster` object.
 
-    Function shows how to initialise a WindTurbineCluster object. In this case
+    Function shows how to initialize a WindTurbineCluster object. In this case
     the cluster only contains two wind farms.
 
     Parameters
@@ -106,7 +107,7 @@ def initialise_wind_turbine_cluster(example_farm, example_farm_2):
         'name': 'example_cluster',
         'wind_farms': [example_farm, example_farm_2]}
 
-    # initialise WindTurbineCluster object
+    # initialize WindTurbineCluster object
     example_cluster = WindTurbineCluster(**example_cluster_data)
 
     return example_cluster
@@ -137,7 +138,7 @@ def calculate_power_output(weather, example_farm, example_cluster):
     # set efficiency of example_farm to apply wake losses
     example_farm.efficiency = 0.9
     # power output calculation for example_farm
-    # initialise TurbineClusterModelChain with default parameters and use
+    # initialize TurbineClusterModelChain with default parameters and use
     # run_model method to calculate power output
     mc_example_farm = TurbineClusterModelChain(example_farm).run_model(weather)
     # write power output time series to WindFarm object
@@ -172,7 +173,7 @@ def calculate_power_output(weather, example_farm, example_cluster):
         'density_correction': True,  # False (default) or True
         'obstacle_height': 0,  # default: 0
         'hellman_exp': None}  # None (default) or None
-    # initialise TurbineClusterModelChain with own specifications and use
+    # initialize TurbineClusterModelChain with own specifications and use
     # run_model method to calculate power output
     mc_example_cluster = TurbineClusterModelChain(
             example_cluster, **modelchain_data).run_model(weather)
@@ -210,10 +211,10 @@ def run_example():
     Run the example.
 
     """
-    weather = basic_example.get_weather_data('weather.csv')
-    my_turbine, e126 = basic_example.initialise_wind_turbines()
-    example_farm, example_farm_2 = initialise_wind_farms(my_turbine, e126)
-    example_cluster = initialise_wind_turbine_cluster(example_farm,
+    weather = mc_e.get_weather_data('weather.csv')
+    my_turbine, e126 = mc_e.initialize_wind_turbines()
+    example_farm, example_farm_2 = initialize_wind_farms(my_turbine, e126)
+    example_cluster = initialize_wind_turbine_cluster(example_farm,
                                                       example_farm_2)
     calculate_power_output(weather, example_farm, example_cluster)
     plot_or_print(example_farm, example_cluster)

@@ -77,6 +77,18 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     distribution of wind speed. This way of smoothing power curves is also used
     in [2]_ and [3]_.
 
+    The standard deviation :math:`\sigma` of the above equation can be
+    calculated by the following methods.
+
+    'turbulence_intensity' [2]_:
+    .. math:: \sigma = v_\text{std} \sigma_\text{n} = v_\text{std} TI
+
+    with:
+        TI: turbulence intensity
+
+    'Staffell_Pfenninger' [4]_:
+    .. math:: \sigma = 0.6 \cdot 0.2 \cdot v_\text{std}
+
     References
     ----------
     .. [1]  Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
@@ -84,11 +96,13 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
              Windleistungssimulationen". Universität Kassel, Diss., 2016,
              p. 106
     .. [2]  Nørgaard, P. and Holttinen, H.: "A Multi-Turbine and Power Curve
-             Approach". Nordic Wind Power Conference, 1.–2.3.2004, 2000
+             Approach". Nordic Wind Power Conference, 1.–2.3.2004, 2000, p. 5
     .. [3]  Kohler, S. and Agricola, A.-Cl. and Seidl, H.:
              "dena-Netzstudie II. Integration erneuerbarer Energien in die
              deutsche Stromversorgung im Zeitraum 2015 – 2020 mit Ausblick
              2025". Technical report, 2010.
+    .. [4]  Staffell, I. and Pfenninger, S.: "Using Bias-Corrected Reanalysis
+              to Simulate Current and Future Wind Power Output". 2005, p. 11
 
     """
     # Specify normalized standard deviation
@@ -128,17 +142,21 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
             if standard_deviation_method is 'Staffell_Pfenninger'
             else power_curve_wind_speed * normalized_standard_deviation)
         # Get the smoothed value of the power output
-        smoothed_value = sum(
-            block_width * np.interp(wind_speed, power_curve_wind_speeds,
-                                    power_curve_values, left=0, right=0) *
-            tools.gauss_distribution(
-                power_curve_wind_speed - wind_speed,
-                standard_deviation, mean_gauss)
-            for wind_speed in wind_speeds_block)
+        if standard_deviation == 0.0:
+            # The gaussian distribution is not defined for a standard deviation
+            # of zero. Smoothed power curve value is set to zero.
+            smoothed_value = 0.0
+        else:
+            smoothed_value = sum(
+                block_width * np.interp(wind_speed, power_curve_wind_speeds,
+                                        power_curve_values, left=0, right=0) *
+                tools.gauss_distribution(
+                    power_curve_wind_speed - wind_speed,
+                    standard_deviation, mean_gauss)
+                for wind_speed in wind_speeds_block)
         # Add value to list - add zero if `smoothed_value` is nan as Gauss
         # distribution for a standard deviation of zero.
-        smoothed_power_curve_values.append(0 if np.isnan(smoothed_value)
-                                           else smoothed_value)
+        smoothed_power_curve_values.append(smoothed_value)
     # Create smoothed power curve data frame
     smoothed_power_curve_df = pd.DataFrame(
         data=[list(power_curve_wind_speeds.values),
