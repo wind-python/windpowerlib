@@ -27,3 +27,6 @@ class TestWakeLosses:
         with pytest.raises(ValueError):
             parameters['wind_efficiency_curve_name'] = 'misspelled'
             reduce_wind_speed(**parameters)
+        with pytest.raises(ValueError):
+            parameters['wind_efficiency_curve_name'] = 'dena_misspelled'
+            reduce_wind_speed(**parameters)

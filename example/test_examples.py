@@ -28,8 +28,8 @@ class TestExamples:
         my_turbine, e126 = mc_e.initialize_wind_turbines()
         example_farm, example_farm_2 = tc_mc_e.initialize_wind_farms(
             my_turbine, e126)
-        example_cluster = tc_mc_e.initialize_wind_turbine_cluster(example_farm,
-                                                             example_farm_2)
+        example_cluster = tc_mc_e.initialize_wind_turbine_cluster(
+            example_farm, example_farm_2)
         tc_mc_e.calculate_power_output(weather, example_farm, example_cluster)
         assert_allclose(1586.23527, (example_farm.power_output.sum() /
                                      example_farm.installed_power), 0.01)
