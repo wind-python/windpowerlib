@@ -11,11 +11,6 @@ import numpy as np
 import pandas as pd
 import os
 
-try:
-    from matplotlib import pyplot as plt
-except ImportError:
-    plt = None
-
 
 def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     r"""
@@ -66,9 +61,10 @@ def get_wind_efficiency_curve(curve_name='dena_mean'):
 
     Parameters
     ----------
-    curve_name : String
+    curve_name : str or list
         Specifies the curve. Use display_wind_efficiency_curves() to see all
-        provided wind efficiency curves. Default: 'dena_mean'.
+        provided wind efficiency curves. Default: 'dena_mean'. Use 'all' to
+        get all curves in a MultiIndex DataFrame.
 
     Returns
     -------
@@ -92,79 +88,54 @@ def get_wind_efficiency_curve(curve_name='dena_mean'):
              Windleistungssimulationen". Universität Kassel, Diss., 2016,
              p. 124
 
+    Examples
+    --------
+    # Example to plot all curves
+    fig, ax = plt.subplots()
+    df = get_wind_efficiency_curve(curve_name='all')
+    for t in df.columns.get_level_values(0).unique():
+        p = df[t].set_index('wind_speed')['efficiency']
+        p.name = t
+        ax = p.plot(ax=ax, legend=True)
+    plt.show()
+
     """
     possible_curve_names = ['dena_mean', 'knorr_mean', 'dena_extreme1',
                             'dena_extreme2', 'knorr_extreme1',
                             'knorr_extreme2', 'knorr_extreme3']
-    if curve_name.split('_')[0] not in ['dena', 'knorr']:
-        raise ValueError("`curve_name` must be one of the following: " +
-                         "{} but is {}".format(possible_curve_names,
-                                               curve_name))
-    path = os.path.join(os.path.dirname(__file__), 'data',
-                        'wind_efficiency_curves_{}.csv'.format(
-                            curve_name.split('_')[0]))
-    # Read wind efficiency curves from file
-    wind_efficiency_curves = pd.read_csv(path)
-    # Raise error if wind efficiency curve specified in 'curve_name' does not
-    # exist
-    if curve_name not in list(wind_efficiency_curves):
-        raise ValueError("Efficiency curve name does not exist. Must be one" +
-                         "of the following: {}".format(possible_curve_names) +
-                         "but is {}".format(curve_name))
-    # Get wind efficiency curve and rename column containing efficiency
-    efficiency_curve = wind_efficiency_curves[['wind_speed', curve_name]]
-    efficiency_curve.columns = ['wind_speed', 'efficiency']
-    return efficiency_curve
 
-
-def display_wind_efficiency_curves():
-    r"""
-    Displays all wind efficiency curves available in the windpowerlib.
-
-    Notes
-    -----
-    The wind efficiency curves were generated in the "Dena Netzstudie" and in
-    the dissertation of Kaspar Knorr. For more information see [1]_ and [2]_.
-
-    References
-    ----------
-    .. [1] Kohler et.al.: "dena-Netzstudie II. Integration erneuerbarer
-            Energien in die deutsche Stromversorgung im Zeitraum 2015 – 2020
-            mit Ausblick 2025.", Deutsche Energie-Agentur GmbH (dena),
-            Tech. rept., 2010, p. 101
-    .. [2] Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
-             Windenergieeinspeisung für wetterdatenbasierte
-             Windleistungssimulationen". Universität Kassel, Diss., 2016,
-             p. 124
-
-    """
-    origins = ['dena', 'knorr']
-    paths = [os.path.join(os.path.dirname(__file__), 'data',
-                          'wind_efficiency_curves_{}.csv'.format(origin)) for
-             origin in origins]
-    # Read wind efficiency curves from files
-    # Create separate data frames for origin of curve
-    dena_df = pd.read_csv(paths[0])
-    knorr_df = pd.read_csv(paths[1])
-    # Print names of all available curves
-    curves_list = [col for col in dena_df if 'wind_speed' not in col]
-    curves_list.extend([col for col in knorr_df if 'wind_speed' not in col])
-    print("Names of the provided wind efficiency curves are the " +
-          "following: {}".format(curves_list))
-    if plt:
-        # Create data frames for plot
-        dena_df.set_index('wind_speed', inplace=True)
-        knorr_df.set_index('wind_speed', inplace=True)
-        fig, ax = plt.subplots()
-        dena_df.plot(ax=ax, legend=True, linestyle='--')
-        knorr_df.plot(ax=ax, legend=True)
-        plt.ylabel('Wind efficiency')
-        plt.xlabel('Wind speed m/s')
-        plt.show()
+    if curve_name == 'all':
+        curve_names = possible_curve_names
+    elif isinstance(curve_name, str):
+        curve_names = [curve_name]
     else:
-        print(dena_df)
-        print(knorr_df)
+        curve_names = curve_name
 
+    efficiency_curve = pd.DataFrame(columns=pd.MultiIndex(levels=[[], []],
+                                                          labels=[[], []]))
 
-if __name__ == "__main__":
-    display_wind_efficiency_curves()
+    for curve_name in curve_names:
+        if curve_name.split('_')[0] not in ['dena', 'knorr']:
+            raise ValueError("`curve_name` must be one of the following: " +
+                             "{} but is {}".format(possible_curve_names,
+                                                   curve_name))
+        path = os.path.join(os.path.dirname(__file__), 'data',
+                            'wind_efficiency_curves_{}.csv'.format(
+                                curve_name.split('_')[0]))
+        # Read wind efficiency curves from file
+        wind_efficiency_curves = pd.read_csv(path)
+        # Raise error if wind efficiency curve specified in 'curve_name' does
+        # not exist
+        if curve_name not in list(wind_efficiency_curves):
+            msg = ("Efficiency curve <{0}> does not exist. Must be one of the" 
+                   "following: {1}.")
+            raise ValueError(msg.format(curve_name, *possible_curve_names))
+
+        # Get wind efficiency curve and rename column containing efficiency
+        wec = wind_efficiency_curves[['wind_speed', curve_name]]
+        efficiency_curve[curve_name, 'wind_speed'] = wec['wind_speed']
+        efficiency_curve[curve_name, 'efficiency'] = wec[curve_name]
+    if len(curve_names) == 1:
+        return efficiency_curve[curve_names[0]]
+    else:
+        return efficiency_curve
