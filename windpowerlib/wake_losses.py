@@ -79,8 +79,13 @@ def get_wind_efficiency_curve(curve_name='dena_mean'):
 
     Notes
     -----
-    The wind efficiency curves were generated in the "Dena Netzstudie" and in
-    the dissertation of Kaspar Knorr. For more information see [1]_ and [2]_.
+    The wind efficiency curves were generated in the "Dena Netzstudie" [1]_ and
+    in the work of Kaspar Knorr [2]_. The mean wind efficiency curve is an
+    average curve from 12 wind farm distributed over Germany ([1]_) or
+    respectively an average from over 2000 wind farms in Germany ([2]_). Curves
+    with the appendix 'extreme' are wind efficiency curves of single wind farms
+    that are extremely deviating from the resprective mean wind efficiency
+    curve. For more information see [1]_ and [2]_.
 
     References
     ----------
