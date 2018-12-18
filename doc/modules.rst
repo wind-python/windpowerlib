@@ -113,13 +113,26 @@ Functions for calculating power output of a wind power plant.
 Alteration of power curves
 ==========================
 
-Functions for smoothing power curves or applying wake losses.
+Functions for smoothing power curves or applying wake losses to a power curve.
 
 .. autosummary::
    :toctree: temp/
 
    power_curves.smooth_power_curve
    power_curves.wake_losses_to_power_curve
+
+
+Wake losses
+===========
+
+Functions for applying wake losses to a wind speed time series.
+
+.. autosummary::
+   :toctree: temp/
+
+   wake_losses.reduce_wind_speed
+   wake_losses.get_wind_efficiency_curve
+   wake_losses.display_wind_efficiency_curves
 
 
 ModelChain
