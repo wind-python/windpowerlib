@@ -10,6 +10,7 @@ __license__ = "GPLv3"
 import numpy as np
 import pandas as pd
 import os
+import logging
 
 try:
     from matplotlib import pyplot as plt
@@ -117,9 +118,18 @@ def get_wind_efficiency_curve(curve_name='dena_mean'):
     return efficiency_curve
 
 
-def display_wind_efficiency_curves():
+def display_wind_efficiency_curves(print_out=False, plot=False):
     r"""
-    Displays all wind efficiency curves available in the windpowerlib.
+    Displays all names of wind efficiency curves available in the windpowerlib.
+
+    Parameters
+    ----------
+    print_out : Boolean
+        If True the values of the wind efficiency curves are printed. Default:
+        False.
+    plot : Boolean
+        If True all available wind efficiency curves are plotted - if
+        matplotlib is installed. Default: False.
 
     Notes
     -----
@@ -151,7 +161,9 @@ def display_wind_efficiency_curves():
     curves_list.extend([col for col in knorr_df if 'wind_speed' not in col])
     print("Names of the provided wind efficiency curves are the " +
           "following: {}".format(curves_list))
-    if plt:
+    print("To plot the different wind efficiency curves use this function " +
+           "with the parameter plot=True.")
+    if plt and plot is True:
         # Create data frames for plot
         dena_df.set_index('wind_speed', inplace=True)
         knorr_df.set_index('wind_speed', inplace=True)
@@ -162,9 +174,10 @@ def display_wind_efficiency_curves():
         plt.xlabel('Wind speed m/s')
         plt.show()
     else:
+        logging.debug("Matplotlib is not installed.")
+    if print_out is True:
         print(dena_df)
         print(knorr_df)
-
 
 if __name__ == "__main__":
     display_wind_efficiency_curves()

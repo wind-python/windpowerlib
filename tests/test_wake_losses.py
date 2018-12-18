@@ -3,8 +3,8 @@ import numpy as np
 import pytest
 from pandas.util.testing import  assert_series_equal
 
-from windpowerlib.wake_losses import reduce_wind_speed
-import windpowerlib.wind_turbine as wt
+from windpowerlib.wake_losses import (reduce_wind_speed,
+                                      display_wind_efficiency_curves)
 
 class TestWakeLosses:
 
@@ -30,3 +30,7 @@ class TestWakeLosses:
         with pytest.raises(ValueError):
             parameters['wind_efficiency_curve_name'] = 'dena_misspelled'
             reduce_wind_speed(**parameters)
+
+    def test_display_wind_efficiency_curves(self):
+        # This test just runs the function
+        display_wind_efficiency_curves()

@@ -85,8 +85,6 @@ class TestTurbineClusterModelChain:
         test_tc_mc.run_model(self.weather_df)
         assert_series_equal(test_tc_mc.power_output, power_output_exp)
 
-        # TODO: Test power efficiency curve?
-
         # Test smoothing
         parameters['smoothing'] = 'True'
         test_wind_farm = wf.WindFarm(**self.test_farm)
