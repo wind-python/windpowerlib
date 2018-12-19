@@ -4,7 +4,8 @@ import pytest
 from pandas.util.testing import  assert_series_equal
 
 from windpowerlib.wake_losses import (reduce_wind_speed,
-                                      display_wind_efficiency_curves)
+                                      get_wind_efficiency_curve)
+
 
 class TestWakeLosses:
 
@@ -31,6 +32,20 @@ class TestWakeLosses:
             parameters['wind_efficiency_curve_name'] = 'dena_misspelled'
             reduce_wind_speed(**parameters)
 
-    def test_display_wind_efficiency_curves(self):
-        # This test just runs the function
-        display_wind_efficiency_curves()
+    def test_get_wind_efficiency_curve_one(self):
+        """Test get_wind_efficiency_curve() for one curve."""
+        wec = get_wind_efficiency_curve().sum()
+        wec_exp = pd.Series({'efficiency': 162.45047,
+                             'wind_speed': 1915.23620})
+        assert_series_equal(wec.sort_index(), wec_exp.sort_index())
+
+    def test_get_wind_efficiency_curve_all(self):
+        """Test get_wind_efficiency_curve() for all curves."""
+        wec_all_sum = int(get_wind_efficiency_curve('all').sum().round().sum())
+        assert wec_all_sum == 12145
+
+    def test_get_wind_efficiency_curve_list(self):
+        """Test get_wind_efficiency_curve() for all curves."""
+        wec_all_sum = int(get_wind_efficiency_curve(
+            ['dena_mean', 'knorr_mean']).sum().round().sum())
+        assert wec_all_sum == 3568
