@@ -25,8 +25,8 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     wind_speed : pandas.Series or numpy.array
         Wind speed time series.
     wind_efficiency_curve_name : string
-        Name of the wind efficiency curve. Use display_wind_efficiency_curves()
-        to see all provided wind efficiency curves.
+        Name of the wind efficiency curve. Use get_wind_efficiency_curve() to
+        get all provided wind efficiency curves. Default: 'dena_mean'.
 
     Returns
     -------
@@ -57,20 +57,21 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
 
 def get_wind_efficiency_curve(curve_name='dena_mean'):
     r"""
-    Reads wind efficiency curve specified in `curve_name`.
+    Reads wind efficiency curve(s) specified in `curve_name`.
 
     Parameters
     ----------
     curve_name : str or list
-        Specifies the curve. Use display_wind_efficiency_curves() to see all
-        provided wind efficiency curves. Default: 'dena_mean'. Use 'all' to
-        get all curves in a MultiIndex DataFrame.
+        Specifies the curve. Default: 'dena_mean'. Use 'all' to get all curves
+        in a MultiIndex DataFrame.
 
     Returns
     -------
     efficiency_curve : pd.DataFrame
         Wind efficiency curve. Contains 'wind_speed' and 'efficiency' columns
         with wind speed in m/s and wind efficiency (dimensionless).
+        If `curve_name` is 'all' or a list of strings a MultiIndex DataFrame is
+        returned with curve names in the first level of the columns.
 
     Notes
     -----
