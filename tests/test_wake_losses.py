@@ -42,5 +42,10 @@ class TestWakeLosses:
     def test_get_wind_efficiency_curve_all(self):
         """Test get_wind_efficiency_curve() for all curves."""
         wec_all_sum = int(get_wind_efficiency_curve('all').sum().round().sum())
-        print(wec_all_sum)
         assert wec_all_sum == 12145
+
+    def test_get_wind_efficiency_curve_list(self):
+        """Test get_wind_efficiency_curve() for all curves."""
+        wec_all_sum = int(get_wind_efficiency_curve(
+            ['dena_mean', 'knorr_mean']).sum().round().sum())
+        assert wec_all_sum == 3568
