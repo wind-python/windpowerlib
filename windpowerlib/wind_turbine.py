@@ -23,8 +23,8 @@ class WindTurbine(object):
     ----------
     name : string
         Name of the wind turbine type.
-        Use get_turbine_types() to see a list of all wind turbines for which
-        power (coefficient) curve data is provided.
+        Use :py:func:`~.get_turbine_types` to see a list of all wind turbines
+        for which power (coefficient) curve data is provided.
     hub_height : float
         Hub height of the wind turbine in m.
     rotor_diameter : None or float
@@ -51,7 +51,7 @@ class WindTurbine(object):
     ----------
     name : string
         Name of the wind turbine type.
-        Use get_turbine_types() to see a list of all wind turbines for which
+        Use :py:func:`~.get_turbine_types` to see a list of all wind turbines for which
         power (coefficient) curve data is provided.
     hub_height : float
         Hub height of the wind turbine in m.

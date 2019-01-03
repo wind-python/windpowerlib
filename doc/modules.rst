@@ -132,7 +132,6 @@ Functions for applying wake losses to a wind speed time series.
 
    wake_losses.reduce_wind_speed
    wake_losses.get_wind_efficiency_curve
-   wake_losses.display_wind_efficiency_curves
 
 
 ModelChain

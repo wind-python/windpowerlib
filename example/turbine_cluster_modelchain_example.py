@@ -152,7 +152,7 @@ def calculate_power_output(weather, example_farm, example_cluster):
                                            # 'power_efficiency_curve',
                                            # 'constant_efficiency' or name of
                                            #  a wind efficiency curve
-                #  see :py:func:`~.wake_losses.display_wind_efficiency_curves`
+                #  see :py:func:`~.wake_losses.get_wind_efficiency_curve`
         'smoothing': True,  # False (default) or True
         'block_width': 0.5,  # default: 0.5
         'standard_deviation_method': 'Staffell_Pfenninger',  #

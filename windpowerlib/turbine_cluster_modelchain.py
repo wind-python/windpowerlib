@@ -27,8 +27,8 @@ class TurbineClusterModelChain(ModelChain):
         consideration. Options: None, 'power_efficiency_curve' or
         'constant_efficiency' or the name of a wind efficiency curve like
         'dena_mean'. Default: 'dena_mean'.
-        Use :py:func:`~.wake_losses.display_wind_efficiency_curves` to see a
-        list of all provided wind efficiency curves.
+        Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
+        wind efficiency curves.
     smoothing : boolean
         If True the power curves will be smoothed before or after the
         aggregation of power curves depending on `smoothing_order`.
@@ -85,8 +85,8 @@ class TurbineClusterModelChain(ModelChain):
         consideration. Options: None, 'power_efficiency_curve' or
         'constant_efficiency' or the name of a wind efficiency curve like
         'dena_mean'. Default: 'dena_mean'.
-        Use :py:func:`~.wake_losses.display_wind_efficiency_curves` to see a
-        list of all provided wind efficiency curves.
+        Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
+        wind efficiency curves.
     smoothing : boolean
         If True the power curves will be smoothed before or after the
         aggregation of power curves depending on `smoothing_order`.
