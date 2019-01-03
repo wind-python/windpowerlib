@@ -13,7 +13,7 @@ New functions
 
  * power curve smoothing for taking into account the spatial distribution of wind speed
  * application of wake losses to a power curve
- * application of wake losses to a wind speed time series
+ * application of wake losses to a wind speed time series by using wind efficiency curves which are provided in the data directory
  * logarithmic interpolation/extrapolation for wind speed time series
  * gauss distribution
  * estimation of turbulence intensity by roughness length
@@ -31,10 +31,22 @@ Documentation
  * added second example section and jupyter notebook
 
 
+API changes
+###########
+
+ * renamed attribute 'turbine_name' of WindTurbine object to 'name' to match with 'name' attribute of WindFarm and WindTurbineCluster
+ * renamed `basic_example` to `modelchain_example`
+ * renamed column 'values' of power curves to 'power' and column 'values' of power coefficient curves to 'power coefficient'
+ * renamed `run_basic_example()` to `run_example()`
+ * renamed parameter `wind_turbine` of `ModelChain` object to `power_plant`
+ * removed parameter `density_correction` from `power_plant.power_coefficient()`
+
+
 Other changes
 #############
  * removed deprecated attributes (.ix)
- * renamed examples according to modelchains
+ * added `turbine_cluster_modelchain_example` showing the usage of the TurbineClusterModelChain
+
 
 Contributors
 ############
