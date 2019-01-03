@@ -56,15 +56,16 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     return reduced_wind_speed
 
 
-def get_wind_efficiency_curve(curve_name='dena_mean'):
+def get_wind_efficiency_curve(curve_name='all'):
     r"""
     Reads wind efficiency curve(s) specified in `curve_name`.
 
     Parameters
     ----------
     curve_name : str or list
-        Specifies the curve. Default: 'dena_mean'. Use 'all' to get all curves
-        in a MultiIndex DataFrame.
+        Specifies the curve. Use 'all' to get all curves in a MultiIndex
+        DataFrame or one of the curve names to retrieve a single curve.
+        Default: 'all'.
 
     Returns
     -------
