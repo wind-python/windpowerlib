@@ -208,20 +208,27 @@ class WindTurbine(object):
         return self
 
 
-def read_turbine_data(**kwargs):
+def read_turbine_data(source='oedb', **kwargs):
     r"""
-    Fetches power (coefficient) curves from a file.
+    Fetches power (coefficient) curves from a database or a file.
 
-    The data files are provided along with the windpowerlib and are located in
-    the directory windpowerlib/data.
+    Turbine data is provided by the Open Energy Database (oedb) or can be
+    provided by the user via a file. In the directory windpowerlib/data an
+    example file is provided.
+
+    Parameters
+    ----------
+    source : string
+        Specifies the source of the turbine data as 'oedb' (Open Energy
+        Database: https://openenergy-platform.org/dataedit/) or as the name of
+        a data file. Use 'example_turbine_data' to use the example data.
+        Default: 'oedb'. TODO add example file!
 
     Other Parameters
     ----------------
     datapath : string, optional
-        Path where the data file is stored. Default: './data'
-    filename : string, optional
-        Name of data file. Provided data files are 'power_curves.csv' and
-        'power_coefficient_curves.csv'. Default: 'power_curves.csv'.
+        Path where the data file is stored if `source` is 'csv'.
+        Default: './data'
 
     Returns
     -------
@@ -232,14 +239,16 @@ def read_turbine_data(**kwargs):
         power in column 'p_nom'.
 
     """
-    if 'datapath' not in kwargs:
-        kwargs['datapath'] = os.path.join(os.path.dirname(__file__), 'data')
-
-    if 'filename' not in kwargs:
-        kwargs['filename'] = 'power_curves.csv'
-
-    df = pd.read_csv(os.path.join(kwargs['datapath'], kwargs['filename']),
-                     index_col=0)
+    if source == 'oedb':
+        # todo: add connection to oedb
+        pass
+    else:
+        if 'datapath' not in kwargs:
+            kwargs['datapath'] = os.path.join(os.path.dirname(__file__),
+                                              'data')
+        df = pd.read_csv(os.path.join(kwargs['datapath'], source),
+                         index_col=0)
+        # todo: add raising error message if file does not exist.
     return df
 
 

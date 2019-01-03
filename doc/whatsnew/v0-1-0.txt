@@ -17,6 +17,7 @@ New functions
  * logarithmic interpolation/extrapolation for wind speed time series
  * gauss distribution
  * estimation of turbulence intensity by roughness length
+ * retrieve power curves from Open Energy Database
 
 
 Testing
