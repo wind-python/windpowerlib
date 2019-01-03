@@ -20,6 +20,9 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     r"""
     Smooths the input power curve values by using a Gauss distribution.
 
+    The smoothing serves for taking the distribution of wind speeds over space
+    into account.
+
     Parameters
     ----------
     power_curve_wind_speeds : pandas.Series or numpy.array
@@ -81,12 +84,14 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     calculated by the following methods.
 
     'turbulence_intensity' [2]_:
+
     .. math:: \sigma = v_\text{std} \sigma_\text{n} = v_\text{std} TI
 
     with:
         TI: turbulence intensity
 
     'Staffell_Pfenninger' [4]_:
+
     .. math:: \sigma = 0.6 \cdot 0.2 \cdot v_\text{std}
 
     References
