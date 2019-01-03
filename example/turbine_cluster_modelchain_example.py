@@ -130,8 +130,8 @@ def calculate_power_output(weather, example_farm, example_cluster):
         Contains weather data time series.
     example_farm : WindFarm
         WindFarm object.
-    example_farm_2 : WindFarm
-        WindFarm object constant wind farm efficiency and coordinates.
+    example_cluster : WindTurbineCluster
+        WindTurbineCluster object.
 
     """
 
