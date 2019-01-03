@@ -142,7 +142,6 @@ def power_curve(wind_speed, power_curve_wind_speeds, power_curve_values,
 
 def power_curve_density_correction(wind_speed, power_curve_wind_speeds,
                                    power_curve_values, density):
-    # possible TODO: add density correction for stall controlled wind turbines
     r"""
     Calculates the turbine power output using a density corrected power curve.
 
