@@ -4,6 +4,8 @@
 API
 #############
 
+.. _classes_label:
+
 Classes
 =========
 
@@ -16,6 +18,7 @@ Classes
    modelchain.ModelChain
    turbine_cluster_modelchain.TurbineClusterModelChain
 
+.. _temperature_module_label:
 
 Temperature
 ==============
@@ -26,6 +29,8 @@ Function for calculating air temperature at hub height.
    :toctree: temp/
 
    temperature.linear_gradient
+
+.. _density_module_label:
 
 Density
 ==============
@@ -38,6 +43,7 @@ Functions for calculating air density at hub height.
    density.barometric
    density.ideal_gas
   
+.. _windspeedmodule-label:
 
 Wind speed
 ==============
@@ -96,6 +102,7 @@ the :py:class:`~wind_farm.WindFarm` class.
    wind_turbine_cluster.WindTurbineCluster.get_installed_power
    wind_turbine_cluster.WindTurbineCluster.assign_power_curve
 
+.. _poweroutput_module_label:
 
 Power output
 ==============
@@ -133,6 +140,7 @@ Functions for applying wake losses to a wind speed time series.
    wake_losses.reduce_wind_speed
    wake_losses.get_wind_efficiency_curve
 
+.. _modelchain_module_label:
 
 ModelChain
 ==============
@@ -161,6 +169,7 @@ Methods of the ModelChain object.
    modelchain.ModelChain.wind_speed_hub
    modelchain.ModelChain.turbine_power_output
 
+.. _tc_modelchain_module_label:
 
 TurbineClusterModelChain
 ========================
@@ -190,6 +199,8 @@ Methods of the TurbineClusterModelChain object.
    turbine_cluster_modelchain.TurbineClusterModelChain.wind_speed_hub
    turbine_cluster_modelchain.TurbineClusterModelChain.turbine_power_output
 
+
+.. _tools_module_label:
 
 Tools
 ==============
