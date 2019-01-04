@@ -1,4 +1,4 @@
-v0.1.0 (expected January 14, 2019)
+v0.1.0 (expected January 16, 2019)
 ++++++++++++++++++++++++++++++++++
 
 New classes
@@ -29,6 +29,7 @@ Documentation
 #############
 
  * added second example section and jupyter notebook
+ * added model description
 
 
 API changes
