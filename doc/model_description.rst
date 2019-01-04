@@ -6,7 +6,7 @@ Wind power plants
 =================
 
 The windpowerlib provides three classes for modelling wind power as wind turbines (:py:class:`~.wind_turbine.WindTurbine`),
-wind farms (:py:class:`~.wind_farm.WindFarm`) and wind turbine clusters (:py:class:`~.wind_farm.WindFarm`).
+wind farms (:py:class:`~.wind_farm.WindFarm`) and wind turbine clusters (:py:class:`~.wind_turbine_cluster.WindTurbineCluster`).
 
 Descisptions can also be found in the sections
 :ref:`wind_turbine_label`, :ref:`wind_farm_label` and :ref:`wind_turbine_cluster_label`.
@@ -44,12 +44,15 @@ average reduction of wind speeds within a wind farm induced by wake losses depen
 were taken from the dena-Netzstudie II and the dissertation of Kaspar Knorr
 (for references see :py:func:`~.get_wind_efficiency_curve`).
 The following graph shows all provided wind efficiency curves. The mean wind efficiency curves were calculated in
-the dena-Netzstudie II and by Kaspar Knorr by averaging wind efficiency curves of 12 wind farm distributed over Germany (dena) or
+the dena-Netzstudie II and by Kaspar Knorr by averaging wind efficiency curves of 12 wind farms distributed over Germany (dena) or
 respectively of over 2000 wind farms in Germany (Knorr). Curves with the appendix 'extreme'
 are wind efficiency curves of single wind farms that are extremely deviating from the respective
 mean wind efficiency curve.
 
-todo: add graph of provided curves
+.. 	image:: _files/wind_efficiency_curves.svg
+   :scale: 99 %
+   :alt: Wind efficiency curves
+   :align: center
 
 The second option of considering wake losses is applying them to power curves by reducing the power values
 by a constant or a wind speed depending wind farm efficiency (see :py:func:`~.wake_losses_to_power_curve`).
