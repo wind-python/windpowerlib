@@ -34,7 +34,7 @@ class TestWakeLosses:
 
     def test_get_wind_efficiency_curve_one(self):
         """Test get_wind_efficiency_curve() for one curve."""
-        wec = get_wind_efficiency_curve().sum()
+        wec = get_wind_efficiency_curve('dena_mean').sum()
         wec_exp = pd.Series({'efficiency': 162.45047,
                              'wind_speed': 1915.23620})
         assert_series_equal(wec.sort_index(), wec_exp.sort_index())

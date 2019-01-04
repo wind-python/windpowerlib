@@ -52,5 +52,5 @@ Contributors
 ############
 
  * Sabine Haas
- * Birgit Schachler
  * Uwe Krien
+ * Birgit Schachler
