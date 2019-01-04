@@ -108,16 +108,14 @@ class WindTurbine(object):
         self.power_coefficient_curve = power_coefficient_curve
         self.power_curve = power_curve
         self.nominal_power = nominal_power
-        self.fetch_curve = fetch_curve
         self.coordinates = coordinates
 
         self.power_output = None
 
         if self.power_coefficient_curve is None and self.power_curve is None:
-            self.fetch_turbine_data()
+            self.fetch_turbine_data(fetch_curve)
 
-    # ToDo: Have fetch_curve as an input to this function.
-    def fetch_turbine_data(self):
+    def fetch_turbine_data(self, fetch_curve):
         r"""
         Fetches data of the requested wind turbine.
 
@@ -186,22 +184,22 @@ class WindTurbine(object):
                         data = np.vstack((data, np.array(
                             [float(col), float(wpp_df[col])])))
             data = np.delete(data, 0, 0)
-            if self.fetch_curve == 'power_curve':
+            if fetch_curve == 'power_curve':
                 df = pd.DataFrame(data, columns=['wind_speed', 'power'])
-            if self.fetch_curve == 'power_coefficient_curve':
+            if fetch_curve == 'power_coefficient_curve':
                 df = pd.DataFrame(data, columns=['wind_speed',
                                                  'power coefficient'])
             nominal_power = wpp_df['p_nom'].iloc[0]
             return df, nominal_power
-        if self.fetch_curve == 'power_curve':
+        if fetch_curve == 'power_curve':
             filename = 'power_curves.csv'
             self.power_curve, p_nom = restructure_data()
-        elif self.fetch_curve == 'power_coefficient_curve':
+        elif fetch_curve == 'power_coefficient_curve':
             filename = 'power_coefficient_curves.csv'
             self.power_coefficient_curve, p_nom = restructure_data()
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
-                             self.fetch_curve) + "`fetch_curve` must be " +
+                             fetch_curve) + "`fetch_curve` must be " +
                              "'power_curve' or 'power_coefficient_curve'.")
         if self.nominal_power is None:
             self.nominal_power = p_nom
