@@ -62,6 +62,7 @@ Further functionalities, like the modelling of wind farms and wind turbine clust
  * `TurbineClusterModelChain example (Jupyter notebook) <https://raw.githubusercontent.com/wind-python/windpowerlib/release_preparation/example/basic_example.ipynb>`_
  * `Example data file <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/weather.csv>`_
 
+You can also look at the examples in the `Examples <https://windpowerlib.readthedocs.io/en/latest/examples.html>`_ section.
 
 Contributing
 ==============

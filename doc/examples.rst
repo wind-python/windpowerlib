@@ -1,4 +1,4 @@
-.. _example_section_label:
+.. _examples_section_label:
 
 #############
 Examples
