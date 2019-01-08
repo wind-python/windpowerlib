@@ -9,6 +9,7 @@ Contents:
    
    getting_started
    examples
+   model_description
    whats_new
    modules
 

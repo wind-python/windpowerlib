@@ -4,6 +4,7 @@
 API
 #############
 
+
 Classes
 =========
 
@@ -16,6 +17,7 @@ Classes
    modelchain.ModelChain
    turbine_cluster_modelchain.TurbineClusterModelChain
 
+.. _temperature_module_label:
 
 Temperature
 ==============
@@ -26,6 +28,8 @@ Function for calculating air temperature at hub height.
    :toctree: temp/
 
    temperature.linear_gradient
+
+.. _density_module_label:
 
 Density
 ==============
@@ -38,6 +42,7 @@ Functions for calculating air density at hub height.
    density.barometric
    density.ideal_gas
   
+.. _windspeedmodule-label:
 
 Wind speed
 ==============
@@ -50,12 +55,13 @@ Functions for calculating wind speed at hub height.
    wind_speed.logarithmic_profile
    wind_speed.hellman
    
+.. _wind_turbine_label:
 
 Wind turbine data
 ====================
 
 Functions and methods to obtain the nominal power as well as 
-power curve or power coefficient curve needed by the :py:class:`~wind_turbine.WindTurbine` class.
+power curve or power coefficient curve needed by the :py:class:`~.wind_turbine.WindTurbine` class.
 
 
 .. autosummary::
@@ -65,12 +71,13 @@ power curve or power coefficient curve needed by the :py:class:`~wind_turbine.Wi
    wind_turbine.get_turbine_types
    wind_turbine.read_turbine_data
 
+.. _wind_farm_label:
 
 Wind farm calculations
 ======================
 
 Functions and methods to calculate the mean hub height, installed power as well
-as the aggregated power curve of a :py:class:`~wind_farm.WindFarm` object.
+as the aggregated power curve of a :py:class:`~.wind_farm.WindFarm` object.
 
 
 .. autosummary::
@@ -80,14 +87,15 @@ as the aggregated power curve of a :py:class:`~wind_farm.WindFarm` object.
    wind_farm.WindFarm.get_installed_power
    wind_farm.WindFarm.assign_power_curve
 
+.. _wind_turbine_cluster_label:
 
 Wind turbine cluster calculations
 =================================
 
 Functions and methods to calculate the mean hub height, installed power as well
-as the aggregated power curve of a :py:class:`~wind_turbine_cluster.WindTurbineCluster` object.
+as the aggregated power curve of a :py:class:`~.wind_turbine_cluster.WindTurbineCluster` object.
 This is realized in a new module as the functions differ from the functions in
-the :py:class:`~wind_farm.WindFarm` class.
+the :py:class:`~.wind_farm.WindFarm` class.
 
 .. autosummary::
    :toctree: temp/
@@ -96,6 +104,7 @@ the :py:class:`~wind_farm.WindFarm` class.
    wind_turbine_cluster.WindTurbineCluster.get_installed_power
    wind_turbine_cluster.WindTurbineCluster.assign_power_curve
 
+.. _poweroutput_module_label:
 
 Power output
 ==============
@@ -132,8 +141,8 @@ Functions for applying wake losses to a wind speed time series.
 
    wake_losses.reduce_wind_speed
    wake_losses.get_wind_efficiency_curve
-   wake_losses.display_wind_efficiency_curves
 
+.. _modelchain_module_label:
 
 ModelChain
 ==============
@@ -162,6 +171,7 @@ Methods of the ModelChain object.
    modelchain.ModelChain.wind_speed_hub
    modelchain.ModelChain.turbine_power_output
 
+.. _tc_modelchain_module_label:
 
 TurbineClusterModelChain
 ========================
@@ -191,6 +201,8 @@ Methods of the TurbineClusterModelChain object.
    turbine_cluster_modelchain.TurbineClusterModelChain.wind_speed_hub
    turbine_cluster_modelchain.TurbineClusterModelChain.turbine_power_output
 
+
+.. _tools_module_label:
 
 Tools
 ==============

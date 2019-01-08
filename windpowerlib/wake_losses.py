@@ -25,8 +25,9 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     wind_speed : pandas.Series or numpy.array
         Wind speed time series.
     wind_efficiency_curve_name : string
-        Name of the wind efficiency curve. Use get_wind_efficiency_curve() to
-        get all provided wind efficiency curves. Default: 'dena_mean'.
+        Name of the wind efficiency curve. Use
+        :py:func:`~.get_wind_efficiency_curve` to get all provided wind
+        efficiency curves. Default: 'dena_mean'.
 
     Returns
     -------
@@ -55,15 +56,16 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     return reduced_wind_speed
 
 
-def get_wind_efficiency_curve(curve_name='dena_mean'):
+def get_wind_efficiency_curve(curve_name='all'):
     r"""
     Reads wind efficiency curve(s) specified in `curve_name`.
 
     Parameters
     ----------
     curve_name : str or list
-        Specifies the curve. Default: 'dena_mean'. Use 'all' to get all curves
-        in a MultiIndex DataFrame.
+        Specifies the curve. Use 'all' to get all curves in a MultiIndex
+        DataFrame or one of the curve names to retrieve a single curve.
+        Default: 'all'.
 
     Returns
     -------
@@ -80,7 +82,7 @@ def get_wind_efficiency_curve(curve_name='dena_mean'):
     average curve from 12 wind farm distributed over Germany ([1]_) or
     respectively an average from over 2000 wind farms in Germany ([2]_). Curves
     with the appendix 'extreme' are wind efficiency curves of single wind farms
-    that are extremely deviating from the resprective mean wind efficiency
+    that are extremely deviating from the respective mean wind efficiency
     curve. For more information see [1]_ and [2]_.
 
     References
