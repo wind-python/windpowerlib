@@ -296,36 +296,32 @@ def load_turbine_data_from_oedb():
 def get_turbine_types(print_out=True):
     r"""
     Get the names of all possible wind turbine types for which the power
-    coefficient curve or power curve is provided in the data files in
-    the directory windpowerlib/data.
+    coefficient curve or power curve is provided in the Open Energy Data Base
+    (oedb).
 
     Parameters
     ----------
     print_out : boolean
-        Directly prints the list of types if set to True. Default: True.
-
-    Other Parameters
-    ----------------
-    datapath : string, optional
-        Path where the data file is stored. Default: './data'
-    filename : string, optional
-        Name of data file. Provided data files are 'power_curves.csv' and
-        'power_coefficient_curves.csv'. Default: 'power_curves.csv'.
+        Directly prints a tabular containing the turbine types in column
+        'turbine_type'. Default: True.
 
     Examples
     --------
     >>> from windpowerlib import wind_turbine
     >>> turbines = wind_turbine.get_turbine_types(print_out=False)
-    >>> print(turbines[turbines["turbine_id"].str.contains("ENERCON")].iloc[0])
+    >>> print(turbines[turbines["turbine_id"].str.contains("ENERCON")].iloc[0])  # todo adapt example
     turbine_id    ENERCON E 101 3000
     p_nom                    3000000
     Name: 25, dtype: object
 
-    """
-    df = read_turbine_data(**kwargs)
+    """ # todo add cp-curves
+    df = load_turbine_data_from_oedb()
+    curves_df = df.iloc[df.loc[df['has_power_curve'] == True].index][
+        ['manufacturer', 'turbine_type']]
 
     if print_out:
-        pd.set_option('display.max_rows', len(df))
-        print(df[['turbine_id', 'p_nom']])
+        pd.set_option('display.max_rows', len(curves_df))
+        print(curves_df)
         pd.reset_option('display.max_rows')
-    return df[['turbine_id', 'p_nom']]
+    return curves_df
+
