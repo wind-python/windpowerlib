@@ -14,6 +14,10 @@ import sys
 import os
 import numpy as np
 
+try:
+    import requests as rq
+except ImportError:
+    rq = None
 
 class WindTurbine(object):
     r"""
@@ -250,7 +254,46 @@ def read_turbine_data(source='oedb', **kwargs):
     return df
 
 
-def get_turbine_types(print_out=True, **kwargs):
+def load_turbine_data_from_oedb():
+    r"""
+
+
+    Returns
+    -------
+    turbine_data : pd.DataFrame
+        Contains turbine data of different turbine types like 'manufacturer',
+        nominal power ('installed_capacity_kw')
+
+    """
+    if rq:
+        # url of Open Energy Platform that contains the oedb
+        oep_url = 'http://oep.iks.cs.ovgu.de/'
+        # location of data
+        schema = 'model_draft'
+        table = 'openfred_windpower_powercurve'
+        # column = 'column=id&column=version'
+        # orderby = 'order_by=version'
+
+        # load data
+        result = rq.get(oep_url + '/api/v0/schema/' + schema +
+                              '/tables/' + table + '/rows/?', )
+        if result.status_code == 200:
+            logging.info("Data base connection successful.")
+        else:
+            raise ConnectionError("Data base connection not successful. " +
+                                  "Error: ".format(result.status_code))
+        # extract data
+        turbine_data = pd.DataFrame(result.json())
+        # dump data as csv
+        turbine_data.to_csv(os.path.join(os.path.dirname(__file__), 'data',
+                                         'turbine_data_oedb.csv'))
+    else:
+        raise ImportError('If you want to load turbine data from the oedb' +
+                          'you have to install the requests package.' +
+                          'see https://pypi.org/project/requests/')
+    return turbine_data
+
+def get_turbine_types(print_out=True):
     r"""
     Get the names of all possible wind turbine types for which the power
     coefficient curve or power curve is provided in the data files in
