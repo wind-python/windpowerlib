@@ -119,7 +119,7 @@ def initialize_wind_turbines():
     # if you want to use the power coefficient curve change the value of
     # 'fetch_curve' to 'power_coefficient_curve'
     enerconE126 = {
-        'name': 'ENERCON E 126 7500',  # turbine name as in register
+        'name': 'E-126/4200',  # turbine name as in register #
         'hub_height': 135,  # in m
         'rotor_diameter': 127,  # in m
         'fetch_curve': 'power_curve'  # fetch power curve

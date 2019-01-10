@@ -19,7 +19,7 @@ try:
 except ImportError:
     rq = None
 
-class WindTurbine(object):
+class WindTurbine(object): # todo add data_source
     r"""
     Defines a standard set of wind turbine attributes.
 
@@ -104,7 +104,8 @@ class WindTurbine(object):
 
     def __init__(self, name, hub_height, rotor_diameter=None,
                  power_coefficient_curve=None, power_curve=None,
-                 nominal_power=None, fetch_curve=None, coordinates=None):
+                 nominal_power=None, fetch_curve=None, coordinates=None,
+                 data_source='oedb'):
 
         self.name = name
         self.hub_height = hub_height
@@ -117,9 +118,9 @@ class WindTurbine(object):
         self.power_output = None
 
         if self.power_coefficient_curve is None and self.power_curve is None:
-            self.fetch_turbine_data(fetch_curve)
+            self.fetch_turbine_data(fetch_curve, data_source)
 
-    def fetch_turbine_data(self, fetch_curve):
+    def fetch_turbine_data(self, fetch_curve, data_source): # todo add parameter description
         r"""
         Fetches data of the requested wind turbine.
 
@@ -144,7 +145,7 @@ class WindTurbine(object):
         ...    'name': 'ENERCON E 126 7500',
         ...    'fetch_curve': 'power_coefficient_curve'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.power_coefficient_curve['power coefficient'][5])
+        >>> print(e126.power_coefficient_curve['power coefficient'][5]) # todo adapt example
         0.423
         >>> print(e126.nominal_power)
         7500000
@@ -168,38 +169,45 @@ class WindTurbine(object):
                 the corresponding wind speeds in m/s.
 
             """
-            df = read_turbine_data(filename=filename)
-            wpp_df = df[df.turbine_id == self.name]
-            # if turbine not in data file
-            if wpp_df.shape[0] == 0:
-                pd.set_option('display.max_rows', len(df))
-                logging.info('Possible types: \n{0}'.format(df.turbine_id))
-                pd.reset_option('display.max_rows')
-                sys.exit('Cannot find the wind converter type: {0}'.format(
-                    self.name))
-            # if turbine in data file write power (coefficient) curve values
-            # to 'data' array
-            ncols = ['turbine_id', 'p_nom', 'source', 'modificationtimestamp']
-            data = np.array([0, 0])
-            for col in wpp_df.keys():
-                if col not in ncols:
-                    if wpp_df[col].iloc[0] is not None and not np.isnan(
-                            float(wpp_df[col].iloc[0])):
-                        data = np.vstack((data, np.array(
-                            [float(col), float(wpp_df[col])])))
-            data = np.delete(data, 0, 0)
+            df = read_turbine_data(source=data_source)
+            if data_source == 'oedb':
+                df.set_index('wea_type', inplace=True)
+                data = df.loc[self.name]['power_curve']
+                nominal_power = df.loc[self.name][
+                                    'installed_capacity_kw'] * 1000
+            else:
+                wpp_df = df[df.turbine_id == self.name]
+                # if turbine not in data file
+                if wpp_df.shape[0] == 0:
+                    pd.set_option('display.max_rows', len(df))
+                    logging.info('Possible types: \n{0}'.format(df.turbine_id))
+                    pd.reset_option('display.max_rows')
+                    sys.exit('Cannot find the wind converter type: {0}'.format(
+                        self.name))
+                # if turbine in data file write power (coefficient) curve values
+                # to 'data' array
+                ncols = ['turbine_id', 'p_nom', 'source', 'modificationtimestamp']
+                data = np.array([0, 0])
+                for col in wpp_df.keys():
+                    if col not in ncols:
+                        if wpp_df[col].iloc[0] is not None and not np.isnan(
+                                float(wpp_df[col].iloc[0])):
+                            data = np.vstack((data, np.array(
+                                [float(col), float(wpp_df[col])])))
+                data = np.delete(data, 0, 0)
+                nominal_power = wpp_df['p_nom'].iloc[0]
             if fetch_curve == 'power_curve':
                 df = pd.DataFrame(data, columns=['wind_speed', 'power'])
+                if data_source == 'oedb':
+                    # power values in W
+                    df['power'] = df['power'] * 1000
             if fetch_curve == 'power_coefficient_curve':
                 df = pd.DataFrame(data, columns=['wind_speed',
                                                  'power coefficient'])
-            nominal_power = wpp_df['p_nom'].iloc[0]
             return df, nominal_power
         if fetch_curve == 'power_curve':
-            filename = 'power_curves.csv'
             self.power_curve, p_nom = restructure_data()
         elif fetch_curve == 'power_coefficient_curve':
-            filename = 'power_coefficient_curves.csv'
             self.power_coefficient_curve, p_nom = restructure_data()
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
@@ -242,8 +250,7 @@ def read_turbine_data(source='oedb', **kwargs):
 
     """
     if source == 'oedb':
-        # todo: add connection to oedb
-        pass
+        df = load_turbine_data_from_oedb()
     else:
         if 'datapath' not in kwargs:
             kwargs['datapath'] = os.path.join(os.path.dirname(__file__),
@@ -325,3 +332,5 @@ def get_turbine_types(print_out=True):
         pd.reset_option('display.max_rows')
     return curves_df
 
+if __name__ == "__main__":
+    get_turbine_types(print_out=True) # todo delete
