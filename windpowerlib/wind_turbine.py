@@ -94,11 +94,12 @@ class WindTurbine(object): # todo add data_source
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'name': 'ENERCON E 126 7500',
-    ...    'fetch_curve': 'power_curve'}
+    ...    'name': 'E-126/4200',
+    ...    'fetch_curve': 'power_curve',
+    ...    'data_source': 'oedb'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> print(e126.nominal_power)
-    7500000
+    4200000.0
 
     """
 
@@ -142,13 +143,26 @@ class WindTurbine(object): # todo add data_source
         >>> enerconE126 = {
         ...    'hub_height': 135,
         ...    'rotor_diameter': 127,
-        ...    'name': 'ENERCON E 126 7500',
-        ...    'fetch_curve': 'power_coefficient_curve'}
+        ...    'name': 'E-126/4200',
+        ...    'fetch_curve': 'power_coefficient_curve',
+        ...    'data_source': 'oedb'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.power_coefficient_curve['power coefficient'][5]) # todo adapt example
-        0.423
+        >>> print(e126.power_coefficient_curve['power coefficient'][5])
+        0.44
         >>> print(e126.nominal_power)
-        7500000
+        4200000.0
+
+        >>> example_turbine = {
+        ...    'hub_height': 100,
+        ...    'rotor_diameter': 70,
+        ...    'name': 'DUMMY 3',
+        ...    'fetch_curve': 'power_curve',
+        ...    'data_source': 'example_power_curves.csv'}
+        >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
+        >>> print(e_t_1.power_curve['power'][7])
+        18000.0
+        >>> print(e_t_1.nominal_power)
+        150000
 
         """
 
@@ -324,13 +338,22 @@ def get_turbine_types(print_out=True):
     Examples
     --------
     >>> from windpowerlib import wind_turbine
-    >>> turbines = wind_turbine.get_turbine_types(print_out=False)
-    >>> print(turbines[turbines["turbine_id"].str.contains("ENERCON")].iloc[0])  # todo adapt example
-    turbine_id    ENERCON E 101 3000
-    p_nom                    3000000
-    Name: 25, dtype: object
+    >>> df = wind_turbine.get_turbine_types(print_out=False)
+    >>> print(df[df["turbine_type"].str.contains("E-126")].iloc[0])
+    manufacturer          Enercon
+    turbine_type       E-126/4200
+    has_power_curve          True
+    has_cp_curve             True
+    Name: 5, dtype: object
+    >>> print(df[df["manufacturer"].str.contains("Enercon")].iloc[0])
+    manufacturer          Enercon
+    turbine_type       E-101/3050
+    has_power_curve          True
+    has_cp_curve             True
+    Name: 1, dtype: object
 
     """
+
     df = load_turbine_data_from_oedb()
     cp_curves_df = df.iloc[df.loc[df['has_cp_curve'] == True].index][
         ['manufacturer', 'turbine_type', 'has_cp_curve']]
