@@ -318,14 +318,10 @@ def load_turbine_data_from_oedb():
         # location of data
         schema = 'model_draft'
         table = 'openfred_windpower_powercurve'
-        # column = 'column=id&column=version'
-        # orderby = 'order_by=version'
-
         # load data
-        # result = rq.get(oep_url + '/api/v0/schema/' + schema +
-        #                       '/tables/' + table + '/rows/?', )
-        result = rq.get(oep_url + '/api/v0/schema/' + schema +
-                        '/tables/' + table + '/rows/?', verify=False, )  # todo: after SSL certificate renewed: verify = True
+        result = rq.get(
+            oep_url + '/api/v0/schema/{}/tables/{}/rows/?'.format(
+                schema, table), )
         if result.status_code == 200:
             logging.info("Data base connection successful.")
         else:
