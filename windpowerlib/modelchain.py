@@ -316,9 +316,9 @@ class ModelChain(object):
                 "or 'log_interpolation_extrapolation'.")
         return wind_speed_hub
 
-    def turbine_power_output(self, wind_speed_hub, density_hub):
+    def calculate_power_output(self, wind_speed_hub, density_hub):
         r"""
-        Calculates the power output of the wind turbine.
+        Calculates the power output of the wind turbine. # todo power plant output????
 
         The method specified by the parameter `power_output_model` is used.
 
@@ -419,6 +419,6 @@ class ModelChain(object):
         density_hub = (None if (self.power_output_model == 'power_curve' and
                                 self.density_correction is False)
                        else self.density_hub(weather_df))
-        self.power_output = self.turbine_power_output(wind_speed_hub,
-                                                      density_hub)
+        self.power_output = self.calculate_power_output(wind_speed_hub,
+                                                        density_hub)
         return self
