@@ -79,7 +79,7 @@ class WindFarm(object):
     >>> example_farm = wind_farm.WindFarm(**example_farm_data)
     >>> example_farm.installed_power = example_farm.get_installed_power()
     >>> print(example_farm.installed_power)
-    4200000
+    25200000.0
 
     """
     def __init__(self, name, wind_turbine_fleet, coordinates=None,
