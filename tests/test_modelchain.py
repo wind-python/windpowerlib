@@ -13,7 +13,7 @@ class TestModelChain:
     def setup_class(self):
         self.test_turbine = {'hub_height': 100,
                              'rotor_diameter': 80,
-                             'name': 'ENERCON E 126 7500',
+                             'name': 'E-126/4200',
                              'fetch_curve': 'power_curve'}
 
     def test_temperature_hub(self):
@@ -185,11 +185,12 @@ class TestModelChain:
 
         test_turbine = {'hub_height': 100,
                         'rotor_diameter': 80,
-                        'name': 'ENERCON E 126 7500',
+                        'name': 'E-126/4200',
                         'fetch_curve': 'power_curve'}
 
         # Test with default parameters of modelchain (power curve)
-        power_output_exp = pd.Series(data=[1731887.39768, 3820152.27489],
+        power_output_exp = pd.Series(data=[1637405.4840444783,
+                                           3154438.3894902095],
                                      name='feedin_power_plant')
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine))
         test_mc.run_model(weather_df)
@@ -199,7 +200,8 @@ class TestModelChain:
         test_modelchain = {'wind_speed_model': 'hellman',
                            'power_output_model': 'power_curve',
                            'density_correction': True}
-        power_output_exp = pd.Series(data=[1433937.37959, 3285183.55084],
+        power_output_exp = pd.Series(data=[1366958.544547462,
+                                           2823402.837201821],
                                      name='feedin_power_plant')
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                 **test_modelchain)
@@ -207,7 +209,8 @@ class TestModelChain:
         assert_series_equal(test_mc.power_output, power_output_exp)
 
         # Test with power coefficient curve and hellman
-        power_output_exp = pd.Series(data=[559060.36156, 1251143.98621],
+        power_output_exp = pd.Series(data=[534137.5112701517,
+                                           1103611.1736067757],
                                      name='feedin_power_plant')
         test_turbine['fetch_curve'] = 'power_coefficient_curve'
         test_modelchain = {'wind_speed_model': 'hellman',
@@ -252,7 +255,7 @@ class TestModelChain:
         with pytest.raises(TypeError):
             test_turbine = {'hub_height': 100,
                             'rotor_diameter': 80,
-                            'name': 'ENERCON E 126 7500',
+                            'name': 'E-126/4200',
                             'fetch_curve': 'power_curve'}
             test_modelchain = {'power_output_model': 'power_coefficient_curve',
                                'density_correction': True}
@@ -262,7 +265,7 @@ class TestModelChain:
         with pytest.raises(TypeError):
             test_turbine = {'hub_height': 100,
                             'rotor_diameter': 80,
-                            'name': 'ENERCON E 126 7500',
+                            'name': 'E-126/4200',
                             'fetch_curve': 'power_coefficient_curve'}
             test_modelchain = {'power_output_model': 'power_curve',
                                'density_corr': True}

@@ -68,8 +68,9 @@ class WindFarm(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'name': 'ENERCON E 126 7500',
-    ...    'fetch_curve': 'power_curve'}
+    ...    'name': 'E-126/4200',
+    ...    'fetch_curve': 'power_curve',
+    ...    'data_source': 'oedb'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> example_farm_data = {
     ...    'name': 'example_farm',
@@ -78,7 +79,7 @@ class WindFarm(object):
     >>> example_farm = wind_farm.WindFarm(**example_farm_data)
     >>> example_farm.installed_power = example_farm.get_installed_power()
     >>> print(example_farm.installed_power)
-    45000000
+    4200000
 
     """
     def __init__(self, name, wind_turbine_fleet, coordinates=None,
