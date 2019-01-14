@@ -282,8 +282,10 @@ def load_turbine_data_from_oedb():
         # orderby = 'order_by=version'
 
         # load data
+        # result = rq.get(oep_url + '/api/v0/schema/' + schema +
+        #                       '/tables/' + table + '/rows/?', )
         result = rq.get(oep_url + '/api/v0/schema/' + schema +
-                              '/tables/' + table + '/rows/?', )
+                        '/tables/' + table + '/rows/?', verify=False, )  # todo: after SSL certificate renewed: verify = True
         if result.status_code == 200:
             logging.info("Data base connection successful.")
         else:
@@ -321,11 +323,14 @@ def get_turbine_types(print_out=True):
     p_nom                    3000000
     Name: 25, dtype: object
 
-    """ # todo add cp-curves
+    """
     df = load_turbine_data_from_oedb()
-    curves_df = df.iloc[df.loc[df['has_power_curve'] == True].index][
-        ['manufacturer', 'turbine_type']]
-
+    cp_curves_df = df.iloc[df.loc[df['has_cp_curve'] == True].index][
+        ['manufacturer', 'turbine_type', 'has_cp_curve']]
+    p_curves_df = df.iloc[df.loc[df['has_power_curve'] == True].index][
+        ['manufacturer', 'turbine_type', 'has_power_curve']]
+    curves_df= pd.merge(p_curves_df, cp_curves_df, how='outer',
+                        sort=True).fillna(False)
     if print_out:
         pd.set_option('display.max_rows', len(curves_df))
         print(curves_df)
