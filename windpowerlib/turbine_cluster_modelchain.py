@@ -273,6 +273,6 @@ class TurbineClusterModelChain(ModelChain):
             wind_speed_hub = wake_losses.reduce_wind_speed(
                 wind_speed_hub,
                 wind_efficiency_curve_name=self.wake_losses_model)
-        self.power_output = self.turbine_power_output(wind_speed_hub,
-                                                      density_hub)
+        self.power_output = self.calculate_power_output(wind_speed_hub,
+                                                        density_hub)
         return self

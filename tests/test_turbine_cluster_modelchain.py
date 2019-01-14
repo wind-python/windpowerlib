@@ -35,11 +35,11 @@ class TestTurbineClusterModelChain:
                                            np.array([2, 10, 0, 8, 10, 0])])
         self.test_turbine = {'hub_height': 100,
                              'rotor_diameter': 80,
-                             'name': 'ENERCON E 126 7500',
+                             'name': 'E-126/4200',
                              'fetch_curve': 'power_curve'}
         self.test_turbine_2 = {'hub_height': 90,
                                'rotor_diameter': 60,
-                               'name': 'VESTAS V 90 1800',
+                               'name': 'V90/2000',
                                'fetch_curve': 'power_curve'}
         self.test_farm = {'name': 'test farm',
                           'wind_turbine_fleet': [
@@ -65,8 +65,8 @@ class TestTurbineClusterModelChain:
                       'smoothing_order': 'wind_farm_power_curves'}
 
         # Test modelchain with default values
-        power_output_exp = pd.Series(data=[4409211.803349806,
-                                           10212484.219845157],
+        power_output_exp = pd.Series(data=[4198361.4830405945,
+                                           8697966.121234536],
                                      name='feedin_power_plant')
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=wf.WindFarm(**self.test_farm), **parameters)
@@ -77,8 +77,8 @@ class TestTurbineClusterModelChain:
         parameters['wake_losses_model'] = 'constant_efficiency'
         test_wind_farm = wf.WindFarm(**self.test_farm)
         test_wind_farm.efficiency = 0.9
-        power_output_exp = pd.Series(data=[4676095.973725522,
-                                           10314411.142196147],
+        power_output_exp = pd.Series(data=[4420994.806920091,
+                                           8516983.651623568],
                                      name='feedin_power_plant')
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=test_wind_farm, **parameters)
@@ -89,8 +89,8 @@ class TestTurbineClusterModelChain:
         parameters['smoothing'] = 'True'
         test_wind_farm = wf.WindFarm(**self.test_farm)
         test_wind_farm.efficiency = 0.9
-        power_output_exp = pd.Series(data=[5015168.554748144,
-                                           10389592.995632712],
+        power_output_exp = pd.Series(data=[4581109.03847444,
+                                           8145581.914240712],
                                      name='feedin_power_plant')
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=test_wind_farm, **parameters)
@@ -100,8 +100,8 @@ class TestTurbineClusterModelChain:
         # Test wind farm with different turbine types (smoothing)
         test_wind_farm = wf.WindFarm(**self.test_farm_2)
         test_wind_farm.efficiency = 0.9
-        power_output_exp = pd.Series(data=[7035990.555719288,
-                                           14104709.373232642],
+        power_output_exp = pd.Series(data=[6777087.9658657005,
+                                           12180374.036660176],
                                      name='feedin_power_plant')
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=test_wind_farm, **parameters)
@@ -112,8 +112,8 @@ class TestTurbineClusterModelChain:
         parameters['smoothing_order'] = 'turbine_power_curves'
         test_wind_farm = wf.WindFarm(**self.test_farm_2)
         test_wind_farm.efficiency = 0.9
-        power_output_exp = pd.Series(data=[7067892.325652927,
-                                           14103159.481573664],
+        power_output_exp = pd.Series(data=[6790706.001026006,
+                                           12179417.461328149],
                                      name='feedin_power_plant')
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=test_wind_farm, **parameters)
@@ -127,8 +127,8 @@ class TestTurbineClusterModelChain:
                       'smoothing_order': 'wind_farm_power_curves'}
 
         # Test modelchain with default values
-        power_output_exp = pd.Series(data=[10683892.759175435,
-                                           24399645.35183305],
+        power_output_exp = pd.Series(data=[10363047.755401008,
+                                           21694496.68221325],
                                      name='feedin_power_plant')
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=wtc.WindTurbineCluster(**self.test_cluster),
@@ -141,8 +141,8 @@ class TestTurbineClusterModelChain:
         test_cluster = wtc.WindTurbineCluster(**self.test_cluster)
         for farm in test_cluster.wind_farms:
             farm.efficiency = 0.9
-        power_output_exp = pd.Series(data=[11333638.728757974,
-                                           24561046.12113034],
+        power_output_exp = pd.Series(data=[10920128.570572512,
+                                           21273144.336885825],
                                      name='feedin_power_plant')
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=test_cluster, **parameters)
@@ -154,8 +154,8 @@ class TestTurbineClusterModelChain:
         test_cluster = wtc.WindTurbineCluster(**self.test_cluster)
         for farm in test_cluster.wind_farms:
             farm.efficiency = 0.9
-        power_output_exp = pd.Series(data=[12055848.06813206,
-                                           24494381.45222553],
+        power_output_exp = pd.Series(data=[11360309.77979467,
+                                           20328652.64490018],
                                      name='feedin_power_plant')
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=test_cluster, **parameters)
@@ -166,8 +166,8 @@ class TestTurbineClusterModelChain:
         test_cluster = wtc.WindTurbineCluster(**self.test_cluster)
         for farm in test_cluster.wind_farms:
             farm.efficiency = 0.9
-        power_output_exp = pd.Series(data=[12055848.06813206,
-                                           24494381.45222553],
+        power_output_exp = pd.Series(data=[11360309.77979467,
+                                           20328652.64490018],
                                      name='feedin_power_plant')
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=test_cluster, **parameters)
@@ -179,8 +179,8 @@ class TestTurbineClusterModelChain:
         test_cluster = wtc.WindTurbineCluster(**self.test_cluster)
         for farm in test_cluster.wind_farms:
             farm.efficiency = 0.9
-        power_output_exp = pd.Series(data=[12086527.665961245,
-                                           24492153.631181397],
+        power_output_exp = pd.Series(data=[11373183.797085874,
+                                           20325877.105744187],
                                      name='feedin_power_plant')
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=test_cluster, **parameters)

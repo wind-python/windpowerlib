@@ -212,7 +212,7 @@ def run_example():
 
     """
     weather = mc_e.get_weather_data('weather.csv')
-    my_turbine, e126 = mc_e.initialize_wind_turbines()
+    my_turbine, e126, dummy_turbine = mc_e.initialize_wind_turbines()
     example_farm, example_farm_2 = initialize_wind_farms(my_turbine, e126)
     example_cluster = initialize_wind_turbine_cluster(example_farm,
                                                       example_farm_2)

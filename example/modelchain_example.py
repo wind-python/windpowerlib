@@ -84,14 +84,13 @@ def initialize_wind_turbines():
     r"""
     Initializes two :class:`~.wind_turbine.WindTurbine` objects.
 
-    Function shows two ways to initialize a WindTurbine object. You can either
-    specify your own turbine, as done below for 'myTurbine', or fetch power
-    and/or power coefficient curve data from data files provided by the
-    windpowerlib, as done for the 'enerconE126'.
-    Execute ``windpowerlib.wind_turbine.get_turbine_types()`` or
-    ``windpowerlib.wind_turbine.get_turbine_types(
-    filename='power_coefficient_curves.csv')`` to get a list of all wind
-    turbines for which power and power coefficient curves respectively are
+    Function shows three ways to initialize a WindTurbine object. You can
+    either specify your own turbine, as done below for 'myTurbine', or fetch
+    power and/or power coefficient curve data from the Open Energy Database
+    (oedb), as done for the 'enerconE126', or provide your turbine data in csv
+    files as done for 'dummyTurbine' with an example file.
+    Execute ``windpowerlib.wind_turbine.get_turbine_types()`` to get a list of
+    all wind turbines for which power and power coefficient curves are
     provided.
 
     Returns
@@ -100,8 +99,8 @@ def initialize_wind_turbines():
 
     """
 
-    # specification of own wind turbine (Note: power coefficient values and
-    # nominal power have to be in Watt)
+    # specification of own wind turbine (Note: power values and nominal power
+    # have to be in Watt)
     myTurbine = {
         'name': 'myTurbine',
         'nominal_power': 3e6,  # in W
@@ -115,22 +114,35 @@ def initialize_wind_turbines():
     # initialize WindTurbine object
     my_turbine = WindTurbine(**myTurbine)
 
-    # specification of wind turbine where power curve is provided
+    # specification of wind turbine where power curve is provided in the oedb
     # if you want to use the power coefficient curve change the value of
     # 'fetch_curve' to 'power_coefficient_curve'
     enerconE126 = {
-        'name': 'ENERCON E 126 7500',  # turbine name as in register
+        'name': 'E-126/4200',  # turbine type as in register #
         'hub_height': 135,  # in m
         'rotor_diameter': 127,  # in m
-        'fetch_curve': 'power_curve'  # fetch power curve
+        'fetch_curve': 'power_curve',  # fetch power curve #
+        'data_source': 'oedb'  # data source oedb or name of csv file
     }
     # initialize WindTurbine object
     e126 = WindTurbine(**enerconE126)
 
-    return my_turbine, e126
+    # specification of wind turbine where power coefficient curve is provided
+    # by a csv file
+    dummyTurbine = {
+        'name': 'DUMMY 1',  # turbine type as in file #
+        'hub_height': 100,  # in m
+        'rotor_diameter': 70,  # in m
+        'fetch_curve': 'power_coefficient_curve',  # fetch cp curve #
+        'data_source': 'example_power_coefficient_curves.csv'  # data source
+    }
+    # initialize WindTurbine object
+    dummy_turbine = WindTurbine(**dummyTurbine)
+
+    return my_turbine, e126, dummy_turbine
 
 
-def calculate_power_output(weather, my_turbine, e126):
+def calculate_power_output(weather, my_turbine, e126, dummy_turbine):
     r"""
     Calculates power output of wind turbines using the
     :class:`~.modelchain.ModelChain`.
@@ -138,7 +150,9 @@ def calculate_power_output(weather, my_turbine, e126):
     The :class:`~.modelchain.ModelChain` is a class that provides all necessary
     steps to calculate the power output of a wind turbine. You can either use
     the default methods for the calculation steps, as done for 'my_turbine',
-    or choose different methods, as done for the 'e126'.
+    or choose different methods, as done for the 'e126'. Of course, you can
+    also use the default methods while only changing one or two of them, as
+    done for 'dummy_turbine'.
 
     Parameters
     ----------
@@ -147,8 +161,9 @@ def calculate_power_output(weather, my_turbine, e126):
     my_turbine : WindTurbine
         WindTurbine object with self provided power curve.
     e126 : WindTurbine
-        WindTurbine object with power curve from data file provided by the
-        windpowerlib.
+        WindTurbine object with power curve from the Open Energy Database.
+    dummy_turbine : WindTurbine
+        WindTurbine object with power coefficient curve from example file.
 
     """
 
@@ -180,10 +195,17 @@ def calculate_power_output(weather, my_turbine, e126):
     # write power output time series to WindTurbine object
     e126.power_output = mc_e126.power_output
 
+    # power output calculation for example_turbine
+    # own specification for 'power_output_model'
+    mc_example_turbine = ModelChain(
+        dummy_turbine,
+        power_output_model='power_coefficient_curve').run_model(weather)
+    dummy_turbine.power_output = mc_example_turbine.power_output
+
     return
 
 
-def plot_or_print(my_turbine, e126):
+def plot_or_print(my_turbine, e126, dummy_turbine):
     r"""
     Plots or prints power output and power (coefficient) curves.
 
@@ -194,6 +216,8 @@ def plot_or_print(my_turbine, e126):
     e126 : WindTurbine
         WindTurbine object with power curve from data file provided by the
         windpowerlib.
+    dummy_turbine : WindTurbine
+        WindTurbine object with power coefficient curve from example file.
 
     """
 
@@ -201,10 +225,12 @@ def plot_or_print(my_turbine, e126):
     if plt:
         e126.power_output.plot(legend=True, label='Enercon E126')
         my_turbine.power_output.plot(legend=True, label='myTurbine')
+        dummy_turbine.power_output.plot(legend=True, label='dummyTurbine')
         plt.show()
     else:
         print(e126.power_output)
         print(my_turbine.power_output)
+        print(dummy_turbine.power_output)
 
     # plot or print power (coefficient) curve
     if plt:
@@ -239,9 +265,9 @@ def run_example():
 
     """
     weather = get_weather_data('weather.csv')
-    my_turbine, e126 = initialize_wind_turbines()
-    calculate_power_output(weather, my_turbine, e126)
-    plot_or_print(my_turbine, e126)
+    my_turbine, e126, dummy_turbine = initialize_wind_turbines()
+    calculate_power_output(weather, my_turbine, e126, dummy_turbine)
+    plot_or_print(my_turbine, e126, dummy_turbine)
 
 
 if __name__ == "__main__":

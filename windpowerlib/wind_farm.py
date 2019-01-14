@@ -68,8 +68,9 @@ class WindFarm(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'name': 'ENERCON E 126 7500',
-    ...    'fetch_curve': 'power_curve'}
+    ...    'name': 'E-126/4200',
+    ...    'fetch_curve': 'power_curve',
+    ...    'data_source': 'oedb'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> example_farm_data = {
     ...    'name': 'example_farm',
@@ -78,7 +79,7 @@ class WindFarm(object):
     >>> example_farm = wind_farm.WindFarm(**example_farm_data)
     >>> example_farm.installed_power = example_farm.get_installed_power()
     >>> print(example_farm.installed_power)
-    45000000
+    25200000.0
 
     """
     def __init__(self, name, wind_turbine_fleet, coordinates=None,
@@ -260,14 +261,16 @@ class WindFarm(object):
                 # can occure problems during the aggregation
                 if power_curve.iloc[0]['wind_speed'] != 0.0:
                     power_curve = pd.concat(
-                        [power_curve, pd.DataFrame(data={
-                            'power': [0.0], 'wind_speed': [0.0]})])
+                        [pd.DataFrame(data={
+                            'power': [0.0], 'wind_speed': [0.0]}),
+                         power_curve], sort=False)
                 if power_curve.iloc[-1]['power'] != 0.0:
                     power_curve = pd.concat(
                         [power_curve, pd.DataFrame(data={
-                            'power': [0.0],
-                            'wind_speed': [power_curve['wind_speed'].loc[
-                                               power_curve.index[-1]] + 0.5]})])
+                            'power': [0.0], 'wind_speed': [
+                                power_curve['wind_speed'].loc[
+                                    power_curve.index[-1]] + 0.5]})],
+                        sort=False)
             # Add power curves of all turbine types to data frame
             # (multiplied by turbine amount)
             df = pd.concat(

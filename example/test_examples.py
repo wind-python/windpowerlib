@@ -14,10 +14,10 @@ class TestExamples:
     def test_modelchain_example_flh(self):
         # tests full load hours
         weather = mc_e.get_weather_data('weather.csv')
-        my_turbine, e126 = mc_e.initialize_wind_turbines()
-        mc_e.calculate_power_output(weather, my_turbine, e126)
+        my_turbine, e126, dummy_turbine = mc_e.initialize_wind_turbines()
+        mc_e.calculate_power_output(weather, my_turbine, e126, dummy_turbine)
 
-        assert_allclose(1766.6870, (e126.power_output.sum() /
+        assert_allclose(2764.194772, (e126.power_output.sum() /
                                     e126.nominal_power), 0.01)
         assert_allclose(1882.7567, (my_turbine.power_output.sum() /
                                     my_turbine.nominal_power), 0.01)
@@ -25,16 +25,16 @@ class TestExamples:
     def test_turbine_cluster_modelchain_example_flh(self):
         # tests full load hours
         weather = mc_e.get_weather_data('weather.csv')
-        my_turbine, e126 = mc_e.initialize_wind_turbines()
+        my_turbine, e126, dummy_turbine = mc_e.initialize_wind_turbines()
         example_farm, example_farm_2 = tc_mc_e.initialize_wind_farms(
             my_turbine, e126)
         example_cluster = tc_mc_e.initialize_wind_turbine_cluster(
             example_farm, example_farm_2)
         tc_mc_e.calculate_power_output(weather, example_farm, example_cluster)
-        assert_allclose(1586.23527, (example_farm.power_output.sum() /
+        assert_allclose(1956.164053, (example_farm.power_output.sum() /
                                      example_farm.installed_power), 0.01)
         example_cluster.installed_power = example_cluster.get_installed_power()
-        assert_allclose(1813.66122, (example_cluster.power_output.sum() /
+        assert_allclose(2156.794154, (example_cluster.power_output.sum() /
                                      example_cluster.installed_power), 0.01)
 
     def _notebook_run(self, path):
