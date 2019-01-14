@@ -19,6 +19,7 @@ try:
 except ImportError:
     rq = None
 
+
 class WindTurbine(object):
     r"""
     Defines a standard set of wind turbine attributes.
@@ -338,6 +339,7 @@ def load_turbine_data_from_oedb():
                           'see https://pypi.org/project/requests/')
     return turbine_data
 
+
 def get_turbine_types(print_out=True):
     r"""
     Get the names of all possible wind turbine types for which the power
@@ -374,7 +376,7 @@ def get_turbine_types(print_out=True):
         ['manufacturer', 'turbine_type', 'has_cp_curve']]
     p_curves_df = df.iloc[df.loc[df['has_power_curve'] == True].index][
         ['manufacturer', 'turbine_type', 'has_power_curve']]
-    curves_df= pd.merge(p_curves_df, cp_curves_df, how='outer',
+    curves_df = pd.merge(p_curves_df, cp_curves_df, how='outer',
                         sort=True).fillna(False)
     if print_out:
         pd.set_option('display.max_rows', len(curves_df))
