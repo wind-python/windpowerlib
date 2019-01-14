@@ -169,13 +169,18 @@ class WindTurbine(object): # todo add data_source
                 the corresponding wind speeds in m/s.
 
             """
-            df = read_turbine_data(source=data_source)
+
             if data_source == 'oedb':
-                df.set_index('wea_type', inplace=True)
-                data = df.loc[self.name]['power_curve']
+                df = load_turbine_data_from_oedb()
+                df.set_index('turbine_type', inplace=True)
+                # Set `curve` depending on `fetch_curve` to match names in oedb
+                curve = ('cp_curve' if fetch_curve == 'power_coefficient_curve'
+                         else fetch_curve)
+                data = df.loc[self.name][curve]
                 nominal_power = df.loc[self.name][
                                     'installed_capacity_kw'] * 1000
             else:
+                df = read_turbine_data(filename=data_source)
                 wpp_df = df[df.turbine_id == self.name]
                 # if turbine not in data file
                 if wpp_df.shape[0] == 0:
@@ -184,9 +189,10 @@ class WindTurbine(object): # todo add data_source
                     pd.reset_option('display.max_rows')
                     sys.exit('Cannot find the wind converter type: {0}'.format(
                         self.name))
-                # if turbine in data file write power (coefficient) curve values
-                # to 'data' array
-                ncols = ['turbine_id', 'p_nom', 'source', 'modificationtimestamp']
+                # if turbine in data file write power (coefficient) curve
+                # values to 'data' array
+                ncols = ['turbine_id', 'p_nom', 'source',
+                         'modificationtimestamp']
                 data = np.array([0, 0])
                 for col in wpp_df.keys():
                     if col not in ncols:
@@ -218,26 +224,24 @@ class WindTurbine(object): # todo add data_source
         return self
 
 
-def read_turbine_data(source='oedb', **kwargs):
+def read_turbine_data(filename, **kwargs):
     r"""
-    Fetches power (coefficient) curves from a database or a file.
-
+    Fetches power (coefficient) curves from a  or a file.
     Turbine data is provided by the Open Energy Database (oedb) or can be
-    provided by the user via a file. In the directory windpowerlib/data an
-    example file is provided.
+    provided by the user via a file. In the directory windpowerlib/data example
+    files are provided.
 
     Parameters
     ----------
-    source : string
-        Specifies the source of the turbine data as 'oedb' (Open Energy
-        Database: https://openenergy-platform.org/dataedit/) or as the name of
-        a data file. Use 'example_turbine_data' to use the example data.
-        Default: 'oedb'. TODO add example file!
+    filename : string
+        Specifies the source of the turbine data.
+        Use 'example_power_coefficient_curves.csv' or
+        'example_power_curves.csv' to use the example data.
 
     Other Parameters
     ----------------
     datapath : string, optional
-        Path where the data file is stored if `source` is 'csv'.
+        Path where the data file is stored if `source` is name of a csv file.
         Default: './data'
 
     Returns
@@ -245,19 +249,22 @@ def read_turbine_data(source='oedb', **kwargs):
     pandas.DataFrame
         Power coefficient curve values (dimensionless) or power curve values
         in kW with corresponding wind speeds in m/s of all available wind
-        turbines with turbine name in column 'turbine_id', turbine nominal
+        turbines with turbine name in column 'turbine_type', turbine nominal
         power in column 'p_nom'.
 
     """
-    if source == 'oedb':
-        df = load_turbine_data_from_oedb()
-    else:
-        if 'datapath' not in kwargs:
-            kwargs['datapath'] = os.path.join(os.path.dirname(__file__),
-                                              'data')
-        df = pd.read_csv(os.path.join(kwargs['datapath'], source),
+
+    if 'datapath' not in kwargs:
+        kwargs['datapath'] = os.path.join(os.path.dirname(__file__),
+                                          'data')
+    try:
+        df = pd.read_csv(os.path.join(kwargs['datapath'], filename),
                          index_col=0)
-        # todo: add raising error message if file does not exist.
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            "The file '{}' was not found. Check spelling ".format(filename) +
+            "and `datapath` - is '{}' ".format(kwargs['datapath']) +
+            "and can be changed in read_turbine_data()")
     return df
 
 
