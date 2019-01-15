@@ -44,7 +44,7 @@ Matplotlib can be installed using pip3 though some Linux users reported that it 
 Examples and basic usage
 =========================
 
-The basic usage of the windpowerlib is shown in the :ref:`modelchain_example <modelchain_example_notebook.ipynb>`. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
+The basic usage of the windpowerlib is shown in the ModelChain example. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
 
  * :download:`ModelChain example (Python script) <../example/modelchain_example.py>`
  * :download:`ModelChain example (Jupyter notebook) <../example/modelchain_example.ipynb>`

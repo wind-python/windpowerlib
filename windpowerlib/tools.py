@@ -158,7 +158,7 @@ def gauss_distribution(function_variable, standard_deviation, mean=0):
                      \left[-\frac{(x-\mu)^2}{2 \sigma^2}\right]
 
     with:
-        :math:`\sigma`: standard deviation, :math: `\mu`: mean
+        :math:`\sigma`: standard deviation, :math:`\mu`: mean
 
     References
     ----------

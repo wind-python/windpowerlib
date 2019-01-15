@@ -22,8 +22,8 @@ correction of weather data.
 
 Functions for the height correction of wind speed to the hub height of a wind turbine are described in the
 :ref:`windspeedmodule-label` module. Respectively a function for the height correction of temperature data is provided in the
-:ref:`temperature_module_label`. Functions for density calculations can be found in the
-:ref:`density_module_label`
+:ref:`temperature_module_label` module. Functions for density calculations can be found in the
+:ref:`density_module_label` module.
 
 If weather data is available for at least two different heights the respective figure at hub height
 can be determined by using linear or logarithmic inter-/extrapolation functions of the :ref:`tools_module_label` module.
@@ -55,7 +55,7 @@ mean wind efficiency curve.
    :align: center
 
 The second option of considering wake losses is applying them to power curves by reducing the power values
-by a constant or a wind speed depending wind farm efficiency (see :py:func:`~.wake_losses_to_power_curve`).
+by a constant or on a wind speed depending wind farm efficiency (see :py:func:`~.wake_losses_to_power_curve`).
 Applying the wind farm efficiency (curve) to power curves instead of to feed-in time series has the advantage that the
 power curves can further be aggregated to achieve turbine cluster power curves (see :py:class:`~.wind_turbine_cluster.WindTurbineCluster`).
 
@@ -75,4 +75,4 @@ of the windpowerlib can be selected. For parameters not being specified default 
 The :ref:`modelchain_module_label` is a model
 to determine the output of a wind turbine while the :ref:`tc_modelchain_module_label` is a model to determine
 the output of a wind farm or wind turbine cluster.
-The usage of both modelchains is shown in the :ref:`example_section_label` section.
+The usage of both modelchains is shown in the :ref:`examples_section_label` section.
