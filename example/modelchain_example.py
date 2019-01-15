@@ -101,7 +101,7 @@ def initialize_wind_turbines():
 
     # specification of own wind turbine (Note: power values and nominal power
     # have to be in Watt)
-    myTurbine = {
+    my_turbine = {
         'name': 'myTurbine',
         'nominal_power': 3e6,  # in W
         'hub_height': 105,  # in m
@@ -112,12 +112,12 @@ def initialize_wind_turbines():
                   'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]})  # in m/s
     }
     # initialize WindTurbine object
-    my_turbine = WindTurbine(**myTurbine)
+    my_turbine = WindTurbine(**my_turbine)
 
     # specification of wind turbine where power curve is provided in the oedb
     # if you want to use the power coefficient curve change the value of
     # 'fetch_curve' to 'power_coefficient_curve'
-    enerconE126 = {
+    enercon_e126 = {
         'name': 'E-126/4200',  # turbine type as in register #
         'hub_height': 135,  # in m
         'rotor_diameter': 127,  # in m
@@ -125,11 +125,11 @@ def initialize_wind_turbines():
         'data_source': 'oedb'  # data source oedb or name of csv file
     }
     # initialize WindTurbine object
-    e126 = WindTurbine(**enerconE126)
+    e126 = WindTurbine(**enercon_e126)
 
     # specification of wind turbine where power coefficient curve is provided
     # by a csv file
-    dummyTurbine = {
+    dummy_turbine = {
         'name': 'DUMMY 1',  # turbine type as in file #
         'hub_height': 100,  # in m
         'rotor_diameter': 70,  # in m
@@ -137,7 +137,7 @@ def initialize_wind_turbines():
         'data_source': 'example_power_coefficient_curves.csv'  # data source
     }
     # initialize WindTurbine object
-    dummy_turbine = WindTurbine(**dummyTurbine)
+    dummy_turbine = WindTurbine(**dummy_turbine)
 
     return my_turbine, e126, dummy_turbine
 
