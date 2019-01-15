@@ -98,14 +98,15 @@ def get_wind_efficiency_curve(curve_name='all'):
 
     Examples
     --------
-    # Example to plot all curves
-    fig, ax = plt.subplots()
-    df = get_wind_efficiency_curve(curve_name='all')
-    for t in df.columns.get_level_values(0).unique():
-        p = df[t].set_index('wind_speed')['efficiency']
-        p.name = t
-        ax = p.plot(ax=ax, legend=True)
-    plt.show()
+    .. parsed-literal::
+        # Example to plot all curves
+        fig, ax = plt.subplots() /n
+        df = get_wind_efficiency_curve(curve_name='all')
+        for t in df.columns.get_level_values(0).unique():
+            p = df[t].set_index('wind_speed')['efficiency']
+            p.name = t
+            ax = p.plot(ax=ax, legend=True)
+        plt.show()
 
     """
     possible_curve_names = ['dena_mean', 'knorr_mean', 'dena_extreme1',

@@ -17,6 +17,7 @@ import pandas as pd
 
 class WindTurbineCluster(object):
     r"""
+    Defines a standard set of wind turbine cluster attributes.
 
     Parameters
     ----------
@@ -74,6 +75,7 @@ class WindTurbineCluster(object):
         Notes
         -----
         The following equation is used [1]_:
+
         .. math:: h_{WTC} = e^{\sum\limits_{k}{ln(h_{WF,k})}
                            \frac{P_{N,k}}{\sum\limits_{k}{P_{N,k}}}}
 

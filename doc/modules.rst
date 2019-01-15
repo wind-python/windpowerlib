@@ -169,7 +169,7 @@ Methods of the ModelChain object.
    modelchain.ModelChain.temperature_hub
    modelchain.ModelChain.density_hub
    modelchain.ModelChain.wind_speed_hub
-   modelchain.ModelChain.turbine_power_output
+   modelchain.ModelChain.calculate_power_output
 
 .. _tc_modelchain_module_label:
 
@@ -199,7 +199,7 @@ Methods of the TurbineClusterModelChain object.
    turbine_cluster_modelchain.TurbineClusterModelChain.temperature_hub
    turbine_cluster_modelchain.TurbineClusterModelChain.density_hub
    turbine_cluster_modelchain.TurbineClusterModelChain.wind_speed_hub
-   turbine_cluster_modelchain.TurbineClusterModelChain.turbine_power_output
+   turbine_cluster_modelchain.TurbineClusterModelChain.calculate_power_output
 
 
 .. _tools_module_label:

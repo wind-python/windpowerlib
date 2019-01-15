@@ -261,7 +261,7 @@ def plot_or_print(my_turbine, e126, dummy_turbine):
 
 def run_example():
     r"""
-    Run the basic example.
+    Runs the basic example.
 
     """
     weather = get_weather_data('weather.csv')

@@ -182,6 +182,7 @@ def power_curve_density_correction(wind_speed, power_curve_wind_speeds,
                       \text{ m/s}<v_{std}<12.5\text{ m/s}\\
                       \frac{2}{3} & \geq 12.5 \text{ m/s}
                     \end{cases},
+
         v: wind speed [m/s], :math:`\rho`: density [kg/m³]
 
     :math:`v_{std}` is the standard wind speed in the power curve

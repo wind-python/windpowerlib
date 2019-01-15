@@ -112,6 +112,7 @@ class WindFarm(object):
         Notes
         -----
         The following equation is used [1]_:
+
         .. math:: h_{WF} = e^{\sum\limits_{k}{ln(h_{WT,k})}
                            \frac{P_{N,k}}{\sum\limits_{k}{P_{N,k}}}}
 

@@ -208,7 +208,7 @@ def plot_or_print(example_farm, example_cluster):
 
 def run_example():
     r"""
-    Run the example.
+    Runs the example.
 
     """
     weather = mc_e.get_weather_data('weather.csv')

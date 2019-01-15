@@ -73,8 +73,8 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
         :math:`P_{smoothed}` is the smoothed power curve value,
         :math:`v_{std}` is the standard wind speed in the power curve,
-        :math: `\Delta v_i` is the interval length between
-        :math: `v_\text{i}` and :math: `v_\text{i+1}`
+        :math:`\Delta v_i` is the interval length between
+        :math:`v_\text{i}` and :math:`v_\text{i+1}`
 
     Power curve smoothing is applied to take account for the spatial
     distribution of wind speed. This way of smoothing power curves is also used
