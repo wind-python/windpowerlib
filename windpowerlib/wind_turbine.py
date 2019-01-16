@@ -169,21 +169,6 @@ class WindTurbine(object):
         >>> print(e126.nominal_power)
         4200000.0
 
-        >>> import os
-        >>> source = os.path.join(os.path.dirname(__file__), '../example/data',
-        ...                       'example_power_curves.csv')
-        >>> example_turbine = {
-        ...    'hub_height': 100,
-        ...    'rotor_diameter': 70,
-        ...    'name': 'DUMMY 3',
-        ...    'fetch_curve': 'power_curve',
-        ...    'data_source': source}
-        >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
-        >>> print(e_t_1.power_curve['power'][7])
-        18000.0
-        >>> print(e_t_1.nominal_power)
-        150000
-
         """
 
         def restructure_data():
@@ -281,8 +266,25 @@ def read_turbine_data(file_):
         turbines with turbine name in column 'turbine_type', turbine nominal
         power in column 'p_nom'.
 
-    """
+    Examples
+    --------
+    >>> from windpowerlib import wind_turbine
+    >>> import os
+    >>> source = os.path.join(os.path.dirname(__file__), '../example/data',
+    ...                       'example_power_curves.csv')
+    >>> example_turbine = {
+    ...    'hub_height': 100,
+    ...    'rotor_diameter': 70,
+    ...    'name': 'DUMMY 3',
+    ...    'fetch_curve': 'power_curve',
+    ...    'data_source': source}
+    >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
+    >>> print(e_t_1.power_curve['power'][7])
+    18000.0
+    >>> print(e_t_1.nominal_power)
+    150000
 
+    """
     try:
         df = pd.read_csv(file_, index_col=0)
     except FileNotFoundError:
