@@ -58,7 +58,6 @@ Further functionalities, like the modelling of wind farms and wind turbine clust
 
  * :download:`TurbineClusterModelChain example (Python script) <../example/turbine_cluster_modelchain_example.py>`
  * :download:`TurbineClusterModelChain example (Jupyter notebook) <../example/turbine_cluster_modelchain_example.ipynb>`
- * :download:`Example data file <../example/weather.csv>`
 
 You can also look at the examples in the :ref:`examples_section_label` section.
 
