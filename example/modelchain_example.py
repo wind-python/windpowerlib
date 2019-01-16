@@ -85,17 +85,17 @@ def initialize_wind_turbines():
     Initializes two :class:`~.wind_turbine.WindTurbine` objects.
 
     Function shows three ways to initialize a WindTurbine object. You can
-    either specify your own turbine, as done below for 'myTurbine', or fetch
+    either specify your own turbine, as done below for 'my_turbine', or fetch
     power and/or power coefficient curve data from the Open Energy Database
-    (oedb), as done for the 'enerconE126', or provide your turbine data in csv
-    files as done for 'dummyTurbine' with an example file.
+    (oedb), as done for the 'enercon_e126', or provide your turbine data in csv
+    files as done for 'dummy_turbine' with an example file.
     Execute ``windpowerlib.wind_turbine.get_turbine_types()`` to get a table
     including all wind turbines for which power and/or power coefficient curves
     are provided.
 
     Returns
     -------
-    Tuple (WindTurbine, WindTurbine)
+    Tuple (WindTurbine, WindTurbine, WindTurbine)
 
     """
 
