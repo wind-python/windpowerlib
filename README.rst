@@ -45,24 +45,23 @@ Matplotlib can be installed using pip3 though some Linux users reported that it 
 Examples and basic usage
 =========================
 
-The basic usage of the windpowerlib is shown in the `modelchain_example <http://windpowerlib.readthedocs.io/en/stable/basic_example_notebook.html>`_. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
+The basic usage of the windpowerlib is shown in the `modelchain_example <http://windpowerlib.readthedocs.io/en/stable/modelchain_example_notebook.html>`_. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
 
- * `ModelChain example (Python script) <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/basic_example.py>`_
- * `ModelChain example (Jupyter notebook) <https://raw.githubusercontent.com/wind-python/windpowerlib/features/revise_example/example/basic_example.ipynb>`_
- * `Example data file <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/weather.csv>`_
-
+ * `ModelChain example (Python script) <https://raw.githubusercontent.com/wind-python/windpowerlib/release_branch/example/modelchain_example.py>`_
+ * `ModelChain example (Jupyter notebook) <https://raw.githubusercontent.com/wind-python/windpowerlib/release_branch/example/modelchain_example.ipynb>`_
+ * `Example data file <https://raw.githubusercontent.com/wind-python/windpowerlib/release_branch/example/weather.csv>`_
 
 To run the examples you first have to install the windpowerlib. To run the notebook you also need to install notebook using pip3. To launch jupyter notebook type ``jupyter notebook`` in terminal.
 This will open a browser window. Navigate to the directory containing the notebook to open it. See the jupyter notebook quick start guide for more information on `how to install <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/install.html>`_ and
 `how to run <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/execute.html>`_ jupyter notebooks.
 
-Further functionalities, like the modelling of wind farms and wind turbine clusters, are shown in a second example. As the ModelChain example it is available as jupyter notebook and as python script. The weather data in this example is the same as in the example above.
+Further functionalities, like the modelling of wind farms and wind turbine clusters, are shown in the `turbine_cluster_modelchain_example <http://windpowerlib.readthedocs.io/en/stable/turbine_cluster_modelchain_example_notebook.html>`_. As the ModelChain example it is available as jupyter notebook and as python script. The weather data in this example is the same as in the example above.
 
- * `TurbineClusterModelChain example (Python script) <https://raw.githubusercontent.com/wind-python/windpowerlib/release_preparation/example/further_example.py>`_
- * `TurbineClusterModelChain example (Jupyter notebook) <https://raw.githubusercontent.com/wind-python/windpowerlib/release_preparation/example/basic_example.ipynb>`_
- * `Example data file <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/weather.csv>`_
+ * `TurbineClusterModelChain example (Python script) <https://raw.githubusercontent.com/wind-python/windpowerlib/release_branch/example/turbine_cluster_modelchain_example.py>`_
+ * `TurbineClusterModelChain example (Jupyter notebook) <https://raw.githubusercontent.com/wind-python/windpowerlib/release_branch/example/turbine_cluster_modelchain_example.ipynb>`_
+ * `Example data file <https://raw.githubusercontent.com/wind-python/windpowerlib/release_branch/example/weather.csv>`_
 
-You can also look at the examples in the `Examples <https://windpowerlib.readthedocs.io/en/latest/examples.html>`_ section.
+You can also look at the examples in the `Examples <https://windpowerlib.readthedocs.io/en/stable/examples.html>`_ section.
 
 Contributing
 ==============

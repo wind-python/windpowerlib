@@ -54,7 +54,7 @@ To run the examples you first have to install the windpowerlib. To run the noteb
 This will open a browser window. Navigate to the directory containing the notebook to open it. See the jupyter notebook quick start guide for more information on `how to install <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/install.html>`_ and
 `how to run <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/execute.html>`_ jupyter notebooks.
 
-Further functionalities, like the modelling of wind farms and wind turbine clusters, are shown in a second example. As the ModelChain example it is available as jupyter notebook and as python script. The weather data in this example is the same as in the example above.
+Further functionalities, like the modelling of wind farms and wind turbine clusters, are shown in the TurbineClusterModelChain example. As the ModelChain example it is available as jupyter notebook and as python script. The weather data in this example is the same as in the example above.
 
  * :download:`TurbineClusterModelChain example (Python script) <../example/turbine_cluster_modelchain_example.py>`
  * :download:`TurbineClusterModelChain example (Jupyter notebook) <../example/turbine_cluster_modelchain_example.ipynb>`
