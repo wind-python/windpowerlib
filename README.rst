@@ -67,7 +67,7 @@ You can also look at the examples in the `Examples <https://windpowerlib.readthe
 Contributing
 ==============
 
-We are warmly welcoming all who want to contribute to the windpowerlib. If you are interested in wind models and want to help improving the existing model do not hesitate to contact us.
+We are warmly welcoming all who want to contribute to the windpowerlib. If you are interested in wind models and want to help improving the existing model do not hesitate to contact us via github or email (windpowerlib@rl-institut.de).
 
 Clone: https://github.com/wind-python/windpowerlib and install the cloned repository using pip:
 
