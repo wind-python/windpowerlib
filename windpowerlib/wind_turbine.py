@@ -169,12 +169,15 @@ class WindTurbine(object):
         >>> print(e126.nominal_power)
         4200000.0
 
+        >>> import os
+        >>> source = os.path.join(os.path.dirname(__file__), '../example/data',
+        ...                       'example_power_curves.csv')
         >>> example_turbine = {
         ...    'hub_height': 100,
         ...    'rotor_diameter': 70,
         ...    'name': 'DUMMY 3',
         ...    'fetch_curve': 'power_curve',
-        ...    'data_source': 'example_power_curves.csv'}
+        ...    'data_source': source}
         >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
         >>> print(e_t_1.power_curve['power'][7])
         18000.0
@@ -211,7 +214,7 @@ class WindTurbine(object):
                 nominal_power = df.loc[self.name][
                                     'installed_capacity_kw'] * 1000
             else:
-                df = read_turbine_data(filename=data_source)
+                df = read_turbine_data(data_source)
                 wpp_df = df[df.turbine_id == self.name]
                 # if turbine not in data file
                 if wpp_df.shape[0] == 0:
@@ -256,7 +259,7 @@ class WindTurbine(object):
         return self
 
 
-def read_turbine_data(filename, **kwargs):
+def read_turbine_data(file_):
     r"""
     Fetches power (coefficient) curves from a  or a file.
     Turbine data is provided by the Open Energy Database (oedb) or can be
@@ -265,16 +268,10 @@ def read_turbine_data(filename, **kwargs):
 
     Parameters
     ----------
-    filename : string
+    file_ : string
         Specifies the source of the turbine data.
-        Use 'example_power_coefficient_curves.csv' or
+        Use 'example_power_coefficient_curves.csv' or # todo adapt
         'example_power_curves.csv' to use the example data.
-
-    Other Parameters
-    ----------------
-    datapath : string, optional
-        Path where the data file is stored if `source` is name of a csv file.
-        Default: './data'
 
     Returns
     -------
@@ -286,17 +283,10 @@ def read_turbine_data(filename, **kwargs):
 
     """
 
-    if 'datapath' not in kwargs:
-        kwargs['datapath'] = os.path.join(os.path.dirname(__file__),
-                                          'data')
     try:
-        df = pd.read_csv(os.path.join(kwargs['datapath'], filename),
-                         index_col=0)
+        df = pd.read_csv(file_, index_col=0)
     except FileNotFoundError:
-        raise FileNotFoundError(
-            "The file '{}' was not found. Check spelling ".format(filename) +
-            "and `datapath` - is '{}' ".format(kwargs['datapath']) +
-            "and can be changed in read_turbine_data()")
+        raise FileNotFoundError("The file '{}' was not found.".format(file_))
     return df
 
 

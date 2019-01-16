@@ -133,12 +133,15 @@ def initialize_wind_turbines():
 
     # specification of wind turbine where power coefficient curve is provided
     # by a csv file
+    csv_file = os.path.join(os.path.dirname(__file__), 'data',
+                            'example_power_coefficient_curves.csv')
+    # todo adapt in jupyter notebook!!!
     dummy_turbine = {
         'name': 'DUMMY 1',  # turbine type as in file #
         'hub_height': 100,  # in m
         'rotor_diameter': 70,  # in m
         'fetch_curve': 'power_coefficient_curve',  # fetch cp curve #
-        'data_source': 'example_power_coefficient_curves.csv'  # data source
+        'data_source': csv_file  # data source
     }
     # initialize WindTurbine object
     dummy_turbine = WindTurbine(**dummy_turbine)
