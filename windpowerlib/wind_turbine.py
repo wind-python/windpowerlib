@@ -54,9 +54,9 @@ class WindTurbine(object):
     data_source : string
         Specifies whether turbine data (f.e. nominal power, power curve, power
         coefficient curve) is loaded from the Open Energy Database ('oedb') or
-        from a csv file ('<name of csv file>'). See `example_power_curves.csv'
-        and `example_power_coefficient_curves.csv` in windpowerlib/data for
-        the required form of a csv file. Default: 'oedb'.
+        from a csv file ('<path including file name>'). See
+        `example_power_curves.csv' and `example_power_coefficient_curves.csv`
+        in example/data for the required form of a csv file. Default: 'oedb'.
 
     Attributes
     ----------
@@ -87,9 +87,11 @@ class WindTurbine(object):
     Notes
     ------
     Your wind turbine object should have a power coefficient or power curve.
-    You can set the `fetch_curve` parameter and the `data_source` parameter if
-    you don't want to provide one yourself but want to automatically fetch a
-    curve from a data set provided in the Open Energy Database (oedb).
+    You can set the `fetch_curve` parameter and the `data_source` parameter
+    want to automatically fetch a curve from a data set provided in the Open
+    Energy Database (oedb) or want to read a csv file that you provide.
+    See `example_power_curves.csv' and `example_power_coefficient_curves.csv`
+    in example/data for the required form of such a csv file.
 
     Examples
     --------
@@ -145,10 +147,12 @@ class WindTurbine(object):
         data_source : string
             Specifies whether turbine data (f.e. nominal power, power curve,
             power coefficient curve) is loaded from the Open Energy Database
-            ('oedb') or from a csv file ('<name of csv file>'). See
-            `example_power_curves.csv` and
-            `example_power_coefficient_curves.csv` in windpowerlib/data for the
+            ('oedb') or from a csv file ('<path including file name>'). See
+            `example_power_curves.csv' and
+            `example_power_coefficient_curves.csv` in example/data for the
             required form of a csv file. Default: 'oedb'.
+            See :py:func:`~.read_turbine_data` for an example reading data from
+            a csv file.
 
         Returns
         -------
@@ -255,8 +259,7 @@ def read_turbine_data(file_):
     ----------
     file_ : string
         Specifies the source of the turbine data.
-        Use 'example_power_coefficient_curves.csv' or # todo adapt
-        'example_power_curves.csv' to use the example data.
+        See the example below for how to use the example data.
 
     Returns
     -------
