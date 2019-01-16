@@ -1,6 +1,8 @@
 """
 The ``turbine_cluster_modelchain`` module contains functions and classes of the
-windpowerlib.
+windpowerlib. This module makes it easy to get started with the windpowerlib
+and shows use cases for the power output calculation of wind farms and wind
+turbine clusters.
 
 """
 
