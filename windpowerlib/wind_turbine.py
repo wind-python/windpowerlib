@@ -168,87 +168,37 @@ class WindTurbine(object):
         ...    'fetch_curve': 'power_coefficient_curve',
         ...    'data_source': 'oedb'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.power_coefficient_curve['power coefficient'][5])
+        >>> print(e126.power_coefficient_curve['power_coefficient'][5])
         0.44
         >>> print(e126.nominal_power)
         4200000.0
 
         """
-
-        def restructure_data():
-            r"""
-            Restructures data fetched from oedb or read from a csv file.
-
-            Method creates a two-dimensional DataFrame containing the power
-            coefficient curve or power curve of the requested wind turbine.
-
-            Returns
-            -------
-            Tuple (pandas.DataFrame, float)
-                Power curve or power coefficient curve (pandas.DataFrame)
-                and nominal power (float).
-                Power (coefficient) curve DataFrame contains power coefficient
-                curve values (dimensionless) or power curve values in W with
-                the corresponding wind speeds in m/s.
-
-            """
-
-            if data_source == 'oedb':
-                df = load_turbine_data_from_oedb()
-                df.set_index('turbine_type', inplace=True)
-                # Set `curve` depending on `fetch_curve` to match names in oedb
-                curve = ('cp_curve' if fetch_curve == 'power_coefficient_curve'
-                         else fetch_curve)
-                data = df.loc[self.name][curve]
-                nominal_power = df.loc[self.name][
-                                    'installed_capacity_kw'] * 1000
-            else:
-                df = read_turbine_data(data_source)
-                wpp_df = df[df.turbine_id == self.name]
-                # if turbine not in data file
-                if wpp_df.shape[0] == 0:
-                    pd.set_option('display.max_rows', len(df))
-                    logging.info('Possible types: \n{0}'.format(df.turbine_id))
-                    pd.reset_option('display.max_rows')
-                    sys.exit('Cannot find the wind converter type: {0}'.format(
-                        self.name))
-                # if turbine in data file write power (coefficient) curve
-                # values to 'data' array
-                ncols = ['turbine_id', 'p_nom', 'source',
-                         'modificationtimestamp']
-                data = np.array([0, 0])
-                for col in wpp_df.keys():
-                    if col not in ncols:
-                        if wpp_df[col].iloc[0] is not None and not np.isnan(
-                                float(wpp_df[col].iloc[0])):
-                            data = np.vstack((data, np.array(
-                                [float(col), float(wpp_df[col])])))
-                data = np.delete(data, 0, 0)
-                nominal_power = wpp_df['p_nom'].iloc[0]
-            if fetch_curve == 'power_curve':
-                df = pd.DataFrame(data, columns=['wind_speed', 'power'])
-                if data_source == 'oedb':
-                    # power values in W
-                    df['power'] = df['power'] * 1000
-            if fetch_curve == 'power_coefficient_curve':
-                df = pd.DataFrame(data, columns=['wind_speed',
-                                                 'power coefficient'])
-            return df, nominal_power
-
+        if data_source == 'oedb':
+            curve_df, nominal_power = get_turbine_data_from_oedb(
+                turbine_type=self.name, fetch_curve=fetch_curve)
+        else:
+            curve_df, nominal_power = read_turbine_data(turbine_type=self.name,
+                                                        file_=data_source)
         if fetch_curve == 'power_curve':
-            self.power_curve, p_nom = restructure_data()
+            curve_df.columns = ['wind_speed', 'power']
+            if data_source == 'oedb':
+                # power values in W
+                curve_df['power'] = curve_df['power'] * 1000
+            self.power_curve = curve_df
         elif fetch_curve == 'power_coefficient_curve':
-            self.power_coefficient_curve, p_nom = restructure_data()
+            curve_df.columns = ['wind_speed', 'power_coefficient']
+            self.power_coefficient_curve = curve_df
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
                              fetch_curve) + "`fetch_curve` must be " +
                              "'power_curve' or 'power_coefficient_curve'.")
         if self.nominal_power is None:
-            self.nominal_power = p_nom
+            self.nominal_power = nominal_power
         return self
 
 
-def read_turbine_data(file_):
+def read_turbine_data(turbine_type, file_):
     r"""
     Fetches power (coefficient) curves from a  or a file.
     Turbine data is provided by the Open Energy Database (oedb) or can be
@@ -257,7 +207,7 @@ def read_turbine_data(file_):
 
     Parameters
     ----------
-    file_ : string
+    file_ : string # todo adapt
         Specifies the source of the turbine data.
         See the example below for how to use the example data.
 
@@ -292,16 +242,30 @@ def read_turbine_data(file_):
         df = pd.read_csv(file_, index_col=0)
     except FileNotFoundError:
         raise FileNotFoundError("The file '{}' was not found.".format(file_))
-    return df
+    wpp_df = df[df.turbine_id == turbine_type]
+    # if turbine not in data file
+    if wpp_df.shape[0] == 0:
+        pd.set_option('display.max_rows', len(df))
+        logging.info('Possible types: \n{0}'.format(df.turbine_id))
+        pd.reset_option('display.max_rows')
+        sys.exit('Cannot find the wind converter type: {0}'.format(
+            turbine_type))
+    # if turbine in data file drop nans
+    data = wpp_df.loc[:, wpp_df.columns != 'turbine_id'].dropna(
+        axis=1)
+    data.drop(['p_nom'], inplace=True, axis=1)
+    df = data.transpose().reset_index()
+    nominal_power = wpp_df['p_nom'].iloc[0]
+    return df, nominal_power
 
 
-def load_turbine_data_from_oedb():
+def get_turbine_data_from_oedb(turbine_type, fetch_curve):
     r"""
-    Loads turbine data from the Open Energy Database (oedb).
+    Loads and restructures turbine data from the Open Energy Database (oedb).
 
-    Returns
+    Returns # todo paratmeter
     -------
-    turbine_data : pd.DataFrame
+    # todo adapt : pd.DataFrame
         Contains turbine data of different turbine types like 'manufacturer',
         'turbine_type', nominal power ('installed_capacity_kw'), '
 
@@ -324,11 +288,18 @@ def load_turbine_data_from_oedb():
                                   "Error: ".format(result.status_code))
         # extract data
         turbine_data = pd.DataFrame(result.json())
+        turbine_data.set_index('turbine_type', inplace=True)
+        # Set `curve` depending on `fetch_curve` to match names in oedb
+        curve = ('cp_curve' if fetch_curve == 'power_coefficient_curve'
+                 else fetch_curve)
+        df = pd.DataFrame(turbine_data.loc[turbine_type][curve])
+        nominal_power = turbine_data.loc[turbine_type][
+                            'installed_capacity_kw'] * 1000
     else:
         raise ImportError('If you want to load turbine data from the oedb' +
                           'you have to install the requests package.' +
                           'see https://pypi.org/project/requests/')
-    return turbine_data
+    return df, nominal_power
 
 
 def get_turbine_types(print_out=True):
