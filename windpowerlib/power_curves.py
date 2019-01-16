@@ -8,6 +8,8 @@ curve of a wind turbine, wind farm or wind turbine cluster.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
+import os
+from collections import namedtuple
 import numpy as np
 import pandas as pd
 from windpowerlib import tools
@@ -237,3 +239,59 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
                 wake_losses_model) +
             "'constant_efficiency' or 'power_efficiency_curve'")
     return power_curve_df
+
+
+def get_power_curve_from_file(name, filename=None, coefficient_curve=False):
+    """
+    Get a power curve from a csv file as a named tuple. Fields are
+
+    * windspeed (array)
+    * value (power or coefficient) (array)
+    * nominal_power (int)
+
+    The csv file has to have a special format. See example file.
+
+    Parameters
+    ----------
+    name : str
+        Type of the turbine (full name)
+    filename : str or None
+        Full filename of the csv file. If None an internal file will be used.
+
+    Examples
+    --------
+    >>> data = get_power_curve_from_file('AN BONUS 54')
+    >>> data.nominal_power
+    1000000
+    >>> my_turbine = {
+    ...     'name': 'myTurbine',
+    ...     'nominal_power': data.nominal_power,
+    ...     'hub_height': 105,
+    ...     'rotor_diameter': 90,
+    ...     'power_curve': pd.DataFrame({'power': data.value,
+    ...                                  'wind_speed': data.windspeed})}
+    >>> my_turbine['nominal_power']
+    1000000
+
+    Returns
+    -------
+    namedtuple : Fields: windspeed, value, nominal_power
+
+    """
+    pwr_curve = namedtuple('power_curve', 'windspeed, value, nominal_power')
+    if filename is None:
+        if coefficient_curve:
+            fn = 'power_coefficient_curves.csv'
+        else:
+            fn = 'power_curves.csv'
+
+        filename = os.path.join(os.path.dirname(__file__), 'data', fn)
+    pc = pd.read_csv(filename, index_col=[1])
+
+    pc.drop(['source', 'modificationtimestamp', 'Unnamed: 0'], axis=1,
+            inplace=True)
+
+    p_nom = pc.pop('p_nom')
+    pc = pc.unstack().unstack()[name].dropna()
+    return pwr_curve(nominal_power=p_nom[name], windspeed=pc.index.values,
+                     value=pc.values)
