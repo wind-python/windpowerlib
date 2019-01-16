@@ -196,6 +196,7 @@ Methods of the TurbineClusterModelChain object.
 .. autosummary::
    :toctree: temp/
 
+   turbine_cluster_modelchain.TurbineClusterModelChain.assign_power_curve
    turbine_cluster_modelchain.TurbineClusterModelChain.temperature_hub
    turbine_cluster_modelchain.TurbineClusterModelChain.density_hub
    turbine_cluster_modelchain.TurbineClusterModelChain.wind_speed_hub

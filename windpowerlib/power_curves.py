@@ -85,7 +85,8 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
     'turbulence_intensity' [2]_:
 
-    .. math:: \sigma = v_\text{std} \sigma_\text{n} = v_\text{std} TI
+    .. math:: \sigma = v_\text{std} \cdot \sigma_\text{n} = v_\text{std}
+        \cdot TI
 
     with:
         TI: turbulence intensity
