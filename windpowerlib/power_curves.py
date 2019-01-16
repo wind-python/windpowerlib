@@ -272,7 +272,13 @@ def get_power_curve_from_file(name, filename=None, coefficient_curve=False):
     ...                                  'wind_speed': data.windspeed})}
     >>> my_turbine['nominal_power']
     1000000
-
+    >>> data2 = get_power_curve_from_file('AN BONUS 54',
+    ...                                   coefficient_curve=True)
+    >>> int(data.value.mean())
+    603777
+    >>> int(data2.value.mean() * 100) / 100
+    0.19
+    
     Returns
     -------
     namedtuple : Fields: windspeed, value, nominal_power
