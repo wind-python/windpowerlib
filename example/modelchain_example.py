@@ -1,6 +1,10 @@
 """
 The ``modelchain_example`` module shows a simple usage of the windpowerlib by
-using the :class:`~.modelchain.ModelChain` class.
+using the :class:`~.modelchain.ModelChain` class. The modelchains are
+implemented to ensure an easy start into the Windpowerlib. They work like
+models that combine all functions provided in the library. Via parameteres
+desired functions of the windpowerlib can be selected. For parameters not being
+specified default parameters are used.
 
 There are mainly three steps. First you have to import your weather data, then
 you need to specify your wind turbine, and in the last step call the
