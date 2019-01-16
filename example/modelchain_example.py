@@ -89,9 +89,9 @@ def initialize_wind_turbines():
     power and/or power coefficient curve data from the Open Energy Database
     (oedb), as done for the 'enerconE126', or provide your turbine data in csv
     files as done for 'dummyTurbine' with an example file.
-    Execute ``windpowerlib.wind_turbine.get_turbine_types()`` to get a list of
-    all wind turbines for which power and power coefficient curves are
-    provided.
+    Execute ``windpowerlib.wind_turbine.get_turbine_types()`` to get a table
+    including all wind turbines for which power and/or power coefficient curves
+    are provided.
 
     Returns
     -------
