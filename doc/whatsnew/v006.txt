@@ -26,3 +26,4 @@ Contributors
 
  * Sabine Haas
  * Birgit Schachler
+ * Uwe Krien

@@ -8,7 +8,8 @@ Contents:
    :glob:   
    
    getting_started
-   basic_example_notebook
+   examples
+   model_description
    whats_new
    modules
 

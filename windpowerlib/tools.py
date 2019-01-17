@@ -8,10 +8,12 @@ windpowerlib.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
+import numpy as np
+
 
 def linear_interpolation_extrapolation(df, target_height):
     r"""
-    Inter- or extrapolates between the values of a data frame.
+    Linear inter- or extrapolates between the values of a data frame.
 
     This function can be used for the inter-/extrapolation of a parameter
     (e.g wind speed) available at two or more different heights, to approximate
@@ -41,7 +43,8 @@ def linear_interpolation_extrapolation(df, target_height):
 
     For the inter- and extrapolation the following equation is used:
 
-    .. math:: f(x) = \frac{(f(x_2) - f(x_1))}{(x_2 - x_1)} \cdot (x - x_1) + f(x_1)
+    .. math:: f(x) = \frac{(f(x_2) - f(x_1))}{(x_2 - x_1)} \cdot
+        (x - x_1) + f(x_1)
 
     Examples
     ---------
@@ -57,9 +60,8 @@ def linear_interpolation_extrapolation(df, target_height):
     ...                           columns=[np.array(['wind_speed',
     ...                                              'wind_speed']),
     ...                                    np.array([10, 80])])
-    >>> round(linear_interpolation_extrapolation(
-    ...     weather_df['wind_speed'], 100)[0], 2)
-    6.86
+    >>> value = linear_interpolation_extrapolation(
+    ...     weather_df['wind_speed'], 100)[0]
 
     """
     # find closest heights
@@ -69,3 +71,133 @@ def linear_interpolation_extrapolation(df, target_height):
     return ((df[heights_sorted[1]] - df[heights_sorted[0]]) /
             (heights_sorted[1] - heights_sorted[0]) *
             (target_height - heights_sorted[0]) + df[heights_sorted[0]])
+
+
+def logarithmic_interpolation_extrapolation(df, target_height):
+    r"""
+    Logarithmic inter- or extrapolates between the values of a data frame.
+
+    This function can be used for the inter-/extrapolation of the wind speed if
+    it is available at two or more different heights, to approximate
+    the value at hub height. The function is carried out when the parameter
+    `wind_speed_model` :class:`~.modelchain.ModelChain` class is
+    'log_interpolation_extrapolation'.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        DataFrame with time series for parameter that is to be interpolated or
+        extrapolated. The columns of the DataFrame are the different heights
+        for which the parameter is available. If more than two heights are
+        given, the two closest heights are used. See example in
+        :py:func:`~.linear_interpolation_extrapolation` on how the
+        DataFrame should look like and how the function can be used.
+    target_height : float
+        Height for which the parameter is approximated (e.g. hub height).
+
+    Returns
+    -------
+    pandas.Series
+        Result of the inter-/extrapolation (e.g. wind speed at hub height).
+
+    Notes
+    -----
+
+    For the logarithmic inter- and extrapolation the following equation is
+    used [1]_:
+
+    .. math:: f(x) = \frac{\ln(x) \cdot (f(x_2) - f(x_1)) - f(x_2) \cdot
+        \ln(x_1) + f(x_1) \cdot \ln(x_2)}{\ln(x_2) - \ln(x_1)}
+
+    References
+    ----------
+    .. [1] Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
+             Windenergieeinspeisung für wetterdatenbasierte
+             Windleistungssimulationen". Universität Kassel, Diss., 2016,
+             p. 83
+
+    """
+    # find closest heights
+    heights_sorted = df.columns[
+        sorted(range(len(df.columns)),
+               key=lambda i: abs(df.columns[i] - target_height))]
+    return ((np.log(target_height) *
+             (df[heights_sorted[1]] - df[heights_sorted[0]]) -
+             df[heights_sorted[1]] * np.log(heights_sorted[0]) +
+             df[heights_sorted[0]] * np.log(heights_sorted[1])) /
+            (np.log(heights_sorted[1]) - np.log(heights_sorted[0])))
+
+
+def gauss_distribution(function_variable, standard_deviation, mean=0):
+    r"""
+    Gauss distribution.
+
+    The Gauss distribution is used in the function
+    :py:func:`~.power_curves.smooth_power_curve` for power curve smoothing.
+
+    Parameters
+    ----------
+    function_variable : float
+        Variable of the gaussian distribution.
+    standard_deviation : float
+        Standard deviation of the Gauss distribution.
+    mean : Float
+        Defines the offset of the Gauss distribution. Default: 0.
+
+    Returns
+    -------
+    pandas.Series or numpy.array
+        Wind speed at hub height. Data type depends on the type of
+        `wind_speed`.
+
+    Notes
+    -----
+    The following equation is used [1]_:
+
+    .. math:: f(x) = \frac{1}{\sigma \sqrt{2 \pi}} \exp
+                     \left[-\frac{(x-\mu)^2}{2 \sigma^2}\right]
+
+    with:
+        :math:`\sigma`: standard deviation, :math:`\mu`: mean
+
+    References
+    ----------
+    .. [1] Berendsen, H.: "A Student's Guide to Data and Error Analysis".
+             New York, Cambridge University Press, 2011, p. 37
+
+    """
+    return (1 / (standard_deviation * np.sqrt(2 * np.pi)) *
+            np.exp(-(function_variable - mean)**2 /
+                   (2 * standard_deviation**2)))
+
+
+def estimate_turbulence_intensity(height, roughness_length):
+    r"""
+    Estimate turbulence intensity by the roughness length.
+
+    Parameters
+    ----------
+    height : float
+        Height above ground in m at which the turbulence intensity is
+        calculated.
+    roughness_length : pandas.Series or numpy.array or float
+        Roughness length.
+
+    Notes
+    -----
+    The following equation is used [1]_:
+
+    .. math:: TI = \frac{1}{\ln\left(\frac{h}{z_\text{0}}\right)}
+
+    with:
+        TI: turbulence intensity, h: height, :math:`z_{0}`: roughness length
+
+    References
+    ----------
+    .. [1] Knorr, K.: "Modellierung von raum-zeitlichen Eigenschaften der
+             Windenergieeinspeisung für wetterdatenbasierte
+             Windleistungssimulationen". Universität Kassel, Diss., 2016,
+             p. 88
+
+    """
+    return 1 / (np.log(height / roughness_length))

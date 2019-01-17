@@ -1,14 +1,63 @@
-v0.1.0 ()
-+++++++++++++++++++++++++
+v0.1.0 (January 17, 2019)
+++++++++++++++++++++++++++++++++++
+
+ATTENTION: From v0.1.0 on power (coefficient) curves are provided by the `OpenEnergy Database (oedb) <https://openenergy-platform.org/dataedit/>`_
+instead of in csv files (v0.6.0 and lower) due to legal reasons.
+Use :py:func:`~windpowerlib.wind_turbine.get_turbine_types` to check whether the turbine types you need are included in the database.
+If your turbine type is not included you can either use your own csv file or open an issue.
+
+New classes
+###########
+
+ * :class:`~windpowerlib.wind_farm.WindFarm` class for modelling a wind farm. Defines a standard set of wind farm attributes, for example aggregated power curve and wind farm efficiency to take wake losses into account.
+ * :class:`~windpowerlib.wind_turbine_cluster.WindTurbineCluster` class for modelling a turbine cluster that contains several wind turbines and/or wind farms. This class is useful for gathering all wind turbines in a weather data grid cell. An aggregated power curve can be calculated which considers the wake losses of the wind farms by a set efficiency if desired.
+ * :class:`~windpowerlib.turbine_cluster_modelchain.TurbineClusterModelChain` class shows the usage of new functions and classes of windpowerlib v.0.1 and is based on the ModelChain class.
+
+New functions
+#############
+
+ * :py:func:`~windpowerlib.power_curves.smooth_power_curve` for taking into account the spatial distribution of wind speed
+ * :py:func:`~windpowerlib.power_curves.wake_losses_to_power_curve`: application of wake losses to a power curve
+ * :py:func:`~windpowerlib.wake_losses.reduce_wind_speed`: application of wake losses to a wind speed time series by using wind efficiency curves which are provided in the data directory
+ * :py:func:`~windpowerlib.tools.logarithmic_interpolation_extrapolation` for wind speed time series
+ * :py:func:`~windpowerlib.tools.gauss_distribution` needed for power curve smoothing
+ * :py:func:`~windpowerlib.tools.estimate_turbulence_intensity` by roughness length
+ * :py:func:`~windpowerlib.wind_turbine.get_turbine_data_from_oedb` for retrieving power curves from `OpenEnergy Database <https://openenergy-platform.org/dataedit/>`_
+
+
+Testing
+#######
+
+ * added continuous integration to automatically test the windpowerlib for different python versions and to check the test coverage
+
 
 Documentation
 #############
 
-Testing
-####### 
+ * added second example section and jupyter notebook
+ * added model description
+
+
+API changes
+###########
+
+ * renamed attribute `turbine_name` of WindTurbine class to `name` to match with `name` attribute of WindFarm and WindTurbineCluster class
+ * renamed `basic_example` to `modelchain_example`
+ * renamed column 'values' of power (coefficient) curves to 'value' to prevent errors using df.value(s)
+ * renamed `run_basic_example()` to `run_example()` in `modelchain_example`
+ * renamed parameter `wind_turbine` of `ModelChain` object to `power_plant`
+ * removed parameter `density_correction` from `power_plant.power_coefficient()`
+
 
 Other changes
 #############
+ * removed deprecated attributes (.ix)
+ * added `turbine_cluster_modelchain_example` showing the usage of the TurbineClusterModelChain
+
 
 Contributors
 ############
+
+ * Sabine Haas
+ * Uwe Krien
+ * Birgit Schachler

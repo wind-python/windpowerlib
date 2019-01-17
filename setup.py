@@ -1,8 +1,11 @@
 import os
 from setuptools import setup
 
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
 setup(name='windpowerlib',
-      version='0.0.6',
+      version='0.1.0',
       description='Creating time series from wind power plants.',
       url='http://github.com/wind-python/windpowerlib',
       author='oemof developing group',
@@ -11,6 +14,7 @@ setup(name='windpowerlib',
       packages=['windpowerlib'],
       package_data={
           'windpowerlib': [os.path.join('data', '*.csv')]},
+      long_description=read('README.rst'),
       zip_safe=False,
-      install_requires=['numpy >= 1.7.0',
-                        'pandas >= 0.13.1'])
+      install_requires=['pandas >= 0.19.1',
+                        'requests'])

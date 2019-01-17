@@ -36,6 +36,8 @@ pip-delete-this-directory.txt
 
 # Doc
 doc/temp/
+.doctrees
+.buildinfo
 
 # Unit test / coverage reports
 htmlcov/
@@ -91,3 +93,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# tests
+.pytest_cache
