@@ -12,7 +12,6 @@ import pandas as pd
 import logging
 import sys
 import os
-import numpy as np
 
 try:
     import requests as rq
