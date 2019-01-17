@@ -16,6 +16,5 @@ setup(name='windpowerlib',
           'windpowerlib': [os.path.join('data', '*.csv')]},
       long_description=read('README.rst'),
       zip_safe=False,
-      install_requires=['numpy >= 1.7.0',
-                        'pandas >= 0.13.1',
+      install_requires=['pandas >= 0.19.1',
                         'requests'])
