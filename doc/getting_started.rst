@@ -32,7 +32,7 @@ If you have a working Python 3 environment, use pypi to install the latest windp
 The windpowerlib is designed for Python 3 and tested on Python >= 3.5.
 Please see the `installation page <http://oemof.readthedocs.io/en/stable/installation_and_setup.html>`_ of the oemof documentation for complete instructions on how to install python and a virtual environment on your operating system.
 
-For retrieving power (coefficient) curves from the Open Energy Database (oedb) the python package requests will be installed with your windpowerlib installation. The windpowerlib was tested with requests version 2.20.1 but might work with lower versions.
+For retrieving power (coefficient) curves from the OpenEnergy Database (oedb) the python package requests will be installed with your windpowerlib installation. The windpowerlib was tested with requests version 2.20.1 but might work with lower versions.
 
 Optional Packages
 ~~~~~~~~~~~~~~~~~

@@ -90,7 +90,7 @@ def initialize_wind_turbines():
 
     Function shows three ways to initialize a WindTurbine object. You can
     either specify your own turbine, as done below for 'my_turbine', or fetch
-    power and/or power coefficient curve data from the Open Energy Database
+    power and/or power coefficient curve data from the OpenEnergy Database
     (oedb), as done for the 'enercon_e126', or provide your turbine data in csv
     files as done for 'dummy_turbine' with an example file.
     Execute ``windpowerlib.wind_turbine.get_turbine_types()`` to get a table
@@ -167,7 +167,7 @@ def calculate_power_output(weather, my_turbine, e126, dummy_turbine):
     my_turbine : WindTurbine
         WindTurbine object with self provided power curve.
     e126 : WindTurbine
-        WindTurbine object with power curve from the Open Energy Database.
+        WindTurbine object with power curve from the OpenEnergy Database.
     dummy_turbine : WindTurbine
         WindTurbine object with power coefficient curve from example file.
 

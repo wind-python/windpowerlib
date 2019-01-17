@@ -47,7 +47,7 @@ class WindTurbine(object):
         Default: None.
     data_source : string
         Specifies whether turbine data (f.e. nominal power, power curve, power
-        coefficient curve) is loaded from the Open Energy Database ('oedb') or
+        coefficient curve) is loaded from the OpenEnergy Database ('oedb') or
         from a csv file ('<path including file name>'). Default: 'oedb'.
         See `example_power_curves.csv' and
         `example_power_coefficient_curves.csv` in example/data for the required
@@ -84,7 +84,7 @@ class WindTurbine(object):
     Your wind turbine object should have a power coefficient or power curve.
     You can set the `fetch_curve` parameter and the `data_source` parameter if
     you want to automatically fetch a curve from a data set provided in the
-    Open Energy Database (oedb) or want to read a csv file that you provide.
+    OpenEnergy Database (oedb) or want to read a csv file that you provide.
     See `example_power_curves.csv' and `example_power_coefficient_curves.csv`
     in example/data for the required form of such a csv file (more columns can
     be added).
@@ -146,7 +146,7 @@ class WindTurbine(object):
             are 'power_curve' and 'power_coefficient_curve'. Default: None.
         data_source : string
             Specifies whether turbine data (f.e. nominal power, power curve,
-            power coefficient curve) is loaded from the Open Energy Database
+            power coefficient curve) is loaded from the OpenEnergy Database
             ('oedb') or from a csv file ('<path including file name>').
             Default: 'oedb'.
 
