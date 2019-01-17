@@ -254,7 +254,7 @@ class WindFarm(object):
             # Editions to the power curves before the summation
             if smoothing and smoothing_order == 'turbine_power_curves':
                 power_curve = power_curves.smooth_power_curve(
-                    power_curve['wind_speed'], power_curve['power'],
+                    power_curve['wind_speed'], power_curve['value'],
                     standard_deviation_method=standard_deviation_method,
                     block_width=block_width, **kwargs)
             else:
@@ -263,12 +263,12 @@ class WindFarm(object):
                 if power_curve.iloc[0]['wind_speed'] != 0.0:
                     power_curve = pd.concat(
                         [pd.DataFrame(data={
-                            'power': [0.0], 'wind_speed': [0.0]}),
+                            'value': [0.0], 'wind_speed': [0.0]}),
                          power_curve])
-                if power_curve.iloc[-1]['power'] != 0.0:
+                if power_curve.iloc[-1]['value'] != 0.0:
                     power_curve = pd.concat(
                         [power_curve, pd.DataFrame(data={
-                            'power': [0.0], 'wind_speed': [
+                            'value': [0.0], 'wind_speed': [
                                 power_curve['wind_speed'].loc[
                                     power_curve.index[-1]] + 0.5]})])
             # Add power curves of all turbine types to data frame
@@ -279,13 +279,13 @@ class WindFarm(object):
         # Aggregate all power curves
         wind_farm_power_curve = pd.DataFrame(
             df.interpolate(method='index').sum(axis=1))
-        wind_farm_power_curve.columns = ['power']
+        wind_farm_power_curve.columns = ['value']
         wind_farm_power_curve.reset_index('wind_speed', inplace=True)
         # Editions to the power curve after the summation
         if smoothing and smoothing_order == 'wind_farm_power_curves':
             wind_farm_power_curve = power_curves.smooth_power_curve(
                 wind_farm_power_curve['wind_speed'],
-                wind_farm_power_curve['power'],
+                wind_farm_power_curve['value'],
                 standard_deviation_method=standard_deviation_method,
                 block_width=block_width, **kwargs)
         if (wake_losses_model == 'constant_efficiency' or
@@ -293,7 +293,7 @@ class WindFarm(object):
             wind_farm_power_curve = (
                 power_curves.wake_losses_to_power_curve(
                     wind_farm_power_curve['wind_speed'].values,
-                    wind_farm_power_curve['power'].values,
+                    wind_farm_power_curve['value'].values,
                     wake_losses_model=wake_losses_model,
                     wind_farm_efficiency=self.efficiency))
         self.power_curve = wind_farm_power_curve

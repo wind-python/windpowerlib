@@ -18,7 +18,7 @@ class TestPowerCurves:
     def test_smooth_power_curve(self):
         test_curve = wt.WindTurbine(**self.test_turbine).power_curve
         parameters = {'power_curve_wind_speeds': test_curve['wind_speed'],
-                      'power_curve_values': test_curve['power'],
+                      'power_curve_values': test_curve['value'],
                       'standard_deviation_method': 'turbulence_intensity'}
 
         # Raise ValueError - `turbulence_intensity` missing
@@ -32,7 +32,7 @@ class TestPowerCurves:
                                           name='wind_speed')
         power_values_exp = pd.Series([
             1141906.9806766496, 1577536.8085282773, 1975480.993355767,
-            2314059.4022704284, 2590216.6802602503], name='power')
+            2314059.4022704284, 2590216.6802602503], name='value')
         smoothed_curve_exp = pd.DataFrame(data=pd.concat([
             wind_speed_values_exp, power_values_exp], axis=1))
         smoothed_curve_exp.index = np.arange(5, 10, 1)
@@ -43,7 +43,7 @@ class TestPowerCurves:
         parameters['standard_deviation_method'] = 'Staffell_Pfenninger'
         power_values_exp = pd.Series([
             929405.1348918702, 1395532.5468724659, 1904826.6851982325,
-            2402659.118305521, 2844527.1732449625], name='power')
+            2402659.118305521, 2844527.1732449625], name='value')
         smoothed_curve_exp = pd.DataFrame(
             data=pd.concat([wind_speed_values_exp, power_values_exp], axis=1))
         smoothed_curve_exp.index = np.arange(5, 10, 1)
@@ -58,13 +58,13 @@ class TestPowerCurves:
     def test_wake_losses_to_power_curve(self):
         test_curve = wt.WindTurbine(**self.test_turbine).power_curve
         parameters = {'power_curve_wind_speeds': test_curve['wind_speed'],
-                      'power_curve_values': test_curve['power'],
+                      'power_curve_values': test_curve['value'],
                       'wind_farm_efficiency': 0.9,
                       'wake_losses_model': 'constant_efficiency'}
 
         # Test constant efficiency
         power_curve_exp = test_curve.copy(deep=True)
-        power_curve_exp['power'] = power_curve_exp['power'].values * 0.9
+        power_curve_exp['value'] = power_curve_exp['value'].values * 0.9
         assert_frame_equal(wake_losses_to_power_curve(**parameters),
                            power_curve_exp)
 
@@ -85,8 +85,8 @@ class TestPowerCurves:
         parameters['wind_farm_efficiency'].columns = ['wind_speed',
                                                       'efficiency']
         power_curve_exp = test_curve.copy(deep=True)
-        power_curve_exp['power'] = (
-            power_curve_exp['power'].values * parameters[
+        power_curve_exp['value'] = (
+            power_curve_exp['value'].values * parameters[
                 'wind_farm_efficiency']['efficiency'])
         assert_frame_equal(wake_losses_to_power_curve(**parameters),
                            power_curve_exp)

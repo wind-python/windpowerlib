@@ -30,11 +30,11 @@ class WindTurbine(object):
         Diameter of the rotor in m. Default: None.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
         Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'power_coefficient' columns/keys with wind speeds
+        have 'wind_speed' and 'value' columns/keys with wind speeds
         in m/s and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
         Power curve of the wind turbine. DataFrame/dictionary must have
-        'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
+        'wind_speed' and 'value' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
         The nominal output of the wind turbine in W. Default: None.
@@ -65,11 +65,11 @@ class WindTurbine(object):
         Diameter of the rotor in m. Default: None.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
         Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'power_coefficient' columns/keys with wind speeds
+        have 'wind_speed' and 'value' columns/keys with wind speeds
         in m/s and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
         Power curve of the wind turbine. DataFrame/dictionary must have
-        'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
+        'wind_speed' and 'value' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
         The nominal output of the wind turbine in W. Default: None.
@@ -164,7 +164,7 @@ class WindTurbine(object):
         ...    'fetch_curve': 'power_coefficient_curve',
         ...    'data_source': 'oedb'}
         >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.power_coefficient_curve['power_coefficient'][5])
+        >>> print(e126.power_coefficient_curve['value'][5])
         0.44
         >>> print(e126.nominal_power)
         4200000.0
@@ -177,13 +177,8 @@ class WindTurbine(object):
             curve_df, nominal_power = get_turbine_data_from_file(
                 turbine_type=self.name, file_=data_source)
         if fetch_curve == 'power_curve':
-            curve_df.columns = ['wind_speed', 'power']
-            if data_source == 'oedb':
-                # power values in W
-                curve_df['power'] = curve_df['power'] * 1000
             self.power_curve = curve_df
         elif fetch_curve == 'power_coefficient_curve':
-            curve_df.columns = ['wind_speed', 'power_coefficient']
             self.power_coefficient_curve = curve_df
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
@@ -233,7 +228,7 @@ def get_turbine_data_from_file(turbine_type, file_):
     ...    'fetch_curve': 'power_curve',
     ...    'data_source': source}
     >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
-    >>> print(e_t_1.power_curve['power'][7])
+    >>> print(e_t_1.power_curve['value'][7])
     18000.0
     >>> print(e_t_1.nominal_power)
     150000
@@ -263,7 +258,8 @@ def get_turbine_data_from_file(turbine_type, file_):
     cols = [_ for _ in wpp_df.columns if isfloat(_)]
     curve_data = wpp_df[cols].dropna(axis=1)
     df = curve_data.transpose().reset_index()
-    df['index'] = df['index'].apply(lambda x: float(x))
+    df.columns = ['wind_speed', 'value']
+    df['wind_speed'] = df['wind_speed'].apply(lambda x: float(x))
     nominal_power = wpp_df['p_nom'].iloc[0]
     return df, nominal_power
 
@@ -307,6 +303,10 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve):
                        "possible wind turbine types.")
     nominal_power = turbine_data.loc[turbine_type][
                         'installed_capacity_kw'] * 1000
+    df.columns = ['wind_speed', 'value']
+    if fetch_curve == 'power_curve':
+        # power in W
+        df['value'] = df['value'] * 1000
     return df, nominal_power
 
 

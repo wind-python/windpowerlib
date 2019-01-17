@@ -344,7 +344,7 @@ class ModelChain(object):
             return (power_output.power_curve(
                         wind_speed_hub,
                         self.power_plant.power_curve['wind_speed'],
-                        self.power_plant.power_curve['power'],
+                        self.power_plant.power_curve['value'],
                         density_hub, self.density_correction))
         elif self.power_output_model == 'power_coefficient_curve':
             if self.power_plant.power_coefficient_curve is None:
@@ -358,7 +358,7 @@ class ModelChain(object):
                         self.power_plant.power_coefficient_curve[
                             'wind_speed'],
                         self.power_plant.power_coefficient_curve[
-                            'power_coefficient'],
+                            'value'],
                         self.power_plant.rotor_diameter, density_hub))
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
