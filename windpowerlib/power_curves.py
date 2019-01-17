@@ -126,7 +126,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         raise ValueError("{} is no valid `standard_deviation_method`. Valid "
                          + "options are 'turbulence_intensity', or "
                          + "'Staffell_Pfenninger'".format(
-            standard_deviation_method))
+                                 standard_deviation_method))
     # Initialize list for power curve values
     smoothed_power_curve_values = []
     # Append wind speeds to `power_curve_wind_speeds`
@@ -225,7 +225,8 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
                     wake_losses_model, wind_farm_efficiency))
         df = pd.concat([power_curve_df.set_index('wind_speed'),
                         wind_farm_efficiency.set_index('wind_speed')], axis=1)
-        # Add column with reduced power (nan values of efficiency are interpolated)
+        # Add column with reduced power (nan values of efficiency are
+        # interpolated)
         df['reduced_power'] = df['power'] * df['efficiency'].interpolate(
             method='index')
         reduced_power = df['reduced_power'].dropna()

@@ -2,4 +2,4 @@ sphinx>=1.4
 ipykernel
 nbsphinx
 pandas
-numpy
+requests
