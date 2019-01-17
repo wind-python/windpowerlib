@@ -127,7 +127,7 @@ class WindTurbine(object):
         Fetches data of the requested wind turbine.
 
         Method fetches nominal power as well as power coefficient curve or
-        power curve from a data set provided in the Open Energy Database
+        power curve from a data set provided in the OpenEnergy Database
         (oedb). You can also import your own power (coefficient) curves from a
         file. For that the wind speeds in m/s have to be in the first row and
         the corresponding power coefficient curve values or power curve values
@@ -199,13 +199,15 @@ def get_turbine_data_from_file(turbine_type, file_):
     Fetches power (coefficient) curve data from a csv file.
 
     See `example_power_curves.csv' and `example_power_coefficient_curves.csv`
-    in example/data for the required form of a csv file
-    (more columns can be added).
+    in example/data for the required format of a csv file. The self-provided
+    csv file may contain more columns than the example files. Only columns
+    containing wind speed and the corresponding power or power coefficient as
+    well as the column 'nominal_power' are taken into account.
 
     Parameters
     ----------
     turbine_type : string
-        Specifies the turbine type of which data is fetched.
+        Specifies the turbine type data is fetched for.
     file_ : string
         Specifies the source of the turbine data.
         See the example below for how to use the example data.
@@ -216,7 +218,7 @@ def get_turbine_data_from_file(turbine_type, file_):
         Power curve or power coefficient curve (pandas.DataFrame) and nominal
         power (float). Power (coefficient) curve DataFrame contains power
         coefficient curve values (dimensionless) or power curve values in W
-        with the corresponding wind speeds in m/s.
+        as column names with the corresponding wind speeds in m/s.
 
     Examples
     --------
@@ -268,12 +270,12 @@ def get_turbine_data_from_file(turbine_type, file_):
 
 def get_turbine_data_from_oedb(turbine_type, fetch_curve):
     r"""
-    Gets turbine data from the Open Energy Database (oedb).
+    Gets turbine data from the OpenEnergy Database (oedb).
 
     Parameters
     ----------
     turbine_type : string
-        Specifies the turbine type of which data is fetched.
+        Specifies the turbine type data is fetched for.
         Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
         for which power (coefficient) curve data is provided.
     fetch_curve : string
@@ -310,16 +312,16 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve):
 
 def load_turbine_data_from_oedb():
     r"""
-    Loads turbine data from the Open Energy Database (oedb).
+    Loads turbine data from the OpenEnergy Database (oedb).
 
     Returns
     -------
     turbine_data : pd.DataFrame
-        Contains turbine data of different turbine types like 'manufacturer',
+        Contains turbine data of different turbines such as 'manufacturer',
         'turbine_type', nominal power ('installed_capacity_kw').
 
     """
-    # url of Open Energy Platform that contains the oedb
+    # url of OpenEnergy Platform that contains the oedb
     oep_url = 'http://oep.iks.cs.ovgu.de/'
     # location of data
     schema = 'model_draft'
@@ -329,9 +331,9 @@ def load_turbine_data_from_oedb():
         oep_url + '/api/v0/schema/{}/tables/{}/rows/?'.format(
             schema, table), )
     if result.status_code == 200:
-        logging.info("Data base connection successful.")
+        logging.info("Database connection successful.")
     else:
-        raise ConnectionError("Data base connection not successful. " +
+        raise ConnectionError("Database connection not successful. " +
                               "Error: ".format(result.status_code))
     # extract data
     turbine_data = pd.DataFrame(result.json())
@@ -341,7 +343,7 @@ def load_turbine_data_from_oedb():
 def get_turbine_types(print_out=True):
     r"""
     Get the names of all possible wind turbine types for which the power
-    coefficient curve or power curve is provided in the Open Energy Data Base
+    coefficient curve or power curve is provided in the OpenEnergy Data Base
     (oedb).
 
     Parameters
