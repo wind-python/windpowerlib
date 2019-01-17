@@ -198,9 +198,9 @@ class WindTurbine(object):
         return self
 
 
-def read_turbine_data(turbine_type, file_):
+def read_turbine_data(turbine_type, file_): # todo: rename get_turbine_data_from_file
     r"""
-    Fetches power (coefficient) curves from a  or a file.
+    Fetches power (coefficient) curves from a csv file.
     Turbine data is provided by the Open Energy Database (oedb) or can be
     provided by the user via a file. In the directory windpowerlib/data example
     files are provided.
@@ -255,11 +255,12 @@ def read_turbine_data(turbine_type, file_):
         axis=1)
     data.drop(['p_nom'], inplace=True, axis=1)
     df = data.transpose().reset_index()
+    df['index'] = df['index'].apply(lambda x: float(x))
     nominal_power = wpp_df['p_nom'].iloc[0]
     return df, nominal_power
 
 
-def get_turbine_data_from_oedb(turbine_type, fetch_curve):
+def get_turbine_data_from_oedb(turbine_type=None, fetch_curve=None):
     r"""
     Loads and restructures turbine data from the Open Energy Database (oedb).
 
@@ -286,15 +287,17 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve):
         else:
             raise ConnectionError("Data base connection not successful. " +
                                   "Error: ".format(result.status_code))
-        # extract data
-        turbine_data = pd.DataFrame(result.json())
-        turbine_data.set_index('turbine_type', inplace=True)
-        # Set `curve` depending on `fetch_curve` to match names in oedb
-        curve = ('cp_curve' if fetch_curve == 'power_coefficient_curve'
-                 else fetch_curve)
-        df = pd.DataFrame(turbine_data.loc[turbine_type][curve])
-        nominal_power = turbine_data.loc[turbine_type][
-                            'installed_capacity_kw'] * 1000
+
+        if (turbine_type is not None and fetch_curve is not None):
+            # extract data
+            turbine_data = pd.DataFrame(result.json())
+            turbine_data.set_index('turbine_type', inplace=True)
+            # Set `curve` depending on `fetch_curve` to match names in oedb
+            curve = ('cp_curve' if fetch_curve == 'power_coefficient_curve'
+                     else fetch_curve)
+            df = pd.DataFrame(turbine_data.loc[turbine_type][curve])
+            nominal_power = turbine_data.loc[turbine_type][
+                                'installed_capacity_kw'] * 1000
     else:
         raise ImportError('If you want to load turbine data from the oedb' +
                           'you have to install the requests package.' +
@@ -333,7 +336,7 @@ def get_turbine_types(print_out=True):
 
     """
 
-    df = load_turbine_data_from_oedb()
+    df = get_turbine_data_from_oedb()
     cp_curves_df = df.iloc[df.loc[df['has_cp_curve'] == True].index][
         ['manufacturer', 'turbine_type', 'has_cp_curve']]
     p_curves_df = df.iloc[df.loc[df['has_power_curve'] == True].index][
