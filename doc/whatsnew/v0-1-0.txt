@@ -20,7 +20,7 @@ New functions
  * :py:func:`~windpowerlib.power_curves.wake_losses_to_power_curve`: application of wake losses to a power curve
  * :py:func:`~windpowerlib.wake_losses.reduce_wind_speed`: application of wake losses to a wind speed time series by using wind efficiency curves which are provided in the data directory
  * :py:func:`~windpowerlib.tools.logarithmic_interpolation_extrapolation` for wind speed time series
- * :py:func:`~windpowerlib.tools.gauss_distribution` (needed for power curve smoothing)
+ * :py:func:`~windpowerlib.tools.gauss_distribution` needed for power curve smoothing
  * :py:func:`~windpowerlib.tools.estimate_turbulence_intensity` by roughness length
  * :py:func:`~windpowerlib.wind_turbine.get_turbine_data_from_oedb` for retrieving power curves from `OpenEnergy Database <https://openenergy-platform.org/dataedit/>`_
 
