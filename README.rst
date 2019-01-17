@@ -2,8 +2,8 @@
     :target: https://travis-ci.org/wind-python/windpowerlib
 .. image:: https://coveralls.io/repos/github/wind-python/windpowerlib/badge.svg?branch=dev
     :target: https://coveralls.io/github/wind-python/windpowerlib?branch=dev
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.824268.svg
-   :target: https://doi.org/10.5281/zenodo.824268
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2542896.svg
+   :target: https://doi.org/10.5281/zenodo.2542896
    
 Introduction
 =============
