@@ -31,10 +31,10 @@ class TestWindTurbine:
             test_turbine = WindTurbine(**self.test_turbine_data)
 
 
-    def test_read_turbine_data(self):
+    def test_get_turbine_data_from_file(self):
         # Raise FileNotFoundError due to missing
         with pytest.raises(FileNotFoundError):
-            get_turbine_data_from_file(turbine_type='...', file_='not_existent') # todo test turbine type not found?
+            get_turbine_data_from_file(turbine_type='...', file_='not_existent')
 
     def test_get_turbine_types(self):
         get_turbine_types(print_out=False)
