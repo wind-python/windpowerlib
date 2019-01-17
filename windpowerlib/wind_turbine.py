@@ -238,6 +238,13 @@ def read_turbine_data(turbine_type, file_): # todo: rename get_turbine_data_from
     150000
 
     """
+    def isfloat(x):
+        try:
+            float(x)
+            return x
+        except:
+            return False
+
     try:
         df = pd.read_csv(file_, index_col=0)
     except FileNotFoundError:
@@ -250,11 +257,11 @@ def read_turbine_data(turbine_type, file_): # todo: rename get_turbine_data_from
         pd.reset_option('display.max_rows')
         sys.exit('Cannot find the wind converter type: {0}'.format(
             turbine_type))
-    # if turbine in data file drop nans
-    data = wpp_df.loc[:, wpp_df.columns != 'turbine_id'].dropna(
-        axis=1)
-    data.drop(['p_nom'], inplace=True, axis=1)
-    df = data.transpose().reset_index()
+    # if turbine in data file select power (coefficient) curve columns and
+    # drop nans
+    cols = [_ for _ in wpp_df.columns if isfloat(_)]
+    curve_data = wpp_df[cols].dropna(axis=1)
+    df = curve_data.transpose().reset_index()
     df['index'] = df['index'].apply(lambda x: float(x))
     nominal_power = wpp_df['p_nom'].iloc[0]
     return df, nominal_power
