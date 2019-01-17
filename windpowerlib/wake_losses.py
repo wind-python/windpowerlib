@@ -136,7 +136,7 @@ def get_wind_efficiency_curve(curve_name='all'):
         # Raise error if wind efficiency curve specified in 'curve_name' does
         # not exist
         if curve_name not in list(wind_efficiency_curves):
-            msg = ("Efficiency curve <{0}> does not exist. Must be one of the" 
+            msg = ("Efficiency curve <{0}> does not exist. Must be one of the"
                    "following: {1}.")
             raise ValueError(msg.format(curve_name, *possible_curve_names))
 

@@ -65,7 +65,7 @@ class WindTurbine(object):
         Diameter of the rotor in m. Default: None.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
         Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'power coefficient' columns/keys with wind speeds
+        have 'wind_speed' and 'power_coefficient' columns/keys with wind speeds
         in m/s and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
         Power curve of the wind turbine. DataFrame/dictionary must have
@@ -82,11 +82,12 @@ class WindTurbine(object):
     Notes
     ------
     Your wind turbine object should have a power coefficient or power curve.
-    You can set the `fetch_curve` parameter and the `data_source` parameter
-    want to automatically fetch a curve from a data set provided in the Open
-    Energy Database (oedb) or want to read a csv file that you provide.
+    You can set the `fetch_curve` parameter and the `data_source` parameter if
+    you want to automatically fetch a curve from a data set provided in the
+    Open Energy Database (oedb) or want to read a csv file that you provide.
     See `example_power_curves.csv' and `example_power_coefficient_curves.csv`
-    in example/data for the required form of such a csv file.
+    in example/data for the required form of such a csv file (more columns can
+    be added).
 
     Examples
     --------
@@ -127,11 +128,10 @@ class WindTurbine(object):
 
         Method fetches nominal power as well as power coefficient curve or
         power curve from a data set provided in the Open Energy Database
-        (oedb). You can also use this function to import your own power
-        (coefficient) curves from a file. For that the wind speeds in m/s have
-        to be in the first row and the corresponding power coefficient curve
-        values or power curve values in W in a row where the first column
-        contains the turbine name.
+        (oedb). You can also import your own power (coefficient) curves from a
+        file. For that the wind speeds in m/s have to be in the first row and
+        the corresponding power coefficient curve values or power curve values
+        in W in a row where the first column contains the turbine name.
         See `example_power_curves.csv' and
         `example_power_coefficient_curves.csv` in example/data for the required
         form of a csv file (more columns can be added). See
@@ -350,7 +350,10 @@ def get_turbine_types(print_out=True):
     ----------
     print_out : boolean
         Directly prints a tabular containing the turbine types in column
-        'turbine_type'. Default: True.
+        'turbine_type', the manufacturer in column 'manufacturer' and
+        information about whether a power (coefficient) curve exists (True) or
+        not (False) in columns 'has_power_curve' and 'has_cp_curve'.
+        Default: True.
 
     Examples
     --------
@@ -377,7 +380,7 @@ def get_turbine_types(print_out=True):
     p_curves_df = df.iloc[df.loc[df['has_power_curve'] == True].index][
         ['manufacturer', 'turbine_type', 'has_power_curve']]
     curves_df = pd.merge(p_curves_df, cp_curves_df, how='outer',
-                        sort=True).fillna(False)
+                         sort=True).fillna(False)
     if print_out:
         pd.set_option('display.max_rows', len(curves_df))
         print(curves_df)

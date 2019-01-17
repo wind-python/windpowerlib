@@ -318,7 +318,7 @@ class ModelChain(object):
 
     def calculate_power_output(self, wind_speed_hub, density_hub):
         r"""
-        Calculates the power output of the wind turbine. # todo power plant output????
+        Calculates the power output of the wind power plant.
 
         The method specified by the parameter `power_output_model` is used.
 
