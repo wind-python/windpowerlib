@@ -297,13 +297,19 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve):
         with the corresponding wind speeds in m/s.
 
     """
-    # extract data
+    # Extract data
     turbine_data = load_turbine_data_from_oedb()
     turbine_data.set_index('turbine_type', inplace=True)
     # Set `curve` depending on `fetch_curve` to match names in oedb
     curve = ('cp_curve' if fetch_curve == 'power_coefficient_curve'
              else fetch_curve)
-    df = pd.DataFrame(turbine_data.loc[turbine_type][curve])
+    # Select curve and nominal power of turbine type
+    try:
+        df = pd.DataFrame(turbine_data.loc[turbine_type][curve])
+    except KeyError:
+        raise KeyError("Turbine type '{}' not in database. ".format(
+            turbine_type) + "Use 'get_turbine_types()' to see a table of " +
+                       "possible wind turbine types.")
     nominal_power = turbine_data.loc[turbine_type][
                         'installed_capacity_kw'] * 1000
     return df, nominal_power
