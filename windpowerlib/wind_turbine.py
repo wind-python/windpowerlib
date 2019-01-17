@@ -11,12 +11,7 @@ __license__ = "GPLv3"
 import pandas as pd
 import logging
 import sys
-import os
-
-try:
-    import requests as rq
-except ImportError:
-    rq = None
+import requests
 
 
 class WindTurbine(object):
@@ -326,27 +321,22 @@ def load_turbine_data_from_oedb():
         'turbine_type', nominal power ('installed_capacity_kw'), '
 
     """
-    if rq:
-        # url of Open Energy Platform that contains the oedb
-        oep_url = 'http://oep.iks.cs.ovgu.de/'
-        # location of data
-        schema = 'model_draft'
-        table = 'openfred_windpower_powercurve'
-        # load data
-        result = rq.get(
-            oep_url + '/api/v0/schema/{}/tables/{}/rows/?'.format(
-                schema, table), )
-        if result.status_code == 200:
-            logging.info("Data base connection successful.")
-        else:
-            raise ConnectionError("Data base connection not successful. " +
-                                  "Error: ".format(result.status_code))
-        # extract data
-        turbine_data = pd.DataFrame(result.json())
+    # url of Open Energy Platform that contains the oedb
+    oep_url = 'http://oep.iks.cs.ovgu.de/'
+    # location of data
+    schema = 'model_draft'
+    table = 'openfred_windpower_powercurve'
+    # load data
+    result = requests.get(
+        oep_url + '/api/v0/schema/{}/tables/{}/rows/?'.format(
+            schema, table), )
+    if result.status_code == 200:
+        logging.info("Data base connection successful.")
     else:
-        raise ImportError('If you want to load turbine data from the oedb' +
-                          'you have to install the requests package.' +
-                          'see https://pypi.org/project/requests/')
+        raise ConnectionError("Data base connection not successful. " +
+                              "Error: ".format(result.status_code))
+    # extract data
+    turbine_data = pd.DataFrame(result.json())
     return turbine_data
 
 
