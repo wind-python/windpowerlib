@@ -32,7 +32,7 @@ class WindTurbine(object):
     hub_height : float
         Hub height of the wind turbine in m.
     rotor_diameter : None or float
-        Diameter of the rotor in m.
+        Diameter of the rotor in m. Default: None.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
         Power coefficient curve of the wind turbine. DataFrame/dictionary must
         have 'wind_speed' and 'power_coefficient' columns/keys with wind speeds
@@ -42,7 +42,7 @@ class WindTurbine(object):
         'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
-        The nominal output of the wind turbine in W.
+        The nominal output of the wind turbine in W. Default: None.
     fetch_curve : string
         Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
@@ -53,9 +53,10 @@ class WindTurbine(object):
     data_source : string
         Specifies whether turbine data (f.e. nominal power, power curve, power
         coefficient curve) is loaded from the Open Energy Database ('oedb') or
-        from a csv file ('<path including file name>'). See
-        `example_power_curves.csv' and `example_power_coefficient_curves.csv`
-        in example/data for the required form of a csv file. Default: 'oedb'.
+        from a csv file ('<path including file name>'). Default: 'oedb'.
+        See `example_power_curves.csv' and
+        `example_power_coefficient_curves.csv` in example/data for the required
+        form of a csv file (more columns can be added).
 
     Attributes
     ----------
@@ -66,7 +67,7 @@ class WindTurbine(object):
     hub_height : float
         Hub height of the wind turbine in m.
     rotor_diameter : None or float
-        Diameter of the rotor in m.
+        Diameter of the rotor in m. Default: None.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
         Power coefficient curve of the wind turbine. DataFrame/dictionary must
         have 'wind_speed' and 'power coefficient' columns/keys with wind speeds
@@ -76,12 +77,12 @@ class WindTurbine(object):
         'wind_speed' and 'power' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
-        The nominal output of the wind turbine in W.
+        The nominal output of the wind turbine in W. Default: None.
     coordinates : list or None
         List of coordinates [lat, lon] of location for loading data.
         Default: None.
     power_output : pandas.Series
-        The calculated power output of the wind turbine.
+        The calculated power output of the wind turbine. Default: None.
 
     Notes
     ------
@@ -132,10 +133,15 @@ class WindTurbine(object):
         Method fetches nominal power as well as power coefficient curve or
         power curve from a data set provided in the Open Energy Database
         (oedb). You can also use this function to import your own power
-        (coefficient) curves. For that the wind speeds in m/s have to be in the
-        first row and the corresponding power coefficient curve values or power
-        curve values in W in a row where the first column contains the turbine
-        name (see directory windpowerlib/data as reference).
+        (coefficient) curves from a file. For that the wind speeds in m/s have
+        to be in the first row and the corresponding power coefficient curve
+        values or power curve values in W in a row where the first column
+        contains the turbine name.
+        See `example_power_curves.csv' and
+        `example_power_coefficient_curves.csv` in example/data for the required
+        form of a csv file (more columns can be added). See
+        :py:func:`~.get_turbine_data_from_file` for an example reading data
+        from a csv file.
 
         Parameters
         ----------
@@ -146,12 +152,8 @@ class WindTurbine(object):
         data_source : string
             Specifies whether turbine data (f.e. nominal power, power curve,
             power coefficient curve) is loaded from the Open Energy Database
-            ('oedb') or from a csv file ('<path including file name>'). See
-            `example_power_curves.csv' and
-            `example_power_coefficient_curves.csv` in example/data for the
-            required form of a csv file. Default: 'oedb'.
-            See :py:func:`~.read_turbine_data` for an example reading data from
-            a csv file.
+            ('oedb') or from a csv file ('<path including file name>').
+            Default: 'oedb'.
 
         Returns
         -------
@@ -199,24 +201,29 @@ class WindTurbine(object):
 
 def get_turbine_data_from_file(turbine_type, file_):
     r"""
-    Fetches power (coefficient) curves from a csv file.
-    Turbine data is provided by the Open Energy Database (oedb) or can be
-    provided by the user via a file. In the directory windpowerlib/data example
-    files are provided.
+    Fetches power (coefficient) curve data from a csv file.
+
+    See `example_power_curves.csv' and `example_power_coefficient_curves.csv`
+    in example/data for the required form of a csv file
+    (more columns can be added).
 
     Parameters
     ----------
-    file_ : string # todo adapt
+    turbine_type : string
+        Specifies the turbine type of which data is fetched.
+        Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
+        for which power (coefficient) curve data is provided.
+    file_ : string
         Specifies the source of the turbine data.
         See the example below for how to use the example data.
 
     Returns
     -------
-    pandas.DataFrame
-        Power coefficient curve values (dimensionless) or power curve values
-        in kW with corresponding wind speeds in m/s of all available wind
-        turbines with turbine name in column 'turbine_type', turbine nominal
-        power in column 'p_nom'.
+    Tuple (pandas.DataFrame, float)
+        Power curve or power coefficient curve (pandas.DataFrame) and nominal
+        power (float). Power (coefficient) curve DataFrame contains power
+        coefficient curve values (dimensionless) or power curve values in W
+        with the corresponding wind speeds in m/s.
 
     Examples
     --------
@@ -270,11 +277,24 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve):
     r"""
     Gets turbine data from the Open Energy Database (oedb).
 
-    Returns # todo paratmeter
+    Parameters
+    ----------
+    turbine_type : string
+        Specifies the turbine type of which data is fetched.
+        Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
+        for which power (coefficient) curve data is provided.
+    fetch_curve : string
+        Parameter to specify whether a power or power coefficient curve
+        should be retrieved from the provided turbine data. Valid options are
+        'power_curve' and 'power_coefficient_curve'. Default: None.
+
+    Returns
     -------
-    # todo adapt : pd.DataFrame
-        Contains turbine data of different turbine types like 'manufacturer',
-        'turbine_type', nominal power ('installed_capacity_kw'), '
+    Tuple (pandas.DataFrame, float)
+        Power curve or power coefficient curve (pandas.DataFrame) and nominal
+        power (float). Power (coefficient) curve DataFrame contains power
+        coefficient curve values (dimensionless) or power curve values in W
+        with the corresponding wind speeds in m/s.
 
     """
     # extract data
@@ -298,8 +318,8 @@ def load_turbine_data_from_oedb():
     turbine_data : pd.DataFrame
         Contains turbine data of different turbine types like 'manufacturer',
         'turbine_type', nominal power ('installed_capacity_kw'), '
-    """
 
+    """
     if rq:
         # url of Open Energy Platform that contains the oedb
         oep_url = 'http://oep.iks.cs.ovgu.de/'
