@@ -318,7 +318,7 @@ class ModelChain(object):
 
     def calculate_power_output(self, wind_speed_hub, density_hub):
         r"""
-        Calculates the power output of the wind turbine. # todo power plant output????
+        Calculates the power output of the wind power plant.
 
         The method specified by the parameter `power_output_model` is used.
 
@@ -344,7 +344,7 @@ class ModelChain(object):
             return (power_output.power_curve(
                         wind_speed_hub,
                         self.power_plant.power_curve['wind_speed'],
-                        self.power_plant.power_curve['power'],
+                        self.power_plant.power_curve['value'],
                         density_hub, self.density_correction))
         elif self.power_output_model == 'power_coefficient_curve':
             if self.power_plant.power_coefficient_curve is None:
@@ -358,7 +358,7 @@ class ModelChain(object):
                         self.power_plant.power_coefficient_curve[
                             'wind_speed'],
                         self.power_plant.power_coefficient_curve[
-                            'power coefficient'],
+                            'value'],
                         self.power_plant.rotor_diameter, density_hub))
         else:
             raise ValueError("'{0}' is an invalid value. ".format(

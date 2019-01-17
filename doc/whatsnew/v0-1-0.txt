@@ -1,5 +1,9 @@
-v0.1.0 (January 16, 2019)
+v0.1.0 (January 17, 2019)
 ++++++++++++++++++++++++++++++++++
+
+ATTENTION: From v0.1.0 on power (coefficient) curves are provided by the OpenEnergy Database (oedb) instead of in csv files (v0.6.0 and lower) due to legal reasons.
+Use :py:func:`~wind_turbine.get_turbine_types` to check whether the turbine types you need are included in the database.
+If your turbine type is not included you can either use your own csv file or open an issue.
 
 New classes
 ###########
@@ -17,7 +21,7 @@ New functions
  * logarithmic interpolation/extrapolation for wind speed time series
  * gauss distribution (needed for power curve smoothing)
  * estimation of turbulence intensity by roughness length
- * retrieve power curves from Open Energy Database
+ * retrieve power curves from OpenEnergy Database
 
 
 Testing
@@ -38,7 +42,7 @@ API changes
 
  * renamed attribute `turbine_name` of WindTurbine class to `name` to match with `name` attribute of WindFarm and WindTurbineCluster class
  * renamed `basic_example` to `modelchain_example`
- * renamed column 'values' of power curves to 'power' and column 'values' of power coefficient curves to 'power coefficient'
+ * renamed column 'values' of power (coefficient) curves to 'value' to prevent errors using df.value(s)
  * renamed `run_basic_example()` to `run_example()` in `modelchain_example`
  * renamed parameter `wind_turbine` of `ModelChain` object to `power_plant`
  * removed parameter `density_correction` from `power_plant.power_coefficient()`

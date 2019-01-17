@@ -90,7 +90,7 @@ def initialize_wind_turbines():
 
     Function shows three ways to initialize a WindTurbine object. You can
     either specify your own turbine, as done below for 'my_turbine', or fetch
-    power and/or power coefficient curve data from the Open Energy Database
+    power and/or power coefficient curve data from the OpenEnergy Database
     (oedb), as done for the 'enercon_e126', or provide your turbine data in csv
     files as done for 'dummy_turbine' with an example file.
     Execute ``windpowerlib.wind_turbine.get_turbine_types()`` to get a table
@@ -111,7 +111,7 @@ def initialize_wind_turbines():
         'hub_height': 105,  # in m
         'rotor_diameter': 90,  # in m
         'power_curve': pd.DataFrame(
-            data={'power': [p * 1000 for p in [
+            data={'value': [p * 1000 for p in [
                       0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],  # in W
                   'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]})  # in m/s
     }
@@ -135,7 +135,6 @@ def initialize_wind_turbines():
     # by a csv file
     csv_file = os.path.join(os.path.dirname(__file__), 'data',
                             'example_power_coefficient_curves.csv')
-    # todo adapt in jupyter notebook!!!
     dummy_turbine = {
         'name': 'DUMMY 1',  # turbine type as in file #
         'hub_height': 100,  # in m
@@ -168,7 +167,7 @@ def calculate_power_output(weather, my_turbine, e126, dummy_turbine):
     my_turbine : WindTurbine
         WindTurbine object with self provided power curve.
     e126 : WindTurbine
-        WindTurbine object with power curve from the Open Energy Database.
+        WindTurbine object with power curve from the OpenEnergy Database.
     dummy_turbine : WindTurbine
         WindTurbine object with power coefficient curve from example file.
 
@@ -247,7 +246,7 @@ def plot_or_print(my_turbine, e126, dummy_turbine):
                 title='Enercon E126 power coefficient curve')
             plt.show()
         if e126.power_curve is not None:
-            e126.power_curve.plot(x='wind_speed', y='power', style='*',
+            e126.power_curve.plot(x='wind_speed', y='value', style='*',
                                   title='Enercon E126 power curve')
             plt.show()
         if my_turbine.power_coefficient_curve is not None:
@@ -256,7 +255,7 @@ def plot_or_print(my_turbine, e126, dummy_turbine):
                 title='myTurbine power coefficient curve')
             plt.show()
         if my_turbine.power_curve is not None:
-            my_turbine.power_curve.plot(x='wind_speed', y='power', style='*',
+            my_turbine.power_curve.plot(x='wind_speed', y='value', style='*',
                                         title='myTurbine power curve')
             plt.show()
     else:
