@@ -54,7 +54,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     Returns
     -------
     smoothed_power_curve_df : pd.DataFrame
-        Smoothed power curve. DataFrame has 'wind_speed' and 'power' columns
+        Smoothed power curve. DataFrame has 'wind_speed' and 'value' columns
         with wind speeds in m/s and the corresponding power curve value in W.
 
     Notes
@@ -85,7 +85,8 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
     'turbulence_intensity' [2]_:
 
-    .. math:: \sigma = v_\text{std} \sigma_\text{n} = v_\text{std} TI
+    .. math:: \sigma = v_\text{std} \cdot \sigma_\text{n} = v_\text{std}
+        \cdot TI
 
     with:
         TI: turbulence intensity
@@ -125,7 +126,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         raise ValueError("{} is no valid `standard_deviation_method`. Valid "
                          + "options are 'turbulence_intensity', or "
                          + "'Staffell_Pfenninger'".format(
-            standard_deviation_method))
+                                 standard_deviation_method))
     # Initialize list for power curve values
     smoothed_power_curve_values = []
     # Append wind speeds to `power_curve_wind_speeds`
@@ -167,7 +168,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         data=[list(power_curve_wind_speeds.values),
               smoothed_power_curve_values]).transpose()
     # Rename columns of the data frame
-    smoothed_power_curve_df.columns = ['wind_speed', 'power']
+    smoothed_power_curve_df.columns = ['wind_speed', 'value']
     return smoothed_power_curve_df
 
 
@@ -199,7 +200,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
     -------
     power_curve_df : pd.DataFrame
         Power curve with power values reduced by a wind farm efficiency.
-        DataFrame has 'wind_speed' and 'power' columns with wind speeds in m/s
+        DataFrame has 'wind_speed' and 'value' columns with wind speeds in m/s
         and the corresponding power curve value in W.
 
     """
@@ -208,13 +209,13 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         data=[list(power_curve_wind_speeds),
               list(power_curve_values)]).transpose()
     # Rename columns of DataFrame
-    power_curve_df.columns = ['wind_speed', 'power']
+    power_curve_df.columns = ['wind_speed', 'value']
     if wake_losses_model == 'constant_efficiency':
         if not isinstance(wind_farm_efficiency, float):
             raise TypeError("'wind_farm_efficiency' must be float if " +
                             "`wake_losses_model´ is '{}' but is {}".format(
                                 wake_losses_model, wind_farm_efficiency))
-        power_curve_df['power'] = power_curve_values * wind_farm_efficiency
+        power_curve_df['value'] = power_curve_values * wind_farm_efficiency
     elif wake_losses_model == 'power_efficiency_curve':
         if (not isinstance(wind_farm_efficiency, dict) and
                 not isinstance(wind_farm_efficiency, pd.DataFrame)):
@@ -224,13 +225,14 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
                     wake_losses_model, wind_farm_efficiency))
         df = pd.concat([power_curve_df.set_index('wind_speed'),
                         wind_farm_efficiency.set_index('wind_speed')], axis=1)
-        # Add column with reduced power (nan values of efficiency are interpolated)
-        df['reduced_power'] = df['power'] * df['efficiency'].interpolate(
+        # Add column with reduced power (nan values of efficiency are
+        # interpolated)
+        df['reduced_power'] = df['value'] * df['efficiency'].interpolate(
             method='index')
         reduced_power = df['reduced_power'].dropna()
         power_curve_df = pd.DataFrame([reduced_power.index,
                                        reduced_power.values]).transpose()
-        power_curve_df.columns = ['wind_speed', 'power']
+        power_curve_df.columns = ['wind_speed', 'value']
     else:
         raise ValueError(
             "`wake_losses_model` is {} but should be ".format(
