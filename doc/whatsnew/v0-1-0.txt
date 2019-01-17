@@ -43,7 +43,7 @@ API changes
 
  * renamed attribute `turbine_name` of WindTurbine class to `name` to match with `name` attribute of WindFarm and WindTurbineCluster class
  * renamed `basic_example` to `modelchain_example`
- * renamed column 'values' of power curves to 'power' and column 'values' of power coefficient curves to 'power coefficient'
+ * renamed column 'values' of power (coefficient) curves to 'value' to prevent errors using df.value(s)
  * renamed `run_basic_example()` to `run_example()` in `modelchain_example`
  * renamed parameter `wind_turbine` of `ModelChain` object to `power_plant`
  * removed parameter `density_correction` from `power_plant.power_coefficient()`
