@@ -6,10 +6,10 @@ def read(fname):
 
 setup(name='windpowerlib',
       version='0.1.0',
-      description='Creating time series from wind power plants.',
+      description='Creating time series of wind power plants.',
       url='http://github.com/wind-python/windpowerlib',
       author='oemof developing group',
-      author_email='mail',
+      author_email='windpowerlib@rl-institut.de',
       license=None,
       packages=['windpowerlib'],
       package_data={
