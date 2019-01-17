@@ -178,8 +178,8 @@ class WindTurbine(object):
             curve_df, nominal_power = get_turbine_data_from_oedb(
                 turbine_type=self.name, fetch_curve=fetch_curve)
         else:
-            curve_df, nominal_power = read_turbine_data(turbine_type=self.name,
-                                                        file_=data_source)
+            curve_df, nominal_power = get_turbine_data_from_file(
+                turbine_type=self.name, file_=data_source)
         if fetch_curve == 'power_curve':
             curve_df.columns = ['wind_speed', 'power']
             if data_source == 'oedb':
@@ -198,7 +198,7 @@ class WindTurbine(object):
         return self
 
 
-def read_turbine_data(turbine_type, file_): # todo: rename get_turbine_data_from_file
+def get_turbine_data_from_file(turbine_type, file_):
     r"""
     Fetches power (coefficient) curves from a csv file.
     Turbine data is provided by the Open Energy Database (oedb) or can be
