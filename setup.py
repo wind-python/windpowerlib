@@ -17,4 +17,5 @@ setup(name='windpowerlib',
       long_description=read('README.rst'),
       zip_safe=False,
       install_requires=['numpy >= 1.7.0',
-                        'pandas >= 0.13.1'])
+                        'pandas >= 0.13.1',
+                        'requests'])
