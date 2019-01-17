@@ -1,5 +1,10 @@
-v0.1.0 (January 16, 2019)
+v0.1.0 (January 17, 2019)
 ++++++++++++++++++++++++++++++++++
+
+ATTENTION: From v0.1.0 on power (coefficient) curves are provided by the Open Energy Database (oedb) instead of in csv files (v0.6.0 and lower) due to legal reasons.
+Use :py:func:`~wind_turbine.get_turbine_types` to check whether the turbine types you need are included in the database.
+If your turbine type is not included you can either add it to the `database <https://openenergy-platform.org/dataedit/view/model_draft/openfred_windpower_powercurve>`_
+(see `API tutorial <https://oep-data-interface.readthedocs.io/en/latest/api/how_to.html>`_) or use your own csv file.
 
 New classes
 ###########

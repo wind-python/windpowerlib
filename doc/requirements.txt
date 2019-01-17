@@ -3,3 +3,4 @@ ipykernel
 nbsphinx
 pandas
 numpy
+requests
