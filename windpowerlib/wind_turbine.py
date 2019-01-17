@@ -302,8 +302,9 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve):
     nominal_power = turbine_data.loc[turbine_type][
                         'installed_capacity_kw'] * 1000
     df.columns = ['wind_speed', 'value']
-    # power in W
-    df['value'] = df['value'] * 1000
+    if fetch_curve == 'power_curve':
+        # power in W
+        df['value'] = df['value'] * 1000
     return df, nominal_power
 
 
