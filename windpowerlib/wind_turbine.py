@@ -206,8 +206,6 @@ def get_turbine_data_from_file(turbine_type, file_):
     ----------
     turbine_type : string
         Specifies the turbine type of which data is fetched.
-        Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
-        for which power (coefficient) curve data is provided.
     file_ : string
         Specifies the source of the turbine data.
         See the example below for how to use the example data.
@@ -318,7 +316,7 @@ def load_turbine_data_from_oedb():
     -------
     turbine_data : pd.DataFrame
         Contains turbine data of different turbine types like 'manufacturer',
-        'turbine_type', nominal power ('installed_capacity_kw'), '
+        'turbine_type', nominal power ('installed_capacity_kw').
 
     """
     # url of Open Energy Platform that contains the oedb
@@ -354,6 +352,14 @@ def get_turbine_types(print_out=True):
         information about whether a power (coefficient) curve exists (True) or
         not (False) in columns 'has_power_curve' and 'has_cp_curve'.
         Default: True.
+
+    Returns
+    -------
+    curves_df : pd.DataFrame
+        Contains turbine types in column 'turbine_type', the manufacturer in
+        column 'manufacturer' and information about whether a power
+        (coefficient) curve exists (True) or not (False) in columns
+        'has_power_curve' and 'has_cp_curve'.
 
     Examples
     --------
