@@ -5,7 +5,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name='windpowerlib',
-      version='0.1.0',
+      version='0.1.1dev',
       description='Creating time series of wind power plants.',
       url='http://github.com/wind-python/windpowerlib',
       author='oemof developing group',
