@@ -296,11 +296,17 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve):
              else fetch_curve)
     # Select curve and nominal power of turbine type
     try:
-        df = pd.DataFrame(turbine_data.loc[turbine_type][curve])
+        df = turbine_data.loc[turbine_type]
     except KeyError:
         raise KeyError("Turbine type '{}' not in database. ".format(
             turbine_type) + "Use 'get_turbine_types()' to see a table of " +
                        "possible wind turbine types.")
+    if df[curve] is not None:
+        df = pd.DataFrame(df[curve])
+    else:
+        sys.exit("{} of {} not available in ".format(curve, turbine_type) +
+                 "oedb. Use 'get_turbine_types()' to see for which turbine " +
+                 "types power coefficient curves are available.")
     nominal_power = turbine_data.loc[turbine_type][
                         'installed_capacity_kw'] * 1000
     df.columns = ['wind_speed', 'value']
