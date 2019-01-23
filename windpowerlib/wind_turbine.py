@@ -336,9 +336,7 @@ def load_turbine_data_from_oedb():
     result = requests.get(
         oep_url + '/api/v0/schema/{}/tables/{}/rows/?'.format(
             schema, table), )
-    if result.status_code == 200:
-        logging.info("Database connection successful.")
-    else:
+    if not result.status_code == 200:
         raise ConnectionError("Database connection not successful. " +
                               "Error: ".format(result.status_code))
     # extract data
