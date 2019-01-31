@@ -72,10 +72,12 @@ def get_weather_data(filename='weather.csv', **kwargs):
             os.path.dirname(__file__))[0], 'example')
     file = os.path.join(kwargs['datapath'], filename)
     # read csv file
-    weather_df = pd.read_csv(file, index_col=0, header=[0, 1])
+    weather_df = pd.read_csv(
+        file, index_col=0, header=[0, 1],
+        date_parser=lambda idx: pd.to_datetime(idx, utc=True))
     # change type of index to datetime and set time zone
-    weather_df.index = pd.to_datetime(weather_df.index).tz_localize(
-        'UTC').tz_convert('Europe/Berlin')
+    weather_df.index = pd.to_datetime(weather_df.index).tz_convert(
+        'Europe/Berlin')
     # change type of height from str to int by resetting columns
     weather_df.columns = [weather_df.axes[1].levels[0][
                               weather_df.axes[1].labels[0]],
