@@ -1,33 +1,14 @@
-v0.1.1 (latest in August 2019)
+v0.1.1 (January 31, 2019)
 ++++++++++++++++++++++++++++++
-
-
-New functions
-#############
-
-
-
-Testing
-#######
-
-
-
-Documentation
-#############
-
-
-
-API changes
-###########
-
-
 
 Other changes
 #############
-
+* Adapted csv reading to pandas API change
+* Removed logging message for successful database connection
+* Added system exit and error message in case a non-existing power (coefficient) curve of an existing turbine type is tried to be used
 
 
 Contributors
 ############
-
-
+* Uwe Krien
+* Sabine Haas
