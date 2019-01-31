@@ -80,9 +80,9 @@ def get_weather_data(filename='weather.csv', **kwargs):
         'Europe/Berlin')
     # change type of height from str to int by resetting columns
     weather_df.columns = [weather_df.axes[1].levels[0][
-                              weather_df.axes[1].labels[0]],
+                              weather_df.axes[1].codes[0]],
                           weather_df.axes[1].levels[1][
-                              weather_df.axes[1].labels[1]].astype(int)]
+                              weather_df.axes[1].codes[1]].astype(int)]
     return weather_df
 
 
