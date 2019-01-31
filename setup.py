@@ -17,4 +17,4 @@ setup(name='windpowerlib',
       long_description=read('README.rst'),
       zip_safe=False,
       install_requires=['pandas >= 0.19.1, < 0.25 ',
-                        'requests'])
+                        'requests < 3.0'])
