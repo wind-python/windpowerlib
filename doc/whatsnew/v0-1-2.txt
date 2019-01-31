@@ -1,0 +1,33 @@
+v0.1.2 (latest in August 2019)
+++++++++++++++++++++++++++++++
+
+
+New functions
+#############
+
+
+
+Testing
+#######
+
+
+
+Documentation
+#############
+
+
+
+API changes
+###########
+
+
+
+Other changes
+#############
+
+
+
+Contributors
+############
+
+
