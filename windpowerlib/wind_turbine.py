@@ -337,8 +337,8 @@ def load_turbine_data_from_oedb():
         oep_url + '/api/v0/schema/{}/tables/{}/rows/?'.format(
             schema, table), )
     if not result.status_code == 200:
-        raise ConnectionError("Database connection not successful. " +
-                              "Error: ".format(result.status_code))
+        raise ConnectionError("Database connection not successful. "
+                              "Error: {}".format(result.status_code))
     # extract data
     turbine_data = pd.DataFrame(result.json())
     return turbine_data
