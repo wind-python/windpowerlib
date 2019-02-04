@@ -121,7 +121,7 @@ def get_wind_efficiency_curve(curve_name='all'):
         curve_names = curve_name
 
     efficiency_curve = pd.DataFrame(columns=pd.MultiIndex(levels=[[], []],
-                                                          labels=[[], []]))
+                                                          codes=[[], []]))
 
     for curve_name in curve_names:
         if curve_name.split('_')[0] not in ['dena', 'knorr']:
