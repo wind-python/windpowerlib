@@ -238,7 +238,7 @@ def get_turbine_data_from_file(turbine_type, file_):
         try:
             float(x)
             return x
-        except:
+        except ValueError:
             return False
 
     try:
@@ -387,9 +387,9 @@ def get_turbine_types(print_out=True):
     """
 
     df = load_turbine_data_from_oedb()
-    cp_curves_df = df.iloc[df.loc[df['has_cp_curve'] == True].index][
+    cp_curves_df = df.iloc[df.loc[df['has_cp_curve'] is True].index][
         ['manufacturer', 'turbine_type', 'has_cp_curve']]
-    p_curves_df = df.iloc[df.loc[df['has_power_curve'] == True].index][
+    p_curves_df = df.iloc[df.loc[df['has_power_curve'] is True].index][
         ['manufacturer', 'turbine_type', 'has_power_curve']]
     curves_df = pd.merge(p_curves_df, cp_curves_df, how='outer',
                          sort=True).fillna(False)
