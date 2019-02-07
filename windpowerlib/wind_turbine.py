@@ -266,7 +266,7 @@ def get_turbine_data_from_file(turbine_type, file_):
 
 def get_turbine_data_from_oedb(turbine_type, fetch_curve):
     r"""
-    Gets turbine data from the OpenEnergy Database (oedb).
+    Fetches data for one wind turbine type from the OpenEnergy Database (oedb).
 
     Parameters
     ----------
@@ -283,9 +283,9 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve):
     -------
     Tuple (pandas.DataFrame, float)
         Power curve or power coefficient curve (pandas.DataFrame) and nominal
-        power (float). Power (coefficient) curve DataFrame contains power
-        coefficient curve values (dimensionless) or power curve values in W
-        with the corresponding wind speeds in m/s.
+        power (float) of one wind turbine type. Power (coefficient) curve
+        DataFrame contains power coefficient curve values (dimensionless) or
+        power curve values in W with the corresponding wind speeds in m/s.
 
     """
     # Extract data
