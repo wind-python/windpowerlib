@@ -8,7 +8,7 @@ Wind power plants
 The windpowerlib provides three classes for modelling wind power as wind turbines (:py:class:`~.wind_turbine.WindTurbine`),
 wind farms (:py:class:`~.wind_farm.WindFarm`) and wind turbine clusters (:py:class:`~.wind_turbine_cluster.WindTurbineCluster`).
 
-Descisptions can also be found in the sections
+Descriptions can also be found in the sections
 :ref:`wind_turbine_label`, :ref:`wind_farm_label` and :ref:`wind_turbine_cluster_label`.
 
 
