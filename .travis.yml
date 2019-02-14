@@ -13,6 +13,7 @@ matrix:
 #  - sudo apt-get install coinor-cbc
 
 install:
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.7" ]]; then sudo apt-get install libhdf5-dev; fi
   - pip install .
   - pip install coveralls sphinx nbformat pytest-cov jupyter
 
