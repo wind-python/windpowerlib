@@ -1,6 +1,22 @@
 v0.1.2 ()
 ++++++++++++++++++++++++++++++
 
+New features
+############
+
+
+Documentation
+#############
+
+
+Testing
+#######
+
+
+Bug fixes
+#########
+
+
 Other changes
 #############
 * Make windpowerlib work offline: turbine data from oedb is stored in a hdf5 file for offline usage
