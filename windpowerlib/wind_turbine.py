@@ -267,7 +267,7 @@ def get_turbine_data_from_file(turbine_type, file_):
 
 def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
     r"""
-    Gets turbine data from the OpenEnergy Database (oedb).
+    Fetches data for one wind turbine type from the OpenEnergy Database (oedb).
 
     If turbine data exists in local repository it is loaded from this file. The
     file is created when turbine data was loaded from oedb in
@@ -294,9 +294,9 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
     -------
     Tuple (pandas.DataFrame, float)
         Power curve or power coefficient curve (pandas.DataFrame) and nominal
-        power (float). Power (coefficient) curve DataFrame contains power
-        coefficient curve values (dimensionless) or power curve values in W
-        with the corresponding wind speeds in m/s.
+        power (float) of one wind turbine type. Power (coefficient) curve
+        DataFrame contains power coefficient curve values (dimensionless) or
+        power curve values in W with the corresponding wind speeds in m/s.
 
     """
     # hdf5 filename
@@ -358,8 +358,8 @@ def load_turbine_data_from_oedb():
             schema, table), )
     if not result.status_code == 200:
         raise ConnectionError("Database connection not successful. "
-                              "Error: {}".format(result.status_code))
-    # extract data
+                              "Response: [{}]".format(result.status_code))
+    # extract data to data frame
     turbine_data = pd.DataFrame(result.json())
     # store data as hdf5
     filename = os.path.join(os.path.dirname(__file__), 'data',

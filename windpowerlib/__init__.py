@@ -7,3 +7,4 @@ from windpowerlib.wind_farm import WindFarm
 from windpowerlib.wind_turbine_cluster import WindTurbineCluster
 from windpowerlib.modelchain import ModelChain
 from windpowerlib.turbine_cluster_modelchain import TurbineClusterModelChain
+from windpowerlib.wind_turbine import get_turbine_types
