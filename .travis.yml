@@ -8,6 +8,11 @@ matrix:
       dist: xenial
       sudo: true
 
+os:
+  - windows
+  - linux
+  - osx
+
 # command to install dependencies
 #before_install:
 #  - sudo apt-get install coinor-cbc
@@ -23,3 +28,5 @@ script:
 
 after_success:
   - coveralls
+
+
