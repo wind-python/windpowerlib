@@ -1,34 +1,29 @@
 language: python
 
-os:
-  - linux
-  - osx
+include:
+  - os: linux
+    sudo: true
+    python: "3.5"
+    dist: xenial
 
-matrix:
-  include:
-    - os: linux
-      sudo: true
-      python: "3.5"
-      dist: xenial
+  - os: linux
+    sudo: true
+    python: 3.6
+    dist: xenial
 
-    - os: linux
-      sudo: true
-      python: 3.6
-      dist: xenial
+   - os: linux
+    sudo: true
+    python: 3.7
+    dist: xenial
 
-     - os: linux
-      sudo: true
-      python: 3.7
-      dist: xenial
+  - os: osx
+    python: 3.5
 
-    - os: osx
-      python: 3.5
+  - os: osx
+    python: 3.6
 
-    - os: osx
-      python: 3.6
-
-    - os: osx
-      python: 3.7
+  - os: osx
+    python: 3.7
 
 # command to install dependencies
 #before_install:
