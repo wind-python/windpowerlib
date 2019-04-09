@@ -401,6 +401,14 @@ def get_turbine_types(print_out=True, filter_=True):
         (coefficient) curve exists (True) or not (False) in columns
         'has_power_curve' and 'has_cp_curve'.
 
+    Notes
+    -----
+    If the power (coefficient) curve of the desired turbine type (or the
+    turbine type itself) is missing you can contact us via github or
+    windpowerlib@rl-institut.de. You can help us by providing data in the
+    format as shown in
+    `the data base <https://openenergy-platform.org/dataedit/view/model_draft/openfred_windpower_powercurve>`_.
+
     Examples
     --------
     >>> from windpowerlib import wind_turbine
