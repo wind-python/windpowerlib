@@ -171,6 +171,10 @@ class WindTurbine(object):
         4200000.0
 
         """
+        if fetch_curve not in ['power_curve', 'power_coefficient_curve']:
+            raise ValueError("'{0}' is an invalid value for ".format(
+                fetch_curve) + "`fetch_curve`. Must be " +
+                             "'power_curve' or 'power_coefficient_curve'.")
         if data_source == 'oedb':
             curve_df, nominal_power = get_turbine_data_from_oedb(
                 turbine_type=self.name, fetch_curve=fetch_curve)
@@ -181,10 +185,6 @@ class WindTurbine(object):
             self.power_curve = curve_df
         elif fetch_curve == 'power_coefficient_curve':
             self.power_coefficient_curve = curve_df
-        else:
-            raise ValueError("'{0}' is an invalid value. ".format(
-                             fetch_curve) + "`fetch_curve` must be " +
-                             "'power_curve' or 'power_coefficient_curve'.")
         if self.nominal_power is None:
             self.nominal_power = nominal_power
         return self
