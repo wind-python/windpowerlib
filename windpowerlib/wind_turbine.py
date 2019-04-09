@@ -371,11 +371,14 @@ def load_turbine_data_from_oedb():
     return turbine_data
 
 
-def get_turbine_types(print_out=True):
+def get_turbine_types(print_out=True, filter_=True):
     r"""
-    Get the names of all possible wind turbine types for which the power
-    coefficient curve or power curve is provided in the OpenEnergy Data Base
-    (oedb).
+    Get all wind turbine types provided in the OpenEnergy Data Base (oedb).
+
+    By default only turbine types for which a power coefficient curve or power
+    curve is provided are returned. Set `filter_=False` to see all turbine
+    types for which any data (f.e. hub height, rotor diameter, ...) is
+    provided.
 
     Parameters
     ----------
@@ -385,6 +388,10 @@ def get_turbine_types(print_out=True):
         information about whether a power (coefficient) curve exists (True) or
         not (False) in columns 'has_power_curve' and 'has_cp_curve'.
         Default: True.
+    filter_ : boolean
+        If True only turbine types for which a power coefficient curve or
+        power curve is provided in the OpenEnergy Data Base (oedb) are
+        returned. Default: True.
 
     Returns
     -------
@@ -413,12 +420,16 @@ def get_turbine_types(print_out=True):
 
     """
     df = load_turbine_data_from_oedb()
-    cp_curves_df = df.loc[df['has_cp_curve']][
-        ['manufacturer', 'turbine_type', 'has_cp_curve']]
-    p_curves_df = df.loc[df['has_power_curve']][
-        ['manufacturer', 'turbine_type', 'has_power_curve']]
-    curves_df = pd.merge(p_curves_df, cp_curves_df, how='outer',
-                         sort=True).fillna(False)
+    if filter_:
+        cp_curves_df = df.loc[df['has_cp_curve']][
+            ['manufacturer', 'turbine_type', 'has_cp_curve']]
+        p_curves_df = df.loc[df['has_power_curve']][
+            ['manufacturer', 'turbine_type', 'has_power_curve']]
+        curves_df = pd.merge(p_curves_df, cp_curves_df, how='outer',
+                             sort=True).fillna(False)
+    else:
+        curves_df = df[['manufacturer', 'turbine_type', 'has_power_curve',
+                        'has_cp_curve']]
     if print_out:
         pd.set_option('display.max_rows', len(curves_df))
         print(curves_df)
