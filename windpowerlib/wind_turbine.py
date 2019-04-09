@@ -412,11 +412,10 @@ def get_turbine_types(print_out=True):
     Name: 1, dtype: object
 
     """
-
     df = load_turbine_data_from_oedb()
-    cp_curves_df = df.iloc[df.loc[df['has_cp_curve']].index][
+    cp_curves_df = df.loc[df['has_cp_curve']][
         ['manufacturer', 'turbine_type', 'has_cp_curve']]
-    p_curves_df = df.iloc[df.loc[df['has_power_curve']].index][
+    p_curves_df = df.loc[df['has_power_curve']][
         ['manufacturer', 'turbine_type', 'has_power_curve']]
     curves_df = pd.merge(p_curves_df, cp_curves_df, how='outer',
                          sort=True).fillna(False)
