@@ -24,7 +24,7 @@ class TurbineClusterModelChain(ModelChain):
         A :class:`~.wind_farm.WindFarm` object representing the wind farm or
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
-    wake_losses_model : string
+    wake_losses_model : string or None
         Defines the method for talking wake losses within the farm into
         consideration. Options: None, 'power_efficiency_curve' or
         'constant_efficiency' or the name of a wind efficiency curve like
@@ -82,7 +82,7 @@ class TurbineClusterModelChain(ModelChain):
         A :class:`~.wind_farm.WindFarm` object representing the wind farm or
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
-    wake_losses_model : string
+    wake_losses_model : string or None
         Defines the method for talking wake losses within the farm into
         consideration. Options: None, 'power_efficiency_curve' or
         'constant_efficiency' or the name of a wind efficiency curve like

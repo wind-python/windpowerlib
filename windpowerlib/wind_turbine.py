@@ -12,6 +12,7 @@ import pandas as pd
 import logging
 import sys
 import requests
+import os
 
 
 class WindTurbine(object):
@@ -264,9 +265,16 @@ def get_turbine_data_from_file(turbine_type, file_):
     return df, nominal_power
 
 
-def get_turbine_data_from_oedb(turbine_type, fetch_curve):
+def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
     r"""
     Fetches data for one wind turbine type from the OpenEnergy Database (oedb).
+
+    If turbine data exists in local repository it is loaded from this file. The
+    file is created when turbine data was loaded from oedb in
+    :py:func:`~.load_turbine_data_from_oedb`. Use this function with
+    `overwrite=True` to overwrite your file with newly fetched data.
+    Use :py:func:`~.check_local_turbine_data` to check
+    weather your local file is up to date.
 
     Parameters
     ----------
@@ -278,6 +286,9 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve):
         Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
         'power_curve' and 'power_coefficient_curve'. Default: None.
+    overwrite : boolean
+        If True local file is overwritten by newly fetch data from oedb, if
+        False turbine data is fetched from previously saved file.
 
     Returns
     -------
@@ -288,8 +299,15 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve):
         power curve values in W with the corresponding wind speeds in m/s.
 
     """
-    # Extract data
-    turbine_data = load_turbine_data_from_oedb()
+    # hdf5 filename
+    filename = os.path.join(os.path.dirname(__file__), 'data',
+                            'turbine_data_oedb.h5')
+    if os.path.isfile(filename) and not overwrite:
+        logging.debug("Turbine data is fetched from {}".format(filename))
+        with pd.HDFStore(filename) as hdf_store:
+            turbine_data = hdf_store.get('turbine_data')
+    else:
+        turbine_data = load_turbine_data_from_oedb()
     turbine_data.set_index('turbine_type', inplace=True)
     # Set `curve` depending on `fetch_curve` to match names in oedb
     curve = ('cp_curve' if fetch_curve == 'power_coefficient_curve'
@@ -320,6 +338,8 @@ def load_turbine_data_from_oedb():
     r"""
     Loads turbine data from the OpenEnergy Database (oedb).
 
+    Turbine data is saved to `filename` for offline usage of windpowerlib.
+
     Returns
     -------
     turbine_data : pd.DataFrame
@@ -341,6 +361,13 @@ def load_turbine_data_from_oedb():
                               "Response: [{}]".format(result.status_code))
     # extract data to data frame
     turbine_data = pd.DataFrame(result.json())
+    # store data as hdf5
+    filename = os.path.join(os.path.dirname(__file__), 'data',
+                            'turbine_data_oedb.h5')
+    with pd.HDFStore(filename) as hdf_store:
+        hdf_store.put('turbine_data', turbine_data)
+    logging.debug("Turbine data is fetched from oedb and saved "
+                  "to {}".format(filename))
     return turbine_data
 
 

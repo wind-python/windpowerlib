@@ -96,3 +96,6 @@ ENV/
 
 # tests
 .pytest_cache
+
+# oedb data dump
+/windpowerlib/data/turbine_data_oedb.h5
