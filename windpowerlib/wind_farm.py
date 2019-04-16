@@ -83,7 +83,7 @@ class WindFarm(object):
 
     """
     def __init__(self, name, wind_turbine_fleet, coordinates=None,
-                 efficiency=None):
+                 efficiency=None, **kwargs):
 
         self.name = name
         self.wind_turbine_fleet = wind_turbine_fleet
