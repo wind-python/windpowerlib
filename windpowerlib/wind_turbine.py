@@ -339,14 +339,14 @@ def load_turbine_data_from_oedb():
     -------
     turbine_data : pd.DataFrame
         Contains turbine data of different turbines such as 'manufacturer',
-        'turbine_type', nominal power ('installed_capacity_kw').
+        'turbine_type', nominal power ('installed_capacity').
 
     """
     # url of OpenEnergy Platform that contains the oedb
     oep_url = 'http://oep.iks.cs.ovgu.de/'
     # location of data
-    schema = 'model_draft'
-    table = 'openfred_windpower_powercurve'
+    schema = 'supply'
+    table = 'turbine_library'
     # load data
     result = requests.get(
         oep_url + '/api/v0/schema/{}/tables/{}/rows/?'.format(
