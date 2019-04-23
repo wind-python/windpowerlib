@@ -108,7 +108,7 @@ class WindTurbine(object):
     def __init__(self, name, hub_height, rotor_diameter=None,
                  power_coefficient_curve=None, power_curve=None,
                  nominal_power=None, fetch_curve=None, coordinates=None,
-                 data_source='oedb'):
+                 data_source='oedb', **kwargs):
 
         self.name = name
         self.hub_height = hub_height

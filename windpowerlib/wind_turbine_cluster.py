@@ -48,7 +48,7 @@ class WindTurbineCluster(object):
         The calculated power output of the wind turbine cluster.
 
     """
-    def __init__(self, name, wind_farms, coordinates=None):
+    def __init__(self, name, wind_farms, coordinates=None, **kwargs):
 
         self.name = name
         self.wind_farms = wind_farms
