@@ -320,6 +320,9 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
         load_turbine_data_from_oedb()
     else:
         logging.debug("Turbine data is fetched from {}".format(filename))
+   # turbine_data = pd.read_csv(filename, index_col=0)
+    df, nominal_power = get_turbine_data_from_file(turbine_type=turbine_type, file_=filename)
+
     # nominal power and power curve values in W
     nominal_power = nominal_power * 1000
     if fetch_curve == 'power_curve':
