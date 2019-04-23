@@ -246,13 +246,7 @@ def get_turbine_data_from_file(turbine_type, file_):
         df = pd.read_csv(file_, index_col=0)
     except FileNotFoundError:
         raise FileNotFoundError("The file '{}' was not found.".format(file_))
-    # todo: note: this try except statement will be removed in 0.2.0 and only
-    #  the exception will stay. The example power (coefficient) curve files
-    #  will then be adapted
-    try:
-        wpp_df = df[df['turbine_id'] == turbine_type]
-    except KeyError:
-        wpp_df = df[df.index == turbine_type]
+    wpp_df = df[df.index == turbine_type]
     # if turbine not in data file
     if wpp_df.shape[0] == 0:
         pd.set_option('display.max_rows', len(df))
@@ -267,13 +261,7 @@ def get_turbine_data_from_file(turbine_type, file_):
     df = curve_data.transpose().reset_index()
     df.columns = ['wind_speed', 'value']
     df['wind_speed'] = df['wind_speed'].apply(lambda x: float(x))
-    # todo: note: this try except statement will be removed in 0.2.0 and only
-    #  the exception will stay. The example power (coefficient) curve files
-    #  will then be adapted
-    try:
-        nominal_power = wpp_df['p_nom'].iloc[0]
-    except KeyError:
-        nominal_power = float(wpp_df['installed_capacity'].iloc[0])
+    nominal_power = float(wpp_df['installed_capacity'].iloc[0])
     return df, nominal_power
 
 
