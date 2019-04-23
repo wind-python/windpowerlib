@@ -246,11 +246,17 @@ def get_turbine_data_from_file(turbine_type, file_):
         df = pd.read_csv(file_, index_col=0)
     except FileNotFoundError:
         raise FileNotFoundError("The file '{}' was not found.".format(file_))
-    wpp_df = df[df.turbine_id == turbine_type]
+    # todo: note: this try except statement will be removed in 0.2.0 and only
+    #  the exception will stay. The example power (coefficient) curve files
+    #  will then be adapted
+    try:
+        wpp_df = df[df['turbine_id'] == turbine_type]
+    except KeyError:
+        wpp_df = df[df.index == turbine_type]
     # if turbine not in data file
     if wpp_df.shape[0] == 0:
         pd.set_option('display.max_rows', len(df))
-        logging.info('Possible types: \n{0}'.format(df.turbine_id))
+        logging.info('Possible types: \n{0}'.format(df['turbine_id']))
         pd.reset_option('display.max_rows')
         sys.exit('Cannot find the wind converter type: {0}'.format(
             turbine_type))
@@ -261,27 +267,32 @@ def get_turbine_data_from_file(turbine_type, file_):
     df = curve_data.transpose().reset_index()
     df.columns = ['wind_speed', 'value']
     df['wind_speed'] = df['wind_speed'].apply(lambda x: float(x))
-    nominal_power = wpp_df['p_nom'].iloc[0]
+    # todo: note: this try except statement will be removed in 0.2.0 and only
+    #  the exception will stay. The example power (coefficient) curve files
+    #  will then be adapted
+    try:
+        nominal_power = wpp_df['p_nom'].iloc[0]
+    except KeyError:
+        nominal_power = float(wpp_df['installed_capacity'].iloc[0])
     return df, nominal_power
 
 
 def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
     r"""
-    Fetches data for one wind turbine type from the OpenEnergy Database (oedb).
+    Fetches wind turbine data from the OpenEnergy Database (oedb).
 
     If turbine data exists in local repository it is loaded from this file. The
     file is created when turbine data was loaded from oedb in
     :py:func:`~.load_turbine_data_from_oedb`. Use this function with
     `overwrite=True` to overwrite your file with newly fetched data.
-    Use :py:func:`~.check_local_turbine_data` to check
-    weather your local file is up to date.
 
     Parameters
     ----------
     turbine_type : string
         Specifies the turbine type data is fetched for.
         Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
-        for which power (coefficient) curve data is provided.
+        in oedb containing information about whether power (coefficient) curve
+        data is provided.
     fetch_curve : string
         Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
@@ -299,35 +310,18 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
         power curve values in W with the corresponding wind speeds in m/s.
 
     """
-    # hdf5 filename
-    filename = os.path.join(os.path.dirname(__file__), 'data',
-                            'turbine_data_oedb.h5')
-    if os.path.isfile(filename) and not overwrite:
-        logging.debug("Turbine data is fetched from {}".format(filename))
-        with pd.HDFStore(filename) as hdf_store:
-            turbine_data = hdf_store.get('turbine_data')
-    else:
-        turbine_data = load_turbine_data_from_oedb()
-    turbine_data.set_index('turbine_type', inplace=True)
     # Set `curve` depending on `fetch_curve` to match names in oedb
     curve = ('cp_curve' if fetch_curve == 'power_coefficient_curve'
-             else fetch_curve)
-    # Select curve and nominal power of turbine type
-    try:
-        df = turbine_data.loc[turbine_type]
-    except KeyError:
-        raise KeyError("Turbine type '{}' not in database. ".format(
-            turbine_type) + "Use 'get_turbine_types()' to see a table of " +
-                       "possible wind turbine types.")
-    if df[curve] is not None:
-        df = pd.DataFrame(df[curve])
+             else fetch_curve)  # todo not needed anymore after OEP name changing
+    filename = os.path.join(os.path.dirname(__file__), 'data',
+                            'oedb_{}s.csv'.format(curve))  # todo fetch_curve after the above was removed
+    if not os.path.isfile(filename) or overwrite:  # todo remove overwrite in 0.2.0
+        # Load data from oedb and save to csv file
+        load_turbine_data_from_oedb()
     else:
-        sys.exit("{} of {} not available in ".format(curve, turbine_type) +
-                 "oedb. Use 'get_turbine_types()' to see for which turbine " +
-                 "types power coefficient curves are available.")
-    nominal_power = turbine_data.loc[turbine_type][
-                        'installed_capacity_kw'] * 1000
-    df.columns = ['wind_speed', 'value']
+        logging.debug("Turbine data is fetched from {}".format(filename))
+    # nominal power and power curve values in W
+    nominal_power = nominal_power * 1000
     if fetch_curve == 'power_curve':
         # power in W
         df['value'] = df['value'] * 1000
@@ -338,7 +332,8 @@ def load_turbine_data_from_oedb():
     r"""
     Loads turbine data from the OpenEnergy Database (oedb).
 
-    Turbine data is saved to `filename` for offline usage of windpowerlib.
+    Turbine data is saved to a csv file for offline usage of windpowerlib. If
+    the file already exists it is overwritten.
 
     Returns
     -------
@@ -361,15 +356,36 @@ def load_turbine_data_from_oedb():
                               "Response: [{}]".format(result.status_code))
     # extract data to data frame
     turbine_data = pd.DataFrame(result.json())
-    # store data as hdf5
+    # standard file name for saving data
     filename = os.path.join(os.path.dirname(__file__), 'data',
-                            'turbine_data_oedb.h5')
-    with pd.HDFStore(filename) as hdf_store:
-        hdf_store.put('turbine_data', turbine_data)
-    logging.debug("Turbine data is fetched from oedb and saved "
-                  "to {}".format(filename))
-    return turbine_data
+                            'oedb_{}.csv')
+    # get all power (coefficient) curves and save to file
+    # for curve_type in ['power_curve', 'power_coefficient_curve']:
+    for curve_type in ['power', 'cp']:  #todo change after renaming
+        curves_df = pd.DataFrame(columns=['wind_speed'])
+        for index in turbine_data.index:
+            if (turbine_data['wind_speed_{}_value'.format(curve_type)][index] and
+                    turbine_data['{}_value'.format(curve_type)][index]):
+                df = pd.DataFrame(data=[
+                    eval(turbine_data['wind_speed_{}_value'.format(curve_type)][index]),
+                    eval(turbine_data['{}_value'.format(curve_type)][
+                             index])]).transpose().rename(
+                        columns={0: 'wind_speed',
+                                 1: turbine_data['turbine_type'][index]})
+                if turbine_data['turbine_type'][index] not in [
+                        'S104/3400', 'S126/6150', 'V164/8000', 'MM92/2050']: # todo delete after fixed in OEP
+                    curves_df = pd.merge(left=curves_df, right=df, how='outer',
+                                         on='wind_speed')
+        curves_df = curves_df.set_index('wind_speed').sort_index().transpose()
+        curves_df['turbine_type'] = curves_df.index
+        # add nominal power to power (coefficient) data frame
+        curves_df = pd.merge(left=curves_df,
+                             right=turbine_data[['turbine_type',
+                                                'installed_capacity']],
+                             on='turbine_type').set_index('turbine_type')
+        curves_df.to_csv(filename.format('{}_curves'.format(curve_type)))
 
+        return turbine_data
 
 def get_turbine_types(print_out=True, filter_=True):
     r"""

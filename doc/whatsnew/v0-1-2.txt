@@ -19,7 +19,7 @@ Bug fixes
 
 Other changes
 #############
-* Make windpowerlib work offline: turbine data from oedb is stored in a hdf5 file for offline usage
+* Make windpowerlib work offline: turbine data from oedb is stored in csv files for offline usage
 * Make :py:func:`~windpowerlib.wind_turbine.get_turbine_types` also accessible via `get_turbine_types()` --> from windpowerlib import get_turbine_types
 
 
