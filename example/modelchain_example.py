@@ -79,10 +79,9 @@ def get_weather_data(filename='weather.csv', **kwargs):
     weather_df.index = pd.to_datetime(weather_df.index).tz_convert(
         'Europe/Berlin')
     # change type of height from str to int by resetting columns
-    weather_df.columns = [weather_df.axes[1].levels[0][
-                              weather_df.axes[1].codes[0]],
-                          weather_df.axes[1].levels[1][
-                              weather_df.axes[1].codes[1]].astype(int)]
+    l0 = [_[0] for _ in weather_df.columns]
+    l1 = [int(_[1]) for _ in weather_df.columns]
+    weather_df.columns = [l0, l1]
     return weather_df
 
 
