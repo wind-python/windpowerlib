@@ -318,7 +318,8 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
     else:
         logging.debug("Turbine data is fetched from {}".format(filename))
    # turbine_data = pd.read_csv(filename, index_col=0)
-    df, nominal_power = get_turbine_data_from_file(turbine_type=turbine_type, file_=filename)
+    df, nominal_power = get_turbine_data_from_file(turbine_type=turbine_type,
+                                                   file_=filename)
 
     # nominal power and power curve values in W
     nominal_power = nominal_power * 1000
@@ -332,8 +333,9 @@ def load_turbine_data_from_oedb():
     r"""
     Loads turbine data from the OpenEnergy Database (oedb).
 
-    Turbine data is saved to a csv file for offline usage of windpowerlib. If
-    the file already exists it is overwritten.
+    Turbine data is saved to csv files ('oedb_power_curves.csv' and
+    'oedb_cp_curves.csv') for offline usage of windpowerlib. If the files
+    already exist they are overwritten.
 
     Returns
     -------
