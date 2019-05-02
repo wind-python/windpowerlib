@@ -323,8 +323,9 @@ def load_turbine_data_from_oedb():
     r"""
     Loads turbine data from the OpenEnergy Database (oedb).
 
-    Turbine data is saved to a csv file for offline usage of windpowerlib. If
-    the file already exists it is overwritten.
+    Turbine data is saved to csv files ('oedb_power_curves.csv',
+    'oedb_cp_curves.csv') for offline usage of windpowerlib. If the files
+    already exist they are overwritten.
 
     Returns
     -------
