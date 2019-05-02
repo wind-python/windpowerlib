@@ -305,8 +305,8 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
     else:
         logging.debug("Turbine data is fetched from {}".format(filename))
    # turbine_data = pd.read_csv(filename, index_col=0)
-    df, nominal_power = get_turbine_data_from_file(turbine_type=turbine_type, file_=filename)
-
+    df, nominal_power = get_turbine_data_from_file(turbine_type=turbine_type,
+                                                   file_=filename)
     # nominal power and power curve values in W
     nominal_power = nominal_power * 1000
     if fetch_curve == 'power_curve':
@@ -366,13 +366,12 @@ def load_turbine_data_from_oedb():
                                          on='wind_speed')
         curves_df = curves_df.set_index('wind_speed').sort_index().transpose()
         curves_df['turbine_type'] = curves_df.index
-        # add nominal power to power (coefficient) data frame
-        curves_df = pd.merge(left=curves_df,
-                             right=turbine_data[['turbine_type',
-                                                'installed_capacity']],
-                             on='turbine_type').set_index('turbine_type')
         curves_df.to_csv(filename.format('{}_curves'.format(curve_type)))
 
+        # get nominal power of all wind turbine types and save to file
+        nominal_power_df = turbine_data[
+            ['turbine_type', 'installed_capacity']].set_index('turbine_type')
+        nominal_power_df.to_csv(filename.format('nominal_power'))
         return turbine_data
 
 def get_turbine_types(print_out=True, filter_=True):
