@@ -388,7 +388,8 @@ def load_turbine_data_from_oedb():
                              on='turbine_type').set_index('turbine_type')
         curves_df.to_csv(filename.format('{}s'.format(curve_type)))
 
-        return turbine_data
+    return turbine_data
+
 
 def get_turbine_types(print_out=True, filter_=True):
     r"""
