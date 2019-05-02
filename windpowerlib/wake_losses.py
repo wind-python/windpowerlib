@@ -120,8 +120,7 @@ def get_wind_efficiency_curve(curve_name='all'):
     else:
         curve_names = curve_name
 
-    efficiency_curve = pd.DataFrame(columns=pd.MultiIndex(levels=[[], []],
-                                                          codes=[[], []]))
+    efficiency_curve = pd.DataFrame()
 
     for curve_name in curve_names:
         if curve_name.split('_')[0] not in ['dena', 'knorr']:
@@ -142,8 +141,13 @@ def get_wind_efficiency_curve(curve_name='all'):
 
         # Get wind efficiency curve and rename column containing efficiency
         wec = wind_efficiency_curves[['wind_speed', curve_name]]
-        efficiency_curve[curve_name, 'wind_speed'] = wec['wind_speed']
-        efficiency_curve[curve_name, 'efficiency'] = wec[curve_name]
+        if efficiency_curve.empty:
+            efficiency_curve = pd.DataFrame(
+                {(curve_name, 'wind_speed'): wec['wind_speed'],
+                 (curve_name, 'efficiency'): wec[curve_name]})
+        else:
+            efficiency_curve[(curve_name, 'wind_speed')] = wec['wind_speed']
+            efficiency_curve[(curve_name, 'efficiency')] = wec[curve_name]
     if len(curve_names) == 1:
         return efficiency_curve[curve_names[0]]
     else:
