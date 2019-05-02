@@ -310,11 +310,8 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
         power curve values in W with the corresponding wind speeds in m/s.
 
     """
-    # Set `curve` depending on `fetch_curve` to match names in oedb
-    curve = ('cp_curve' if fetch_curve == 'power_coefficient_curve'
-             else fetch_curve)  # todo not needed anymore after OEP name changing
     filename = os.path.join(os.path.dirname(__file__), 'data',
-                            'oedb_{}s.csv'.format(curve))  # todo fetch_curve after the above was removed
+                            'oedb_{}s.csv'.format(fetch_curve))
     if not os.path.isfile(filename) or overwrite:  # todo remove overwrite in 0.2.0
         # Load data from oedb and save to csv file
         load_turbine_data_from_oedb()
