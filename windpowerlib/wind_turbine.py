@@ -363,17 +363,18 @@ def load_turbine_data_from_oedb():
                             'oedb_{}.csv')
     # get all power (coefficient) curves and save to file
     # for curve_type in ['power_curve', 'power_coefficient_curve']:
-    for curve_type in ['power', 'cp']:  #todo change after renaming
+    for curve_type in ['power_curve', 'power_coefficient_curve']:
         curves_df = pd.DataFrame(columns=['wind_speed'])
         for index in turbine_data.index:
-            if (turbine_data['wind_speed_{}_value'.format(curve_type)][index] and
-                    turbine_data['{}_value'.format(curve_type)][index]):
+            if (turbine_data['{}_wind_speeds'.format(curve_type)][index]
+                    and turbine_data['{}_values'.format(curve_type)][index]):
                 df = pd.DataFrame(data=[
-                    eval(turbine_data['wind_speed_{}_value'.format(curve_type)][index]),
-                    eval(turbine_data['{}_value'.format(curve_type)][
+                    eval(turbine_data['{}_wind_speeds'.format(curve_type)][
+                             index]),
+                    eval(turbine_data['{}_values'.format(curve_type)][
                              index])]).transpose().rename(
-                        columns={0: 'wind_speed',
-                                 1: turbine_data['turbine_type'][index]})
+                    columns={0: 'wind_speed',
+                             1: turbine_data['turbine_type'][index]})
                 if turbine_data['turbine_type'][index] not in [
                         'S104/3400', 'S126/6150', 'V164/8000', 'MM92/2050']: # todo delete after fixed in OEP
                     curves_df = pd.merge(left=curves_df, right=df, how='outer',
@@ -385,7 +386,7 @@ def load_turbine_data_from_oedb():
                              right=turbine_data[['turbine_type',
                                                 'installed_capacity']],
                              on='turbine_type').set_index('turbine_type')
-        curves_df.to_csv(filename.format('{}_curves'.format(curve_type)))
+        curves_df.to_csv(filename.format('{}s'.format(curve_type)))
 
         return turbine_data
 
