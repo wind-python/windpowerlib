@@ -352,14 +352,14 @@ def load_turbine_data_from_oedb():
                             'oedb_{}.csv')
     # get all power (coefficient) curves and save to file
     # for curve_type in ['power_curve', 'power_coefficient_curve']:
-    for curve_type in ['power', 'cp']:  #todo change after renaming
+    for curve_type in ['power_curve', 'power_coefficient_curve']:
         curves_df = pd.DataFrame(columns=['wind_speed'])
         for index in turbine_data.index:
-            if (turbine_data['wind_speed_{}_value'.format(curve_type)][index] and
-                    turbine_data['{}_value'.format(curve_type)][index]):
+            if (turbine_data['{}_wind_speeds'.format(curve_type)][index]
+                    and turbine_data['{}_values'.format(curve_type)][index]):
                 df = pd.DataFrame(data=[
-                    eval(turbine_data['wind_speed_{}_value'.format(curve_type)][index]),
-                    eval(turbine_data['{}_value'.format(curve_type)][
+                    eval(turbine_data['{}_wind_speeds'.format(curve_type)][index]),
+                    eval(turbine_data['{}_values'.format(curve_type)][
                              index])]).transpose().rename(
                         columns={0: 'wind_speed',
                                  1: turbine_data['turbine_type'][index]})
