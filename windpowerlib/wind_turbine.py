@@ -87,8 +87,7 @@ class WindTurbine(object):
     you want to automatically fetch a curve from a data set provided in the
     OpenEnergy Database (oedb) or want to read a csv file that you provide.
     See `example_power_curves.csv' and `example_power_coefficient_curves.csv`
-    in example/data for the required form of such a csv file (more columns can
-    be added).
+    in example/data for the required form of such a csv file.
 
     Examples
     --------
@@ -135,8 +134,8 @@ class WindTurbine(object):
         in W in a row where the first column contains the turbine name.
         See `example_power_curves.csv' and
         `example_power_coefficient_curves.csv` in example/data for the required
-        form of a csv file (more columns can be added). See
-        :py:func:`~.get_turbine_data_from_file` for an example reading data
+        form of a csv file.
+        See :py:func:`~.get_turbine_data_from_file` for an example reading data
         from a csv file.
 
         Parameters
@@ -195,10 +194,7 @@ def get_turbine_data_from_file(turbine_type, file_):
     Fetches power (coefficient) curve data from a csv file.
 
     See `example_power_curves.csv' and `example_power_coefficient_curves.csv`
-    in example/data for the required format of a csv file. The self-provided
-    csv file may contain more columns than the example files. Only columns
-    containing wind speed and the corresponding power or power coefficient as
-    well as the column 'nominal_power' are taken into account.
+    in example/data for the required format of a csv file.
 
     Parameters
     ----------
@@ -324,8 +320,8 @@ def load_turbine_data_from_oedb():
     Loads turbine data from the OpenEnergy Database (oedb).
 
     Turbine data is saved to csv files ('oedb_power_curves.csv',
-    'oedb_cp_curves.csv') for offline usage of windpowerlib. If the files
-    already exist they are overwritten.
+    'oedb_cp_curves.csv' and 'oedb_installed_capacities') for offline usage of
+    windpowerlib. If the files already exist they are overwritten.
 
     Returns
     -------
