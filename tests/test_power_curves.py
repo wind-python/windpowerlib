@@ -59,8 +59,7 @@ class TestPowerCurves:
         test_curve = wt.WindTurbine(**self.test_turbine).power_curve
         parameters = {'power_curve_wind_speeds': test_curve['wind_speed'],
                       'power_curve_values': test_curve['value'],
-                      'wind_farm_efficiency': 0.9,
-                      'wake_losses_model': 'constant_efficiency'}
+                      'wind_farm_efficiency': 0.9}
 
         # Test constant efficiency
         power_curve_exp = test_curve.copy(deep=True)
@@ -68,13 +67,7 @@ class TestPowerCurves:
         assert_frame_equal(wake_losses_to_power_curve(**parameters),
                            power_curve_exp)
 
-        # Raise TypeError if wind farm efficiency is not float
-        with pytest.raises(TypeError):
-            parameters['wind_farm_efficiency'] = 1
-            wake_losses_to_power_curve(**parameters)
-
         # Test efficiency curve
-        parameters['wake_losses_model'] = 'power_efficiency_curve'
         parameters['wind_farm_efficiency'] = pd.DataFrame(
             pd.concat([pd.Series(np.arange(1, 26, 1)),
                        pd.Series([
@@ -91,15 +84,11 @@ class TestPowerCurves:
         assert_frame_equal(wake_losses_to_power_curve(**parameters),
                            power_curve_exp)
 
-        # # Raise TypeError if efficiency is not DataFrame
-        # with pytest.raises(TypeError):
-        #     parameters['wind_farm_efficiency'] = pd.Series([1, 2, 3])
-        #     wake_losses_to_power_curve(**parameters)
-        #
-        # # Raise ValueError - misspelling
-        # with pytest.raises(ValueError):
-        #     parameters['wake_losses_model'] = 'misspelled'
-        #     wake_losses_to_power_curve(**parameters)
+        # Raise TypeError if wind farm efficiency is of wrong type
+        with pytest.raises(TypeError):
+            parameters['wind_farm_efficiency'] = 1
+            wake_losses_to_power_curve(**parameters)
+
 
 if __name__ == "__main__":
     test = TestPowerCurves()
