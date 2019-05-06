@@ -1,0 +1,32 @@
+v0.2.0 ()
+++++++++++++++++++++++++++++++
+
+New features
+############
+
+
+Documentation
+#############
+
+
+Testing
+#######
+
+
+Bug fixes
+#########
+
+
+API changes
+#############
+* Remove unnecessary `wake_losses_model` parameter in :py:func:`~.power_curves.wake_losses_to_power_curve`. Whether a constant wind farm efficiency or a wind farm efficiency curve is used is decided by the type of the wind farm efficiency.
+
+Other changes
+#############
+
+
+
+Contributors
+############
+* Sabine Haas
+
