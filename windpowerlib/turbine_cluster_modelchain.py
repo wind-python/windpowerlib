@@ -26,9 +26,8 @@ class TurbineClusterModelChain(ModelChain):
         representing the wind turbine cluster.
     wake_losses_model : string or None
         Defines the method for talking wake losses within the farm into
-        consideration. Options: None, 'power_efficiency_curve' or
-        'constant_efficiency' or the name of a wind efficiency curve like
-        'dena_mean'. Default: 'dena_mean'.
+        consideration. Options: None, 'wind_farm_efficiency' or the name of a
+        wind efficiency curve like 'dena_mean'. Default: 'dena_mean'.
         Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
         wind efficiency curves.
     smoothing : boolean
@@ -84,9 +83,8 @@ class TurbineClusterModelChain(ModelChain):
         representing the wind turbine cluster.
     wake_losses_model : string or None
         Defines the method for talking wake losses within the farm into
-        consideration. Options: None, 'power_efficiency_curve' or
-        'constant_efficiency' or the name of a wind efficiency curve like
-        'dena_mean'. Default: 'dena_mean'.
+        consideration. Options: None, 'wind_farm_efficiency' or the name of a
+        wind efficiency curve like 'dena_mean'. Default: 'dena_mean'.
         Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
         wind efficiency curves.
     smoothing : boolean
