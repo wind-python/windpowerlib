@@ -265,16 +265,16 @@ def get_turbine_data_from_file(turbine_type, file_):
     return df, nominal_power
 
 
-def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
+def get_turbine_data_from_oedb(turbine_type, fetch_curve):
     r"""
     Fetches data for one wind turbine type from the OpenEnergy Database (oedb).
 
     If turbine data exists in local repository it is loaded from this file. The
     file is created when turbine data was loaded from oedb in
-    :py:func:`~.load_turbine_data_from_oedb`. Use this function with
-    `overwrite=True` to overwrite your file with newly fetched data.
-    Use :py:func:`~.check_local_turbine_data` to check
-    weather your local file is up to date.
+    :py:func:`~.load_turbine_data_from_oedb`.
+
+    Execute :py:func:`~.load_turbine_data_from_oedb` or delete the files to
+    refresh the download.
 
     Parameters
     ----------
@@ -286,9 +286,6 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
         Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
         'power_curve' and 'power_coefficient_curve'. Default: None.
-    overwrite : boolean
-        If True local file is overwritten by newly fetch data from oedb, if
-        False turbine data is fetched from previously saved file.
 
     Returns
     -------
@@ -302,7 +299,7 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
     # hdf5 filename
     filename = os.path.join(os.path.dirname(__file__), 'data',
                             'turbine_data_oedb.h5')
-    if os.path.isfile(filename) and not overwrite:
+    if os.path.isfile(filename):
         logging.debug("Turbine data is fetched from {}".format(filename))
         with pd.HDFStore(filename) as hdf_store:
             turbine_data = hdf_store.get('turbine_data')
