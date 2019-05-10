@@ -109,7 +109,7 @@ class ModelChain(object):
                  power_output_model='power_curve',
                  density_correction=False,
                  obstacle_height=0,
-                 hellman_exp=None):
+                 hellman_exp=None, **kwargs):
 
         self.power_plant = power_plant
         self.obstacle_height = obstacle_height
