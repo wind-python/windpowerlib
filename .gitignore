@@ -101,3 +101,5 @@ ENV/
 
 # oedb data dump
 /windpowerlib/data/turbine_data_oedb.h5
+/windpowerlib/data/oedb_power_coefficient_curves.csv
+/windpowerlib/data/oedb_power_curves.csv
