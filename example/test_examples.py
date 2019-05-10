@@ -32,10 +32,9 @@ class TestExamples:
             example_farm, example_farm_2)
         tc_mc_e.calculate_power_output(weather, example_farm, example_cluster)
         assert_allclose(1956.164053, (example_farm.power_output.sum() /
-                                     example_farm.installed_power), 0.01)
-        example_cluster.installed_power = example_cluster.get_installed_power()
+                                      example_farm.nominal_power), 0.01)
         assert_allclose(2156.794154, (example_cluster.power_output.sum() /
-                                     example_cluster.installed_power), 0.01)
+                                     example_cluster.nominal_power), 0.01)
 
     def _notebook_run(self, path):
         """

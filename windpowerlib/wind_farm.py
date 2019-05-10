@@ -11,6 +11,7 @@ __license__ = "GPLv3"
 from windpowerlib import tools, power_curves
 import numpy as np
 import pandas as pd
+import warnings
 
 
 class WindFarm(object):
@@ -54,11 +55,15 @@ class WindFarm(object):
         dimensionless wind farm efficiency. Default: None.
     hub_height : float
         The calculated mean hub height of the wind farm.
-    installed_power : float
-        The calculated installed power of the wind farm.
     power_curve : pandas.DataFrame or None
         The calculated power curve of the wind farm.
     power_output : pandas.Series
+    nominal_power : float
+        The nominal power is the sum of the nominal power of all turbines in
+        the wind farm in W.
+    installed_power : float
+        Installed nominal power of the wind farm in W. Deprecated! Use
+        :attr:`~.wind_farm.WindFarm.nominal_power` instead.
         The calculated power output of the wind farm.
 
     Examples
@@ -77,8 +82,7 @@ class WindFarm(object):
     ...    'wind_turbine_fleet': [{'wind_turbine': e126,
     ...                            'number_of_turbines': 6}]}
     >>> example_farm = wind_farm.WindFarm(**example_farm_data)
-    >>> example_farm.installed_power = example_farm.get_installed_power()
-    >>> print(example_farm.installed_power)
+    >>> print(example_farm.nominal_power)
     25200000.0
 
     """
@@ -91,9 +95,51 @@ class WindFarm(object):
         self.efficiency = efficiency
 
         self.hub_height = None
-        self.installed_power = None
+        self._nominal_power = None
+        self._installed_power = None
         self.power_curve = None
         self.power_output = None
+
+    @property
+    def installed_power(self):
+        r"""
+        The installed nominal power of the wind farm. (Deprecated!)
+
+        """
+        warnings.warn(
+            'installed_power is deprecated, use nominal_power instead.',
+            FutureWarning)
+        return self.nominal_power
+
+    @installed_power.setter
+    def installed_power(self, installed_power):
+        self._installed_power = installed_power
+
+    @property
+    def nominal_power(self):
+        r"""
+        The nominal power of the wind farm.
+
+        See :attr:`~.wind_farm.WindFarm.nominal_power` for further information.
+
+        Parameters
+        -----------
+        nominal_power : float
+            Nominal power of the wind farm in W.
+
+        Returns
+        -------
+        float
+            Nominal power of the wind farm in W.
+
+        """
+        if not self._nominal_power:
+            self.nominal_power = self.get_installed_power()
+        return self._nominal_power
+
+    @nominal_power.setter
+    def nominal_power(self, nominal_power):
+        self._nominal_power = nominal_power
 
     def mean_hub_height(self):
         r"""
@@ -139,17 +185,13 @@ class WindFarm(object):
 
     def get_installed_power(self):
         r"""
-        Calculates the installed power of the wind farm.
-
-        The installed power of wind farms is necessary when a
-        :class:`~.wind_turbine_cluster.WindTurbineCluster` object is used and
-        it's power weighed mean hub height is calculated with
-        :py:func:`~.wind_turbine_cluster.WindTurbineCluster.mean_hub_height`.
+        Calculates :py:attr:`~nominal_power` of the wind farm.
 
         Returns
         -------
         float
-            Installed power of the wind farm.
+            Nominal power of the wind farm in W. See :py:attr:`~nominal_power`
+            for further information.
 
         """
         return sum(
