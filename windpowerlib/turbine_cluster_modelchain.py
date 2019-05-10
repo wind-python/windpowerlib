@@ -182,8 +182,7 @@ class TurbineClusterModelChain(ModelChain):
         self
 
         """
-
-        # Set turbulence intensity for assigning power curve
+        # Get turbulence intensity from weather if existent
         turbulence_intensity = (
             weather_df['turbulence_intensity'].values.mean() if
             'turbulence_intensity' in
