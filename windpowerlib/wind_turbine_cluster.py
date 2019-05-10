@@ -13,6 +13,7 @@ __license__ = "GPLv3"
 
 import numpy as np
 import pandas as pd
+import warnings
 
 
 class WindTurbineCluster(object):
@@ -40,6 +41,9 @@ class WindTurbineCluster(object):
         weather data. Default: None.
     hub_height : float
         The calculated average hub height of the wind turbine cluster.
+    nominal_power : float
+        The nominal power is the sum of the nominal power of all turbines in
+        the wind turbine cluster in W.
     installed_power : float
         The calculated installed power of the wind turbine cluster.
     power_curve : pandas.DataFrame or None
@@ -55,9 +59,48 @@ class WindTurbineCluster(object):
         self.coordinates = coordinates
 
         self.hub_height = None
-        self.installed_power = None
+        self._nominal_power = None
+        self._installed_power = None
         self.power_curve = None
         self.power_output = None
+
+    @property
+    def installed_power(self):
+        r"""
+        The installed nominal power of the wind turbine cluster. (Deprecated!)
+
+        """
+        warnings.warn(
+            'installed_power is deprecated, use nominal_power instead.',
+            FutureWarning)
+        return self.nominal_power
+
+    @property
+    def nominal_power(self):
+        r"""
+        The nominal power of the wind turbine cluster.
+
+        See :attr:`~.wind_turbine_cluster.WindTurbineCluster.nominal_power`
+        for further information.
+
+        Parameters
+        -----------
+        nominal_power : float
+            Nominal power of the wind turbine cluster in w.
+
+        Returns
+        -------
+        float
+            Nominal power of the wind turbine cluster in w.
+
+        """
+        if not self._nominal_power:
+            self.nominal_power = self.get_installed_power()
+        return self._nominal_power
+
+    @nominal_power.setter
+    def nominal_power(self, nominal_power):
+        self._nominal_power = nominal_power
 
     def mean_hub_height(self):
         r"""
@@ -99,17 +142,18 @@ class WindTurbineCluster(object):
 
     def get_installed_power(self):
         r"""
-        Calculates the installed power of a wind turbine cluster.
+        Calculates the :py:attr:`~nominal_power` of a wind turbine cluster.
 
         Returns
         -------
         float
-            Installed power of the wind turbine cluster.
+            Nominal power of the wind farm in W. See :py:attr:`~nominal_power`
+            for further information.
 
         """
         for wind_farm in self.wind_farms:
-            wind_farm.installed_power = wind_farm.get_installed_power()
-        return sum(wind_farm.installed_power for wind_farm in self.wind_farms)
+            wind_farm.nominal_power = wind_farm.get_installed_power()
+        return sum(wind_farm.nominal_power for wind_farm in self.wind_farms)
 
     def assign_power_curve(self, wake_losses_model='power_efficiency_curve',
                            smoothing=False, block_width=0.5,
