@@ -375,10 +375,8 @@ def load_turbine_data_from_oedb():
                              index])]).transpose().rename(
                     columns={0: 'wind_speed',
                              1: turbine_data['turbine_type'][index]})
-                if turbine_data['turbine_type'][index] not in [
-                        'S104/3400', 'S126/6150', 'V164/8000', 'MM92/2050']: # todo delete after fixed in OEP
-                    curves_df = pd.merge(left=curves_df, right=df, how='outer',
-                                         on='wind_speed')
+                curves_df = pd.merge(left=curves_df, right=df, how='outer',
+                                     on='wind_speed')
         curves_df = curves_df.set_index('wind_speed').sort_index().transpose()
         curves_df['turbine_type'] = curves_df.index
         # add nominal power to power (coefficient) data frame
