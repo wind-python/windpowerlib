@@ -273,7 +273,7 @@ def get_turbine_data_from_file(turbine_type, file_):
     try:
         nominal_power = wpp_df['p_nom'].iloc[0]
     except KeyError:
-        nominal_power = float(wpp_df['installed_capacity'].iloc[0])
+        nominal_power = float(wpp_df['nominal_power'].iloc[0])
     return df, nominal_power
 
 
@@ -341,7 +341,7 @@ def load_turbine_data_from_oedb():
     -------
     turbine_data : pd.DataFrame
         Contains turbine data of different turbines such as 'manufacturer',
-        'turbine_type', nominal power ('installed_capacity').
+        'turbine_type', 'nominal_power'.
 
     """
     # url of OpenEnergy Platform that contains the oedb
@@ -382,10 +382,11 @@ def load_turbine_data_from_oedb():
         curves_df = curves_df.set_index('wind_speed').sort_index().transpose()
         curves_df['turbine_type'] = curves_df.index
         # add nominal power to power (coefficient) data frame
-        curves_df = pd.merge(left=curves_df,
-                             right=turbine_data[['turbine_type',
+        curves_df = pd.merge(
+            left=curves_df, right=turbine_data[['turbine_type',
                                                 'installed_capacity']],
-                             on='turbine_type').set_index('turbine_type')
+            on='turbine_type').set_index('turbine_type').rename(
+                columns={'installed_capacity': 'nominal_power'})
         curves_df.to_csv(filename.format('{}s'.format(curve_type)))
 
     return turbine_data
