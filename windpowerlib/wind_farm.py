@@ -111,6 +111,10 @@ class WindFarm(object):
             FutureWarning)
         return self.nominal_power
 
+    @installed_power.setter
+    def installed_power(self, installed_power):
+        self._installed_power = installed_power
+
     @property
     def nominal_power(self):
         r"""
