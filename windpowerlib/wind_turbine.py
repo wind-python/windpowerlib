@@ -202,15 +202,15 @@ def get_turbine_data_from_file(turbine_type, file_):
 
     Parameters
     ----------
-    turbine_type : string
+    turbine_type : str
         Specifies the turbine type data is fetched for.
-    file_ : string
+    file_ : str
         Specifies the source of the turbine data.
         See the example below for how to use the example data.
 
     Returns
     -------
-    Tuple (pandas.DataFrame, float)
+    tuple(pandas.DataFrame, float)
         Power curve or power coefficient curve (pandas.DataFrame) and nominal
         power (float). Power (coefficient) curve DataFrame contains power
         coefficient curve values (dimensionless) or power curve values in W
@@ -279,31 +279,31 @@ def get_turbine_data_from_file(turbine_type, file_):
 
 def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
     r"""
-    Fetches wind turbine data from the OpenEnergy Database (oedb).
+    Fetches wind turbine data from the OpenEnergy database (oedb).
 
     If turbine data exists in local repository it is loaded from this file. The
-    file is created when turbine data was loaded from oedb in
+    file is created when turbine data is loaded from oedb in
     :py:func:`~.load_turbine_data_from_oedb`. Use this function with
     `overwrite=True` to overwrite your file with newly fetched data.
 
     Parameters
     ----------
-    turbine_type : string
+    turbine_type : str
         Specifies the turbine type data is fetched for.
         Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
         in oedb containing information about whether power (coefficient) curve
         data is provided.
-    fetch_curve : string
+    fetch_curve : str
         Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
         'power_curve' and 'power_coefficient_curve'. Default: None.
-    overwrite : boolean
-        If True local file is overwritten by newly fetch data from oedb, if
+    overwrite : bool
+        If True local file is overwritten by newly fetched data from oedb, if
         False turbine data is fetched from previously saved file.
 
     Returns
     -------
-    Tuple (pandas.DataFrame, float)
+    tuple(pandas.DataFrame, float)
         Power curve or power coefficient curve (pandas.DataFrame) and nominal
         power (float) of one wind turbine type. Power (coefficient) curve
         DataFrame contains power coefficient curve values (dimensionless) or
@@ -317,7 +317,7 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
         load_turbine_data_from_oedb()
     else:
         logging.debug("Turbine data is fetched from {}".format(filename))
-   # turbine_data = pd.read_csv(filename, index_col=0)
+    # turbine_data = pd.read_csv(filename, index_col=0)
     df, nominal_power = get_turbine_data_from_file(turbine_type=turbine_type,
                                                    file_=filename)
 
@@ -331,15 +331,15 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
 
 def load_turbine_data_from_oedb():
     r"""
-    Loads turbine data from the OpenEnergy Database (oedb).
+    Loads turbine data from the OpenEnergy database (oedb).
 
     Turbine data is saved to csv files ('oedb_power_curves.csv' and
-    'oedb_cp_curves.csv') for offline usage of windpowerlib. If the files
-    already exist they are overwritten.
+    'oedb_power_coefficient_curves.csv') for offline usage of windpowerlib.
+    If the files already exist they are overwritten.
 
     Returns
     -------
-    turbine_data : pd.DataFrame
+    pd.DataFrame
         Contains turbine data of different turbines such as 'manufacturer',
         'turbine_type', 'nominal_power'.
 
@@ -356,7 +356,7 @@ def load_turbine_data_from_oedb():
     if not result.status_code == 200:
         raise ConnectionError("Database connection not successful. "
                               "Response: [{}]".format(result.status_code))
-    # extract data to data frame
+    # extract data to dataframe
     turbine_data = pd.DataFrame(result.json())
     # standard file name for saving data
     filename = os.path.join(os.path.dirname(__file__), 'data',
@@ -392,7 +392,7 @@ def load_turbine_data_from_oedb():
 
 def get_turbine_types(print_out=True, filter_=True):
     r"""
-    Get all wind turbine types provided in the OpenEnergy Data Base (oedb).
+    Get all wind turbine types provided in the OpenEnergy database (oedb).
 
     By default only turbine types for which a power coefficient curve or power
     curve is provided are returned. Set `filter_=False` to see all turbine
@@ -401,20 +401,20 @@ def get_turbine_types(print_out=True, filter_=True):
 
     Parameters
     ----------
-    print_out : boolean
+    print_out : bool
         Directly prints a tabular containing the turbine types in column
         'turbine_type', the manufacturer in column 'manufacturer' and
         information about whether a power (coefficient) curve exists (True) or
         not (False) in columns 'has_power_curve' and 'has_cp_curve'.
         Default: True.
-    filter_ : boolean
+    filter_ : bool
         If True only turbine types for which a power coefficient curve or
-        power curve is provided in the OpenEnergy Data Base (oedb) are
+        power curve is provided in the OpenEnergy database (oedb) are
         returned. Default: True.
 
     Returns
     -------
-    curves_df : pd.DataFrame
+    pd.DataFrame
         Contains turbine types in column 'turbine_type', the manufacturer in
         column 'manufacturer' and information about whether a power
         (coefficient) curve exists (True) or not (False) in columns
