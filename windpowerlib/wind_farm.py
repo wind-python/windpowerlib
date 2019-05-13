@@ -11,6 +11,7 @@ __license__ = "GPLv3"
 from windpowerlib import tools, power_curves
 import numpy as np
 import pandas as pd
+import warnings
 
 
 class WindFarm(object):
@@ -19,46 +20,50 @@ class WindFarm(object):
 
     Parameters
     ----------
-    name : string
+    name : str or None
         Name of the wind farm.
-    wind_turbine_fleet : list of dictionaries
+    wind_turbine_fleet : list(dict)
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
         (contains a :class:`~.wind_turbine.WindTurbine` object) and
         'number_of_turbines' (number of wind turbines of the same turbine type
         in the wind farm) as keys.
-    coordinates : list or None
-        List of coordinates [lat, lon] of location for loading data.
-        Default: None.
-    efficiency : float or pd.DataFrame
-        Efficiency of the wind farm. Either constant (float) power efficiency
-        curve (pd.DataFrame) containing 'wind_speed' and 'efficiency'
-        columns/keys with wind speeds in m/s and the corresponding
+    coordinates : list(float) or None (optional)
+        List with coordinates [lat, lon] of location. Default: None.
+    efficiency : float or :pandas:`pandas.DataFrame<frame>` or None (optional)
+        Efficiency of the wind farm. Provide as either constant (float) or
+        power efficiency curve (pd.DataFrame) containing 'wind_speed' and
+        'efficiency' columns with wind speeds in m/s and the corresponding
         dimensionless wind farm efficiency. Default: None.
 
     Attributes
     ----------
-    name : string
+    name : str or None
         Name of the wind farm.
-    wind_turbine_fleet : list of dictionaries
+    wind_turbine_fleet : list(dict)
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
         (contains a :class:`~.wind_turbine.WindTurbine` object) and
         'number_of_turbines' (number of wind turbines of the same turbine type
         in the wind farm) as keys.
-    coordinates : list or None
-        List of coordinates [lat, lon] of location for loading data.
-        Default: None.
-    efficiency : float or pd.DataFrame
+    coordinates : list(float) or None
+        List with coordinates [lat, lon] of location. Default: None.
+    efficiency : float or :pandas:`pandas.DataFrame<frame>` or None
         Efficiency of the wind farm. Either constant (float) power efficiency
         curve (pd.DataFrame) containing 'wind_speed' and 'efficiency'
-        columns/keys with wind speeds in m/s and the corresponding
+        columns with wind speeds in m/s and the corresponding
         dimensionless wind farm efficiency. Default: None.
     hub_height : float
-        The calculated mean hub height of the wind farm.
+        The calculated mean hub height of the wind farm. See
+        :py:func:`mean_hub_height` for more information.
+    nominal_power : float
+        The nominal power is the sum of the nominal power of all turbines in
+        the wind farm in W.
     installed_power : float
-        The calculated installed power of the wind farm.
-    power_curve : pandas.DataFrame or None
-        The calculated power curve of the wind farm.
-    power_output : pandas.Series
+        Installed nominal power of the wind farm in W. Deprecated! Use
+        :attr:`~.wind_farm.WindFarm.nominal_power` instead.
+    power_curve : :pandas:`pandas.DataFrame<frame>` or None
+        The calculated power curve of the wind farm. See
+        :py:func:`assign_power_curve` for more information.
+    power_output : :pandas:`pandas.Series<series>`
         The calculated power output of the wind farm.
 
     Examples
@@ -77,11 +82,11 @@ class WindFarm(object):
     ...    'wind_turbine_fleet': [{'wind_turbine': e126,
     ...                            'number_of_turbines': 6}]}
     >>> example_farm = wind_farm.WindFarm(**example_farm_data)
-    >>> example_farm.installed_power = example_farm.get_installed_power()
-    >>> print(example_farm.installed_power)
+    >>> print(example_farm.nominal_power)
     25200000.0
 
     """
+
     def __init__(self, name, wind_turbine_fleet, coordinates=None,
                  efficiency=None, **kwargs):
 
@@ -91,9 +96,51 @@ class WindFarm(object):
         self.efficiency = efficiency
 
         self.hub_height = None
-        self.installed_power = None
+        self._nominal_power = None
+        self._installed_power = None
         self.power_curve = None
         self.power_output = None
+
+    @property
+    def installed_power(self):
+        r"""
+        The installed nominal power of the wind farm. (Deprecated!)
+
+        """
+        warnings.warn(
+            'installed_power is deprecated, use nominal_power instead.',
+            FutureWarning)
+        return self.nominal_power
+
+    @installed_power.setter
+    def installed_power(self, installed_power):
+        self._installed_power = installed_power
+
+    @property
+    def nominal_power(self):
+        r"""
+        The nominal power of the wind farm.
+
+        See :attr:`~.wind_farm.WindFarm.nominal_power` for further information.
+
+        Parameters
+        -----------
+        nominal_power : float
+            Nominal power of the wind farm in W.
+
+        Returns
+        -------
+        float
+            Nominal power of the wind farm in W.
+
+        """
+        if not self._nominal_power:
+            self.nominal_power = self.get_installed_power()
+        return self._nominal_power
+
+    @nominal_power.setter
+    def nominal_power(self, nominal_power):
+        self._nominal_power = nominal_power
 
     def mean_hub_height(self):
         r"""
@@ -102,12 +149,14 @@ class WindFarm(object):
         The mean hub height of a wind farm is necessary for power output
         calculations with an aggregated wind farm power curve containing wind
         turbines with different hub heights. Hub heights of wind turbines with
-        higher nominal power weigh more than others. Assigns the hub height to
-        the wind farm object.
+        higher nominal power weigh more than others.
+        After the calculations the mean hub height is assigned to the attribute
+        :py:attr:`~hub_height`.
 
         Returns
         -------
-        self
+        :class:`~.wind_farm.WindFarm`
+            self
 
         Notes
         -----
@@ -139,17 +188,13 @@ class WindFarm(object):
 
     def get_installed_power(self):
         r"""
-        Calculates the installed power of the wind farm.
-
-        The installed power of wind farms is necessary when a
-        :class:`~.wind_turbine_cluster.WindTurbineCluster` object is used and
-        it's power weighed mean hub height is calculated with
-        :py:func:`~.wind_turbine_cluster.WindTurbineCluster.mean_hub_height`.
+        Calculates :py:attr:`~nominal_power` of the wind farm.
 
         Returns
         -------
         float
-            Installed power of the wind farm.
+            Nominal power of the wind farm in W. See :py:attr:`~nominal_power`
+            for further information.
 
         """
         return sum(
@@ -169,27 +214,28 @@ class WindFarm(object):
         of all wind turbines in the wind farm. Depending on the parameters the
         power curves are smoothed (before or after the aggregation) and/or a
         wind farm efficiency (power efficiency curve or constant efficiency) is
-        applied after the aggregation. After the calculations the power curve
-        is assigned to the wind farm object.
+        applied after the aggregation.
+        After the calculations the power curve is assigned to the attribute
+        :py:attr:`~power_curve`.
 
         Parameters
         ----------
-        wake_losses_model : string
+        wake_losses_model : str
             Defines the method for taking wake losses within the farm into
             consideration. Options: 'power_efficiency_curve',
             'constant_efficiency' or None. Default: 'power_efficiency_curve'.
-        smoothing : boolean
+        smoothing : bool
             If True the power curves will be smoothed before or after the
             aggregation of power curves depending on `smoothing_order`.
             Default: False.
         block_width : float
             Width between the wind speeds in the sum of the equation in
             :py:func:`~.power_curves.smooth_power_curve`. Default: 0.5.
-        standard_deviation_method : string
+        standard_deviation_method : str
             Method for calculating the standard deviation for the Gauss
             distribution. Options: 'turbulence_intensity',
             'Staffell_Pfenninger'. Default: 'turbulence_intensity'.
-        smoothing_order : string
+        smoothing_order : str
             Defines when the smoothing takes place if `smoothing` is True.
             Options: 'turbine_power_curves' (to the single turbine power
             curves), 'wind_farm_power_curves'.
@@ -198,17 +244,15 @@ class WindFarm(object):
             Turbulence intensity at hub height of the wind farm for power curve
             smoothing with 'turbulence_intensity' method. Can be calculated
             from `roughness_length` instead. Default: None.
-
-        Other Parameters
-        ----------------
-        roughness_length : float, optional.
+        roughness_length : float (optional)
             Roughness length. If `standard_deviation_method` is
             'turbulence_intensity' and `turbulence_intensity` is not given
             the turbulence intensity is calculated via the roughness length.
 
         Returns
         -------
-        self
+        :class:`~.wind_farm.WindFarm`
+            self
 
         """
         # Check if all wind turbines have a power curve as attribute
@@ -259,8 +303,8 @@ class WindFarm(object):
                     standard_deviation_method=standard_deviation_method,
                     block_width=block_width, **kwargs)
             else:
-                # Add value zero to start and end of curve as otherwise there
-                # can occure problems during the aggregation
+                # Add value zero to start and end of curve as otherwise
+                # problems can occur during the aggregation
                 if power_curve.iloc[0]['wind_speed'] != 0.0:
                     power_curve = pd.concat(
                         [pd.DataFrame(data={
@@ -283,7 +327,8 @@ class WindFarm(object):
             df.interpolate(method='index').sum(axis=1))
         wind_farm_power_curve.columns = ['value']
         wind_farm_power_curve.reset_index('wind_speed', inplace=True)
-        # Editions to the power curve after the summation
+        # Apply power curve smoothing and consideration of wake losses
+        # after the summation
         if smoothing and smoothing_order == 'wind_farm_power_curves':
             wind_farm_power_curve = power_curves.smooth_power_curve(
                 wind_farm_power_curve['wind_speed'],

@@ -3,6 +3,7 @@ v0.1.2 ()
 
 New features
 ############
+* installed power as attribute or getter in wind farm and wind turbine cluster
 
 
 Documentation
@@ -19,11 +20,13 @@ Bug fixes
 
 Other changes
 #############
-* Make windpowerlib work offline: turbine data from oedb is stored in csv files for offline usage
-* Make :py:func:`~windpowerlib.wind_turbine.get_turbine_types` also accessible via `get_turbine_types()` --> from windpowerlib import get_turbine_types
-
+* Made windpowerlib work offline: turbine data from oedb is stored in csv files for offline usage
+* Made :py:func:`~windpowerlib.wind_turbine.get_turbine_types` also accessible via `get_turbine_types()` --> from windpowerlib import get_turbine_types
+* Added kwargs in init of wind turbine, wind farm, wind turbine cluster
+* We are working with deprecation warnings to draw our user's attention to important changes.
+* Work around to use older pandas versions
 
 Contributors
 ############
 * Sabine Haas
-
+* Birgit Schachler

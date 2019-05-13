@@ -35,13 +35,22 @@ if needs_sphinx > sphinx.__display_version__:
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.extlinks',  # enables external links with a key
     'sphinx.ext.viewcode',
     'sphinx.ext.imgmath',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
     'nbsphinx'
-
 ]
+
+autodoc_member_order = 'bysource'
+
+extlinks = {'pandas':('http://pandas.pydata.org/pandas-docs/stable/reference/%s.html',
+                      'pandas.')
+            }
+# Example configuration for intersphinx: refer to the Python standard library.
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
 
 # 
 autoclass_content = 'both'
@@ -61,7 +70,7 @@ master_doc = 'index'
 # General information about the project.
 project = u'windpowerlib'
 copyright = u'2016, oemof developer group'
-author = u'oemof developing group'
+author = u'oemof developer group'
 
 import windpowerlib
 
@@ -117,11 +126,9 @@ autosummary_generate = True
 # -- Options for HTML output ----------------------------------------------
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-on_rtd = os.environ.get('READTHEDOCS') == 'True'
-if on_rtd:
-    html_theme = 'default'
-else:
-    html_theme = 'bizstyle'
+import sphinx_rtd_theme
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -285,9 +292,9 @@ texinfo_documents = [
 
 # Bibliographic Dublin Core info.
 epub_title = u'windpowerlib'
-epub_author = u'oemof developing group'
-epub_publisher = u'oemof developing group'
-epub_copyright = u'2016, oemof developing group'
+epub_author = u'oemof developer group'
+epub_publisher = u'oemof developer group'
+epub_copyright = u'2016, oemof developer group'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'pahesmf'
