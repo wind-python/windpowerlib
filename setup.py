@@ -18,7 +18,5 @@ setup(name='windpowerlib',
           'windpowerlib': [os.path.join('data', '*.csv')]},
       long_description=read('README.rst'),
       zip_safe=False,
-      install_requires=['numpy <= 1.15.4', # remove after PyTables release 3.4.5
-                        'pandas >= 0.19.1',
-                        'requests',
-                        'tables']) # PyTables needed for pandas.HDFStore
+      install_requires=['pandas >= 0.19.1',
+                        'requests'])
