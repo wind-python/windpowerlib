@@ -106,7 +106,6 @@ class TurbineClusterModelChain(ModelChain):
         'wind_farm_power_curves'. Default: 'wind_farm_power_curves'.
     power_output : :pandas:`pandas.Series<series>`
         Electrical power output of the wind turbine in W.
-    #Todo fix!
     power_curve : :pandas:`pandas.Dataframe<frame>` or None
         The calculated power curve of the wind farm.
     wind_speed_model : str
