@@ -200,10 +200,6 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         and the corresponding power curve value in W.
 
     """
-    warnings.warn(
-        'wake_losses_model is deprecated, will be defined by the type of '
-        'wind_farm_efficiency.',
-        FutureWarning)
     # Create power curve DataFrame
     power_curve_df = pd.DataFrame(
         data=[list(power_curve_wind_speeds),
