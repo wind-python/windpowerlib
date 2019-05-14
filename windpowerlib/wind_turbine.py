@@ -311,7 +311,7 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve):
     """
     filename = os.path.join(os.path.dirname(__file__), 'data',
                             'oedb_{}s.csv'.format(fetch_curve))
-    if not os.path.isfile(filename) or overwrite:
+    if not os.path.isfile(filename):
         # Load data from oedb and save to csv file
         load_turbine_data_from_oedb()
     else:
