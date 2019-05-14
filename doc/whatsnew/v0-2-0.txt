@@ -1,0 +1,34 @@
+v0.2.0 ()
+++++++++++++++++++++++++++++++
+
+New features
+############
+
+
+Documentation
+#############
+
+
+Testing
+#######
+
+
+Bug fixes
+#########
+
+
+API changes
+#############
+* Removed unnecessary `wake_losses_model` parameter in :py:func:`~.power_curves.wake_losses_to_power_curve`. Whether a constant wind farm efficiency or a wind farm efficiency curve is used is decided by the type of the wind farm efficiency.
+* Combined options 'constant_efficiency' and 'power_efficiency_curve' of `wake_losses_model` parameter in :py:func:`~.turbine_cluster_modelchain.TurbineClusterModelChain` to 'wind_farm_efficiency'. Therefore, default value of `wake_losses_model` in :py:func:`~.wind_farm.WindFarm.assign_power_curve` and :py:func:`~.wind_turbine_cluster.WindTurbineCluster.assign_power_curve` changed to 'wind_farm_efficiency'.
+* Removed `overwrite` parameter from :py:func:`~.wind_turbine.get_turbine_data_from_oedb`
+
+Other changes
+#############
+
+
+
+Contributors
+############
+* Sabine Haas
+

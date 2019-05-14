@@ -25,10 +25,9 @@ class TurbineClusterModelChain(ModelChain):
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
     wake_losses_model : str or None
-        Defines the method for taking wake losses within the farm into
-        consideration. Options: None, 'power_efficiency_curve' or
-        'constant_efficiency' or the name of a wind efficiency curve like
-        'dena_mean'. Default: 'dena_mean'.
+        Defines the method for talking wake losses within the farm into
+        consideration. Options: None, 'wind_farm_efficiency' or the name of a
+        wind efficiency curve like 'dena_mean'. Default: 'dena_mean'.
         Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
         wind efficiency curves.
     smoothing : bool
@@ -83,10 +82,9 @@ class TurbineClusterModelChain(ModelChain):
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
     wake_losses_model : str or None
-        Defines the method for taking wake losses within the farm into
-        consideration. Options: None, 'power_efficiency_curve' or
-        'constant_efficiency' or the name of a wind efficiency curve like
-        'dena_mean'. Default: 'dena_mean'.
+        Defines the method for talking wake losses within the farm into
+        consideration. Options: None, 'wind_farm_efficiency' or the name of a
+        wind efficiency curve like 'dena_mean'. Default: 'dena_mean'.
         Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
         wind efficiency curves.
     smoothing : bool
@@ -106,7 +104,6 @@ class TurbineClusterModelChain(ModelChain):
         'wind_farm_power_curves'. Default: 'wind_farm_power_curves'.
     power_output : :pandas:`pandas.Series<series>`
         Electrical power output of the wind turbine in W.
-    #Todo fix!
     power_curve : :pandas:`pandas.Dataframe<frame>` or None
         The calculated power curve of the wind farm.
     wind_speed_model : str

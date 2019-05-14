@@ -170,10 +170,6 @@ class WindTurbine(object):
         4200000.0
 
         """
-        if fetch_curve not in ['power_curve', 'power_coefficient_curve']:
-            raise ValueError("'{0}' is an invalid value for ".format(
-                fetch_curve) + "`fetch_curve`. Must be " +
-                             "'power_curve' or 'power_coefficient_curve'.")
         if data_source == 'oedb':
             curve_df, nominal_power = get_turbine_data_from_oedb(
                 turbine_type=self.name, fetch_curve=fetch_curve)
@@ -184,6 +180,10 @@ class WindTurbine(object):
             self.power_curve = curve_df
         elif fetch_curve == 'power_coefficient_curve':
             self.power_coefficient_curve = curve_df
+        else:
+            raise ValueError("'{0}' is an invalid value. ".format(
+                             fetch_curve) + "`fetch_curve` must be " +
+                             "'power_curve' or 'power_coefficient_curve'.")
         if self.nominal_power is None:
             self.nominal_power = nominal_power
         return self
@@ -261,14 +261,16 @@ def get_turbine_data_from_file(turbine_type, file_):
     return df, nominal_power
 
 
-def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
+def get_turbine_data_from_oedb(turbine_type, fetch_curve):
     r"""
     Fetches wind turbine data from the OpenEnergy database (oedb).
 
     If turbine data exists in local repository it is loaded from this file. The
-    file is created when turbine data is loaded from oedb in
-    :py:func:`~.load_turbine_data_from_oedb`. Use this function with
-    `overwrite=True` to overwrite your file with newly fetched data.
+    file is created when turbine data was loaded from oedb in
+    :py:func:`~.load_turbine_data_from_oedb`.
+
+    Execute :py:func:`~.load_turbine_data_from_oedb` or delete the files to
+    refresh the download.
 
     Parameters
     ----------
@@ -281,9 +283,6 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
         Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
         'power_curve' and 'power_coefficient_curve'. Default: None.
-    overwrite : bool
-        If True local file is overwritten by newly fetched data from oedb, if
-        False turbine data is fetched from previously saved file.
 
     Returns
     -------
@@ -296,7 +295,7 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
     """
     filename = os.path.join(os.path.dirname(__file__), 'data',
                             'oedb_{}s.csv'.format(fetch_curve))
-    if not os.path.isfile(filename) or overwrite:
+    if not os.path.isfile(filename):
         # Load data from oedb and save to csv file
         load_turbine_data_from_oedb()
     else:
@@ -323,7 +322,7 @@ def load_turbine_data_from_oedb():
 
     Returns
     -------
-    pd.DataFrame
+    turbine_data : pd.DataFrame
         Contains turbine data of different turbines such as 'manufacturer',
         'turbine_type', 'nominal_power'.
 
@@ -427,6 +426,7 @@ def get_turbine_types(print_out=True, filter_=True):
     Name: 1, dtype: object
 
     """
+
     df = load_turbine_data_from_oedb()
     if filter_:
         cp_curves_df = df.loc[df['has_cp_curve']][

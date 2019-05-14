@@ -3,28 +3,23 @@ v0.1.2 ()
 
 New features
 ############
-* installed power as attribute or getter in wind farm and wind turbine cluster
-
-
-Documentation
-#############
-
-
-Testing
-#######
-
+* new attribute nominal_power in WindFarm and WindTurbineCluster classes (PR #53)
 
 Bug fixes
 #########
-
+* fix issue with pandas Multiindex labels and codes attributes (PR #51)
 
 Other changes
 #############
-* Made windpowerlib work offline: turbine data from oedb is stored in csv files for offline usage
+* Made windpowerlib work offline: turbine data from oedb is stored in csv files for offline usage (PR #52)
 * Made :py:func:`~windpowerlib.wind_turbine.get_turbine_types` also accessible via `get_turbine_types()` --> from windpowerlib import get_turbine_types
 * Added kwargs in init of wind turbine, wind farm, wind turbine cluster
-* We are working with deprecation warnings to draw our user's attention to important changes.
-* Work around to use older pandas versions
+* We are working with deprecation warnings to draw our user's attention to important changes (PR #53).
+
+Deprecations
+############
+* installed_power is deprecated, use nominal_power instead.
+* wake_losses_model is deprecated, will be defined by the type of wind_farm_efficiency
 
 Contributors
 ############

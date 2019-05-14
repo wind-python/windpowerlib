@@ -22,7 +22,7 @@ class WindTurbineCluster(object):
 
     Parameters
     ----------
-    name : string or None
+    name : str or None
         Name of the wind turbine cluster.
     wind_farms : list (:class:`~.wind_farm.WindFarm`)
         List of wind farms in cluster.
@@ -31,7 +31,7 @@ class WindTurbineCluster(object):
 
     Attributes
     ----------
-    name : string or None
+    name : str or None
         Name of the wind turbine cluster.
     wind_farms : list (:class:`~.wind_farm.WindFarm`)
         List of wind farms in cluster.
@@ -163,7 +163,7 @@ class WindTurbineCluster(object):
             wind_farm.nominal_power = wind_farm.get_installed_power()
         return sum(wind_farm.nominal_power for wind_farm in self.wind_farms)
 
-    def assign_power_curve(self, wake_losses_model='power_efficiency_curve',
+    def assign_power_curve(self, wake_losses_model='wind_farm_efficiency',
                            smoothing=False, block_width=0.5,
                            standard_deviation_method='turbulence_intensity',
                            smoothing_order='wind_farm_power_curves',
@@ -183,8 +183,8 @@ class WindTurbineCluster(object):
         ----------
         wake_losses_model : str
             Defines the method for taking wake losses within the farm into
-            consideration. Options: 'power_efficiency_curve',
-            'constant_efficiency' or None. Default: 'power_efficiency_curve'.
+            consideration. Options: 'wind_farm_efficiency' or None.
+            Default: 'wind_farm_efficiency'.
         smoothing : bool
             If True the power curves will be smoothed before or after the
             aggregation of power curves depending on `smoothing_order`.

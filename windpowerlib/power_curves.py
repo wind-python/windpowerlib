@@ -174,8 +174,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
 
 def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
-                               wind_farm_efficiency,
-                               wake_losses_model='power_efficiency_curve'):
+                               wind_farm_efficiency):
     r"""
     Reduces the power values of a power curve by an efficiency (curve).
 
@@ -192,10 +191,6 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         curve (pd.DataFrame) containing 'wind_speed' and 'efficiency' columns
         with wind speeds in m/s and the corresponding dimensionless wind farm
         efficiency (reduction of power). Default: None.
-    wake_losses_model : String
-        Defines the method for taking wake losses within the farm into
-        consideration. Options: 'power_efficiency_curve',
-        'constant_efficiency'. Default: 'power_efficiency_curve'.
 
     Returns
     -------
@@ -205,28 +200,16 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
         and the corresponding power curve value in W.
 
     """
-    warnings.warn(
-        'wake_losses_model is deprecated.',
-        FutureWarning)
     # Create power curve DataFrame
     power_curve_df = pd.DataFrame(
         data=[list(power_curve_wind_speeds),
               list(power_curve_values)]).transpose()
     # Rename columns of DataFrame
     power_curve_df.columns = ['wind_speed', 'value']
-    if wake_losses_model == 'constant_efficiency':
-        if not isinstance(wind_farm_efficiency, float):
-            raise TypeError("'wind_farm_efficiency' must be float if " +
-                            "`wake_losses_model´ is '{}' but is {}".format(
-                                wake_losses_model, wind_farm_efficiency))
+    if isinstance(wind_farm_efficiency, float):
         power_curve_df['value'] = power_curve_values * wind_farm_efficiency
-    elif wake_losses_model == 'power_efficiency_curve':
-        if (not isinstance(wind_farm_efficiency, dict) and
-                not isinstance(wind_farm_efficiency, pd.DataFrame)):
-            raise TypeError(
-                "'wind_farm_efficiency' must be pd.DataFrame if " +
-                "`wake_losses_model´ is '{}' but is {}".format(
-                    wake_losses_model, wind_farm_efficiency))
+    elif (isinstance(wind_farm_efficiency, dict) or
+          isinstance(wind_farm_efficiency, pd.DataFrame)):
         df = pd.concat([power_curve_df.set_index('wind_speed'),
                         wind_farm_efficiency.set_index('wind_speed')], axis=1)
         # Add column with reduced power (nan values of efficiency are
@@ -238,8 +221,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
                                        reduced_power.values]).transpose()
         power_curve_df.columns = ['wind_speed', 'value']
     else:
-        raise ValueError(
-            "`wake_losses_model` is {} but should be ".format(
-                wake_losses_model) +
-            "'constant_efficiency' or 'power_efficiency_curve'")
+        raise TypeError(
+            "'wind_farm_efficiency' must be float, dict or pd.DataFrame "
+            "but is {}".format(type(wind_farm_efficiency)))
     return power_curve_df

@@ -222,8 +222,8 @@ class WindFarm(object):
         ----------
         wake_losses_model : str
             Defines the method for taking wake losses within the farm into
-            consideration. Options: 'power_efficiency_curve',
-            'constant_efficiency' or None. Default: 'power_efficiency_curve'.
+            consideration. Options: 'wind_farm_efficiency' or None.
+            Default: 'wind_farm_efficiency'.
         smoothing : bool
             If True the power curves will be smoothed before or after the
             aggregation of power curves depending on `smoothing_order`.
@@ -268,7 +268,7 @@ class WindFarm(object):
         # Initialize data frame for power curve values
         df = pd.DataFrame()
         for turbine_type_dict in self.wind_turbine_fleet:
-            # Check if all needed parameters are available and/or assign them
+            # Check if needed parameters are available and/or assign them
             if smoothing:
                 if (standard_deviation_method == 'turbulence_intensity' and
                         turbulence_intensity is None):
@@ -285,14 +285,6 @@ class WindFarm(object):
                             "'turbulence_intensity' as " +
                             "`standard_deviation_method` if " +
                             "`turbulence_intensity` is not given")
-            if wake_losses_model is not None:
-                if self.efficiency is None:
-                    raise KeyError(
-                        "`efficiency` is needed if " +
-                        "`wake_losses_model´ is '{0}', but ".format(
-                            wake_losses_model) +
-                        "`efficiency` of wind farm {0} is {1}.".format(
-                            self.name if self.name else '', self.efficiency))
             # Get original power curve
             power_curve = pd.DataFrame(
                 turbine_type_dict['wind_turbine'].power_curve)
@@ -327,8 +319,7 @@ class WindFarm(object):
             df.interpolate(method='index').sum(axis=1))
         wind_farm_power_curve.columns = ['value']
         wind_farm_power_curve.reset_index('wind_speed', inplace=True)
-        # Apply power curve smoothing and consideration of wake losses
-        # after the summation
+        # Editions to the power curve after the summation
         if smoothing and smoothing_order == 'wind_farm_power_curves':
             wind_farm_power_curve = power_curves.smooth_power_curve(
                 wind_farm_power_curve['wind_speed'],
@@ -337,11 +328,15 @@ class WindFarm(object):
                 block_width=block_width, **kwargs)
         if (wake_losses_model == 'constant_efficiency' or
                 wake_losses_model == 'power_efficiency_curve'):
-            wind_farm_power_curve = (
-                power_curves.wake_losses_to_power_curve(
-                    wind_farm_power_curve['wind_speed'].values,
-                    wind_farm_power_curve['value'].values,
-                    wake_losses_model=wake_losses_model,
-                    wind_farm_efficiency=self.efficiency))
+            if self.efficiency is not None:
+                wind_farm_power_curve = (
+                    power_curves.wake_losses_to_power_curve(
+                        wind_farm_power_curve['wind_speed'].values,
+                        wind_farm_power_curve['value'].values,
+                        wind_farm_efficiency=self.efficiency))
+            else:
+                logging.info("`wake_losses_model` is {} but wind farm ".format(
+                    wake_losses_model) + "efficiency is NOT taken into "
+                                         "account as it is None.")
         self.power_curve = wind_farm_power_curve
         return self
