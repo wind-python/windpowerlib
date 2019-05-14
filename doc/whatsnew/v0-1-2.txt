@@ -5,15 +5,6 @@ New features
 ############
 * new attribute nominal_power in WindFarm and WindTurbineCluster classes (PR #53)
 
-
-Documentation
-#############
-
-
-Testing
-#######
-
-
 Bug fixes
 #########
 * fix issue with pandas Multiindex labels and codes attributes (PR #51)
@@ -25,6 +16,10 @@ Other changes
 * Added kwargs in init of wind turbine, wind farm, wind turbine cluster
 * We are working with deprecation warnings to draw our user's attention to important changes (PR #53).
 
+Deprecations
+############
+* installed_power is deprecated, use nominal_power instead.
+* wake_losses_model is deprecated, will be defined by the type of wind_farm_efficiency
 
 Contributors
 ############
