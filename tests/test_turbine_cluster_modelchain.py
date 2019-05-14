@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import pytest
 from pandas.util.testing import assert_series_equal
 
 import windpowerlib.wind_farm as wf
@@ -19,20 +18,21 @@ class TestTurbineClusterModelChain:
         wind_speed_8m = np.array([[4.0], [5.0]])
         wind_speed_10m = np.array([[5.0], [6.5]])
         roughness_length = np.array([[0.15], [0.15]])
-        self.weather_df = pd.DataFrame(np.hstack((temperature_2m,
-                                             temperature_10m,
-                                             pressure_0m,
-                                             wind_speed_8m,
-                                             wind_speed_10m,
-                                             roughness_length)),
-                                  index=[0, 1],
-                                  columns=[np.array(['temperature',
-                                                     'temperature',
-                                                     'pressure',
-                                                     'wind_speed',
-                                                     'wind_speed',
-                                                     'roughness_length']),
-                                           np.array([2, 10, 0, 8, 10, 0])])
+        self.weather_df = pd.DataFrame(
+                np.hstack((temperature_2m,
+                           temperature_10m,
+                           pressure_0m,
+                           wind_speed_8m,
+                           wind_speed_10m,
+                           roughness_length)),
+                index=[0, 1],
+                columns=[np.array(['temperature',
+                                   'temperature',
+                                   'pressure',
+                                   'wind_speed',
+                                   'wind_speed',
+                                   'roughness_length']),
+                         np.array([2, 10, 0, 8, 10, 0])])
         self.test_turbine = {'hub_height': 100,
                              'rotor_diameter': 80,
                              'name': 'E-126/4200',
@@ -44,15 +44,15 @@ class TestTurbineClusterModelChain:
         self.test_farm = {'name': 'test farm',
                           'wind_turbine_fleet': [
                               {'wind_turbine':
-                                   wt.WindTurbine(**self.test_turbine),
+                                  wt.WindTurbine(**self.test_turbine),
                                'number_of_turbines': 3}]}
         self.test_farm_2 = {'name': 'test farm',
                             'wind_turbine_fleet':
                                 [{'wind_turbine':
-                                      wt.WindTurbine(**self.test_turbine),
+                                    wt.WindTurbine(**self.test_turbine),
                                   'number_of_turbines': 3},
                                  {'wind_turbine':
-                                      wt.WindTurbine(**self.test_turbine_2),
+                                     wt.WindTurbine(**self.test_turbine_2),
                                   'number_of_turbines': 3}]}
         self.test_cluster = {'name': 'example_cluster',
                              'wind_farms': [wf.WindFarm(**self.test_farm),
