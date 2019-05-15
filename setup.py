@@ -21,4 +21,4 @@ setup(name='windpowerlib',
       install_requires=['pandas >= 0.19.1',
                         'requests'],
       extras_require={
-          'dev': ['sphinx_rtd_theme', 'pytest']})
+          'dev': ['pytest', 'jupyter', 'sphinx_rtd_theme', 'nbformat']})
