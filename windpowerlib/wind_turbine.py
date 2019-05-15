@@ -13,6 +13,7 @@ import logging
 import sys
 import requests
 import os
+import warnings
 
 
 class WindTurbine(object):
@@ -109,6 +110,14 @@ class WindTurbine(object):
                  power_coefficient_curve=None, power_curve=None,
                  nominal_power=None, fetch_curve=None, coordinates=None,
                  data_source='oedb', **kwargs):
+
+        warnings.warn(
+            "parameters data_source and fetch_curve are deprecated, data "
+            "source and fetching will be defined by the parameters "
+            "power_coefficient_curve, power_curve and nominal_power in the "
+            "future. The default values ('oedb') will lead to the same "
+            "behaviour like the current default values "
+            "(None, data_source='oedb').", FutureWarning)
 
         self.name = name
         self.hub_height = hub_height
