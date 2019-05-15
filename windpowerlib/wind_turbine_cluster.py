@@ -22,7 +22,7 @@ class WindTurbineCluster(object):
 
     Parameters
     ----------
-    name : string or None
+    name : str or None
         Name of the wind turbine cluster.
     wind_farms : list (:class:`~.wind_farm.WindFarm`)
         List of wind farms in cluster.
@@ -31,7 +31,7 @@ class WindTurbineCluster(object):
 
     Attributes
     ----------
-    name : string or None
+    name : str or None
         Name of the wind turbine cluster.
     wind_farms : list (:class:`~.wind_farm.WindFarm`)
         List of wind farms in cluster.

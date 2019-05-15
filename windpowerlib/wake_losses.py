@@ -24,7 +24,7 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     ----------
     wind_speed : pandas.Series or numpy.array
         Wind speed time series.
-    wind_efficiency_curve_name : string
+    wind_efficiency_curve_name : str
         Name of the wind efficiency curve. Use
         :py:func:`~.get_wind_efficiency_curve` to get all provided wind
         efficiency curves. Default: 'dena_mean'.
