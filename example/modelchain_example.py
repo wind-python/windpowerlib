@@ -111,6 +111,7 @@ def initialize_wind_turbines():
         'nominal_power': 3e6,  # in W
         'hub_height': 105,  # in m
         'rotor_diameter': 90,  # in m
+        'power_coefficient_curve': None,  # not specified
         'power_curve': pd.DataFrame(
             data={'value': [p * 1000 for p in [
                       0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],  # in W
@@ -121,27 +122,31 @@ def initialize_wind_turbines():
 
     # specification of wind turbine where power curve is provided in the oedb
     # if you want to use the power coefficient curve change the value of
-    # 'fetch_curve' to 'power_coefficient_curve'
+    # 'power_coefficient_curve' to 'oedb'.
     enercon_e126 = {
         'name': 'E-126/4200',  # turbine type as in register #
         'hub_height': 135,  # in m
         'rotor_diameter': 127,  # in m
-        'fetch_curve': 'power_curve',  # fetch power curve #
-        'data_source': 'oedb'  # data source oedb or name of csv file
+        'power_coefficient_curve': None,  # curve data is not fetched
+        'power_curve': 'oedb',  # data is fetched from oedb, is default value
+        'nominal_power': 'oedb',  # data is fetched from oedb, is default value
     }
     # initialize WindTurbine object
     e126 = WindTurbine(**enercon_e126)
 
-    # specification of wind turbine where power coefficient curve is provided
-    # by a csv file
+    # specification of wind turbine where power coefficient curve and nominal
+    # power is provided by a csv file
     csv_file = os.path.join(os.path.dirname(__file__), 'data',
                             'example_power_coefficient_curves.csv')
+    csv_file_nom = os.path.join(os.path.dirname(__file__), 'data',
+                            'example_nominal_power.csv')
     dummy_turbine = {
         'name': 'DUMMY 1',  # turbine type as in file #
         'hub_height': 100,  # in m
         'rotor_diameter': 70,  # in m
-        'fetch_curve': 'power_coefficient_curve',  # fetch cp curve #
-        'data_source': csv_file  # data source
+        'power_curve': None,  # data is not fetched
+        'power_coefficient_curve': csv_file,  # data is fetched from file
+        'nominal_power': csv_file_nom,  # data is fetched from file
     }
     # initialize WindTurbine object
     dummy_turbine = WindTurbine(**dummy_turbine)

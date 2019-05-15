@@ -12,27 +12,15 @@ class TestWindTurbine:
                               'example_power_curves.csv')
         self.test_turbine_data = {'hub_height': 100,
                                   'rotor_diameter': 80,
-                                  'name': 'turbine_not_in_file',
-                                  'fetch_curve': 'power_curve',
-                                  'data_source': source}
+                                  'power_curve': source,
+                                  'power_coefficient_curve': None,
+                                  'nominal_power': None,
+                                  'name': 'turbine_not_in_file'}
         # Raise system exit due to turbine type not in file
         with pytest.raises(SystemExit):
             WindTurbine(**self.test_turbine_data)
 
-        # Raise ValueError due to invalid parameter `fetch_curve`
-        self.test_turbine_data['fetch_curve'] = 'misspelling'
-        self.test_turbine_data['name'] = 'DUMMY 3'
-        with pytest.raises(ValueError):
-            WindTurbine(**self.test_turbine_data)
-
-        # Raise KeyError due to turbine type not in oedb
-        self.test_turbine_data['fetch_curve'] = 'power_curve'
-        self.test_turbine_data['data_source'] = 'oedb'
-        with pytest.raises(KeyError):
-            WindTurbine(**self.test_turbine_data)
-
-    def test_get_turbine_data_from_file(self):
-        # Raise FileNotFoundError due to missing
+        # Raise FileNotFoundError due to missing file
         with pytest.raises(FileNotFoundError):
             get_turbine_data_from_file(turbine_type='...',
                                        file_='not_existent')
