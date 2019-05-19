@@ -241,7 +241,6 @@ def get_turbine_data_from_file(turbine_type, file_):
     ...    'rotor_diameter': 70,
     ...    'name': 'DUMMY 3',
     ...    'power_curve': source,
-    ...    'power_coefficient_curve': None,
     ...    'nominal_power': p_nom_source}
     >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
     >>> print(e_t_1.power_curve['value'][7])
