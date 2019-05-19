@@ -20,37 +20,33 @@ class WindFarm(object):
 
     Parameters
     ----------
-    name : str or None
-        Name of the wind farm.
     wind_turbine_fleet : list(dict)
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
         (contains a :class:`~.wind_turbine.WindTurbine` object) and
         'number_of_turbines' (number of wind turbines of the same turbine type
         in the wind farm) as keys.
-    coordinates : list(float) or None (optional)
-        List with coordinates [lat, lon] of location. Default: None.
     efficiency : float or :pandas:`pandas.DataFrame<frame>` or None (optional)
         Efficiency of the wind farm. Provide as either constant (float) or
         power efficiency curve (pd.DataFrame) containing 'wind_speed' and
         'efficiency' columns with wind speeds in m/s and the corresponding
         dimensionless wind farm efficiency. Default: None.
+    name : str (optional)
+        Can be used as an identifier of the wind farm. Default: ''.
 
     Attributes
     ----------
-    name : str or None
-        Name of the wind farm.
     wind_turbine_fleet : list(dict)
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
         (contains a :class:`~.wind_turbine.WindTurbine` object) and
         'number_of_turbines' (number of wind turbines of the same turbine type
         in the wind farm) as keys.
-    coordinates : list(float) or None
-        List with coordinates [lat, lon] of location. Default: None.
     efficiency : float or :pandas:`pandas.DataFrame<frame>` or None
         Efficiency of the wind farm. Either constant (float) power efficiency
         curve (pd.DataFrame) containing 'wind_speed' and 'efficiency'
         columns with wind speeds in m/s and the corresponding
         dimensionless wind farm efficiency. Default: None.
+    name : str
+        If set this is used as an identifier of the wind farm.
     hub_height : float
         The calculated mean hub height of the wind farm. See
         :py:func:`mean_hub_height` for more information.
@@ -87,13 +83,11 @@ class WindFarm(object):
 
     """
 
-    def __init__(self, name, wind_turbine_fleet, coordinates=None,
-                 efficiency=None, **kwargs):
+    def __init__(self, wind_turbine_fleet, efficiency=None, name='', **kwargs):
 
-        self.name = name
         self.wind_turbine_fleet = wind_turbine_fleet
-        self.coordinates = coordinates
         self.efficiency = efficiency
+        self.name = name
 
         self.hub_height = None
         self._nominal_power = None
