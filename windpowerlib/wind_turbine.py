@@ -301,11 +301,12 @@ def get_oedb_turbine_data(turbine_type, fetch_curve):
 
     Returns
     -------
-    pandas.DataFrame or float
+    :pandas:`pandas.DataFrame<frame>` or float
         Power curve or power coefficient curve (pandas.DataFrame) or nominal
-        power in W (float) of one wind turbine type. Power (coefficient) curve
-        DataFrame contains power coefficient curve values (dimensionless) or
-        power curve values in W with the corresponding wind speeds in m/s.
+        power in W (float) of specified wind turbine type. Power (coefficient)
+        curve DataFrame contains power coefficient curve values (dimensionless)
+        or power curve values in W in column 'values' with the corresponding
+        wind speeds in m/s in column 'wind_speed'.
 
     """
     if fetch_curve == 'nominal_power':
@@ -334,16 +335,16 @@ def get_oedb_turbine_data(turbine_type, fetch_curve):
 
 def load_turbine_data_from_oedb():
     r"""
-    Loads turbine data from the OpenEnergy database (oedb).
+    Loads turbine library from the OpenEnergy database (oedb).
 
-    Turbine data is saved to csv files ('oedb_power_curves.csv' and
-    'oedb_power_coefficient_curves.csv') for offline usage of windpowerlib.
-    If the files already exist they are overwritten.
+    Turbine data is saved to csv files ('oedb_power_curves.csv',
+    'oedb_power_coefficient_curves.csv' and 'oedb_nominal_power') for offline
+    usage of the windpowerlib. If the files already exist they are overwritten.
 
     Returns
     -------
-    pd.DataFrame
-        Contains turbine data of different turbines such as 'manufacturer',
+    :pandas:`pandas.DataFrame<frame>`
+        Turbine data of different turbines such as 'manufacturer',
         'turbine_type', 'nominal_power'.
 
     """
@@ -394,11 +395,11 @@ def load_turbine_data_from_oedb():
 
 def get_turbine_types(print_out=True, filter_=True):
     r"""
-    Get all wind turbine types provided in the OpenEnergy database (oedb).
+    Get all wind turbine types provided in the oedb turbine library.
 
     By default only turbine types for which a power coefficient curve or power
     curve is provided are returned. Set `filter_=False` to see all turbine
-    types for which any data (f.e. hub height, rotor diameter, ...) is
+    types for which any data (e.g. hub height, rotor diameter, ...) is
     provided.
 
     Parameters
@@ -411,12 +412,12 @@ def get_turbine_types(print_out=True, filter_=True):
         Default: True.
     filter_ : bool
         If True only turbine types for which a power coefficient curve or
-        power curve is provided in the OpenEnergy database (oedb) are
+        power curve is provided in the oedb turbine library are
         returned. Default: True.
 
     Returns
     -------
-    pd.DataFrame
+    :pandas:`pandas.DataFrame<frame>`
         Contains turbine types in column 'turbine_type', the manufacturer in
         column 'manufacturer' and information about whether a power
         (coefficient) curve exists (True) or not (False) in columns
