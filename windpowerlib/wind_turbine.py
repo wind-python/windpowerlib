@@ -263,17 +263,16 @@ def get_turbine_data_from_file(turbine_type, file_):
         pd.reset_option('display.max_rows')
         sys.exit('Cannot find the wind converter type: {0}'.format(
             turbine_type))
-    # if turbine in data file select power (coefficient) curve columns and
-    # change the format or select nominal power
+    # if turbine in data file change the format
     if 'nominal_power' in file_:
-        data = float(wpp_df['nominal_power'].values[0])
+        return float(wpp_df['nominal_power'].values[0])
     else:
-        curve_data = wpp_df.dropna(axis=1)
-        data = curve_data.transpose().reset_index()
-        data.columns = ['wind_speed', 'value']
+        wpp_df.dropna(axis=1, inplace=True)
+        wpp_df = wpp_df.transpose().reset_index()
+        wpp_df.columns = ['wind_speed', 'value']
         # transform wind speeds to floats
-        data['wind_speed'] = data['wind_speed'].apply(lambda x: float(x))
-    return data
+        wpp_df['wind_speed'] = wpp_df['wind_speed'].apply(lambda x: float(x))
+        return wpp_df
 
 
 def get_oedb_turbine_data(turbine_type, fetch_data):
