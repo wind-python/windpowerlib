@@ -275,7 +275,7 @@ def get_turbine_data_from_file(turbine_type, file_):
     return data
 
 
-def get_oedb_turbine_data(turbine_type, fetch_curve):
+def get_oedb_turbine_data(turbine_type, fetch_data):
     r"""
     Retrieves wind turbine data from the oedb turbine library.
 
