@@ -142,14 +142,13 @@ class WindTurbine(object):
         if power_curve:
             # if True get power curve from oedb turbine library
             if power_curve is True:
-                self.power_curve, self.nominal_power = get_oedb_turbine_data(
-                    self.turbine_type, fetch_curve='power_curve')
-            # if power_curve is a string try to retrieve power curve from file
+                self.power_curve = get_oedb_turbine_data(
+                    self.turbine_type, fetch_data='power_curve')
+            # if string try to retrieve power curve from file
             elif isinstance(power_curve, str):
-                self.power_curve, self.nominal_power = \
-                    get_turbine_data_from_file(self.turbine_type,
-                                               os.path.join(path, power_curve))
-            # if power_curve is dict or pd.DataFrame use it directly
+                self.power_curve = get_turbine_data_from_file(
+                    self.turbine_type, os.path.join(path, power_curve))
+            # if dict or pd.DataFrame use it directly
             elif isinstance(power_curve, dict) or \
                     isinstance(power_curve, pd.DataFrame):
                 self.power_curve = power_curve
@@ -161,19 +160,15 @@ class WindTurbine(object):
         if power_coefficient_curve:
             # if True get power coefficient curve from oedb turbine library
             if power_coefficient_curve is True:
-                self.power_coefficient_curve, self.nominal_power = \
-                    get_oedb_turbine_data(
-                        self.turbine_type,
-                        fetch_curve='power_coefficient_curve')
-            # if power_coefficient_curve is a string try to retrieve power
-            # coefficient curve from file
+                self.power_coefficient_curve = get_oedb_turbine_data(
+                    self.turbine_type,
+                    fetch_data='power_coefficient_curve')
+            # if a string try to retrieve power coefficient curve from file
             elif isinstance(power_coefficient_curve, str):
-                self.power_coefficient_curve, self.nominal_power = \
-                    get_turbine_data_from_file(
-                        self.turbine_type,
-                        os.path.join(path, power_coefficient_curve))
-            # if power_coefficient_curve is dict or pd.DataFrame use it
-            # directly
+                self.power_coefficient_curve = get_turbine_data_from_file(
+                    self.turbine_type,
+                    os.path.join(path, power_coefficient_curve))
+            # if dict or pd.DataFrame use it directly
             elif isinstance(power_coefficient_curve, dict) or \
                     isinstance(power_coefficient_curve, pd.DataFrame):
                 self.power_coefficient_curve = power_coefficient_curve
@@ -294,10 +289,11 @@ def get_oedb_turbine_data(turbine_type, fetch_curve):
         Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
         in oedb containing information about whether power (coefficient) curve
         data is provided.
-    fetch_curve : str
-        Parameter to specify whether a power or power coefficient curve
-        should be retrieved from the provided turbine data. Valid options are
-        'power_curve' and 'power_coefficient_curve'. Default: None.
+        in the oedb turbine library and information about whether power
+        (coefficient) curve data is provided.
+    fetch_data : str
+        Parameter to specify what data to retrieve. Valid options are
+        'power_curve', 'power_coefficient_curve' and 'nominal_power'.
 
     Returns
     -------
@@ -309,25 +305,25 @@ def get_oedb_turbine_data(turbine_type, fetch_curve):
         wind speeds in m/s in column 'wind_speed'.
 
     """
-    if fetch_curve == 'nominal_power':
+    if fetch_data == 'nominal_power':
         filename = os.path.join(os.path.dirname(__file__), 'data',
-                                'oedb_{}.csv'.format(fetch_curve))
+                                'oedb_{}.csv'.format(fetch_data))
     else:
         filename = os.path.join(os.path.dirname(__file__), 'data',
-                                'oedb_{}s.csv'.format(fetch_curve))
     if not os.path.isfile(filename):
         # Load data from oedb and save to csv file
         load_turbine_data_from_oedb()
     else:
         logging.debug("Turbine data is fetched from {}".format(filename))
+                                'oedb_{}s.csv'.format(fetch_data))
 
     data = get_turbine_data_from_file(turbine_type=turbine_type,
                                                    file_=filename)
 
     # nominal power and power curve values in W
-    if fetch_curve == 'nominal_power':
+    if fetch_data == 'nominal_power':
         data = data * 1000
-    if fetch_curve == 'power_curve':
+    elif fetch_data == 'power_curve':
         # power in W
         data['value'] = data['value'] * 1000
     return data
