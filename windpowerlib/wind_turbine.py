@@ -189,8 +189,22 @@ class WindTurbine(object):
             raise AttributeError("Wind turbine must either have a power curve "
                                  "or power coefficient curve.")
 
+    def __repr__(self):
+        info = []
+        if self.nominal_power is not None:
+            info.append('nominal power={} W'.format(self.nominal_power))
+        if self.hub_height is not None:
+            info.append('hub height={} m'.format(self.hub_height))
+        if self.rotor_diameter is not None:
+            info.append('rotor diameter={} m'.format(self.rotor_diameter))
 
+        if self.turbine_type is not None:
+            repr = 'Wind turbine: {name} {info}'.format(
+                name=self.turbine_type, info=info)
         else:
+            repr = 'Wind turbine: {info}'.format(info=info)
+
+        return repr
 
 
 def get_turbine_data_from_file(turbine_type, file_):

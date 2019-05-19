@@ -95,6 +95,10 @@ class WindFarm(object):
         self.power_curve = None
         self.power_output = None
 
+    def __repr__(self):
+        #ToDo implement nice nice string representation
+        return self.name
+
     @property
     def installed_power(self):
         r"""
