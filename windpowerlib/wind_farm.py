@@ -258,11 +258,8 @@ class WindFarm(object):
             if item['wind_turbine'].power_curve is None:
                 raise ValueError("For an aggregated wind farm power curve " +
                                  "each wind turbine needs a power curve " +
-                                 "but `power_curve` of wind turbine " +
-                                 "{} is {}.".format(
-                                     item['wind_turbine'].name if
-                                     item['wind_turbine'].name else '',
-                                     item['wind_turbine'].power_curve))
+                                 "but `power_curve` of '{}' is None.".format(
+                                     item['wind_turbine']))
         # Initialize data frame for power curve values
         df = pd.DataFrame()
         for turbine_type_dict in self.wind_turbine_fleet:
@@ -290,7 +287,7 @@ class WindFarm(object):
                         "`wake_losses_model´ is '{0}', but ".format(
                             wake_losses_model) +
                         "`efficiency` of wind farm {0} is {1}.".format(
-                            self.name if self.name else '', self.efficiency))
+                            self, self.efficiency))
             # Get original power curve
             power_curve = pd.DataFrame(
                 turbine_type_dict['wind_turbine'].power_curve)

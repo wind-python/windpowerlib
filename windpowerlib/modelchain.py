@@ -337,9 +337,8 @@ class ModelChain(object):
         """
         if self.power_output_model == 'power_curve':
             if self.power_plant.power_curve is None:
-                raise TypeError("Power curve values of " +
-                                self.power_plant.name +
-                                " are missing.")
+                raise TypeError("Power curve values of {} are missing.".format(
+                    self.power_plant))
             logging.debug('Calculating power output using power curve.')
             return (power_output.power_curve(
                         wind_speed_hub,
@@ -348,9 +347,8 @@ class ModelChain(object):
                         density_hub, self.density_correction))
         elif self.power_output_model == 'power_coefficient_curve':
             if self.power_plant.power_coefficient_curve is None:
-                raise TypeError("Power coefficient curve values of " +
-                                self.power_plant.name +
-                                " are missing.")
+                raise TypeError("Power coefficient curve values of {} are "
+                                "missing.".format(self.power_plant))
             logging.debug('Calculating power output using power coefficient '
                           'curve.')
             return (power_output.power_coefficient_curve(
