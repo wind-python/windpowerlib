@@ -73,10 +73,27 @@ class WindTurbine(object):
     rotor_diameter : float (optional)
         Diameter of the rotor in m. Only needs to be provided if power output
         is calculated using the power coefficient curve. Default: None.
-    nominal_power : float (optional)
-        The nominal output of the wind turbine in W. Default: None.
-        ToDo: Expand docstring once it is decided how nominal power is set in
-        case it is not directly provided.
+    nominal_power : bool, str or float (optional)
+        The nominal power of the wind turbine in W. Possible options are:
+
+        * bool
+          If set to True nominal power is retrieved from oedb turbine
+          library. Additionally, the parameter `turbine_type` must be provided
+          to specify which turbine to retrieve the nominal power for.
+          The default is False in which case it is tried to deduce the nominal
+          power from the power curve (using the maximum value of the power
+          curve) or retrieve it from the oedb turbine library. If neither of
+          that is possible the nominal power is set to None.
+        * str
+          File name of self-provided csv file the nominal power is
+          retrieved from. Additionally, the path pointing to the file's
+          directory must be provided through the parameter `path`. See
+          `example_nominal_power.csv` in example/data directory for
+          the required format of the csv file.
+        * float
+          Directly sets the nominal power.
+
+        Default: False.
     path : str (optional)
         In case :py:attr:`power_curve`, :py:attr:`power_coefficient_curve`, or
         :py:attr:`nominal_power` needs to be retrieved from self provided csv
@@ -130,14 +147,12 @@ class WindTurbine(object):
     def __init__(self, hub_height, power_curve=False,
                  power_coefficient_curve=False,
                  turbine_type=None, rotor_diameter=None,
-                 nominal_power=None, path=None, **kwargs):
+                 nominal_power=False, path=None, **kwargs):
 
         self.hub_height = hub_height
         self.turbine_type = turbine_type
         self.rotor_diameter = rotor_diameter
-        # ToDo Check and transparently document where nominal_power is gotten
-        # from (input parameter, csv file or maximum of power curve).
-        self.nominal_power = nominal_power
+        self.nominal_power = None
 
         if power_curve:
             # if True get power curve from oedb turbine library
@@ -177,6 +192,35 @@ class WindTurbine(object):
                                 "'power_coefficient_curve'.")
         else:
             self.power_coefficient_curve = None
+
+        if nominal_power:
+            # if True get nominal power from oedb turbine library
+            if nominal_power is True:
+                self.nominal_power = get_oedb_turbine_data(
+                    self.turbine_type,
+                    fetch_data='nominal_power')
+            # if string try to retrieve nominal power from file
+            elif isinstance(nominal_power, str):
+                self.nominal_power = get_turbine_data_from_file(
+                    self.turbine_type,
+                    os.path.join(path, nominal_power))
+            # if float use it directly
+            elif isinstance(nominal_power, float):
+                self.nominal_power = nominal_power
+            else:
+                raise TypeError("Unknown type for parameter "
+                                "'nominal_power'.")
+        else:
+            # try to deduce nominal power from power curve or fetch from
+            # oedb turbine library
+            if self.power_curve is not None:
+                self.nominal_power = max(self.power_curve['value'])
+            else:
+                try:
+                    self.nominal_power = get_oedb_turbine_data(
+                        self.turbine_type, fetch_data='nominal_power')
+                except KeyError:
+                    pass
 
         # test if either power curve or power coefficient curve is assigned
         if not power_curve and not power_coefficient_curve:
