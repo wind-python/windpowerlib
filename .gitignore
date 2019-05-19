@@ -98,8 +98,3 @@ ENV/
 
 # tests
 .pytest_cache
-
-# oedb data dump
-/windpowerlib/data/oedb_power_coefficient_curves.csv
-/windpowerlib/data/oedb_power_curves.csv
-/windpowerlib/data/oedb_nominal_power.csv

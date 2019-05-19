@@ -22,21 +22,17 @@ class WindTurbineCluster(object):
 
     Parameters
     ----------
-    name : str or None
-        Name of the wind turbine cluster.
-    wind_farms : list (:class:`~.wind_farm.WindFarm`)
+    wind_farms : list(:class:`~.wind_farm.WindFarm`)
         List of wind farms in cluster.
-    coordinates : list(float) or None (optional)
-        List with coordinates [lat, lon] of location. Default: None.
+    name : str (optional)
+        Can be used as an identifier of the wind turbine cluster. Default: ''.
 
     Attributes
     ----------
-    name : str or None
-        Name of the wind turbine cluster.
-    wind_farms : list (:class:`~.wind_farm.WindFarm`)
+    wind_farms : list(:class:`~.wind_farm.WindFarm`)
         List of wind farms in cluster.
-    coordinates : list(float) or None
-        List with coordinates [lat, lon] of location. Default: None.
+    name : str
+        If set this is used as an identifier of the wind turbine cluster.
     hub_height : float
         The calculated average hub height of the wind turbine cluster. See
         :py:func:`mean_hub_height` for more information.
@@ -53,17 +49,20 @@ class WindTurbineCluster(object):
         The calculated power output of the wind turbine cluster.
 
     """
-    def __init__(self, name, wind_farms, coordinates=None, **kwargs):
+    def __init__(self, wind_farms, name='', **kwargs):
 
-        self.name = name
         self.wind_farms = wind_farms
-        self.coordinates = coordinates
+        self.name = name
 
         self.hub_height = None
         self._nominal_power = None
         self._installed_power = None
         self.power_curve = None
         self.power_output = None
+
+    def __repr__(self):
+        #ToDo implement nice nice string representation
+        return self.name
 
     @property
     def installed_power(self):
