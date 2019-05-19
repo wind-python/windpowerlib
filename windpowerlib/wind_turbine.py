@@ -294,14 +294,9 @@ def get_turbine_data_from_file(turbine_type, file_):
     return df, nominal_power
 
 
-def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
+def get_oedb_turbine_data(turbine_type, fetch_curve):
     r"""
-    Fetches wind turbine data from the OpenEnergy database (oedb).
-
-    If turbine data exists in local repository it is loaded from this file. The
-    file is created when turbine data is loaded from oedb in
-    :py:func:`~.load_turbine_data_from_oedb`. Use this function with
-    `overwrite=True` to overwrite your file with newly fetched data.
+    Retrieves wind turbine data from the oedb turbine library.
 
     Parameters
     ----------
@@ -314,9 +309,6 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
         Parameter to specify whether a power or power coefficient curve
         should be retrieved from the provided turbine data. Valid options are
         'power_curve' and 'power_coefficient_curve'. Default: None.
-    overwrite : bool
-        If True local file is overwritten by newly fetched data from oedb, if
-        False turbine data is fetched from previously saved file.
 
     Returns
     -------
@@ -329,11 +321,6 @@ def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
     """
     filename = os.path.join(os.path.dirname(__file__), 'data',
                             'oedb_{}s.csv'.format(fetch_curve))
-    if not os.path.isfile(filename) or overwrite:
-        # Load data from oedb and save to csv file
-        load_turbine_data_from_oedb()
-    else:
-        logging.debug("Turbine data is fetched from {}".format(filename))
 
     df, nominal_power = get_turbine_data_from_file(turbine_type=turbine_type,
                                                    file_=filename)
