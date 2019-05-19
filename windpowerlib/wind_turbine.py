@@ -313,7 +313,7 @@ def get_oedb_turbine_data(turbine_type, fetch_data):
                                 'oedb_{}s.csv'.format(fetch_data))
 
     data = get_turbine_data_from_file(turbine_type=turbine_type,
-                                                   file_=filename)
+                                      file_=filename)
 
     # nominal power and power curve values in W
     if fetch_data == 'nominal_power':
