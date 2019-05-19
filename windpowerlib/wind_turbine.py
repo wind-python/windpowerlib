@@ -261,7 +261,7 @@ def get_turbine_data_from_file(turbine_type, file_):
         pd.set_option('display.max_rows', len(df))
         logging.info('Possible types: \n{0}'.format(pd.DataFrame(df.index)))
         pd.reset_option('display.max_rows')
-        sys.exit('Cannot find the wind converter type: {0}'.format(
+        raise KeyError("Wind converter type {0} not provided.".format(
             turbine_type))
     # if turbine in data file change the format
     if 'nominal_power' in file_:
