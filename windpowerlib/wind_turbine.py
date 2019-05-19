@@ -51,8 +51,8 @@ class WindTurbine(object):
         * bool
           If set to True power coefficient curve is retrieved from oedb turbine
           library. Additionally, the parameter `turbine_type` must be provided
-          to specify which turbine to retrieve the power curve for. The
-          default is False in which case no power curve is set.
+          to specify which turbine to retrieve the power coefficient curve for.
+          The default is False in which case no power coefficient curve is set.
         * str
           File name of self-provided csv file the power coefficient curve is
           retrieved from. Additionally, the path pointing to the files
@@ -207,7 +207,8 @@ def get_turbine_data_from_file(turbine_type, file_):
 
     See `example_power_curves.csv', `example_power_coefficient_curves.csv` and
     `example_nominal_power_data.csv` in example/data for the required format of
-    a csv file.
+    a csv file. Make sure to provide wind speeds in m/s and power in W or
+    convert units after loading the data.
 
     Parameters
     ----------
@@ -219,7 +220,7 @@ def get_turbine_data_from_file(turbine_type, file_):
 
     Returns
     -------
-    data : pandas.DataFrame or float
+    :pandas:`pandas.DataFrame<frame>` or float
         Power curve or power coefficient curve (pandas.DataFrame) or nominal
         power (float) of one wind turbine type. Power (coefficient) curve
         DataFrame contains power coefficient curve values (dimensionless) or
@@ -279,16 +280,16 @@ def get_oedb_turbine_data(turbine_type, fetch_data):
     r"""
     Retrieves wind turbine data from the oedb turbine library.
 
-    Execute :py:func:`~.load_turbine_data_from_oedb` or delete the files to
-    refresh the download.
+    The oedb turbine library is provided along with the windpowerlib and
+    provides power curves, power coefficient curves and nominal power for a
+    large number of wind turbines. The latest oedb turbine library can be
+    fetched by executing :py:func:`~.load_turbine_data_from_oedb`.
 
     Parameters
     ----------
     turbine_type : str
-        Specifies the turbine type data is fetched for.
+        Specifies the wind turbine the data is fetched for.
         Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
-        in oedb containing information about whether power (coefficient) curve
-        data is provided.
         in the oedb turbine library and information about whether power
         (coefficient) curve data is provided.
     fetch_data : str
