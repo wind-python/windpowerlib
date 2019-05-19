@@ -449,7 +449,7 @@ def get_turbine_types(print_out=True, filter_=True):
     Name: 1, dtype: object
 
     """
-
+    # ToDo Use local csv files instead of querying the oedb
     df = load_turbine_data_from_oedb()
     if filter_:
         cp_curves_df = df.loc[df['has_cp_curve']][
