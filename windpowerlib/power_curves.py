@@ -19,17 +19,17 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                        standard_deviation_method='turbulence_intensity',
                        mean_gauss=0, **kwargs):
     r"""
-    Smooths the input power curve values by using a Gauss distribution.
+    Smoothes the input power curve values by using a Gauss distribution.
 
     The smoothing serves for taking the distribution of wind speeds over space
     into account.
 
     Parameters
     ----------
-    power_curve_wind_speeds : pandas.Series or numpy.array
+    power_curve_wind_speeds : :pandas:`pandas.Series<series>` or numpy.array
         Wind speeds in m/s for which the power curve values are provided in
         `power_curve_values`.
-    power_curve_values : pandas.Series or numpy.array
+    power_curve_values : :pandas:`pandas.Series<series>` or numpy.array
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
     block_width : float
@@ -38,7 +38,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     wind_speed_range : float
         The sum in the equation below is taken for this wind speed range below
         and above the power curve wind speed. Default: 15.0.
-    standard_deviation_method : string
+    standard_deviation_method : str
         Method for calculating the standard deviation for the Gauss
         distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
         Default: 'turbulence_intensity'.
@@ -54,7 +54,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
     Returns
     -------
-    smoothed_power_curve_df : pd.DataFrame
+    smoothed_power_curve_df : :pandas:`pandas.DataFrame<frame>`
         Smoothed power curve. DataFrame has 'wind_speed' and 'value' columns
         with wind speeds in m/s and the corresponding power curve value in W.
 
@@ -77,7 +77,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         :math:`\Delta v_i` is the interval length between
         :math:`v_\text{i}` and :math:`v_\text{i+1}`
 
-    Power curve smoothing is applied to take account for the spatial
+    Power curve smoothing is applied to take account of the spatial
     distribution of wind speed. This way of smoothing power curves is also used
     in [2]_ and [3]_.
 

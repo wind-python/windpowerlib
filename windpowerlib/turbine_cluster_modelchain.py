@@ -161,19 +161,13 @@ class TurbineClusterModelChain(ModelChain):
 
         Parameters
         ----------
-        weather_df : pandas.DataFrame
-            DataFrame with time series for wind speed `wind_speed` in m/s, and
-            roughness length `roughness_length` in m, as well as optionally
-            temperature `temperature` in K, pressure `pressure` in Pa,
-            density `density` in kg/m³ and turbulence intensity
-            `turbulence_intensity` depending on `power_output_model`,
-            `density_model` and `standard_deviation_model` chosen.
-            The columns of the DataFrame are a MultiIndex where the first level
-            contains the variable name (e.g. wind_speed) and the second level
-            contains the height at which it applies (e.g. 10, if it was
-            measured at a height of 10 m).  See documentation of
-            :func:`TurbineClusterModelChain.run_model` for an example on how
-            to create the weather_df DataFrame.
+        weather_df : :pandas:`pandas.DataFrame<frame>`
+            DataFrame with weather data time series. If power curve smoothing
+            :py:attr:`~smoothing` is True and chosen method for calculating the
+            standard deviation :py:attr:`~standard_deviation_method` is
+            `turbulence_intensity` the weather dataframe needs to either
+            contain the turbulence intensity in column 'turbulence_intensity'
+            or the roughness length in m in column 'roughness_length'.
 
         Returns
         -------

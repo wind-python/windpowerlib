@@ -54,20 +54,20 @@ class ModelChain(object):
     power_plant : WindTurbine
         A :class:`~.wind_turbine.WindTurbine` object representing the wind
         turbine.
-    wind_speed_model : string
+    wind_speed_model : str
         Parameter to define which model to use to calculate the wind speed at
         hub height. Valid options are 'logarithmic', 'hellman' and
         'interpolation_extrapolation', 'log_interpolation_extrapolation'.
         Default: 'logarithmic'.
-    temperature_model : string
+    temperature_model : str
         Parameter to define which model to use to calculate the temperature of
         air at hub height. Valid options are 'linear_gradient' and
         'interpolation_extrapolation'. Default: 'linear_gradient'.
-    density_model : string
+    density_model : str
         Parameter to define which model to use to calculate the density of air
         at hub height. Valid options are 'barometric', 'ideal_gas' and
         'interpolation_extrapolation'. Default: 'barometric'.
-    power_output_model : string
+    power_output_model : str
         Parameter to define which model to use to calculate the turbine power
         output. Valid options are 'power_curve' and 'power_coefficient_curve'.
         Default: 'power_curve'.
