@@ -39,9 +39,6 @@ class WindTurbineCluster(object):
     nominal_power : float
         The nominal power is the sum of the nominal power of all turbines in
         the wind turbine cluster in W.
-    installed_power : float
-        Installed nominal power of the wind turbine cluster in W. Deprecated!
-        Use :attr:`~.wind_farm.WindFarm.nominal_power` instead.
     power_curve : :pandas:`pandas.DataFrame<frame>` or None
         The calculated power curve of the wind turbine cluster. See
         :py:func:`assign_power_curve` for more information.
@@ -56,28 +53,12 @@ class WindTurbineCluster(object):
 
         self.hub_height = None
         self._nominal_power = None
-        self._installed_power = None
         self.power_curve = None
         self.power_output = None
 
     def __repr__(self):
         #ToDo implement nice nice string representation
         return self.name
-
-    @property
-    def installed_power(self):
-        r"""
-        The installed nominal power of the wind turbine cluster. (Deprecated!)
-
-        """
-        warnings.warn(
-            'installed_power is deprecated, use nominal_power instead.',
-            FutureWarning)
-        return self.nominal_power
-
-    @installed_power.setter
-    def installed_power(self, installed_power):
-        self._installed_power = installed_power
 
     @property
     def nominal_power(self):
