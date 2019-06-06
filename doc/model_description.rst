@@ -54,10 +54,10 @@ mean wind efficiency curve.
    :alt: Wind efficiency curves
    :align: center
 
-The second option of considering wake losses is applying them to power curves by reducing the power values
+The second option to consider wake losses is to apply them to power curves by reducing the power values
 by a constant or on a wind speed depending wind farm efficiency (see :py:func:`~.wake_losses_to_power_curve`).
-Applying the wind farm efficiency (curve) to power curves instead of to feed-in time series has the advantage that the
-power curves can further be aggregated to achieve turbine cluster power curves (see :py:class:`~.wind_turbine_cluster.WindTurbineCluster`).
+Applying the wind farm efficiency (curve) to power curves instead of feed-in time series has the advantage that the
+power curves can further be aggregated to obtain turbine cluster power curves (see :py:class:`~.wind_turbine_cluster.WindTurbineCluster`).
 
 Smoothing of power curves
 =========================
