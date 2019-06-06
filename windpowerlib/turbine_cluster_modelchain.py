@@ -167,7 +167,10 @@ class TurbineClusterModelChain(ModelChain):
             standard deviation :py:attr:`~standard_deviation_method` is
             `turbulence_intensity` the weather dataframe needs to either
             contain the turbulence intensity in column 'turbulence_intensity'
-            or the roughness length in m in column 'roughness_length'.
+            or the roughness length in m in column 'roughness_length'. The
+            turbulence intensity should be provided at hub height or at least
+            at a height close to the hub height, as it cannot be inter- or
+            extrapolated.
 
         Returns
         -------
