@@ -25,7 +25,7 @@ class TurbineClusterModelChain(ModelChain):
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
     wake_losses_model : str or None
-        Defines the method for talking wake losses within the farm into
+        Defines the method for taking wake losses within the farm into
         consideration. Options: None, 'wind_farm_efficiency' or the name of a
         wind efficiency curve like 'dena_mean'. Default: 'dena_mean'.
         Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
@@ -82,7 +82,7 @@ class TurbineClusterModelChain(ModelChain):
         a :class:`~.wind_turbine_cluster.WindTurbineCluster` object
         representing the wind turbine cluster.
     wake_losses_model : str or None
-        Defines the method for talking wake losses within the farm into
+        Defines the method for taking wake losses within the farm into
         consideration. Options: None, 'wind_farm_efficiency' or the name of a
         wind efficiency curve like 'dena_mean'. Default: 'dena_mean'.
         Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
