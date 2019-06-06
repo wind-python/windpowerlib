@@ -112,13 +112,16 @@ class WindTurbine(object):
                  data_source='oedb', **kwargs):
 
         warnings.warn(
-            "parameters data_source and fetch_curve are deprecated, data "
-            "source and fetching will be defined by the parameters "
+            "Parameters name, data_source and fetch_curve are deprecated. "
+            "The parameter name will be renamed to turbine_type. "
+            "Data source and fetching will be defined by the parameters "
             "power_coefficient_curve, power_curve and nominal_power in the "
-            "future. The default values ('oedb') will lead to the same "
-            "behaviour like the current default values "
-            "(None, data_source='oedb').", FutureWarning)
-
+            "future.", FutureWarning)
+        if coordinates is not None:
+            warnings.warn(
+                "Parameter coordinates is deprecated. In the future the "
+                "parameter can only be set after instantiation of WindTurbine "
+                "object.", FutureWarning)
         self.name = name
         self.hub_height = hub_height
         self.rotor_diameter = rotor_diameter

@@ -55,6 +55,12 @@ class WindTurbineCluster(object):
     """
     def __init__(self, name, wind_farms, coordinates=None, **kwargs):
 
+        if coordinates is not None:
+            warnings.warn(
+                "Parameter coordinates is deprecated. In the future the "
+                "parameter can only be set after instantiation of "
+                "WindTurbineCluster object.", FutureWarning)
+
         self.name = name
         self.wind_farms = wind_farms
         self.coordinates = coordinates
