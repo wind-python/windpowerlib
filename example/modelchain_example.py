@@ -2,7 +2,7 @@
 The ``modelchain_example`` module shows a simple usage of the windpowerlib by
 using the :class:`~.modelchain.ModelChain` class. The modelchains are
 implemented to ensure an easy start into the Windpowerlib. They work like
-models that combine all functions provided in the library. Via parameteres
+models that combine all functions provided in the library. Via parameters
 desired functions of the windpowerlib can be selected. For parameters not being
 specified default parameters are used.
 
@@ -45,18 +45,18 @@ def get_weather_data(filename='weather.csv', **kwargs):
 
     Parameters
     ----------
-    filename : string
+    filename : str
         Filename of the weather data file. Default: 'weather.csv'.
 
     Other Parameters
     ----------------
-    datapath : string, optional
+    datapath : str, optional
         Path where the weather data file is stored.
         Default: 'windpowerlib/example'.
 
     Returns
     -------
-    weather_df : pandas.DataFrame
+    weather_df : :pandas:`pandas.DataFrame<frame>`
             DataFrame with time series for wind speed `wind_speed` in m/s,
             temperature `temperature` in K, roughness length `roughness_length`
             in m, and pressure `pressure` in Pa.
@@ -71,47 +71,52 @@ def get_weather_data(filename='weather.csv', **kwargs):
         kwargs['datapath'] = os.path.join(os.path.split(
             os.path.dirname(__file__))[0], 'example')
     file = os.path.join(kwargs['datapath'], filename)
+
     # read csv file
     weather_df = pd.read_csv(
         file, index_col=0, header=[0, 1],
         date_parser=lambda idx: pd.to_datetime(idx, utc=True))
+
     # change type of index to datetime and set time zone
     weather_df.index = pd.to_datetime(weather_df.index).tz_convert(
         'Europe/Berlin')
+
     # change type of height from str to int by resetting columns
     l0 = [_[0] for _ in weather_df.columns]
     l1 = [int(_[1]) for _ in weather_df.columns]
     weather_df.columns = [l0, l1]
+
     return weather_df
 
 
 def initialize_wind_turbines():
     r"""
-    Initializes two :class:`~.wind_turbine.WindTurbine` objects.
+    Initializes three :class:`~.wind_turbine.WindTurbine` objects.
 
-    Function shows three ways to initialize a WindTurbine object. You can
-    either specify your own turbine, as done below for 'my_turbine', or fetch
-    power and/or power coefficient curve data from the OpenEnergy Database
-    (oedb), as done for the 'enercon_e126', or provide your turbine data in csv
-    files as done for 'dummy_turbine' with an example file.
-    Execute ``windpowerlib.wind_turbine.get_turbine_types()`` to get a table
+    This function shows three ways to initialize a WindTurbine object. You can
+    either specify your own turbine by directly providing a power (coefficient)
+    curve, as done below for 'my_turbine', or provide your own turbine data in
+    csv files as done for 'dummy_turbine', or you can use power and/or power
+    coefficient curve data from the OpenEnergy Database
+    (oedb) turbine library that is provided along with the windpowerlib,
+    as done for the 'enercon_e126'. Execute
+    ``windpowerlib.wind_turbine.get_turbine_types()`` to get a table
     including all wind turbines for which power and/or power coefficient curves
     are provided.
 
     Returns
     -------
-    Tuple (WindTurbine, WindTurbine, WindTurbine)
+    Tuple (:class:`~.wind_turbine.WindTurbine`,
+           :class:`~.wind_turbine.WindTurbine`,
+           :class:`~.wind_turbine.WindTurbine`)
 
     """
 
     # specification of own wind turbine (Note: power values and nominal power
     # have to be in Watt)
     my_turbine = {
-        'name': 'myTurbine',
         'nominal_power': 3e6,  # in W
         'hub_height': 105,  # in m
-        'rotor_diameter': 90,  # in m
-        'power_coefficient_curve': None,  # not specified
         'power_curve': pd.DataFrame(
             data={'value': [p * 1000 for p in [
                       0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],  # in W
@@ -120,36 +125,37 @@ def initialize_wind_turbines():
     # initialize WindTurbine object
     my_turbine = WindTurbine(**my_turbine)
 
-    # specification of wind turbine where power curve is provided in the oedb
-    # if you want to use the power coefficient curve change the value of
-    # 'power_coefficient_curve' to 'oedb'.
-    enercon_e126 = {
-        'name': 'E-126/4200',  # turbine type as in register #
-        'hub_height': 135,  # in m
-        'rotor_diameter': 127,  # in m
-        'power_coefficient_curve': None,  # curve data is not fetched
-        'power_curve': 'oedb',  # data is fetched from oedb, is default value
-        'nominal_power': 'oedb',  # data is fetched from oedb, is default value
-    }
-    # initialize WindTurbine object
-    e126 = WindTurbine(**enercon_e126)
-
     # specification of wind turbine where power coefficient curve and nominal
-    # power is provided by a csv file
-    csv_file = os.path.join(os.path.dirname(__file__), 'data',
-                            'example_power_coefficient_curves.csv')
-    csv_file_nom = os.path.join(os.path.dirname(__file__), 'data',
-                            'example_nominal_power.csv')
+    # power is provided in an own csv file
+    csv_path = os.path.join(os.path.dirname(__file__), 'data')
     dummy_turbine = {
-        'name': 'DUMMY 1',  # turbine type as in file #
+        'turbine_type': "DUMMY 1",
         'hub_height': 100,  # in m
         'rotor_diameter': 70,  # in m
-        'power_curve': None,  # data is not fetched
-        'power_coefficient_curve': csv_file,  # data is fetched from file
-        'nominal_power': csv_file_nom,  # data is fetched from file
+        'power_coefficient_curve':
+            'example_power_coefficient_curves.csv',  # data is fetched from
+        # file
+        'nominal_power': 'example_nominal_power.csv',  # data is fetched from
+        # file
+        'path': csv_path
     }
     # initialize WindTurbine object
     dummy_turbine = WindTurbine(**dummy_turbine)
+
+    # specification of wind turbine where power curve is provided in the oedb
+    # if you want to use the power coefficient curve change the value of
+    # 'power_coefficient_curve' to True.
+    enercon_e126 = {
+        'turbine_type': 'E-126/4200',  # turbine type as in register
+        'hub_height': 135,  # in m
+        'rotor_diameter': 127,  # in m
+        'power_coefficient_curve':
+            False,  # curve data is not fetched (default)
+        'power_curve': True,  # data is fetched from oedb turbine library
+        'nominal_power': True,  # data is fetched from oedb turbine library
+    }
+    # initialize WindTurbine object
+    e126 = WindTurbine(**enercon_e126)
 
     return my_turbine, e126, dummy_turbine
 
@@ -168,13 +174,14 @@ def calculate_power_output(weather, my_turbine, e126, dummy_turbine):
 
     Parameters
     ----------
-    weather : pd.DataFrame
+    weather : :pandas:`pandas.DataFrame<frame>`
         Contains weather data time series.
-    my_turbine : WindTurbine
+    my_turbine : :class:`~.wind_turbine.WindTurbine`
         WindTurbine object with self provided power curve.
-    e126 : WindTurbine
-        WindTurbine object with power curve from the OpenEnergy Database.
-    dummy_turbine : WindTurbine
+    e126 : :class:`~.wind_turbine.WindTurbine`
+        WindTurbine object with power curve from the OpenEnergy Database
+        turbine library.
+    dummy_turbine : :class:`~.wind_turbine.WindTurbine`
         WindTurbine object with power coefficient curve from example file.
 
     """
@@ -223,12 +230,12 @@ def plot_or_print(my_turbine, e126, dummy_turbine):
 
     Parameters
     ----------
-    my_turbine : WindTurbine
+    my_turbine : :class:`~.wind_turbine.WindTurbine`
         WindTurbine object with self provided power curve.
-    e126 : WindTurbine
-        WindTurbine object with power curve from data file provided by the
-        windpowerlib.
-    dummy_turbine : WindTurbine
+    e126 : :class:`~.wind_turbine.WindTurbine`
+        WindTurbine object with power curve from the OpenEnergy Database
+        turbine library.
+    dummy_turbine : :class:`~.wind_turbine.WindTurbine`
         WindTurbine object with power coefficient curve from example file.
 
     """
@@ -246,23 +253,23 @@ def plot_or_print(my_turbine, e126, dummy_turbine):
 
     # plot or print power curve
     if plt:
-        if e126.power_curve is not None:
+        if e126.power_curve is not False:
             e126.power_curve.plot(x='wind_speed', y='value', style='*',
                                   title='Enercon E126 power curve')
             plt.show()
-        if my_turbine.power_curve is not None:
+        if my_turbine.power_curve is not False:
             my_turbine.power_curve.plot(x='wind_speed', y='value', style='*',
                                         title='myTurbine power curve')
             plt.show()
-        if dummy_turbine.power_coefficient_curve is not None:
+        if dummy_turbine.power_coefficient_curve is not False:
             dummy_turbine.power_coefficient_curve.plot(
                 x='wind_speed', y='value', style='*',
                 title='dummyTurbine power coefficient curve')
             plt.show()
     else:
-        if e126.power_coefficient_curve is not None:
+        if e126.power_coefficient_curve is not False:
             print(e126.power_coefficient_curve)
-        if e126.power_curve is not None:
+        if e126.power_curve is not False:
             print(e126.power_curve)
 
 
