@@ -1,5 +1,5 @@
 import pytest
-import os
+import pandas as pd
 
 from windpowerlib.wind_turbine import (get_turbine_data_from_file, WindTurbine,
                                        get_turbine_types)
@@ -30,10 +30,21 @@ class TestWindTurbine:
         except:
             assert False
 
-        # directly provided power curve
+        # directly provided power curve (dictionary)
         self.test_turbine_data = {'hub_height': 100,
                                   'power_curve': {'wind_speed': [0, 10],
                                                   'value': [0, 3]}}
+        try:
+            WindTurbine(**self.test_turbine_data)
+            assert True
+        except:
+            assert False
+
+        # directly provided power curve (dataframe)
+        self.test_turbine_data = {
+            'hub_height': 100,
+            'power_curve': pd.DataFrame({'wind_speed': [0, 10],
+                                         'value': [0, 3]})}
         try:
             WindTurbine(**self.test_turbine_data)
             assert True
@@ -64,11 +75,23 @@ class TestWindTurbine:
         except:
             assert False
 
-        # directly provided power coefficient curve
+        # directly provided power coefficient curve (dictionary)
         self.test_turbine_data = {'hub_height': 100,
                                   'power_coefficient_curve':
                                       {'wind_speed': [0, 10],
                                        'value': [0, 3]}}
+        try:
+            WindTurbine(**self.test_turbine_data)
+            assert True
+        except:
+            assert False
+
+        # directly provided power coefficient curve (dataframe)
+        self.test_turbine_data = {'hub_height': 100,
+                                  'power_coefficient_curve':
+                                      pd.DataFrame({
+                                          'wind_speed': [0, 10],
+                                          'value': [0, 3]})}
         try:
             WindTurbine(**self.test_turbine_data)
             assert True

@@ -154,7 +154,7 @@ class WindTurbine(object):
         self.rotor_diameter = rotor_diameter
         self.nominal_power = None
 
-        if power_curve:
+        if power_curve is not False:
             # if True get power curve from oedb turbine library
             if power_curve is True:
                 self.power_curve = get_oedb_turbine_data(
@@ -172,7 +172,7 @@ class WindTurbine(object):
         else:
             self.power_curve = None
 
-        if power_coefficient_curve:
+        if power_coefficient_curve is not False:
             # if True get power coefficient curve from oedb turbine library
             if power_coefficient_curve is True:
                 self.power_coefficient_curve = get_oedb_turbine_data(
@@ -193,7 +193,7 @@ class WindTurbine(object):
         else:
             self.power_coefficient_curve = None
 
-        if nominal_power:
+        if nominal_power is not False:
             # if True get nominal power from oedb turbine library
             if nominal_power is True:
                 self.nominal_power = get_oedb_turbine_data(
@@ -223,7 +223,7 @@ class WindTurbine(object):
                     pass
 
         # test if either power curve or power coefficient curve is assigned
-        if not power_curve and not power_coefficient_curve:
+        if power_curve is False and power_coefficient_curve is False:
             raise AttributeError("Wind turbine must either have a power curve "
                                  "or power coefficient curve.")
 
