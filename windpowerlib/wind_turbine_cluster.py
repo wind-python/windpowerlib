@@ -54,7 +54,6 @@ class WindTurbineCluster(object):
         self.hub_height = None
         self._nominal_power = None
         self.power_curve = None
-        self.power_output = None
 
     def __repr__(self):
         #ToDo implement nice nice string representation
