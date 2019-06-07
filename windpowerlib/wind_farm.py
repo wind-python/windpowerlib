@@ -91,8 +91,17 @@ class WindFarm(object):
         self.power_curve = None
 
     def __repr__(self):
-        #ToDo implement nice nice string representation
-        return self.name
+
+        if self.name is not '':
+            repr = 'Wind farm: {name}'.format(name=self.name)
+        else:
+            info = []
+            for turbine_dict in self.wind_turbine_fleet:
+                info.append(r"{number}x {type}".format(
+                    number=turbine_dict['number_of_turbines'],
+                    type=turbine_dict['wind_turbine']))
+            repr = r'Wind farm with: {info}'.format(info=info)
+        return repr
 
     @property
     def nominal_power(self):

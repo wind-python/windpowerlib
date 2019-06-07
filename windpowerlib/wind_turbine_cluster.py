@@ -56,8 +56,14 @@ class WindTurbineCluster(object):
         self.power_curve = None
 
     def __repr__(self):
-        #ToDo implement nice nice string representation
-        return self.name
+        if self.name is not '':
+            repr = 'Wind turbine cluster: {name}'.format(name=self.name)
+        else:
+            info = []
+            for wind_farm in self.wind_farms:
+                info.append(wind_farm)
+            repr = r'Wind turbine cluster with: {info}'.format(info=info)
+        return repr
 
     @property
     def nominal_power(self):
