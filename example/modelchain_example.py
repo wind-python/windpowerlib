@@ -143,6 +143,7 @@ def initialize_wind_turbines():
     dummy_turbine = WindTurbine(**dummy_turbine)
 
     # specification of wind turbine where power curve is provided in the oedb
+    # turbine library
     # if you want to use the power coefficient curve change the value of
     # 'power_coefficient_curve' to True.
     enercon_e126 = {
@@ -245,6 +246,8 @@ def plot_or_print(my_turbine, e126, dummy_turbine):
         e126.power_output.plot(legend=True, label='Enercon E126')
         my_turbine.power_output.plot(legend=True, label='myTurbine')
         dummy_turbine.power_output.plot(legend=True, label='dummyTurbine')
+        plt.xlabel('Time')
+        plt.ylabel('Power in W')
         plt.show()
     else:
         print(e126.power_output)
@@ -256,15 +259,21 @@ def plot_or_print(my_turbine, e126, dummy_turbine):
         if e126.power_curve is not False:
             e126.power_curve.plot(x='wind_speed', y='value', style='*',
                                   title='Enercon E126 power curve')
+            plt.xlabel('Wind speed in m/s')
+            plt.ylabel('Power in W')
             plt.show()
         if my_turbine.power_curve is not False:
             my_turbine.power_curve.plot(x='wind_speed', y='value', style='*',
                                         title='myTurbine power curve')
+            plt.xlabel('Wind speed in m/s')
+            plt.ylabel('Power in W')
             plt.show()
         if dummy_turbine.power_coefficient_curve is not False:
             dummy_turbine.power_coefficient_curve.plot(
                 x='wind_speed', y='value', style='*',
                 title='dummyTurbine power coefficient curve')
+            plt.xlabel('Wind speed in m/s')
+            plt.ylabel('Power coefficient')
             plt.show()
     else:
         if e126.power_coefficient_curve is not False:

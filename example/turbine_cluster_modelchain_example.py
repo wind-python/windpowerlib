@@ -192,6 +192,8 @@ def plot_or_print(example_farm, example_cluster):
     if plt:
         example_cluster.power_output.plot(legend=True, label='example cluster')
         example_farm.power_output.plot(legend=True, label='example farm')
+        plt.xlabel('Wind speed in m/s')
+        plt.ylabel('Power in W')
         plt.show()
     else:
         print(example_cluster.power_output)
