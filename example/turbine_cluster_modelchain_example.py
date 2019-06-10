@@ -47,7 +47,7 @@ def initialize_wind_farms(my_turbine, e126):
 
     Returns
     -------
-    Tuple (:class:`~.wind_farm.WindFarm`, :class:`~.wind_farm.WindFarm`)
+    tuple(:class:`~.wind_farm.WindFarm`, :class:`~.wind_farm.WindFarm`)
 
     """
 

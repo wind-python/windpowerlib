@@ -18,18 +18,18 @@ def barometric(pressure, pressure_height, hub_height, temperature_hub_height):
 
     Parameters
     ----------
-    pressure : pandas.Series or numpy.array
+    pressure : :pandas:`pandas.Series<series>` or numpy.array
         Air pressure in Pa.
     pressure_height : float
         Height in m for which the parameter `pressure` applies.
     hub_height : float
         Hub height of wind turbine in m.
-    temperature_hub_height : pandas.Series or numpy.array
+    temperature_hub_height : :pandas:`pandas.Series<series>` or numpy.array
         Air temperature at hub height in K.
 
     Returns
     -------
-    pandas.Series or numpy.array
+    :pandas:`pandas.Series<series>` or numpy.array
         Density of air at hub height in kg/m³.
         Returns a pandas.Series if one of the input parameters is a
         pandas.Series.
@@ -37,7 +37,7 @@ def barometric(pressure, pressure_height, hub_height, temperature_hub_height):
     Notes
     -----
 
-    The following equation is used [1]_, [2]_ :
+    The following equation is used [1]_ [2]_ :
 
     .. math:: \rho_{hub}=\left(p/100-\left(h_{hub}-h_{p,data}\right)
        \cdot\frac{1}{8}\right)\cdot \frac{\rho_0 T_0\cdot 100}{p_0 T_{hub}}
@@ -76,25 +76,25 @@ def ideal_gas(pressure, pressure_height, hub_height, temperature_hub_height):
 
     Parameters
     ----------
-    pressure : pandas.Series or numpy.array
+    pressure : :pandas:`pandas.Series<series>` or numpy.array
         Air pressure in Pa.
     pressure_height : float
         Height in m for which the parameter `pressure` applies.
     hub_height : float
         Hub height of wind turbine in m.
-    temperature_hub_height : pandas.Series or numpy.array
+    temperature_hub_height : :pandas:`pandas.Series<series>` or numpy.array
         Air temperature at hub height in K.
 
     Returns
     -------
-    pandas.Series or numpy.array
+    :pandas:`pandas.Series<series>` or numpy.array
         Density of air at hub height in kg/m³.
         Returns a pandas.Series if one of the input parameters is a
         pandas.Series.
 
     Notes
     -----
-    The following equations are used [1]_, [2]_, [3]_:
+    The following equations are used [1]_ [2]_ [3]_:
 
     .. math:: \rho_{hub}=p_{hub}/ (R_s T_{hub})
 

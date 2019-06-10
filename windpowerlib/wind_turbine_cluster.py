@@ -42,8 +42,6 @@ class WindTurbineCluster(object):
     power_curve : :pandas:`pandas.DataFrame<frame>` or None
         The calculated power curve of the wind turbine cluster. See
         :py:func:`assign_power_curve` for more information.
-    power_output : :pandas:`pandas.Series<series>`
-        The calculated power output of the wind turbine cluster.
 
     """
     def __init__(self, wind_farms, name='', **kwargs):

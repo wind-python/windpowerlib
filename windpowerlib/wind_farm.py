@@ -11,7 +11,7 @@ __license__ = "GPLv3"
 from windpowerlib import tools, power_curves
 import numpy as np
 import pandas as pd
-import warnings
+import logging
 
 
 class WindFarm(object):
@@ -56,8 +56,6 @@ class WindFarm(object):
     power_curve : :pandas:`pandas.DataFrame<frame>` or None
         The calculated power curve of the wind farm. See
         :py:func:`assign_power_curve` for more information.
-    power_output : :pandas:`pandas.Series<series>`
-        The calculated power output of the wind farm.
 
     Examples
     --------

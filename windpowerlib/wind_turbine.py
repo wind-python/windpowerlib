@@ -28,17 +28,20 @@ class WindTurbine(object):
         Possible options are:
 
         * bool
+
           If set to True power curve is retrieved from oedb turbine library.
           Additionally, the parameter `turbine_type` must be provided to
           specify which turbine to retrieve the power curve for. The default is
           False in which case no power curve is set.
         * str
+
           File name of self-provided csv file the power curve is retrieved
           from. Additionally, the path pointing to the files directory must be
           provided through the parameter `path`. See
           `example_power_curves.csv` in example/data directory for the
           required format of the csv file.
         * :pandas:`pandas.DataFrame<frame>` or dict
+
           Directly sets the power curve. DataFrame/dictionary must have
           'wind_speed' and 'value' columns/keys with wind speeds in m/s and
           the corresponding power curve value in W.
@@ -49,17 +52,20 @@ class WindTurbine(object):
         retrieve it from. Possible options are:
 
         * bool
+
           If set to True power coefficient curve is retrieved from oedb turbine
           library. Additionally, the parameter `turbine_type` must be provided
           to specify which turbine to retrieve the power coefficient curve for.
           The default is False in which case no power coefficient curve is set.
         * str
+
           File name of self-provided csv file the power coefficient curve is
           retrieved from. Additionally, the path pointing to the files
           directory must be provided through the parameter `path`. See
           `example_power_coefficient_curves.csv` in example/data directory for
           the required format of the csv file.
         * :pandas:`pandas.DataFrame<frame>` or dict
+
           Directly sets the power coefficient curve. DataFrame/dictionary must
           have 'wind_speed' and 'value' columns/keys with wind speeds in m/s
           and the corresponding power coefficient curve value.
@@ -77,6 +83,7 @@ class WindTurbine(object):
         The nominal power of the wind turbine in W. Possible options are:
 
         * bool
+
           If set to True nominal power is retrieved from oedb turbine
           library. Additionally, the parameter `turbine_type` must be provided
           to specify which turbine to retrieve the nominal power for.
@@ -85,12 +92,14 @@ class WindTurbine(object):
           curve) or retrieve it from the oedb turbine library. If neither of
           that is possible the nominal power is set to None.
         * str
+
           File name of self-provided csv file the nominal power is
           retrieved from. Additionally, the path pointing to the file's
           directory must be provided through the parameter `path`. See
           `example_nominal_power.csv` in example/data directory for
           the required format of the csv file.
         * float
+
           Directly sets the nominal power.
 
         Default: False.

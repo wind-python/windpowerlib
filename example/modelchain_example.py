@@ -56,7 +56,7 @@ def get_weather_data(filename='weather.csv', **kwargs):
 
     Returns
     -------
-    weather_df : :pandas:`pandas.DataFrame<frame>`
+    :pandas:`pandas.DataFrame<frame>`
             DataFrame with time series for wind speed `wind_speed` in m/s,
             temperature `temperature` in K, roughness length `roughness_length`
             in m, and pressure `pressure` in Pa.

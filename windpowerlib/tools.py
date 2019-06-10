@@ -24,7 +24,7 @@ def linear_interpolation_extrapolation(df, target_height):
 
     Parameters
     ----------
-    df : pandas.DataFrame
+    df : :pandas:`pandas.DataFrame<frame>`
         DataFrame with time series for parameter that is to be interpolated or
         extrapolated. The columns of the DataFrame are the different heights
         for which the parameter is available. If more than two heights are
@@ -35,7 +35,7 @@ def linear_interpolation_extrapolation(df, target_height):
 
     Returns
     -------
-    pandas.Series
+    :pandas:`pandas.Series<series>`
         Result of the inter-/extrapolation (e.g. wind speed at hub height).
 
     Notes
@@ -85,7 +85,7 @@ def logarithmic_interpolation_extrapolation(df, target_height):
 
     Parameters
     ----------
-    df : pandas.DataFrame
+    df : :pandas:`pandas.DataFrame<frame>`
         DataFrame with time series for parameter that is to be interpolated or
         extrapolated. The columns of the DataFrame are the different heights
         for which the parameter is available. If more than two heights are
@@ -97,7 +97,7 @@ def logarithmic_interpolation_extrapolation(df, target_height):
 
     Returns
     -------
-    pandas.Series
+    :pandas:`pandas.Series<series>`
         Result of the inter-/extrapolation (e.g. wind speed at hub height).
 
     Notes
@@ -141,12 +141,12 @@ def gauss_distribution(function_variable, standard_deviation, mean=0):
         Variable of the gaussian distribution.
     standard_deviation : float
         Standard deviation of the Gauss distribution.
-    mean : Float
+    mean : float
         Defines the offset of the Gauss distribution. Default: 0.
 
     Returns
     -------
-    pandas.Series or numpy.array
+    :pandas:`pandas.Series<series>` or numpy.array
         Wind speed at hub height. Data type depends on the type of
         `wind_speed`.
 

@@ -23,29 +23,29 @@ def power_coefficient_curve(wind_speed, power_coefficient_curve_wind_speeds,
 
     Parameters
     ----------
-    wind_speed : pandas.Series or numpy.array
+    wind_speed : :pandas:`pandas.Series<series>` or numpy.array
         Wind speed at hub height in m/s.
-    power_coefficient_curve_wind_speeds : pandas.Series or numpy.array
+    power_coefficient_curve_wind_speeds : :pandas:`pandas.Series<series>` or numpy.array
         Wind speeds in m/s for which the power coefficients are provided in
         `power_coefficient_curve_values`.
-    power_coefficient_curve_values : pandas.Series or numpy.array
+    power_coefficient_curve_values : :pandas:`pandas.Series<series>` or numpy.array
         Power coefficients corresponding to wind speeds in
         `power_coefficient_curve_wind_speeds`.
     rotor_diameter : float
         Rotor diameter in m.
-    density : pandas.Series or numpy.array
+    density : :pandas:`pandas.Series<series>` or numpy.array
         Density of air at hub height in kg/m³.
 
     Returns
     -------
-    pandas.Series or numpy.array
+    :pandas:`pandas.Series<series>` or numpy.array
         Electrical power output of the wind turbine in W.
         Data type depends on type of `wind_speed`.
 
     Notes
     -----
     The following equation is used if the parameter `density_corr` is False
-    [1]_, [2]_:
+    [1]_ [2]_:
 
     .. math:: P=\frac{1}{8}\cdot\rho_{hub}\cdot d_{rotor}^{2}
         \cdot\pi\cdot v_{wind}^{3}\cdot cp\left(v_{wind}\right)
@@ -93,25 +93,25 @@ def power_curve(wind_speed, power_curve_wind_speeds, power_curve_values,
 
     Parameters
     ----------
-    wind_speed : pandas.Series or numpy.array
+    wind_speed : :pandas:`pandas.Series<series>` or numpy.array
         Wind speed at hub height in m/s.
-    power_curve_wind_speeds : pandas.Series or numpy.array
+    power_curve_wind_speeds : :pandas:`pandas.Series<series>` or numpy.array
         Wind speeds in m/s for which the power curve values are provided in
         `power_curve_values`.
     power_curve_values : pandas.Series or numpy.array
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
-    density : pandas.Series or numpy.array
+    density : :pandas:`pandas.Series<series>` or numpy.array
         Density of air at hub height in kg/m³. This parameter is needed
         if `density_correction` is True. Default: None.
-    density_correction : boolean
+    density_correction : bool
         If the parameter is True the density corrected power curve is used for
         the calculation of the turbine power output. In this case `density`
         cannot be None. Default: False.
 
     Returns
     -------
-    pandas.Series or numpy.array
+    :pandas:`pandas.Series<series>` or numpy.array
         Electrical power output of the wind turbine in W.
         Data type depends on type of `wind_speed`.
 
@@ -150,27 +150,27 @@ def power_curve_density_correction(wind_speed, power_curve_wind_speeds,
 
     Parameters
     ----------
-    wind_speed : pandas.Series or numpy.array
+    wind_speed : :pandas:`pandas.Series<series>` or numpy.array
         Wind speed at hub height in m/s.
-    power_curve_wind_speeds : pandas.Series or numpy.array
+    power_curve_wind_speeds : :pandas:`pandas.Series<series>` or numpy.array
         Wind speeds in m/s for which the power curve values are provided in
         `power_curve_values`.
-    power_curve_values : pandas.Series or numpy.array
+    power_curve_values : :pandas:`pandas.Series<series>` or numpy.array
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
-    density : pandas.Series or numpy.array
+    density : :pandas:`pandas.Series<series>` or numpy.array
         Density of air at hub height in kg/m³.
 
     Returns
     -------
-    pandas.Series or numpy.array
+    :pandas:`pandas.Series<series>` or numpy.array
         Electrical power output of the wind turbine in W.
         Data type depends on type of `wind_speed`.
 
     Notes
     -----
     The following equation is used for the site specific power curve wind
-    speeds [1]_, [2]_, [3]_:
+    speeds [1]_ [2]_ [3]_:
 
     .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}
                        {\rho_{site}}\right)^{p(v)}

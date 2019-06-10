@@ -54,7 +54,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
     Returns
     -------
-    smoothed_power_curve_df : :pandas:`pandas.DataFrame<frame>`
+    :pandas:`pandas.DataFrame<frame>`
         Smoothed power curve. DataFrame has 'wind_speed' and 'value' columns
         with wind speeds in m/s and the corresponding power curve value in W.
 
@@ -180,13 +180,13 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
 
     Parameters
     ----------
-    power_curve_wind_speeds : pandas.Series or numpy.array
+    power_curve_wind_speeds : :pandas:`pandas.Series<series>` or numpy.array
         Wind speeds in m/s for which the power curve values are provided in
         `power_curve_values`.
-    power_curve_values : pandas.Series or numpy.array
+    power_curve_values : :pandas:`pandas.Series<series>` or numpy.array
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
-    wind_farm_efficiency : float or pd.DataFrame
+    wind_farm_efficiency : float or :pandas:`pandas.DataFrame<frame>`
         Efficiency of the wind farm. Either constant (float) or efficiency
         curve (pd.DataFrame) containing 'wind_speed' and 'efficiency' columns
         with wind speeds in m/s and the corresponding dimensionless wind farm
@@ -194,7 +194,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
 
     Returns
     -------
-    power_curve_df : pd.DataFrame
+    :pandas:`pandas.DataFrame<frame>`
         Power curve with power values reduced by a wind farm efficiency.
         DataFrame has 'wind_speed' and 'value' columns with wind speeds in m/s
         and the corresponding power curve value in W.
