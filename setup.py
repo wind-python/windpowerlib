@@ -18,7 +18,7 @@ setup(name='windpowerlib',
           'windpowerlib': [os.path.join('data', '*.csv')]},
       long_description=read('README.rst'),
       zip_safe=False,
-      install_requires=['pandas >= 0.19.1, < 0.25.0',
-                        'requests'],
+      install_requires=['pandas >= 0.19.1, < 0.25',
+                        'requests < 3.0'],
       extras_require={
           'dev': ['pytest', 'jupyter', 'sphinx_rtd_theme', 'nbformat']})
