@@ -35,7 +35,9 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Doc
-doc/temp/
+doc/temp/*
+!doc/temp/windpowerlib.wind_farm.WindFarm.rst
+!doc/temp/windpowerlib.wind_turbine_cluster.WindTurbineCluster.rst
 .doctrees
 .buildinfo
 
@@ -96,3 +98,8 @@ ENV/
 
 # tests
 .pytest_cache
+
+# oedb data dump
+/windpowerlib/data/turbine_data_oedb.h5
+/windpowerlib/data/oedb_power_coefficient_curves.csv
+/windpowerlib/data/oedb_power_curves.csv

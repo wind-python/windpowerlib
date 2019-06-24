@@ -79,10 +79,9 @@ def get_weather_data(filename='weather.csv', **kwargs):
     weather_df.index = pd.to_datetime(weather_df.index).tz_convert(
         'Europe/Berlin')
     # change type of height from str to int by resetting columns
-    weather_df.columns = [weather_df.axes[1].levels[0][
-                              weather_df.axes[1].codes[0]],
-                          weather_df.axes[1].levels[1][
-                              weather_df.axes[1].codes[1]].astype(int)]
+    l0 = [_[0] for _ in weather_df.columns]
+    l1 = [int(_[1]) for _ in weather_df.columns]
+    weather_df.columns = [l0, l1]
     return weather_df
 
 
@@ -240,25 +239,20 @@ def plot_or_print(my_turbine, e126, dummy_turbine):
         print(my_turbine.power_output)
         print(dummy_turbine.power_output)
 
-    # plot or print power (coefficient) curve
+    # plot or print power curve
     if plt:
-        if e126.power_coefficient_curve is not None:
-            e126.power_coefficient_curve.plot(
-                x='wind_speed', y='power coefficient', style='*',
-                title='Enercon E126 power coefficient curve')
-            plt.show()
         if e126.power_curve is not None:
             e126.power_curve.plot(x='wind_speed', y='value', style='*',
                                   title='Enercon E126 power curve')
             plt.show()
-        if my_turbine.power_coefficient_curve is not None:
-            my_turbine.power_coefficient_curve.plot(
-                x='wind_speed', y='power coefficient', style='*',
-                title='myTurbine power coefficient curve')
-            plt.show()
         if my_turbine.power_curve is not None:
             my_turbine.power_curve.plot(x='wind_speed', y='value', style='*',
                                         title='myTurbine power curve')
+            plt.show()
+        if dummy_turbine.power_coefficient_curve is not None:
+            dummy_turbine.power_coefficient_curve.plot(
+                x='wind_speed', y='value', style='*',
+                title='dummyTurbine power coefficient curve')
             plt.show()
     else:
         if e126.power_coefficient_curve is not None:

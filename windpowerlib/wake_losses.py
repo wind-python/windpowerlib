@@ -24,7 +24,7 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     ----------
     wind_speed : pandas.Series or numpy.array
         Wind speed time series.
-    wind_efficiency_curve_name : string
+    wind_efficiency_curve_name : str
         Name of the wind efficiency curve. Use
         :py:func:`~.get_wind_efficiency_curve` to get all provided wind
         efficiency curves. Default: 'dena_mean'.
@@ -120,8 +120,7 @@ def get_wind_efficiency_curve(curve_name='all'):
     else:
         curve_names = curve_name
 
-    efficiency_curve = pd.DataFrame(columns=pd.MultiIndex(levels=[[], []],
-                                                          labels=[[], []]))
+    efficiency_curve = pd.DataFrame()
 
     for curve_name in curve_names:
         if curve_name.split('_')[0] not in ['dena', 'knorr']:
@@ -136,14 +135,19 @@ def get_wind_efficiency_curve(curve_name='all'):
         # Raise error if wind efficiency curve specified in 'curve_name' does
         # not exist
         if curve_name not in list(wind_efficiency_curves):
-            msg = ("Efficiency curve <{0}> does not exist. Must be one of the"
+            msg = ("Efficiency curve <{0}> does not exist. Must be one of the "
                    "following: {1}.")
             raise ValueError(msg.format(curve_name, *possible_curve_names))
 
         # Get wind efficiency curve and rename column containing efficiency
         wec = wind_efficiency_curves[['wind_speed', curve_name]]
-        efficiency_curve[curve_name, 'wind_speed'] = wec['wind_speed']
-        efficiency_curve[curve_name, 'efficiency'] = wec[curve_name]
+        if efficiency_curve.empty:
+            efficiency_curve = pd.DataFrame(
+                {(curve_name, 'wind_speed'): wec['wind_speed'],
+                 (curve_name, 'efficiency'): wec[curve_name]})
+        else:
+            efficiency_curve[(curve_name, 'wind_speed')] = wec['wind_speed']
+            efficiency_curve[(curve_name, 'efficiency')] = wec[curve_name]
     if len(curve_names) == 1:
         return efficiency_curve[curve_names[0]]
     else:
