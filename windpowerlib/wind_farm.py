@@ -11,7 +11,7 @@ __license__ = "GPLv3"
 from windpowerlib import tools, power_curves
 import numpy as np
 import pandas as pd
-import warnings
+import logging
 
 
 class WindFarm(object):
