@@ -284,17 +284,14 @@ def get_turbine_data_from_file(turbine_type, file_):
     --------
     >>> from windpowerlib import wind_turbine
     >>> import os
-    >>> source = os.path.join(os.path.dirname(__file__), '../example/data',
-    ...                       'example_power_curves.csv')
-    >>> p_nom_source = os.path.join(os.path.dirname(__file__),
-    ...                             '../example/data',
-    ...                             'example_nominal_power.csv')
+    >>> path = os.path.join(os.path.dirname(__file__), '../example/data')
     >>> example_turbine = {
     ...    'hub_height': 100,
     ...    'rotor_diameter': 70,
     ...    'name': 'DUMMY 3',
-    ...    'power_curve': source,
-    ...    'nominal_power': p_nom_source}
+    ...    'power_curve': 'example_power_curves.csv',
+    ...    'nominal_power': 'example_nominal_power.csv',
+    ...    'path' : path}
     >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
     >>> print(e_t_1.power_curve['value'][7])
     18000.0

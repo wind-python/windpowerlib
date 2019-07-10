@@ -64,9 +64,8 @@ class WindFarm(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'name': 'E-126/4200',
-    ...    'fetch_curve': 'power_curve',
-    ...    'data_source': 'oedb'}
+    ...    'turbine_type': 'E-126/4200',
+    ...    'power_curve': True}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> example_farm_data = {
     ...    'name': 'example_farm',
@@ -208,7 +207,7 @@ class WindFarm(object):
         wake_losses_model : str
             Defines the method for taking wake losses within the farm into
             consideration. Options: 'wind_farm_efficiency' or None.
-            Default: 'wind_farm_efficiency'.
+            Default: 'wind_farm_efficiency'. # todo adapt
         smoothing : bool
             If True the power curves will be smoothed before or after the
             aggregation of power curves depending on `smoothing_order`.
