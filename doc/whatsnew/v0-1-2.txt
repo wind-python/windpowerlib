@@ -1,27 +1,41 @@
-v0.1.2 ()
+v0.1.2 (June 24, 2019)
 ++++++++++++++++++++++++++++++
 
 New features
 ############
-* new attribute nominal_power in WindFarm and WindTurbineCluster classes (PR #53)
+* new attribute `nominal_power` in :class:`~windpowerlib.wind_farm.WindFarm` and :class:`~windpowerlib.wind_turbine_cluster.WindTurbineCluster` classes (PR #53)
+* use properties and setters for `nominal_power` and `installed_power` in :class:`~windpowerlib.wind_farm.WindFarm` and  :class:`~windpowerlib.wind_turbine_cluster.WindTurbineCluster` classes
+* made windpowerlib work offline: added csv files containing turbine data from `OpenEnergy Database (oedb) <https://openenergy-platform.org/dataedit/>`_ to the repository for offline usage (PR #52)
+
 
 Bug fixes
 #########
-* fix issue with pandas Multiindex labels and codes attributes (PR #51)
+* fixed issue with pandas Multiindex labels and codes attributes (PR #51)
 
 Other changes
 #############
-* Made windpowerlib work offline: turbine data from oedb is stored in csv files for offline usage (PR #52)
-* Made :py:func:`~windpowerlib.wind_turbine.get_turbine_types` also accessible via `get_turbine_types()` --> from windpowerlib import get_turbine_types
-* Added kwargs in init of wind turbine, wind farm, wind turbine cluster
-* We are working with deprecation warnings to draw our user's attention to important changes (PR #53).
+* made :py:func:`~windpowerlib.wind_turbine.get_turbine_types` also accessible via `get_turbine_types()` --> from windpowerlib import get_turbine_types
+* added kwargs in init of :class:`~windpowerlib.wind_turbine.WindTurbine`, :class:`~windpowerlib.wind_farm.WindFarm` and  :class:`~windpowerlib.wind_turbine_cluster.WindTurbineCluster`
+* we are working with deprecation warnings to draw our user's attention to important changes (PR #53)
 
 Deprecations
 ############
-* installed_power is deprecated, use nominal_power instead.
+**wind_farm and wind_turbine_cluster:**
+
+* Parameter coordinates is deprecated. In the future the parameter can only be set after instantiation of WindFarm object.
+* installed_power is deprecated, use nominal_power instead
+
+**wind_turbine:**
+
+* Parameters name, data_source and fetch_curve are deprecated. The parameter name will be renamed to turbine_type. Data source and fetching will be defined by the parameters power_coefficient_curve, power_curve and nominal_power in the future.
+* Parameter coordinates is deprecated. In the future the parameter can only be set after instantiation of WindTurbine object.
+
+**power_curves:**
+
 * wake_losses_model is deprecated, will be defined by the type of wind_farm_efficiency
 
 Contributors
 ############
 * Sabine Haas
 * Birgit Schachler
+* Uwe Krien

@@ -29,6 +29,9 @@ Other changes
 * Restructured csv reading for offline usage of windpowerlib. The nominal power of wind turbines is now saved to a separate file.
 
 
+Deprecations
+############
+
 Contributors
 ############
 * Sabine Haas
