@@ -204,7 +204,7 @@ class TurbineClusterModelChain(ModelChain):
             roughness_length=weather_df['roughness_length'][0].mean(),
             turbulence_intensity=turbulence_intensity)
         # Further logging messages
-        if self.smoothing is None:
+        if self.smoothing is False:
             logging.debug('Aggregated power curve not smoothed.')
         else:
             logging.debug('Aggregated power curve smoothed by method: ' +
