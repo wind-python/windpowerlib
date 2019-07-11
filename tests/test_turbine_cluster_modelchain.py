@@ -40,7 +40,9 @@ class TestTurbineClusterModelChain:
         self.test_turbine_2 = {'hub_height': 90,
                                'rotor_diameter': 60,
                                'turbine_type': 'V90/2000',
-                               'power_curve': True}
+                               'power_curve': True,
+                               'nominal_power': 2000000.0
+                               }
         self.test_farm = {'wind_turbine_fleet': [
                               {'wind_turbine':
                                   wt.WindTurbine(**self.test_turbine),
