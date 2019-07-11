@@ -288,7 +288,7 @@ def get_turbine_data_from_file(turbine_type, file_):
     >>> example_turbine = {
     ...    'hub_height': 100,
     ...    'rotor_diameter': 70,
-    ...    'name': 'DUMMY 3',
+    ...    'turbine_type': 'DUMMY 3',
     ...    'power_curve': 'example_power_curves.csv',
     ...    'nominal_power': 'example_nominal_power.csv',
     ...    'path' : path}
