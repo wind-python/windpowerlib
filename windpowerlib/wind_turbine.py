@@ -214,8 +214,9 @@ class WindTurbine(object):
                     self.turbine_type,
                     os.path.join(path, nominal_power))
             # if float use it directly
-            elif isinstance(nominal_power, float):
-                self.nominal_power = nominal_power
+            elif isinstance(nominal_power, float) or \
+                    isinstance(nominal_power, int):
+                self.nominal_power = float(nominal_power)
             else:
                 raise TypeError("Unknown type for parameter "
                                 "'nominal_power'.")
