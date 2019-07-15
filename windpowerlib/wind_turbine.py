@@ -526,6 +526,3 @@ def get_turbine_types(turbine_library='local', print_out=True, filter_=True):
         print(curves_df)
         pd.reset_option('display.max_rows')
     return curves_df
-
-
-if __name__ == "__main__":

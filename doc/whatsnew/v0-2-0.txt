@@ -3,7 +3,7 @@ v0.2.0 ()
 
 New features
 ############
-
+* get_turbine_types() can now be used to get provided turbine types of oedb turbine_library as well as provided turbine types of local files
 
 Documentation
 #############
