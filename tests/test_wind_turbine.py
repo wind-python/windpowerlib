@@ -142,5 +142,13 @@ class TestWindTurbine:
                                        file_='not_existent')
 
     def test_get_turbine_types(self):
-        get_turbine_types(print_out=True, filter_=True)
-        get_turbine_types(print_out=False, filter_=False)
+        # local with and without filter
+        get_turbine_types(turbine_library='local', print_out=True,
+                          filter_=True)
+        get_turbine_types(turbine_library='local', print_out=False,
+                          filter_=False)
+        # oedb with and without filter
+        get_turbine_types(turbine_library='oedb', print_out=False,
+                          filter_=True)
+        get_turbine_types(turbine_library='oedb', print_out=False,
+                          filter_=False)

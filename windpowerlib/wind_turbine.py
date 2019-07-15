@@ -440,10 +440,13 @@ def load_turbine_data_from_oedb():
     return turbine_data
 
 
-def get_turbine_types(print_out=True, filter_=True):
+def get_turbine_types(turbine_library='local', print_out=True, filter_=True):
     r"""
-    Get all wind turbine types provided in the oedb turbine library.
+    Get all provided wind turbine types provided.
 
+    Choose by `turbine_library` whether to get wind turbine types provided by
+    the OpenEnergy Database ('oedb') or wind turbine types provided in your
+    local file(s) ('local').
     By default only turbine types for which a power coefficient curve or power
     curve is provided are returned. Set `filter_=False` to see all turbine
     types for which any data (e.g. hub height, rotor diameter, ...) is
@@ -451,6 +454,9 @@ def get_turbine_types(print_out=True, filter_=True):
 
     Parameters
     ----------
+    turbine_library : str
+        Specifies if the oedb turbine library ('oedb') or your local turbine
+        data file ('local') is evaluated. Default: 'local'.
     print_out : bool
         Directly prints a tabular containing the turbine types in column
         'turbine_type', the manufacturer in column 'manufacturer' and
@@ -496,8 +502,15 @@ def get_turbine_types(print_out=True, filter_=True):
     Name: 1, dtype: object
 
     """
-    # ToDo Use local csv files instead of querying the oedb
-    df = load_turbine_data_from_oedb()
+    if turbine_library == 'local':
+        filename = os.path.join(os.path.dirname(__file__), 'data',
+                                'oedb_turbine_data.csv')
+        df = pd.read_csv(filename, index_col=0).reset_index()
+    elif turbine_library == 'oedb':
+        df = load_turbine_data_from_oedb()
+    else:
+        raise ValueError("`turbine_library` is {} ".format(turbine_library) +
+                         "but must be 'local' or 'oedb'.")
     if filter_:
         cp_curves_df = df.loc[df['has_cp_curve']][
             ['manufacturer', 'turbine_type', 'has_cp_curve']]
@@ -513,3 +526,6 @@ def get_turbine_types(print_out=True, filter_=True):
         print(curves_df)
         pd.reset_option('display.max_rows')
     return curves_df
+
+
+if __name__ == "__main__":
