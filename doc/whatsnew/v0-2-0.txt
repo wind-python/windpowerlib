@@ -26,7 +26,7 @@ API changes
 
 Other changes
 #############
-* Restructured csv reading for offline usage of windpowerlib. The nominal power of wind turbines is now saved to a separate file.
+* Restructured csv reading for offline usage of windpowerlib. The nominal power of wind turbines is now saved to a separate file along with other turbine data from the oedb turbine library.
 
 
 Deprecations
