@@ -368,13 +368,6 @@ def get_oedb_turbine_data(turbine_type, fetch_data):
 
     data = get_turbine_data_from_file(turbine_type=turbine_type,
                                       file_=filename)
-
-    # nominal power and power curve values in W
-    if fetch_data == 'nominal_power':
-        data = data * 1000
-    elif fetch_data == 'power_curve':
-        # power in W
-        data['value'] = data['value'] * 1000
     return data
 
 
@@ -427,6 +420,10 @@ def load_turbine_data_from_oedb():
                 curves_df = pd.merge(left=curves_df, right=df, how='outer',
                                      on='wind_speed')
         curves_df = curves_df.set_index('wind_speed').sort_index().transpose()
+        # power curve values in W
+        if curve_type == 'power_curve':
+            curves_df = curves_df * 1000
+        curves_df.index.name = 'turbine_type'
         curves_df.to_csv(filename.format('{}s'.format(curve_type)))
 
     # get turbine data and save to file (excl. curves)
