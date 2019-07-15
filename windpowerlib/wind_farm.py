@@ -186,7 +186,7 @@ class WindFarm(object):
             wind_dict['number_of_turbines']
             for wind_dict in self.wind_turbine_fleet)
 
-    def assign_power_curve(self, wake_losses_model='power_efficiency_curve',
+    def assign_power_curve(self, wake_losses_model='wind_farm_efficiency',
                            smoothing=False, block_width=0.5,
                            standard_deviation_method='turbulence_intensity',
                            smoothing_order='wind_farm_power_curves',
@@ -207,7 +207,7 @@ class WindFarm(object):
         wake_losses_model : str
             Defines the method for taking wake losses within the farm into
             consideration. Options: 'wind_farm_efficiency' or None.
-            Default: 'wind_farm_efficiency'. # todo adapt
+            Default: 'wind_farm_efficiency'.
         smoothing : bool
             If True the power curves will be smoothed before or after the
             aggregation of power curves depending on `smoothing_order`.
@@ -308,8 +308,7 @@ class WindFarm(object):
                 wind_farm_power_curve['value'],
                 standard_deviation_method=standard_deviation_method,
                 block_width=block_width, **kwargs)
-        if (wake_losses_model == 'constant_efficiency' or
-                wake_losses_model == 'power_efficiency_curve'):
+        if wake_losses_model == 'wind_farm_efficiency':
             if self.efficiency is not None:
                 wind_farm_power_curve = (
                     power_curves.wake_losses_to_power_curve(

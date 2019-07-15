@@ -75,7 +75,7 @@ class TestTurbineClusterModelChain:
         assert_series_equal(test_tc_mc.power_output, power_output_exp)
 
         # Test constant efficiency
-        parameters['wake_losses_model'] = 'constant_efficiency'
+        parameters['wake_losses_model'] = 'wind_farm_efficiency'
         test_wind_farm = wf.WindFarm(**self.test_farm)
         test_wind_farm.efficiency = 0.9
         power_output_exp = pd.Series(data=[4420994.806920091,
@@ -138,7 +138,7 @@ class TestTurbineClusterModelChain:
         assert_series_equal(test_tc_mc.power_output, power_output_exp)
 
         # Test constant efficiency
-        parameters['wake_losses_model'] = 'constant_efficiency'
+        parameters['wake_losses_model'] = 'wind_farm_efficiency'
         test_cluster = wtc.WindTurbineCluster(**self.test_cluster)
         for farm in test_cluster.wind_farms:
             farm.efficiency = 0.9

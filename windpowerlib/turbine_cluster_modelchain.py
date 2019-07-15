@@ -183,8 +183,7 @@ class TurbineClusterModelChain(ModelChain):
             'turbulence_intensity' in
             weather_df.columns.get_level_values(0) else None)
         # Assign power curve
-        if (self.wake_losses_model == 'power_efficiency_curve' or
-                self.wake_losses_model == 'constant_efficiency' or
+        if (self.wake_losses_model == 'wind_farm_efficiency' or
                 self.wake_losses_model is None):
             wake_losses_model_to_power_curve = self.wake_losses_model
             if self.wake_losses_model is None:
@@ -262,8 +261,7 @@ class TurbineClusterModelChain(ModelChain):
         density_hub = (None if (self.power_output_model == 'power_curve' and
                                 self.density_correction is False)
                        else self.density_hub(weather_df))
-        if (self.wake_losses_model != 'power_efficiency_curve' and
-                self.wake_losses_model != 'constant_efficiency' and
+        if (self.wake_losses_model != 'wind_farm_efficiency' and
                 self.wake_losses_model is not None):
             # Reduce wind speed with wind efficiency curve
             wind_speed_hub = wake_losses.reduce_wind_speed(

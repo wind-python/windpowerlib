@@ -129,7 +129,7 @@ def calculate_power_output(weather, example_farm, example_cluster):
         WindTurbineCluster object.
 
     """
-
+    example_farm.efficiency = 0.9
     # power output calculation for example_farm
     # initialize TurbineClusterModelChain with default parameters and use
     # run_model method to calculate power output
@@ -141,10 +141,10 @@ def calculate_power_output(weather, example_farm, example_cluster):
     # own specifications for TurbineClusterModelChain setup
     modelchain_data = {
         'wake_losses_model':
-            None,  # 'dena_mean' (default) or name of another wind efficiency
-                   # curve (see
-                   # :py:func:`~.wake_losses.get_wind_efficiency_curve`) or
-                   # 'wind_farm_efficiency' or None
+            'wind_farm_efficiency',  # 'dena_mean' (default), None,
+                                     # 'wind_farm_efficiency' or name
+                                     #  of another wind efficiency curve
+                #  see :py:func:`~.wake_losses.get_wind_efficiency_curve`
         'smoothing': True,  # False (default) or True
         'block_width': 0.5,  # default: 0.5
         'standard_deviation_method': 'Staffell_Pfenninger',  #
