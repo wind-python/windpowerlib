@@ -96,7 +96,7 @@ class WindTurbine(object):
           File name of self-provided csv file the nominal power is
           retrieved from. Additionally, the path pointing to the file's
           directory must be provided through the parameter `path`. See
-          `example_nominal_power.csv` in example/data directory for
+          `example_turbine_data.csv` in example/data directory for
           the required format of the csv file.
         * float
 
@@ -136,7 +136,7 @@ class WindTurbine(object):
     the oedb turbine library (a dataset provided in the OpenEnergy Database).
     You can also provide your own csv files with power coefficient and power
     curves. See `example_power_curves.csv',
-    `example_power_coefficient_curves.csv` and `example_nominal_power.csv`
+    `example_power_coefficient_curves.csv` and `example_turbine_data.csv`
     in example/data for the required form of such csv files.
 
     Examples
@@ -260,7 +260,7 @@ def get_turbine_data_from_file(turbine_type, file_):
     Fetches turbine data from a csv file.
 
     See `example_power_curves.csv', `example_power_coefficient_curves.csv` and
-    `example_nominal_power_data.csv` in example/data for the required format of
+    `example_turbine_data.csv` in example/data for the required format of
     a csv file. Make sure to provide wind speeds in m/s and power in W or
     convert units after loading the data.
 
@@ -291,7 +291,7 @@ def get_turbine_data_from_file(turbine_type, file_):
     ...    'rotor_diameter': 70,
     ...    'turbine_type': 'DUMMY 3',
     ...    'power_curve': 'example_power_curves.csv',
-    ...    'nominal_power': 'example_nominal_power.csv',
+    ...    'nominal_power': 'example_turbine_data.csv',
     ...    'path' : path}
     >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
     >>> print(e_t_1.power_curve['value'][7])

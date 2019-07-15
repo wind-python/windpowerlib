@@ -57,7 +57,7 @@ To run the example you need the example weather and turbine data used:
  * :download:`Example weather data file <../example/weather.csv>`
  * :download:`Example power curve data file <../example/data/example_power_curves.csv>`
  * :download:`Example power coefficient curve data file <../example/data/example_power_coefficient_curves.csv>`
- * :download:`Example nominal power data file <../example/data/example_nominal_power.csv>`
+ * :download:`Example nominal power data file <../example/data/example_turbine_data.csv>`
 
 Furthermore, you have to install the windpowerlib and to run the notebook you also need to install `notebook` using pip3. To launch jupyter notebook type ``jupyter notebook`` in the terminal.
 This will open a browser window. Navigate to the directory containing the notebook to open it. See the jupyter notebook quick start guide for more information on `how to install <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/install.html>`_ and

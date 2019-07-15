@@ -135,7 +135,7 @@ def initialize_wind_turbines():
         'power_coefficient_curve':
             'example_power_coefficient_curves.csv',  # data is fetched from
         # file
-        'nominal_power': 'example_nominal_power.csv',  # data is fetched from
+        'nominal_power': 'example_turbine_data.csv',  # data is fetched from
         # file
         'path': csv_path
     }
