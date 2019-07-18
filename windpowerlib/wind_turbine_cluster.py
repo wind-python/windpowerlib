@@ -214,8 +214,9 @@ class WindTurbineCluster(object):
                 turbulence_intensity=turbulence_intensity, **kwargs)
         # Create data frame from power curves of all wind farms
         df = pd.concat([farm.power_curve.set_index(['wind_speed']).rename(
-            columns={'value': farm.name}) for
-            farm in self.wind_farms], axis=1)
+            columns={'value': i}) for
+            farm, i in zip(self.wind_farms,
+                           list(range(len(self.wind_farms))))], axis=1)
         # Sum up power curves
         cluster_power_curve = pd.DataFrame(
             df.interpolate(method='index').sum(axis=1))
