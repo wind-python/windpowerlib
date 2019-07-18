@@ -202,6 +202,12 @@ class WindTurbine(object):
         else:
             self.power_coefficient_curve = None
 
+        # test if either power curve or power coefficient curve is assigned
+        if power_curve is False and power_coefficient_curve is False:
+            raise AttributeError(
+                "Wind turbine must either have a power curve "
+                "or power coefficient curve.")
+
         if nominal_power is not False:
             # if True get nominal power from oedb turbine library
             if nominal_power is True:
@@ -232,10 +238,6 @@ class WindTurbine(object):
                 except KeyError:
                     pass
 
-        # test if either power curve or power coefficient curve is assigned
-        if power_curve is False and power_coefficient_curve is False:
-            raise AttributeError("Wind turbine must either have a power curve "
-                                 "or power coefficient curve.")
 
     def __repr__(self):
         info = []
