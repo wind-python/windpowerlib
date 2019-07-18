@@ -68,6 +68,7 @@ class TestWindTurbine:
         self.test_turbine_data = {
             'hub_height': 100,
             'power_coefficient_curve': 'example_power_curves.csv',
+            'nominal_power': 'example_turbine_data.csv',
             'turbine_type': 'DUMMY 3',
             'path': os.path.join(os.path.dirname(__file__), '../example/data')}
         try:
@@ -80,7 +81,8 @@ class TestWindTurbine:
         self.test_turbine_data = {'hub_height': 100,
                                   'power_coefficient_curve':
                                       {'wind_speed': [0, 10],
-                                       'value': [0, 3]}}
+                                       'value': [0, 0.3]},
+                                  'nominal_power': 3e6}
         try:
             WindTurbine(**self.test_turbine_data)
             assert True
@@ -92,7 +94,8 @@ class TestWindTurbine:
                                   'power_coefficient_curve':
                                       pd.DataFrame({
                                           'wind_speed': [0, 10],
-                                          'value': [0, 3]})}
+                                          'value': [0, 3]}),
+                                  'nominal_power': 3e6}
         try:
             WindTurbine(**self.test_turbine_data)
             assert True
@@ -134,6 +137,16 @@ class TestWindTurbine:
         # is set
         self.test_turbine_data = {'hub_height': 100}
         with pytest.raises(AttributeError):
+            WindTurbine(**self.test_turbine_data)
+
+        # Raise ValueError due to missing nominal power when using power
+        # coefficient curve
+        self.test_turbine_data = {'hub_height': 100,
+                                  'power_coefficient_curve':
+                                      pd.DataFrame({
+                                          'wind_speed': [0, 10],
+                                          'value': [0, 3]})}
+        with pytest.raises(ValueError):
             WindTurbine(**self.test_turbine_data)
 
     def test_get_turbine_data_from_file(self):
