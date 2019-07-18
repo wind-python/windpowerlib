@@ -359,6 +359,11 @@ def get_oedb_turbine_data(turbine_type, fetch_data):
         wind speeds in m/s in column 'wind_speed'.
 
     """
+    # raise error if no turbine type is provided
+    if turbine_type is None:
+        raise ValueError("Please provide wind turbine type to fetch {} from "
+                         "oedb turbine library.".format(fetch_data))
+
     if fetch_data == 'nominal_power':
         filename = os.path.join(os.path.dirname(__file__), 'data',
                                 'oedb_turbine_data.csv')
