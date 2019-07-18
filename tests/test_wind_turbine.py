@@ -133,6 +133,14 @@ class TestWindTurbine:
         with pytest.raises(TypeError):
             WindTurbine(**self.test_turbine_data)
 
+        # Raise TypeError due to invalid type for nominal power
+        self.test_turbine_data = {'hub_height': 100,
+                                  'power_curve': True,
+                                  'turbine_type': 'E-126/4200',
+                                  'nominal_power': [3]}
+        with pytest.raises(TypeError):
+            WindTurbine(**self.test_turbine_data)
+
         # Raise AttributeError in case no power or power coefficient curve
         # is set
         self.test_turbine_data = {'hub_height': 100}
