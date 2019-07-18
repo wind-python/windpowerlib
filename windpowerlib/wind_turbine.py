@@ -235,9 +235,10 @@ class WindTurbine(object):
                 try:
                     self.nominal_power = get_oedb_turbine_data(
                         self.turbine_type, fetch_data='nominal_power')
-                except KeyError:
-                    pass
-
+                except (KeyError, ValueError):
+                    raise ValueError(
+                        "nominal_power must be provided when using power "
+                        "coefficient curve.")
 
     def __repr__(self):
         info = []
