@@ -132,11 +132,6 @@ def initialize_wind_turbines():
         'turbine_type': "DUMMY 1",
         'hub_height': 100,  # in m
         'rotor_diameter': 70,  # in m
-        'power_coefficient_curve':
-            'example_power_coefficient_curves.csv',  # data is fetched from
-        # file
-        'nominal_power': 'example_turbine_data.csv',  # data is fetched from
-        # file
         'path': csv_path
     }
     # initialize WindTurbine object
@@ -150,10 +145,6 @@ def initialize_wind_turbines():
         'turbine_type': 'E-126/4200',  # turbine type as in register
         'hub_height': 135,  # in m
         'rotor_diameter': 127,  # in m
-        'power_coefficient_curve':
-            False,  # curve data is not fetched (default)
-        'power_curve': True,  # data is fetched from oedb turbine library
-        'nominal_power': True,  # data is fetched from oedb turbine library
     }
     # initialize WindTurbine object
     e126 = WindTurbine(**enercon_e126)

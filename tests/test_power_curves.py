@@ -13,8 +13,7 @@ class TestPowerCurves:
     @classmethod
     def setup_class(self):
         self.test_turbine = {'hub_height': 100,
-                             'turbine_type': 'E-126/4200',
-                             'power_curve': True}
+                             'turbine_type': 'E-126/4200'}
 
     def test_smooth_power_curve(self):
         test_curve = wt.WindTurbine(**self.test_turbine).power_curve

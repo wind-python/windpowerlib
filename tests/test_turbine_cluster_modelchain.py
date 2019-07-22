@@ -36,12 +36,10 @@ class TestTurbineClusterModelChain:
                          np.array([2, 10, 0, 8, 10, 0])])
         self.test_turbine = {'hub_height': 100,
                              'rotor_diameter': 80,
-                             'turbine_type': 'E-126/4200',
-                             'power_curve': True}
+                             'turbine_type': 'E-126/4200'}
         self.test_turbine_2 = {'hub_height': 90,
                                'rotor_diameter': 60,
                                'turbine_type': 'V90/2000',
-                               'power_curve': True,
                                'nominal_power': 2000000.0
                                }
         self.test_farm = {'wind_turbine_fleet': [
@@ -197,7 +195,7 @@ class TestTurbineClusterModelChain:
             'hub_height': 100,
             'rotor_diameter': 98,
             'turbine_type': 'V90/2000',
-            'power_coefficient_curve': True}
+            'power_curve': True}
         test_farm = {'wind_turbine_fleet':
                          [{'wind_turbine':
                                wt.WindTurbine(**self.test_turbine),

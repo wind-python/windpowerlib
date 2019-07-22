@@ -184,9 +184,7 @@ class TestModelChain:
 
         test_turbine = {'hub_height': 100,
                         'rotor_diameter': 80,
-                        'turbine_type': 'E-126/4200',
-                        'power_curve': True,
-                        'power_coefficient_curve': True}
+                        'turbine_type': 'E-126/4200'}
 
         # Test with default parameters of modelchain (power curve)
         power_output_exp = pd.Series(data=[1637405.4840444783,
@@ -251,11 +249,12 @@ class TestModelChain:
             test_mc.run_model(weather_df)
 
         # Raise TypeErrors due to missing cp- or p-values
+        # with pytest.raises(TypeError):
         with pytest.raises(TypeError):
             test_turbine = {'hub_height': 100,
                             'rotor_diameter': 80,
                             'turbine_type': 'E-126/4200',
-                            'power_curve': True}
+                            'power_coefficient_curve': 'True'}
             test_modelchain = {'power_output_model': 'power_coefficient_curve',
                                'density_correction': True}
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
@@ -265,7 +264,7 @@ class TestModelChain:
             test_turbine = {'hub_height': 100,
                             'rotor_diameter': 80,
                             'turbine_type': 'E-126/4200',
-                            'power_coefficient_curve': True}
+                            'power_curve': 'True'}
             test_modelchain = {'power_output_model': 'power_curve',
                                'density_corr': True}
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
