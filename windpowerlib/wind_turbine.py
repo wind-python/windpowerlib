@@ -319,10 +319,7 @@ def get_turbine_data_from_file(turbine_type, file_):
     # if turbine in data file
     # get nominal power or power (coefficient) curve
     if 'turbine_data' in file_:
-        try:
-            return float(wpp_df['nominal_power'].values[0])
-        except KeyError:
-            return float(wpp_df['installed_capacity'].values[0])  # todo delete if changed in turbine_library
+        return float(wpp_df['nominal_power'].values[0])
     else:
         wpp_df.dropna(axis=1, inplace=True)
         wpp_df = wpp_df.transpose().reset_index()
@@ -442,8 +439,8 @@ def load_turbine_data_from_oedb():
           'thrust_coefficient_curve_wind_speeds',
           'thrust_coefficient_curve_values'], axis=1).set_index('turbine_type')
     # nominal power in W
-    turbine_data_df['installed_capacity'] = turbine_data_df[
-                                                'installed_capacity'] * 1000
+    turbine_data_df['nominal_power'] = turbine_data_df[
+                                           'nominal_power'] * 1000
     turbine_data_df.to_csv(filename.format('turbine_data'))
     return turbine_data
 
