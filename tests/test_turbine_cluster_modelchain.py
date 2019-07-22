@@ -1,3 +1,4 @@
+import pytest
 import pandas as pd
 import numpy as np
 from pandas.util.testing import assert_series_equal
@@ -187,3 +188,36 @@ class TestTurbineClusterModelChain:
             power_plant=test_cluster, **parameters)
         test_tc_mc.run_model(self.weather_df)
         assert_series_equal(test_tc_mc.power_output, power_output_exp)
+
+    def test_error_raising(self):
+
+        # Raise ValueError when aggregated wind farm power curve needs to be
+        # calculated but turbine does not have a power curve
+        test_turbine = {
+            'hub_height': 100,
+            'rotor_diameter': 98,
+            'turbine_type': 'V90/2000',
+            'power_coefficient_curve': True}
+        test_farm = {'wind_turbine_fleet':
+                         [{'wind_turbine':
+                               wt.WindTurbine(**self.test_turbine),
+                           'number_of_turbines': 3},
+                          {'wind_turbine':
+                               wt.WindTurbine(**test_turbine),
+                           'number_of_turbines': 3}]}
+        test_tc_mc = tc_mc.TurbineClusterModelChain(
+            power_plant=wf.WindFarm(**test_farm))
+        with pytest.raises(ValueError):
+            test_tc_mc.run_model(self.weather_df)
+
+        # Raise ValueError when neither turbulence intensity nor roughness
+        # length are provided to apply power curve smoothing with standard
+        # deviation method 'turbulence_intensity'
+        parameters = {'smoothing': True,
+                      'standard_deviation_method': 'turbulence_intensity'}
+        test_tc_mc = tc_mc.TurbineClusterModelChain(
+            power_plant=wf.WindFarm(**self.test_farm), **parameters)
+        weather_df = self.weather_df.copy()
+        weather_df.pop('roughness_length')
+        with pytest.raises(ValueError):
+            test_tc_mc.run_model(weather_df)
