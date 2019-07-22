@@ -253,7 +253,8 @@ class WindFarm(object):
             if smoothing:
                 if (standard_deviation_method == 'turbulence_intensity' and
                         turbulence_intensity is None):
-                    if 'roughness_length' in kwargs:
+                    if 'roughness_length' in kwargs and \
+                            kwargs['roughness_length'] is not None:
                         # Calculate turbulence intensity and write to kwargs
                         turbulence_intensity = (
                             tools.estimate_turbulence_intensity(

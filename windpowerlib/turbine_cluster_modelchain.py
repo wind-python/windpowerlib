@@ -182,6 +182,10 @@ class TurbineClusterModelChain(ModelChain):
             weather_df['turbulence_intensity'].values.mean() if
             'turbulence_intensity' in
             weather_df.columns.get_level_values(0) else None)
+        roughness_length = (
+            weather_df['roughness_length'].values.mean() if
+            'roughness_length' in weather_df.columns.get_level_values(0) else
+            None)
         # Assign power curve
         if (self.wake_losses_model == 'wind_farm_efficiency' or
                 self.wake_losses_model is None):
@@ -200,7 +204,7 @@ class TurbineClusterModelChain(ModelChain):
             smoothing=self.smoothing, block_width=self.block_width,
             standard_deviation_method=self.standard_deviation_method,
             smoothing_order=self.smoothing_order,
-            roughness_length=weather_df['roughness_length'][0].mean(),
+            roughness_length=roughness_length,
             turbulence_intensity=turbulence_intensity)
         # Further logging messages
         if self.smoothing is False:
