@@ -259,13 +259,20 @@ def get_turbine_data_from_file(turbine_type, path):
         return wpp_df
 
 
-def load_turbine_data_from_oedb():
+def load_turbine_data_from_oedb(schema = 'supply', table = 'turbine_library'):
     r"""
     Loads turbine library from the OpenEnergy database (oedb).
 
     Turbine data is saved to csv files ('oedb_power_curves.csv',
     'oedb_power_coefficient_curves.csv' and 'oedb_nominal_power') for offline
     usage of the windpowerlib. If the files already exist they are overwritten.
+
+    Parameters
+    ----------
+    schema : str
+        Database schema of the turbine library.
+    table : str
+        Table name of the turbine library.
 
     Returns
     -------
@@ -274,13 +281,9 @@ def load_turbine_data_from_oedb():
         'turbine_type', 'nominal_power'.
 
     """
-    # TODO: Test is missing
-
     # url of OpenEnergy Platform that contains the oedb
     oep_url = 'http://oep.iks.cs.ovgu.de/'
-    # location of data
-    schema = 'supply'
-    table = 'turbine_library'
+
     # load data
     result = requests.get(
         oep_url + '/api/v0/schema/{}/tables/{}/rows/?'.format(
@@ -399,7 +402,7 @@ def get_turbine_types(turbine_library='local', print_out=True, filter_=True):
     elif turbine_library == 'oedb':
         df = load_turbine_data_from_oedb()
     else:
-        raise ValueError("`turbine_library` is {} ".format(turbine_library) +
+        raise ValueError("`turbine_library` is '{}' ".format(turbine_library) +
                          "but must be 'local' or 'oedb'.")
     if filter_:
         cp_curves_df = df.loc[df['has_cp_curve']][

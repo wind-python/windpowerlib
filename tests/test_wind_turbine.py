@@ -1,21 +1,29 @@
+"""
+Testing the wind_turbine module.
+"""
+
+__copyright__ = "Copyright oemof developer group"
+__license__ = "GPLv3"
+
 import pytest
 import os
+from windpowerlib.tools import WindpowerlibUserWarning
 
 from windpowerlib.wind_turbine import (get_turbine_data_from_file, WindTurbine,
-                                       get_turbine_types)
+                                       get_turbine_types,
+                                       load_turbine_data_from_oedb)
 
 
 class TestWindTurbine:
 
-    def test_error_raising(self):
+    def test_warning(self, recwarn):
         source = os.path.join(os.path.dirname(__file__), '../example/data')
         self.test_turbine_data = {'hub_height': 100,
                                   'rotor_diameter': 80,
                                   'turbine_type': 'turbine_not_in_file',
                                   'path': source}
-        # Raise system exit due to turbine type not in file
-        # with pytest.raises(SystemExit):
         assert(WindTurbine(**self.test_turbine_data).power_curve is None)
+        assert recwarn.pop(WindpowerlibUserWarning)
 
     def test_get_turbine_data_from_file(self):
         # Raise FileNotFoundError due to missing
@@ -23,6 +31,28 @@ class TestWindTurbine:
             get_turbine_data_from_file(turbine_type='...',
                                        path='not_existent')
 
-    def test_get_turbine_types(self):
-        get_turbine_types(print_out=True, filter_=True)
-        get_turbine_types(print_out=False, filter_=False)
+    def test_get_turbine_types(self, capsys):
+        get_turbine_types()
+        captured = capsys.readouterr()
+        assert 'Enercon' in captured.out
+        get_turbine_types('oedb', print_out=False, filter_=False)
+        msg = "`turbine_library` is 'wrong' but must be 'local' or 'oedb'."
+        with pytest.raises(ValueError, match=msg):
+            get_turbine_types('wrong')
+
+    def test_deduce_nominal_power(self):
+        """Test method to deduce nominal_power from power curve"""
+        test_turbine_data = {'hub_height': 100,
+                             'rotor_diameter': 80,
+                             'turbine_type': 'N131/3000'}
+        n131 = WindTurbine(**test_turbine_data)
+        assert n131.nominal_power == 3000000.0
+        n131.deduce_nominal_power_from_power_curve()
+        assert n131.nominal_power == 3000000.0
+
+    def test_wrong_url_load_turbine_data(self):
+        """Load turbine data from oedb."""
+
+        with pytest.raises(ConnectionError,
+                           match="Database connection not successful"):
+            load_turbine_data_from_oedb('wrong_schema')
