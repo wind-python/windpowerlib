@@ -10,9 +10,10 @@ __license__ = "GPLv3"
 
 import pandas as pd
 import logging
-import sys
+import warnings
 import requests
 import os
+from windpowerlib.tools import WindpowerlibUserWarning
 
 
 class WindTurbine(object):
@@ -139,6 +140,14 @@ class WindTurbine(object):
                     self.nominal_power = float(turbine_data['nominal_power'])
                 if self.rotor_diameter is None and turbine_data is not None:
                     self.rotor_diameter = float(turbine_data['rotor_diameter'])
+
+        if self.power_curve is None and self.power_coefficient_curve is None:
+            msg = ("The WindTurbine has been initialised without a power curve"
+                   " and without a power coefficient curve.\nYou will not be"
+                   " able to calculate the power output.\n"
+                   " Check if the turbine type {0} is in your database file"
+                   " or if you you passed a valid curve.")
+            warnings.warn(msg.format(turbine_type), WindpowerlibUserWarning)
 
     def __repr__(self):
         info = []
