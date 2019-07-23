@@ -184,6 +184,14 @@ class WindTurbine(object):
 
         return turbine_repr
 
+    def deduce_nominal_power_from_power_curve(self):
+        """Try to deduce nominal power from power curve"""
+        if self.power_curve is not None:
+            self.nominal_power = max(self.power_curve['value'])
+        else:
+            raise ValueError("You can not deduce the nominal value from the"
+                             "power curve if the power curve is None")
+
 
 def get_turbine_data_from_file(turbine_type, path):
     r"""
