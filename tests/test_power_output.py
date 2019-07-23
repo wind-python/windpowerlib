@@ -175,3 +175,16 @@ class TestPowerOutput:
         with pytest.raises(TypeError):
             parameters['density'] = None
             power_curve_density_correction(**parameters)
+
+    def test_wrong_spelling_density_correction(self):
+        parameters = {'wind_speed': pd.Series(data=[2.0, 5.5, 7.0]),
+                      'density': pd.Series(data=[1.3, 1.3, 1.3]),
+                      'power_curve_wind_speeds':
+                          pd.Series([4.0, 5.0, 6.0]),
+                      'power_curve_values':
+                          pd.Series([300, 400, 500])
+                      }
+        msg = "is an invalid type. `density_correction` must be Boolean"
+        with pytest.raises(TypeError, match=msg):
+            parameters['density_correction'] = None
+            power_curve(**parameters)
