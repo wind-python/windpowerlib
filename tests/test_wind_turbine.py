@@ -56,3 +56,7 @@ class TestWindTurbine:
         with pytest.raises(ConnectionError,
                            match="Database connection not successful"):
             load_turbine_data_from_oedb('wrong_schema')
+
+    @pytest.mark.filterwarnings("ignore:The WindTurbine")
+    def test_string_representation_of_wind_turbine(self):
+        assert "Wind turbine: ['hub height=120 m'" in repr(WindTurbine(120))
