@@ -1,8 +1,5 @@
 """
-The ``modelchain`` module contains functions and classes of the
-windpowerlib. This module makes it easy to get started with the windpowerlib
-and demonstrates standard ways to use the library.
-
+Testing the ``modelchain`` module.
 """
 
 __copyright__ = "Copyright oemof developer group"
@@ -279,6 +276,7 @@ class TestModelChain:
                                     **test_modelchain)
             test_mc.run_model(self.weather_df)
 
+    @pytest.mark.filterwarnings("ignore:The WindTurbine")
     def test_missing_cp_values(self):
         """Raise TypeErrors due to missing cp-values"""
         test_turbine = {'hub_height': 100,
@@ -292,6 +290,7 @@ class TestModelChain:
                                     **test_modelchain)
             test_mc.run_model(self.weather_df)
 
+    @pytest.mark.filterwarnings("ignore:The WindTurbine")
     def test_missing_p_values(self):
         """Raise TypeErrors due to missing p-values"""
         test_turbine = {'hub_height': 100,
