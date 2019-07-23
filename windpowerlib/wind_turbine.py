@@ -259,7 +259,7 @@ def get_turbine_data_from_file(turbine_type, path):
         return wpp_df
 
 
-def load_turbine_data_from_oedb(schema = 'supply', table = 'turbine_library'):
+def load_turbine_data_from_oedb(schema='supply', table='turbine_library'):
     r"""
     Loads turbine library from the OpenEnergy database (oedb).
 
@@ -294,7 +294,7 @@ def load_turbine_data_from_oedb(schema = 'supply', table = 'turbine_library'):
     # extract data to dataframe
     turbine_data = pd.DataFrame(result.json())
     # standard file name for saving data
-    filename = os.path.join(os.path.dirname(__file__),
+    filename = os.path.join(os.path.dirname(__file__), 'oedb',
                             '{}.csv')
     # get all power (coefficient) curves and save to file
     # for curve_type in ['power_curve', 'power_coefficient_curve']:
