@@ -231,3 +231,10 @@ class TestTurbineClusterModelChain:
             power_plant=wtc.WindTurbineCluster(**self.test_cluster),
             **parameters)
         test_tc_mc.run_model(self.weather_df)
+
+    def test_wind_farm_repr(self):
+        assert 'E-126/4200' in repr(wf.WindFarm(**self.test_farm))
+
+    def test_wind_turbine_cluster_repr(self):
+        assert ("Wind turbine: E-126/4200 ['nominal power=42000" in
+                repr(self.test_cluster))
