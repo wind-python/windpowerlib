@@ -221,6 +221,7 @@ class TestTurbineClusterModelChain:
             test_tc_mc.run_model(weather_df)
 
     def test_ignore_wake_losses(self):
+        """Run model without wake losses."""
         parameters = {'wake_losses_model': None,
                       'smoothing': False,
                       'standard_deviation_method': 'turbulence_intensity',
@@ -233,8 +234,17 @@ class TestTurbineClusterModelChain:
         test_tc_mc.run_model(self.weather_df)
 
     def test_wind_farm_repr(self):
+        """Test string representation of WindFarm"""
         assert 'E-126/4200' in repr(wf.WindFarm(**self.test_farm))
 
-    def test_wind_turbine_cluster_repr(self):
-        assert ("Wind turbine: E-126/4200 ['nominal power=42000" in
-                repr(self.test_cluster))
+    def test_wind_turbine_cluster_repr_with_name(self):
+        """Test string representation of WindTurbineCluster with a name."""
+        assert 'Wind turbine cluster:' in repr(
+            wtc.WindTurbineCluster(**self.test_cluster))
+
+    def test_wind_turbine_cluster_repr_without_name(self):
+        """Test string representation of WindTurbineCluster without a name."""
+        test_cluster = {'wind_farms': [wf.WindFarm(**self.test_farm),
+                                       wf.WindFarm(**self.test_farm_2)]}
+        assert 'Wind turbine cluster with:' in repr(
+            wtc.WindTurbineCluster(**test_cluster))
