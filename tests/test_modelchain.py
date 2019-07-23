@@ -281,26 +281,26 @@ class TestModelChain:
 
     def test_missing_cp_values(self):
         """Raise TypeErrors due to missing cp-values"""
-        with pytest.raises(TypeError):
-            self.test_turbine = {'hub_height': 100,
-                                 'rotor_diameter': 80,
-                                 'turbine_type': 'E-126/4200',
-                                 'power_coefficient_curve': False}
+        test_turbine = {'hub_height': 100,
+                        'rotor_diameter': 80,
+                        'turbine_type': 'E-126/4201'}
+        msg = "Power coefficient curve values of"
+        with pytest.raises(TypeError, match=msg):
             test_modelchain = {'power_output_model': 'power_coefficient_curve',
                                'density_correction': True}
-            test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
+            test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                     **test_modelchain)
             test_mc.run_model(self.weather_df)
 
     def test_missing_p_values(self):
         """Raise TypeErrors due to missing p-values"""
-        with pytest.raises(TypeError):
-            self.test_turbine = {'hub_height': 100,
-                                 'rotor_diameter': 80,
-                                 'turbine_type': 'E-126/4200',
-                                 'power_curve': False}
+        test_turbine = {'hub_height': 100,
+                        'rotor_diameter': 80,
+                        'turbine_type': 'E-126/4205'}
+        msg = "Power curve values of"
+        with pytest.raises(TypeError, match=msg):
             test_modelchain = {'power_output_model': 'power_curve',
                                'density_corr': True}
-            test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
+            test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                     **test_modelchain)
             test_mc.run_model(self.weather_df)
