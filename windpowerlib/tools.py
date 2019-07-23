@@ -9,6 +9,22 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 import numpy as np
+import warnings
+
+
+class WindpowerlibUserWarning(UserWarning):
+    """
+    The WindpowerlibUserWarning is used to warn users if they use the
+    windpowerlib in an untypical way. It is not necessarily wrong but could
+    lead to an unwanted behaviour if you do not know what you are doing.
+    If you know what you are doing you can easily switch the warnings off:
+
+    Examples
+    --------
+    >>> import warnings
+    >>> warnings.filterwarnings("ignore", category=WindpowerlibUserWarning)
+    """
+    pass
 
 
 def linear_interpolation_extrapolation(df, target_height):
