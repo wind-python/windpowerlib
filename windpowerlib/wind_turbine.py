@@ -165,16 +165,14 @@ class WindTurbine(object):
             info.append('hub height={} m'.format(self.hub_height))
         if self.rotor_diameter is not None:
             info.append('rotor diameter={} m'.format(self.rotor_diameter))
-        pcc = 'power_coefficient_curve={}'
         if self.power_coefficient_curve is not None:
-            info.append(pcc.format('True'))
+            info.append('power_coefficient_curve={}'.format('True'))
         else:
-            info.append(pcc.format('False'))
-        pcc = 'power_curve={}'
+            info.append('power_coefficient_curve={}'.format('False'))
         if self.power_curve is not None:
-            info.append(pcc.format('True'))
+            info.append('power_curve={}'.format('True'))
         else:
-            info.append(pcc.format('False'))
+            info.append('power_curve={}'.format('False'))
 
         if self.turbine_type is not None:
             turbine_repr = 'Wind turbine: {name} {info}'.format(
