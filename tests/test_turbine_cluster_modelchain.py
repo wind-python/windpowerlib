@@ -219,3 +219,15 @@ class TestTurbineClusterModelChain:
         weather_df.pop('roughness_length')
         with pytest.raises(ValueError):
             test_tc_mc.run_model(weather_df)
+
+    def test_ignore_wake_losses(self):
+        parameters = {'wake_losses_model': None,
+                      'smoothing': False,
+                      'standard_deviation_method': 'turbulence_intensity',
+                      'smoothing_order': 'wind_farm_power_curves'}
+
+        # Test modelchain with default values
+        test_tc_mc = tc_mc.TurbineClusterModelChain(
+            power_plant=wtc.WindTurbineCluster(**self.test_cluster),
+            **parameters)
+        test_tc_mc.run_model(self.weather_df)
