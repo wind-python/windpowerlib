@@ -18,11 +18,11 @@ class TestWindTurbine:
 
     def test_warning(self, recwarn):
         source = os.path.join(os.path.dirname(__file__), '../example/data')
-        self.test_turbine_data = {'hub_height': 100,
-                                  'rotor_diameter': 80,
-                                  'turbine_type': 'turbine_not_in_file',
-                                  'path': source}
-        assert(WindTurbine(**self.test_turbine_data).power_curve is None)
+        test_turbine_data = {'hub_height': 100,
+                             'rotor_diameter': 80,
+                             'turbine_type': 'turbine_not_in_file',
+                             'path': source}
+        assert(WindTurbine(**test_turbine_data).power_curve is None)
         assert recwarn.pop(WindpowerlibUserWarning)
 
     def test_get_turbine_data_from_file(self):
