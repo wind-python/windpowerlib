@@ -250,11 +250,8 @@ def get_turbine_data_from_file(turbine_type, path):
     wpp_df = df[df.index == turbine_type].copy()
     # if turbine not in data file
     if wpp_df.shape[0] == 0:
-        pd.set_option('display.max_rows', len(df))
-        logging.info('Possible types: \n{0}'.format(pd.DataFrame(df.index)))
-        pd.reset_option('display.max_rows')
-        raise KeyError("Wind converter type {0} not provided.".format(
-            turbine_type))
+        msg = "Wind converter type {0} not provided. Possible types: {1}"
+        raise KeyError(msg.format(turbine_type, list(df.index)))
     # if turbine in data file
     # get nominal power or power (coefficient) curve
     if 'turbine_data' in path:
