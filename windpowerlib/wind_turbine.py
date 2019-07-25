@@ -90,6 +90,7 @@ class WindTurbine(object):
 
     Examples
     --------
+    >>> import os
     >>> from windpowerlib import wind_turbine
     >>> enerconE126 = {
     ...    'hub_height': 135,
@@ -97,6 +98,18 @@ class WindTurbine(object):
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> print(e126.nominal_power)
     4200000.0
+    >>> # Example with own path
+    >>> path = os.path.join(os.path.dirname(__file__), '../example/data')
+    >>> example_turbine = {
+    ...    'hub_height': 100,
+    ...    'rotor_diameter': 70,
+    ...    'turbine_type': 'DUMMY 3',
+    ...    'path' : path}
+    >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
+    >>> print(e_t_1.power_curve['value'][7])
+    18000.0
+    >>> print(e_t_1.nominal_power)
+    1500000.0
 
     """
 
@@ -221,17 +234,13 @@ def get_turbine_data_from_file(turbine_type, path):
     --------
     >>> from windpowerlib import wind_turbine
     >>> import os
-    >>> path = os.path.join(os.path.dirname(__file__), '../example/data')
-    >>> example_turbine = {
-    ...    'hub_height': 100,
-    ...    'rotor_diameter': 70,
-    ...    'turbine_type': 'DUMMY 3',
-    ...    'path' : path}
-    >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
-    >>> print(e_t_1.power_curve['value'][7])
+    >>> path = os.path.join(os.path.dirname(__file__), '../example/data',
+    ...     'power_curves.csv')
+    >>> d3 = get_turbine_data_from_file('DUMMY 3', path)
+    >>> print(d3['value'][7])
     18000.0
-    >>> print(e_t_1.nominal_power)
-    150000.0
+    >>> print(d3['value'].max())
+    1500000.0
     """
 
     try:
