@@ -94,11 +94,11 @@ class WindTurbine(object):
     Examples
     --------
     >>> import os
-    >>> from windpowerlib import wind_turbine
+    >>> from windpowerlib import WindTurbine
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'turbine_type': 'E-126/4200'}
-    >>> e126 = wind_turbine.WindTurbine(**enerconE126)
+    >>> e126 = WindTurbine(**enerconE126)
     >>> print(e126.nominal_power)
     4200000.0
     >>> # Example with own path
@@ -108,7 +108,7 @@ class WindTurbine(object):
     ...    'rotor_diameter': 70,
     ...    'turbine_type': 'DUMMY 3',
     ...    'path' : path}
-    >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
+    >>> e_t_1 = WindTurbine(**example_turbine)
     >>> print(e_t_1.power_curve['value'][7])
     18000.0
     >>> print(e_t_1.nominal_power)
