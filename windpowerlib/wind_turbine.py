@@ -25,17 +25,18 @@ class WindTurbine(object):
     hub_height : float
         Hub height of the wind turbine in m.
     power_curve : :pandas:`pandas.DataFrame<frame>` or dict (optional)
-        Directly sets the power curve. DataFrame/dictionary must have
-        'wind_speed' and 'value' columns/keys with wind speeds in m/s and
+        If provided directly sets the power curve. DataFrame/dictionary must
+        have 'wind_speed' and 'value' columns/keys with wind speeds in m/s and
         the corresponding power curve value in W. If not set the value is
         retrieved from 'power_curve.csv' file in `path`. In that case a
         `turbine_type` is needed. Default: None.
     power_coefficient_curve : :pandas:`pandas.DataFrame<frame>` or dict (optional)
-        Directly sets the power coefficient curve. DataFrame/dictionary must
-        have 'wind_speed' and 'value' columns/keys with wind speeds in m/s
-        and the corresponding power coefficient curve value. If not set the
-        value is retrieved from 'power_coefficient_curve.csv' file in `path`.
-        In that case a `turbine_type` is needed. Default: None.
+        If provided directly sets the power coefficient curve.
+        DataFrame/dictionary must have 'wind_speed' and 'value' columns/keys
+        with wind speeds in m/s and the corresponding power coefficient curve
+        value. If not set the value is retrieved from
+        'power_coefficient_curve.csv' file in `path`. In that case a
+        `turbine_type` is needed. Default: None.
     turbine_type : str (optional)
         Name of the wind turbine type. Must be provided if power (coefficient)
         curve, nominal power or rotor diameter is retrieved from self-provided
@@ -46,17 +47,20 @@ class WindTurbine(object):
         provided in the oedb turbine library.
         Default: None.
     rotor_diameter : float (optional)
-        Diameter of the rotor in m. Only needs to be provided if power output
+        Diameter of the rotor in m. If not set the value is
+        retrieved from 'turbine_data.csv' file in `path`. In that case a
+        `turbine_type` is needed.
+        The rotor diameter only needs to be set if power output
         is calculated using the power coefficient curve. Default: None.
     nominal_power : float (optional)
         The nominal power of the wind turbine in W. If not set the value is
         retrieved from 'turbine_data.csv' file in `path`. In that case a
         `turbine_type` is needed. Default: None.
     path : str (optional)
-        Directory where the turbine database files are located. The names of
-        the files need to be 'power_coefficient_curve.csv', 'power_curve.csv',
-        'turbine_data.csv'. Set path to `None` to ignore turbine data from
-         files. Default: 'oedb'.
+        Directory where the turbine database files are located. The files need
+        to be named 'power_coefficient_curve.csv', 'power_curve.csv', and
+        'turbine_data.csv'. By default the oedb turbine library files are used.
+        Set path to `None` to ignore turbine data from files. Default: 'oedb'.
 
     Attributes
     ----------
@@ -67,11 +71,11 @@ class WindTurbine(object):
     rotor_diameter : None or float
         Diameter of the rotor in m. Default: None.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
-        Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'value' columns/keys with wind speeds
+        Power coefficient curve of the wind turbine. DataFrame/dictionary
+        containing 'wind_speed' and 'value' columns/keys with wind speeds
         in m/s and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
-        Power curve of the wind turbine. DataFrame/dictionary must have
+        Power curve of the wind turbine. DataFrame/dictionary containing
         'wind_speed' and 'value' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
@@ -80,13 +84,12 @@ class WindTurbine(object):
     Notes
     ------
     Your wind turbine object needs to have a power coefficient or power curve.
-    If you set the parameters `power_curve`, `power_coefficient_curve` and/or
-    `nominal_power` to True the respective data is automatically fetched from
-    the oedb turbine library (a dataset provided in the OpenEnergy Database).
-    You can also provide your own csv files with power coefficient and power
-    curves. See `example_power_curves.csv',
+    By default they are fetched from the oedb turbine library that is provided
+    along with the windpowerlib. In that case `turbine_type` must be specified.
+    You can also set the curves directly or provide your own csv files with
+    power coefficient and power curves. See `example_power_curves.csv',
     `example_power_coefficient_curves.csv` and `example_turbine_data.csv`
-    in example/data for the required form of such csv files.
+    in example/data for the required format of such csv files.
 
     Examples
     --------
