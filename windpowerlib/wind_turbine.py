@@ -170,7 +170,7 @@ class WindTurbine(object):
                    " and without a power coefficient curve.\nYou will not be"
                    " able to calculate the power output.\n"
                    " Check if the turbine type {0} is in your database file"
-                   " or if you you passed a valid curve.")
+                   " or if you passed a valid curve.")
             warnings.warn(msg.format(turbine_type), WindpowerlibUserWarning)
 
     def __repr__(self):
