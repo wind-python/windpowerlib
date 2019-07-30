@@ -7,16 +7,16 @@ E-101/3050,True,True,False,True,99; 124; 135; 149,5,4,Enercon,15,E-101/3050 E2,3
 E-115/3000,True,True,False,True,92; 122; 135; 149,6,5,Enercon,13,E-115/3000,3000000,285,4,10512,116,https://www.enercon.de/fileadmin/Redakteur/Medien-Portal/broschueren/pdf/ENERCON_Produkt_de_042017.pdf; https://www.wind-turbine-models.com/turbines/,6,IEC/EN IIA,WZIII; WZ4 GKI; WZ4 GK II
 E-82/3000,True,True,False,True,69; 78; 84,7,6,Enercon,18,E-82/3000,3000000,568,2,5280,82,https://www.enercon.de/fileadmin/Redakteur/Medien-Portal/broschueren/pdf/ENERCON_Produkt_de_042017.pdf; https://www.wind-turbine-models.com/turbines/,7,IEC/EN IA; IEC/EN IIA,
 E-92/2350,True,True,False,True,69; 78; 84; 85; 98; 104; 108; 138,8,7,Enercon,16,E-92/2350,2350000,354,3,6647,92,https://www.enercon.de/fileadmin/Redakteur/Medien-Portal/broschueren/pdf/ENERCON_Produkt_de_042017.pdf; https://www.wind-turbine-models.com/turbines/,8,IEC/EN IIA,WZ III; WZ 4 GK I; WZ 4 GK II
-SWT130/4000,,False,False,False,90; 89.5,60,59,Siemens,,SWT-4.0-130,4000000,,,13272,130,,64,,
+SWT101/2300,,False,False,False,80;,76,75,Siemens,,SWT-2.3-101,2300000,,,8011,101,,80,,
 E-82/2350,True,True,False,True,59; 69; 78; 84,9,8,Enercon,18,E-82/2350,2350000,445,2,5280,82,https://www.enercon.de/fileadmin/Redakteur/Medien-Portal/broschueren/pdf/ENERCON_Produkt_de_042017.pdf; https://www.wind-turbine-models.com/turbines/,9,IEC/EN IA; IEC/EN IIA,WZ 4 GK I
 E-82/2300,True,True,False,True,78; 84; 85; 98; 108; 138,10,9,Enercon,18,E-82/2300 E2,2300000,436,2,5280,82,https://www.enercon.de/fileadmin/Redakteur/Medien-Portal/broschueren/pdf/ENERCON_Produkt_de_042017.pdf; https://www.wind-turbine-models.com/turbines/,10,IEC/EN IIA,WZ III; WZ 4; WZ 4 GK I
 E-70/2300,True,True,False,True,57; 64; 75; 85; 98; 114,11,10,Enercon,21,E-70/2300 E4,2300000,581,2,3959,71,https://www.enercon.de/fileadmin/Redakteur/Medien-Portal/broschueren/pdf/ENERCON_Produkt_de_042017.pdf; https://www.wind-turbine-models.com/turbines/,11,IEC/EN IA; IEC/EN IIA,WZ III; WZ 4 GK I; WZ 4 GK II
 E-82/2000,True,True,False,True,78; 84; 85; 98; 108; 138,12,11,Enercon,18,E-82/2000 E2,2000000,379,3,5280,82,https://www.enercon.de/fileadmin/Redakteur/Medien-Portal/broschueren/pdf/ENERCON_Produkt_de_042017.pdf; https://www.wind-turbine-models.com/turbines/,12,IEC/EN IIA,WZ III; WZ 4; WZ 4 GK I
-E-70/2000,,True,False,True,57; 64; 75; 85; 98; 114,13,12,Enercon,22,E-70/2000,2000000,505,2,3959,71,https://www.wind-turbine-models.com/turbines/827-enercon-e-70-e4-2.000#datasheet,13,,
+E-70/2000,,False,False,True,57; 64; 75; 85; 98; 114,13,12,Enercon,22,E-70/2000,2000000,505,2,3959,71,https://www.thewindpower.net/turbine_en_174_enercon_e70-2000.php,13,,
 E-53/800,True,True,False,True,50; 60; 73,14,13,Enercon,30,E-53/800,800000,364,3,2198,53,https://www.enercon.de/fileadmin/Redakteur/Medien-Portal/broschueren/pdf/ENERCON_Produkt_de_042017.pdf; https://www.wind-turbine-models.com/turbines/,14,IEC SA,WZ II exp.; WZ 3 GKI; WZ 4 GK II
 N131/3900,,False,False,False,84; 106; 112; 134,15,14,Nordex,,,3900000,289,4,13477,131,http://www.nordex-online.com/de/produkte-service/windenergieanlagen/; https://www.wind-turbine-models.com/turbines/1583-nordex-n-131-3900-delta,16,,
 N131/3600,True,True,True,True,84; 106; 112; 134,16,15,Nordex,14,,3600000,267,4,13477,131,http://www.nordex-online.com/de/produkte-service/windenergieanlagen/; https://www.wind-turbine-models.com/turbines/1466-nordex-n-131-3600-delta,17,IEC SA,
-SWT120/6000,,False,False,False,90;,59,58,Siemens,13,SWT-6.0-120,6000000,319,3,11308,120,https://www.wind-turbine-models.com/turbines/646-siemens-swt-3.6-120-onshore,63,IEC Ia,
+SWT93/2300,,False,False,False,80;,77,76,Siemens,,SWT-2.3-93,2300000,,,6792,93,,81,,
 N131/3300,,True,True,True,134; 164,17,16,Nordex,,,3300000,,,13477,131,http://www.windenergie-im-binnenland.de/powercurve.php,18,,
 N131/3000,,True,True,True,99; 114; 134,18,17,Nordex,,,3000000,,,13477,131,http://www.windenergie-im-binnenland.de/powercurve.php,19,,
 N117/3600,,False,False,False,91; 120; 141,19,18,Nordex,,,3600000,,,10750,117,,20,,
@@ -59,6 +59,8 @@ V112/3075,True,True,True,True,84; 94; 119,52,51,Vestas,18,V112-3.075 MW,3075000,
 V112/3000,,True,True,True,,53,52,Vestas,,V112-3.0 MW,3000000,,,9851,112,http://www.windenergie-im-binnenland.de/powercurve.php,56,,
 V90/3000,,False,False,False,80;,54,53,Vestas,,V90-3.0 MW,3000000,,,6361,90,https://www.wind-turbine-models.com/turbines/16-vestas-v90,57,IEC IIA/IEC S,
 SWT154/6000,,False,False,False,,58,57,Siemens,11,SWT-6.0-154,6000000,323,3,18624,154,https://www.wind-turbine-models.com/turbines/657-siemens-swt-6.0-154,62,IEC Ia,
+SWT120/6000,,False,False,False,90;,59,58,Siemens,13,SWT-6.0-120,6000000,319,3,11308,120,https://www.wind-turbine-models.com/turbines/646-siemens-swt-3.6-120-onshore,63,IEC Ia,
+SWT130/4000,,False,False,False,90; 89.5,60,59,Siemens,,SWT-4.0-130,4000000,,,13272,130,,64,,
 SWT130/3600,,True,True,True,85;115;135;165,61,60,Siemens,,SWT-3.6-130,3600000,,,13272,130,http://www.windenergie-im-binnenland.de/powercurve.php,65,,
 SWT120/3600,,True,True,True,90;,62,61,Siemens,,SWT-3.6-120,3600000,,,11308,120,http://www.windenergie-im-binnenland.de/powercurve.php,66,,
 SWT107/3600,,False,False,False,80;,63,62,Siemens,,SWT-3.6-107,3600000,,,8991,107,,67,,
@@ -74,8 +76,6 @@ SWT120/2500,,False,False,False,85.1;92,72,71,Siemens,,SWT-2.5-120,2500000,,,1130
 SWT120/2300,,False,False,False,80;92.4,73,72,Siemens,,SWT-2.3-120,2300000,,,11308,120,,77,,
 SWT113/2300,,True,True,True,99.5,74,73,Siemens,,SWT-2.3-113,2300000,,,10027,113,http://www.windenergie-im-binnenland.de/powercurve.php,78,,
 SWT108/2300,,False,False,False,80;,75,74,Siemens,,SWT-2.3-108,2300000,,,9160,108,,79,,
-SWT101/2300,,False,False,False,80;,76,75,Siemens,,SWT-2.3-101,2300000,,,8011,101,,80,,
-SWT93/2300,,False,False,False,80;,77,76,Siemens,,SWT-2.3-93,2300000,,,6792,93,,81,,
 SWT82/2300,,False,False,False,80;,78,77,Siemens,,SWT-2.3-82,2300000,,,5280,82,,82,,
 SWT62/1300,,False,False,False,68-90,79,78,Siemens,,SWT-1.3-62,1300000,,,3019,62,,83,,
 AD180/8000,,False,False,False,,80,79,Adwen/Areva,8,AD 8-180,8000000,314,3,25444,180,https://www.wind-turbine-models.com/turbines/1124-adwen-ad-8-180;,85,IEC Ib,
@@ -92,6 +92,8 @@ S114/3400,True,True,True,True,93; 119; 123; 143,90,89,Senvion/REpower,12,3.4M114
 S104/3400,True,False,False,True,73;80;93;100,91,90,Senvion/REpower,,3.4M104,3400000,,,8494,104,https://www.senvion.com/global/en/products-services/wind-turbines/3xm/34m104/;,97,,
 S122/3400,True,False,False,False,139;,92,91,Senvion/REpower,,3.4M122 NES,3400000,,,11688,122,https://www.senvion.com/global/en/products-services/wind-turbines/3xm/34m122-nes/;,98,,
 S140/3400,True,False,False,False,93;119;123;143,93,92,Senvion/REpower,,3.4M140 EBC,3400000,,,15392,140,https://www.senvion.com/global/en/products-services/wind-turbines/3xm/34m140-ebc/;,99,,
+ENO126/4800,,False,False,False,,123,122,Eno,,ENO 126 4.8,4800000,,,12467,126,https://www.wind-turbine-models.com/turbines/1741-eno-energy-eno-126-4.8,133,,
+ENO126/4000,,False,False,False,,124,123,Eno,,ENO 126 4.0,4000000,,,12467,126,https://www.wind-turbine-models.com/turbines/1484-eno-energy-eno-126-4.0,134,,
 S114/3200,,False,False,True,93; 119; 123; 143,94,93,Senvion/REpower,12,3.2M114 NES,3200000,,,10206,114,http://www.windenergie-im-binnenland.de/powercurve.php,100,IEC IIA,4
 S122/3200,,True,True,True,139;,95,94,Senvion/REpower,,3.2M122,3200000,,,11688,122,http://www.windenergie-im-binnenland.de/powercurve.php,101,,
 S122/3000,,True,True,True,136;139,96,95,Senvion/REpower,,3.0M122,3000000,,,11688,122,http://www.windenergie-im-binnenland.de/powercurve.php,102,,
@@ -113,8 +115,6 @@ GE150/6000,,False,False,False,100; side spec,111,110,GE Wind,,Haliade 150-6MW,60
 GE158/4800,,False,False,False,101;120.9;149;169,112,111,GE Wind,,GE 4.8-158,4800000,,,19604,158,https://www.gerenewableenergy.com/wind-energy/turbines/4mw-platform; https://www.wind-turbine-models.com/turbines/1719-general-electric-ge-4.8-158,120,,
 GE137/3600,,False,False,False,85;110;131.4;164.5,113,112,GE Wind,,GE 3.6-137,3600000,,,14739,137,https://www.wind-turbine-models.com/turbines/1551-general-electric-ge-3.6-137,121,IIIb,
 GE137/3400,True,False,False,False,85;110;131;134;155,114,113,GE Wind,,GE 3.4-137,3400000,,,14739,137,https://www.wind-turbine-models.com/turbines/1339-general-electric-ge-3.4-137,122,,
-ENO126/4800,,False,False,False,,123,122,Eno,,ENO 126 4.8,4800000,,,12467,126,https://www.wind-turbine-models.com/turbines/1741-eno-energy-eno-126-4.8,133,,
-ENO126/4000,,False,False,False,,124,123,Eno,,ENO 126 4.0,4000000,,,12467,126,https://www.wind-turbine-models.com/turbines/1484-eno-energy-eno-126-4.0,134,,
 GE130/3200,True,True,True,True,85;110;134;155,115,114,GE Wind,,GE 3.2-130,3200000,,,13272,130,https://www.wind-turbine-models.com/turbines/1290-general-electric-ge-3.2-130,123,IIIa,2
 GE103/2850,,False,False,False,75;85;98.3,116,115,GE Wind,,GE 2.85-103,3850000,,,8331,103,https://www.wind-turbine-models.com/turbines/750-general-electric-ge-2.85-103,124,,
 GE120/2750,True,True,True,True,85; 98.3; 110; 139,117,116,GE Wind,,GE 2.75-120,2750000,,,11308,120,https://www.wind-turbine-models.com/turbines/983-general-electric-ge-2.75-120,125,,
@@ -137,4 +137,4 @@ V100/1800,,True,True,True,,135,134,Vestas,,V100/1800,1800000,,,7853,100,http://w
 V100/1800/GS,,True,True,True,,136,135,Vestas,,V100/1800 GS,1800000,,,7853,100,http://www.windenergie-im-binnenland.de/powercurve.php,147,,
 V117/3600,,True,True,True,,137,136,Vestas,,V117-3.6,3600000,,,10750,117,http://www.windenergie-im-binnenland.de/powercurve.php,148,,
 SCD168/8000,,False,False,True,,138,137,aerodyn,,SCD 168 8000,8000000,,,22164,168,https://www.wind-turbine-models.com/turbines/1116-aerodyn-scd-8.0-168,149,,
-E-126/7500,,False,False,True,125,139,138,Enercon,,E-126/126/7500,7500000,2,,12666,127,https://www.thewindpower.net/turbine_en_225_enercon_e126-7500.php,150,,
+E-126/7500,,False,False,True,125,139,138,Enercon,,E-126/7500,7500000,2,,12666,127,https://www.thewindpower.net/turbine_en_225_enercon_e126-7500.php,150,,
