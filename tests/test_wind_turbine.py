@@ -40,26 +40,6 @@ class TestWindTurbine:
         with pytest.raises(ValueError, match=msg):
             get_turbine_types('wrong')
 
-    def test_deduce_nominal_power(self):
-        """Test method to deduce nominal_power from power curve"""
-        test_turbine_data = {'hub_height': 100,
-                             'rotor_diameter': 80,
-                             'turbine_type': 'N131/3000'}
-        n131 = WindTurbine(**test_turbine_data)
-        assert n131.nominal_power == 3000000.0
-        n131.deduce_nominal_power_from_power_curve()
-        assert n131.nominal_power == 3000000.0
-
-    def test_error_deduce_nominal_power_withour_p_curve(self):
-        """Test method to deduce nominal_power from power curve"""
-        test_turbine_data = {'hub_height': 100,
-                             'rotor_diameter': 80,
-                             'turbine_type': 'N131/3050'}
-        n131 = WindTurbine(**test_turbine_data)
-        assert n131.nominal_power is None
-        with pytest.raises(ValueError, match="You can not deduce the"):
-            n131.deduce_nominal_power_from_power_curve()
-
     def test_wrong_url_load_turbine_data(self):
         """Load turbine data from oedb."""
 
