@@ -8,7 +8,7 @@ wind farm.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
-from windpowerlib import tools, power_curves
+from windpowerlib import tools, power_curves, WindTurbine
 import numpy as np
 import pandas as pd
 import logging
@@ -23,8 +23,10 @@ class WindFarm(object):
     wind_turbine_fleet : list(dict)
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
         (contains a :class:`~.wind_turbine.WindTurbine` object) and
-        'number_of_turbines' (number of wind turbines of the same turbine type
-        in the wind farm) as keys.
+        either 'number_of_turbines' (number of wind turbines of the same
+        turbine type in the wind farm) or 'total_capacity' (installed capacity
+        of wind turbines of the same turbine type in the wind farm) as keys.
+        See example below.
     efficiency : float or :pandas:`pandas.DataFrame<frame>` or None (optional)
         Efficiency of the wind farm. Provide as either constant (float) or
         power efficiency curve (pd.DataFrame) containing 'wind_speed' and
@@ -73,7 +75,12 @@ class WindFarm(object):
     >>> example_farm = wind_farm.WindFarm(**example_farm_data)
     >>> print(example_farm.nominal_power)
     25200000.0
-
+    >>> example_farm_data = {
+    ...    'wind_turbine_fleet': [{'wind_turbine': e126,
+    ...                            'total_capacity': 8.4e6}]}
+    >>> example_farm = wind_farm.WindFarm(**example_farm_data)
+    >>> print(example_farm.nominal_power)
+    8400000.0
     """
 
     def __init__(self, wind_turbine_fleet, efficiency=None, name='', **kwargs):
@@ -85,6 +92,40 @@ class WindFarm(object):
         self.hub_height = None
         self._nominal_power = None
         self.power_curve = None
+
+        # check integrity of given wind turbine fleet
+        for turbine_type in self.wind_turbine_fleet:
+            turbine_keys = list(turbine_type.keys())
+            # check wind turbine
+            if 'wind_turbine' in turbine_keys:
+                if not isinstance(turbine_type['wind_turbine'], WindTurbine):
+                    raise ValueError(
+                        'Wind turbine must be provided as WindTurbine object '
+                        'but was provided as {}.'.format(
+                            type(turbine_type['wind_turbine'])))
+            else:
+                raise ValueError('Missing wind_turbine key in wind turbine '
+                                 'fleet entry {}.'.format(turbine_type))
+            # check if number of turbines is provided
+            if not 'number_of_turbines' in turbine_keys:
+                if 'total_capacity' in turbine_keys:
+                    try:
+                        turbine_type['number_of_turbines'] = \
+                            turbine_type['total_capacity'] / \
+                            turbine_type['wind_turbine'].nominal_power
+                    except:
+                        raise ValueError(
+                            'Number of turbines of type {turbine} can not be '
+                            'deduced from total capacity. Please either '
+                            'provide `number_of_turbines` in the turbine '
+                            'fleet definition or set the nominal power of the '
+                            'wind turbine.'.format(
+                                turbine=turbine_type['wind_turbine']))
+                else:
+                    raise ValueError(
+                        'Please provide `number_of_turbines` or '
+                        '`total_capacity` for wind turbine {} in wind farm '
+                        'definition.'.format(turbine_type['wind_turbine']))
 
     def __repr__(self):
 
