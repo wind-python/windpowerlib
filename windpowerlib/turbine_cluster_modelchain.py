@@ -26,9 +26,8 @@ class TurbineClusterModelChain(ModelChain):
         representing the wind turbine cluster.
     wake_losses_model : str or None
         Defines the method for taking wake losses within the farm into
-        consideration. Options: None, 'power_efficiency_curve' or
-        'constant_efficiency' or the name of a wind efficiency curve like
-        'dena_mean'. Default: 'dena_mean'.
+        consideration. Options: None, 'wind_farm_efficiency' or the name of a
+        wind efficiency curve like 'dena_mean'. Default: 'dena_mean'.
         Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
         wind efficiency curves.
     smoothing : bool
@@ -84,9 +83,8 @@ class TurbineClusterModelChain(ModelChain):
         representing the wind turbine cluster.
     wake_losses_model : str or None
         Defines the method for taking wake losses within the farm into
-        consideration. Options: None, 'power_efficiency_curve' or
-        'constant_efficiency' or the name of a wind efficiency curve like
-        'dena_mean'. Default: 'dena_mean'.
+        consideration. Options: None, 'wind_farm_efficiency' or the name of a
+        wind efficiency curve like 'dena_mean'. Default: 'dena_mean'.
         Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
         wind efficiency curves.
     smoothing : bool
@@ -163,19 +161,16 @@ class TurbineClusterModelChain(ModelChain):
 
         Parameters
         ----------
-        weather_df : pandas.DataFrame
-            DataFrame with time series for wind speed `wind_speed` in m/s, and
-            roughness length `roughness_length` in m, as well as optionally
-            temperature `temperature` in K, pressure `pressure` in Pa,
-            density `density` in kg/m³ and turbulence intensity
-            `turbulence_intensity` depending on `power_output_model`,
-            `density_model` and `standard_deviation_model` chosen.
-            The columns of the DataFrame are a MultiIndex where the first level
-            contains the variable name (e.g. wind_speed) and the second level
-            contains the height at which it applies (e.g. 10, if it was
-            measured at a height of 10 m).  See documentation of
-            :func:`TurbineClusterModelChain.run_model` for an example on how
-            to create the weather_df DataFrame.
+        weather_df : :pandas:`pandas.DataFrame<frame>`
+            DataFrame with weather data time series. If power curve smoothing
+            :py:attr:`~smoothing` is True and chosen method for calculating the
+            standard deviation :py:attr:`~standard_deviation_method` is
+            `turbulence_intensity` the weather dataframe needs to either
+            contain the turbulence intensity in column 'turbulence_intensity'
+            or the roughness length in m in column 'roughness_length'. The
+            turbulence intensity should be provided at hub height or at least
+            at a height close to the hub height, as it cannot be inter- or
+            extrapolated.
 
         Returns
         -------
@@ -187,9 +182,12 @@ class TurbineClusterModelChain(ModelChain):
             weather_df['turbulence_intensity'].values.mean() if
             'turbulence_intensity' in
             weather_df.columns.get_level_values(0) else None)
+        roughness_length = (
+            weather_df['roughness_length'].values.mean() if
+            'roughness_length' in weather_df.columns.get_level_values(0) else
+            None)
         # Assign power curve
-        if (self.wake_losses_model == 'power_efficiency_curve' or
-                self.wake_losses_model == 'constant_efficiency' or
+        if (self.wake_losses_model == 'wind_farm_efficiency' or
                 self.wake_losses_model is None):
             wake_losses_model_to_power_curve = self.wake_losses_model
             if self.wake_losses_model is None:
@@ -206,10 +204,10 @@ class TurbineClusterModelChain(ModelChain):
             smoothing=self.smoothing, block_width=self.block_width,
             standard_deviation_method=self.standard_deviation_method,
             smoothing_order=self.smoothing_order,
-            roughness_length=weather_df['roughness_length'][0].mean(),
+            roughness_length=roughness_length,
             turbulence_intensity=turbulence_intensity)
         # Further logging messages
-        if self.smoothing is None:
+        if self.smoothing is False:
             logging.debug('Aggregated power curve not smoothed.')
         else:
             logging.debug('Aggregated power curve smoothed by method: ' +
@@ -223,7 +221,7 @@ class TurbineClusterModelChain(ModelChain):
 
         Parameters
         ----------
-        weather_df : pandas.DataFrame
+        weather_df : :pandas:`pandas.DataFrame<frame>`
             DataFrame with time series for wind speed `wind_speed` in m/s, and
             roughness length `roughness_length` in m, as well as optionally
             temperature `temperature` in K, pressure `pressure` in Pa,
@@ -267,8 +265,7 @@ class TurbineClusterModelChain(ModelChain):
         density_hub = (None if (self.power_output_model == 'power_curve' and
                                 self.density_correction is False)
                        else self.density_hub(weather_df))
-        if (self.wake_losses_model != 'power_efficiency_curve' and
-                self.wake_losses_model != 'constant_efficiency' and
+        if (self.wake_losses_model != 'wind_farm_efficiency' and
                 self.wake_losses_model is not None):
             # Reduce wind speed with wind efficiency curve
             wind_speed_hub = wake_losses.reduce_wind_speed(

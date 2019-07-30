@@ -10,10 +10,10 @@ __license__ = "GPLv3"
 
 import pandas as pd
 import logging
-import sys
+import warnings
 import requests
 import os
-import warnings
+from windpowerlib.tools import WindpowerlibUserWarning
 
 
 class WindTurbine(object):
@@ -22,345 +22,269 @@ class WindTurbine(object):
 
     Parameters
     ----------
-    name : string
-        Name of the wind turbine type.
-        Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
-        for which power (coefficient) curve data is provided.
     hub_height : float
         Hub height of the wind turbine in m.
-    rotor_diameter : None or float
-        Diameter of the rotor in m. Default: None.
-    power_coefficient_curve : None, pandas.DataFrame or dictionary
-        Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'value' columns/keys with wind speeds
-        in m/s and the corresponding power coefficients. Default: None.
-    power_curve : None, pandas.DataFrame or dictionary
-        Power curve of the wind turbine. DataFrame/dictionary must have
-        'wind_speed' and 'value' columns/keys with wind speeds in m/s and the
-        corresponding power curve value in W. Default: None.
-    nominal_power : None or float
-        The nominal output of the wind turbine in W. Default: None.
-    fetch_curve : string
-        Parameter to specify whether a power or power coefficient curve
-        should be retrieved from the provided turbine data. Valid options are
-        'power_curve' and 'power_coefficient_curve'. Default: None.
-    coordinates : list or None
-        List of coordinates [lat, lon] of location for loading data.
+    power_curve : :pandas:`pandas.DataFrame<frame>` or dict (optional)
+        If provided directly sets the power curve. DataFrame/dictionary must
+        have 'wind_speed' and 'value' columns/keys with wind speeds in m/s and
+        the corresponding power curve value in W. If not set the value is
+        retrieved from 'power_curve.csv' file in `path`. In that case a
+        `turbine_type` is needed. Default: None.
+    power_coefficient_curve : :pandas:`pandas.DataFrame<frame>` or dict (optional)
+        If provided directly sets the power coefficient curve.
+        DataFrame/dictionary must have 'wind_speed' and 'value' columns/keys
+        with wind speeds in m/s and the corresponding power coefficient curve
+        value. If not set the value is retrieved from
+        'power_coefficient_curve.csv' file in `path`. In that case a
+        `turbine_type` is needed. Default: None.
+    turbine_type : str (optional)
+        Name of the wind turbine type. Must be provided if power (coefficient)
+        curve, nominal power or rotor diameter is retrieved from self-provided
+        or oedb turbine library csv files. If turbine_type is None it is not
+        possible to retrieve turbine data from file.
+        Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
+        for which power (coefficient) curve data and other turbine data is
+        provided in the oedb turbine library.
         Default: None.
-    data_source : string
-        Specifies whether turbine data (f.e. nominal power, power curve, power
-        coefficient curve) is loaded from the OpenEnergy Database ('oedb') or
-        from a csv file ('<path including file name>'). Default: 'oedb'.
-        See `example_power_curves.csv' and
-        `example_power_coefficient_curves.csv` in example/data for the required
-        form of a csv file (more columns can be added).
+    rotor_diameter : float (optional)
+        Diameter of the rotor in m. If not set the value is
+        retrieved from 'turbine_data.csv' file in `path`. In that case a
+        `turbine_type` is needed.
+        The rotor diameter only needs to be set if power output
+        is calculated using the power coefficient curve. Default: None.
+    nominal_power : float (optional)
+        The nominal power of the wind turbine in W. If not set the value is
+        retrieved from 'turbine_data.csv' file in `path`. In that case a
+        `turbine_type` is needed. Default: None.
+    path : str (optional)
+        Directory where the turbine database files are located. The files need
+        to be named 'power_coefficient_curve.csv', 'power_curve.csv', and
+        'turbine_data.csv'. By default the oedb turbine library files are used.
+        Set path to `None` to ignore turbine data from files. Default: 'oedb'.
 
     Attributes
     ----------
-    name : string
-        Name of the wind turbine type.
-        Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
-        for which power (coefficient) curve data is provided.
+    turbine_type : str
+        Name of the wind turbine.
     hub_height : float
         Hub height of the wind turbine in m.
     rotor_diameter : None or float
         Diameter of the rotor in m. Default: None.
     power_coefficient_curve : None, pandas.DataFrame or dictionary
-        Power coefficient curve of the wind turbine. DataFrame/dictionary must
-        have 'wind_speed' and 'value' columns/keys with wind speeds
+        Power coefficient curve of the wind turbine. DataFrame/dictionary
+        containing 'wind_speed' and 'value' columns/keys with wind speeds
         in m/s and the corresponding power coefficients. Default: None.
     power_curve : None, pandas.DataFrame or dictionary
-        Power curve of the wind turbine. DataFrame/dictionary must have
+        Power curve of the wind turbine. DataFrame/dictionary containing
         'wind_speed' and 'value' columns/keys with wind speeds in m/s and the
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
         The nominal output of the wind turbine in W. Default: None.
-    coordinates : list or None
-        List of coordinates [lat, lon] of location for loading data.
-        Default: None.
-    power_output : pandas.Series
-        The calculated power output of the wind turbine. Default: None.
-
+   
     Notes
     ------
-    Your wind turbine object should have a power coefficient or power curve.
-    You can set the `fetch_curve` parameter and the `data_source` parameter if
-    you want to automatically fetch a curve from a data set provided in the
-    OpenEnergy Database (oedb) or want to read a csv file that you provide.
-    See `example_power_curves.csv' and `example_power_coefficient_curves.csv`
-    in example/data for the required form of such a csv file (more columns can
-    be added).
+    Your wind turbine object needs to have a power coefficient or power curve.
+    By default they are fetched from the oedb turbine library that is provided
+    along with the windpowerlib. In that case `turbine_type` must be specified.
+    You can also set the curves directly or provide your own csv files with
+    power coefficient and power curves. See `example_power_curves.csv',
+    `example_power_coefficient_curves.csv` and `example_turbine_data.csv`
+    in example/data for the required format of such csv files.
 
     Examples
     --------
-    >>> from windpowerlib import wind_turbine
+    >>> import os
+    >>> from windpowerlib import WindTurbine
     >>> enerconE126 = {
     ...    'hub_height': 135,
-    ...    'rotor_diameter': 127,
-    ...    'name': 'E-126/4200',
-    ...    'fetch_curve': 'power_curve',
-    ...    'data_source': 'oedb'}
-    >>> e126 = wind_turbine.WindTurbine(**enerconE126)
+    ...    'turbine_type': 'E-126/4200'}
+    >>> e126 = WindTurbine(**enerconE126)
     >>> print(e126.nominal_power)
     4200000.0
+    >>> # Example with own path
+    >>> path = os.path.join(os.path.dirname(__file__), '../example/data')
+    >>> example_turbine = {
+    ...    'hub_height': 100,
+    ...    'rotor_diameter': 70,
+    ...    'turbine_type': 'DUMMY 3',
+    ...    'path' : path}
+    >>> e_t_1 = WindTurbine(**example_turbine)
+    >>> print(e_t_1.power_curve['value'][7])
+    18000.0
+    >>> print(e_t_1.nominal_power)
+    1500000.0
 
     """
 
-    def __init__(self, name, hub_height, rotor_diameter=None,
-                 power_coefficient_curve=None, power_curve=None,
-                 nominal_power=None, fetch_curve=None, coordinates=None,
-                 data_source='oedb', **kwargs):
+    def __init__(self, hub_height, nominal_power=None, path='oedb',
+                 power_curve=None, power_coefficient_curve=None,
+                 rotor_diameter=None, turbine_type=None, **kwargs):
 
-        warnings.warn(
-            "Parameters name, data_source and fetch_curve are deprecated. "
-            "The parameter name will be renamed to turbine_type. "
-            "Data source and fetching will be defined by the parameters "
-            "power_coefficient_curve, power_curve and nominal_power in the "
-            "future.", FutureWarning)
-        if coordinates is not None:
-            warnings.warn(
-                "Parameter coordinates is deprecated. In the future the "
-                "parameter can only be set after instantiation of WindTurbine "
-                "object.", FutureWarning)
-        self.name = name
         self.hub_height = hub_height
+        self.turbine_type = turbine_type
         self.rotor_diameter = rotor_diameter
-        self.power_coefficient_curve = power_coefficient_curve
-        self.power_curve = power_curve
         self.nominal_power = nominal_power
-        self.coordinates = coordinates
+        self.power_curve = power_curve
+        self.power_coefficient_curve = power_coefficient_curve
 
-        self.power_output = None
+        if path == 'oedb':
+            path = os.path.join(os.path.dirname(__file__), 'oedb')
 
-        if self.power_coefficient_curve is None and self.power_curve is None:
-            self.fetch_turbine_data(fetch_curve, data_source)
+        if turbine_type is not None and path is not None:
+            if power_curve is None:
+                try:
+                    fn = os.path.join(path, 'power_curves.csv')
+                    self.power_curve = get_turbine_data_from_file(
+                        self.turbine_type, fn)
+                except KeyError:
+                    msg = "No power curve found for {0}"
+                    logging.debug(msg.format(self.turbine_type))
+            if power_coefficient_curve is None:
+                try:
+                    fn = os.path.join(path, 'power_coefficient_curves.csv')
+                    self.power_coefficient_curve = get_turbine_data_from_file(
+                        self.turbine_type, fn)
+                except KeyError:
+                    msg = "No power coefficient curve found for {0}"
+                    logging.debug(msg.format(self.turbine_type))
 
-    def fetch_turbine_data(self, fetch_curve, data_source):
-        r"""
-        Fetches data of the requested wind turbine.
+            if nominal_power is None or (
+                    rotor_diameter is None and
+                    self.power_coefficient_curve is not None):
+                turbine_data = None
+                try:
+                    fn = os.path.join(path, 'turbine_data.csv')
+                    turbine_data = get_turbine_data_from_file(
+                        self.turbine_type, fn)
+                except KeyError:
+                    msg = "No turbine data found for {0}"
+                    logging.debug(msg.format(self.turbine_type))
 
-        Method fetches nominal power as well as power coefficient curve or
-        power curve from a data set provided in the OpenEnergy Database
-        (oedb). You can also import your own power (coefficient) curves from a
-        file. For that the wind speeds in m/s have to be in the first row and
-        the corresponding power coefficient curve values or power curve values
-        in W in a row where the first column contains the turbine name.
-        See `example_power_curves.csv' and
-        `example_power_coefficient_curves.csv` in example/data for the required
-        form of a csv file (more columns can be added). See
-        :py:func:`~.get_turbine_data_from_file` for an example reading data
-        from a csv file.
+                if self.nominal_power is None and turbine_data is not None:
+                    self.nominal_power = float(turbine_data['nominal_power'])
+                if self.rotor_diameter is None and turbine_data is not None:
+                    self.rotor_diameter = float(turbine_data['rotor_diameter'])
 
-        Parameters
-        ----------
-        fetch_curve : string
-            Parameter to specify whether a power or power coefficient curve
-            should be retrieved from the provided turbine data. Valid options
-            are 'power_curve' and 'power_coefficient_curve'. Default: None.
-        data_source : string
-            Specifies whether turbine data (f.e. nominal power, power curve,
-            power coefficient curve) is loaded from the OpenEnergy Database
-            ('oedb') or from a csv file ('<path including file name>').
-            Default: 'oedb'.
+        if self.power_curve is None and self.power_coefficient_curve is None:
+            msg = ("The WindTurbine has been initialised without a power curve"
+                   " and without a power coefficient curve.\nYou will not be"
+                   " able to calculate the power output.\n"
+                   " Check if the turbine type {0} is in your database file"
+                   " or if you passed a valid curve.")
+            warnings.warn(msg.format(turbine_type), WindpowerlibUserWarning)
 
-        Returns
-        -------
-        self
-
-        Examples
-        --------
-        >>> from windpowerlib import wind_turbine
-        >>> enerconE126 = {
-        ...    'hub_height': 135,
-        ...    'rotor_diameter': 127,
-        ...    'name': 'E-126/4200',
-        ...    'fetch_curve': 'power_coefficient_curve',
-        ...    'data_source': 'oedb'}
-        >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-        >>> print(e126.power_coefficient_curve['value'][5])
-        0.44
-        >>> print(e126.nominal_power)
-        4200000.0
-
-        """
-        if fetch_curve not in ['power_curve', 'power_coefficient_curve']:
-            raise ValueError("'{0}' is an invalid value for ".format(
-                fetch_curve) + "`fetch_curve`. Must be " +
-                             "'power_curve' or 'power_coefficient_curve'.")
-        if data_source == 'oedb':
-            curve_df, nominal_power = get_turbine_data_from_oedb(
-                turbine_type=self.name, fetch_curve=fetch_curve)
+    def __repr__(self):
+        info = []
+        if self.nominal_power is not None:
+            info.append('nominal power={} W'.format(self.nominal_power))
+        if self.hub_height is not None:
+            info.append('hub height={} m'.format(self.hub_height))
+        if self.rotor_diameter is not None:
+            info.append('rotor diameter={} m'.format(self.rotor_diameter))
+        if self.power_coefficient_curve is not None:
+            info.append('power_coefficient_curve={}'.format('True'))
         else:
-            curve_df, nominal_power = get_turbine_data_from_file(
-                turbine_type=self.name, file_=data_source)
-        if fetch_curve == 'power_curve':
-            self.power_curve = curve_df
-        elif fetch_curve == 'power_coefficient_curve':
-            self.power_coefficient_curve = curve_df
-        if self.nominal_power is None:
-            self.nominal_power = nominal_power
-        return self
+            info.append('power_coefficient_curve={}'.format('False'))
+        if self.power_curve is not None:
+            info.append('power_curve={}'.format('True'))
+        else:
+            info.append('power_curve={}'.format('False'))
+
+        if self.turbine_type is not None:
+            turbine_repr = 'Wind turbine: {name} {info}'.format(
+                name=self.turbine_type, info=info)
+        else:
+            turbine_repr = 'Wind turbine: {info}'.format(info=info)
+
+        return turbine_repr
 
 
-def get_turbine_data_from_file(turbine_type, file_):
+def get_turbine_data_from_file(turbine_type, path):
     r"""
-    Fetches power (coefficient) curve data from a csv file.
+    Fetches turbine data from a csv file.
 
-    See `example_power_curves.csv' and `example_power_coefficient_curves.csv`
-    in example/data for the required format of a csv file. The self-provided
-    csv file may contain more columns than the example files. Only columns
-    containing wind speed and the corresponding power or power coefficient as
-    well as the column 'nominal_power' are taken into account.
+    See `example_power_curves.csv', `example_power_coefficient_curves.csv` and
+    `example_turbine_data.csv` in example/data for the required format of
+    a csv file. Make sure to provide wind speeds in m/s and power in W or
+    convert units after loading the data.
 
     Parameters
     ----------
     turbine_type : str
         Specifies the turbine type data is fetched for.
-    file_ : str
+    path : str
         Specifies the source of the turbine data.
         See the example below for how to use the example data.
 
     Returns
     -------
-    tuple(pandas.DataFrame, float)
-        Power curve or power coefficient curve (pandas.DataFrame) and nominal
-        power (float). Power (coefficient) curve DataFrame contains power
-        coefficient curve values (dimensionless) or power curve values in W
-        as column names with the corresponding wind speeds in m/s.
+    :pandas:`pandas.DataFrame<frame>` or float
+        Power curve or power coefficient curve (pandas.DataFrame) or nominal
+        power (float) of one wind turbine type. Power (coefficient) curve
+        DataFrame contains power coefficient curve values (dimensionless) or
+        power curve values (in dimension given in file) with the corresponding
+        wind speeds (in dimension given in file).
 
     Examples
     --------
     >>> from windpowerlib import wind_turbine
     >>> import os
-    >>> source = os.path.join(os.path.dirname(__file__), '../example/data',
-    ...                       'example_power_curves.csv')
-    >>> example_turbine = {
-    ...    'hub_height': 100,
-    ...    'rotor_diameter': 70,
-    ...    'name': 'DUMMY 3',
-    ...    'fetch_curve': 'power_curve',
-    ...    'data_source': source}
-    >>> e_t_1 = wind_turbine.WindTurbine(**example_turbine)
-    >>> print(e_t_1.power_curve['value'][7])
+    >>> path = os.path.join(os.path.dirname(__file__), '../example/data',
+    ...     'power_curves.csv')
+    >>> d3 = get_turbine_data_from_file('DUMMY 3', path)
+    >>> print(d3['value'][7])
     18000.0
-    >>> print(e_t_1.nominal_power)
-    150000
-
+    >>> print(d3['value'].max())
+    1500000.0
     """
-    def isfloat(x):
-        try:
-            float(x)
-            return x
-        except ValueError:
-            return False
 
     try:
-        df = pd.read_csv(file_, index_col=0)
+        df = pd.read_csv(path, index_col=0)
     except FileNotFoundError:
-        raise FileNotFoundError("The file '{}' was not found.".format(file_))
-    # note: this try except statement will be removed in 0.2.0 and only
-    # the exception will stay. The example power (coefficient) curve files
-    # will then be adapted
-    try:
-        wpp_df = df[df['turbine_id'] == turbine_type]
-    except KeyError:
-        wpp_df = df[df.index == turbine_type]
+        raise FileNotFoundError("The file '{}' was not found.".format(path))
+    wpp_df = df[df.index == turbine_type].copy()
     # if turbine not in data file
     if wpp_df.shape[0] == 0:
-        pd.set_option('display.max_rows', len(df))
-        logging.info('Possible types: \n{0}'.format(df['turbine_id']))
-        pd.reset_option('display.max_rows')
-        sys.exit('Cannot find the wind converter type: {0}'.format(
-            turbine_type))
-    # if turbine in data file select power (coefficient) curve columns and
-    # drop nans
-    cols = [_ for _ in wpp_df.columns if isfloat(_)]
-    curve_data = wpp_df[cols].dropna(axis=1)
-    df = curve_data.transpose().reset_index()
-    df.columns = ['wind_speed', 'value']
-    df['wind_speed'] = df['wind_speed'].apply(lambda x: float(x))
-    # note: this try except statement will be removed in 0.2.0 and only
-    # the exception will stay. The example power (coefficient) curve files
-    # will then be adapted
-    try:
-        nominal_power = wpp_df['p_nom'].iloc[0]
-    except KeyError:
-        nominal_power = float(wpp_df['nominal_power'].iloc[0])
-    return df, nominal_power
+        msg = "Wind converter type {0} not provided. Possible types: {1}"
+        raise KeyError(msg.format(turbine_type, list(df.index)))
+    # if turbine in data file
+    # get nominal power or power (coefficient) curve
+    if 'turbine_data' in path:
+        return wpp_df
+    else:
+        wpp_df.dropna(axis=1, inplace=True)
+        wpp_df = wpp_df.transpose().reset_index()
+        wpp_df.columns = ['wind_speed', 'value']
+        # transform wind speeds to floats
+        wpp_df['wind_speed'] = wpp_df['wind_speed'].apply(lambda x: float(x))
+        return wpp_df
 
 
-def get_turbine_data_from_oedb(turbine_type, fetch_curve, overwrite=False):
+def load_turbine_data_from_oedb(schema='supply', table='turbine_library'):
     r"""
-    Fetches wind turbine data from the OpenEnergy database (oedb).
+    Loads turbine library from the OpenEnergy database (oedb).
 
-    If turbine data exists in local repository it is loaded from this file. The
-    file is created when turbine data is loaded from oedb in
-    :py:func:`~.load_turbine_data_from_oedb`. Use this function with
-    `overwrite=True` to overwrite your file with newly fetched data.
+    Turbine data is saved to csv files ('oedb_power_curves.csv',
+    'oedb_power_coefficient_curves.csv' and 'oedb_nominal_power') for offline
+    usage of the windpowerlib. If the files already exist they are overwritten.
 
     Parameters
     ----------
-    turbine_type : str
-        Specifies the turbine type data is fetched for.
-        Use :py:func:`~.get_turbine_types` to see a table of all wind turbines
-        in oedb containing information about whether power (coefficient) curve
-        data is provided.
-    fetch_curve : str
-        Parameter to specify whether a power or power coefficient curve
-        should be retrieved from the provided turbine data. Valid options are
-        'power_curve' and 'power_coefficient_curve'. Default: None.
-    overwrite : bool
-        If True local file is overwritten by newly fetched data from oedb, if
-        False turbine data is fetched from previously saved file.
+    schema : str
+        Database schema of the turbine library.
+    table : str
+        Table name of the turbine library.
 
     Returns
     -------
-    tuple(pandas.DataFrame, float)
-        Power curve or power coefficient curve (pandas.DataFrame) and nominal
-        power (float) of one wind turbine type. Power (coefficient) curve
-        DataFrame contains power coefficient curve values (dimensionless) or
-        power curve values in W with the corresponding wind speeds in m/s.
-
-    """
-    filename = os.path.join(os.path.dirname(__file__), 'data',
-                            'oedb_{}s.csv'.format(fetch_curve))
-    if not os.path.isfile(filename) or overwrite:
-        # Load data from oedb and save to csv file
-        load_turbine_data_from_oedb()
-    else:
-        logging.debug("Turbine data is fetched from {}".format(filename))
-
-    df, nominal_power = get_turbine_data_from_file(turbine_type=turbine_type,
-                                                   file_=filename)
-
-    # nominal power and power curve values in W
-    nominal_power = nominal_power * 1000
-    if fetch_curve == 'power_curve':
-        # power in W
-        df['value'] = df['value'] * 1000
-    return df, nominal_power
-
-
-def load_turbine_data_from_oedb():
-    r"""
-    Loads turbine data from the OpenEnergy database (oedb).
-
-    Turbine data is saved to csv files ('oedb_power_curves.csv' and
-    'oedb_power_coefficient_curves.csv') for offline usage of windpowerlib.
-    If the files already exist they are overwritten.
-
-    Returns
-    -------
-    pd.DataFrame
-        Contains turbine data of different turbines such as 'manufacturer',
+    :pandas:`pandas.DataFrame<frame>`
+        Turbine data of different turbines such as 'manufacturer',
         'turbine_type', 'nominal_power'.
 
     """
     # url of OpenEnergy Platform that contains the oedb
     oep_url = 'http://oep.iks.cs.ovgu.de/'
-    # location of data
-    schema = 'supply'
-    table = 'turbine_library'
+
     # load data
     result = requests.get(
         oep_url + '/api/v0/schema/{}/tables/{}/rows/?'.format(
@@ -371,8 +295,8 @@ def load_turbine_data_from_oedb():
     # extract data to dataframe
     turbine_data = pd.DataFrame(result.json())
     # standard file name for saving data
-    filename = os.path.join(os.path.dirname(__file__), 'data',
-                            'oedb_{}.csv')
+    filename = os.path.join(os.path.dirname(__file__), 'oedb',
+                            '{}.csv')
     # get all power (coefficient) curves and save to file
     # for curve_type in ['power_curve', 'power_coefficient_curve']:
     for curve_type in ['power_curve', 'power_coefficient_curve']:
@@ -390,29 +314,43 @@ def load_turbine_data_from_oedb():
                 curves_df = pd.merge(left=curves_df, right=df, how='outer',
                                      on='wind_speed')
         curves_df = curves_df.set_index('wind_speed').sort_index().transpose()
-        curves_df['turbine_type'] = curves_df.index
-        # add nominal power to power (coefficient) data frame
-        curves_df = pd.merge(
-            left=curves_df, right=turbine_data[['turbine_type',
-                                                'installed_capacity']],
-            on='turbine_type').set_index('turbine_type').rename(
-                columns={'installed_capacity': 'nominal_power'})
+        # power curve values in W
+        if curve_type == 'power_curve':
+            curves_df *= 1000
+        curves_df.index.name = 'turbine_type'
         curves_df.to_csv(filename.format('{}s'.format(curve_type)))
 
+    # get turbine data and save to file (excl. curves)
+    turbine_data_df = turbine_data.drop(
+        ['power_curve_wind_speeds', 'power_curve_values',
+         'power_coefficient_curve_wind_speeds',
+         'power_coefficient_curve_values',
+         'thrust_coefficient_curve_wind_speeds',
+         'thrust_coefficient_curve_values'], axis=1).set_index('turbine_type')
+    # nominal power in W
+    turbine_data_df['nominal_power'] = turbine_data_df[
+                                           'nominal_power'] * 1000
+    turbine_data_df.to_csv(filename.format('turbine_data'))
     return turbine_data
 
 
-def get_turbine_types(print_out=True, filter_=True):
+def get_turbine_types(turbine_library='local', print_out=True, filter_=True):
     r"""
-    Get all wind turbine types provided in the OpenEnergy database (oedb).
+    Get all provided wind turbine types provided.
 
+    Choose by `turbine_library` whether to get wind turbine types provided by
+    the OpenEnergy Database ('oedb') or wind turbine types provided in your
+    local file(s) ('local').
     By default only turbine types for which a power coefficient curve or power
     curve is provided are returned. Set `filter_=False` to see all turbine
-    types for which any data (f.e. hub height, rotor diameter, ...) is
+    types for which any data (e.g. hub height, rotor diameter, ...) is
     provided.
 
     Parameters
     ----------
+    turbine_library : str
+        Specifies if the oedb turbine library ('oedb') or your local turbine
+        data file ('local') is evaluated. Default: 'local'.
     print_out : bool
         Directly prints a tabular containing the turbine types in column
         'turbine_type', the manufacturer in column 'manufacturer' and
@@ -421,12 +359,12 @@ def get_turbine_types(print_out=True, filter_=True):
         Default: True.
     filter_ : bool
         If True only turbine types for which a power coefficient curve or
-        power curve is provided in the OpenEnergy database (oedb) are
+        power curve is provided in the oedb turbine library are
         returned. Default: True.
 
     Returns
     -------
-    pd.DataFrame
+    :pandas:`pandas.DataFrame<frame>`
         Contains turbine types in column 'turbine_type', the manufacturer in
         column 'manufacturer' and information about whether a power
         (coefficient) curve exists (True) or not (False) in columns
@@ -458,7 +396,15 @@ def get_turbine_types(print_out=True, filter_=True):
     Name: 1, dtype: object
 
     """
-    df = load_turbine_data_from_oedb()
+    if turbine_library == 'local':
+        filename = os.path.join(os.path.dirname(__file__), 'oedb',
+                                'turbine_data.csv')
+        df = pd.read_csv(filename, index_col=0).reset_index()
+    elif turbine_library == 'oedb':
+        df = load_turbine_data_from_oedb()
+    else:
+        raise ValueError("`turbine_library` is '{}' ".format(turbine_library) +
+                         "but must be 'local' or 'oedb'.")
     if filter_:
         cp_curves_df = df.loc[df['has_cp_curve']][
             ['manufacturer', 'turbine_type', 'has_cp_curve']]

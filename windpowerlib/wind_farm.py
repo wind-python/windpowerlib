@@ -11,7 +11,7 @@ __license__ = "GPLv3"
 from windpowerlib import tools, power_curves
 import numpy as np
 import pandas as pd
-import warnings
+import logging
 
 
 class WindFarm(object):
@@ -20,51 +20,42 @@ class WindFarm(object):
 
     Parameters
     ----------
-    name : str or None
-        Name of the wind farm.
     wind_turbine_fleet : list(dict)
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
         (contains a :class:`~.wind_turbine.WindTurbine` object) and
         'number_of_turbines' (number of wind turbines of the same turbine type
         in the wind farm) as keys.
-    coordinates : list(float) or None (optional)
-        List with coordinates [lat, lon] of location. Default: None.
     efficiency : float or :pandas:`pandas.DataFrame<frame>` or None (optional)
         Efficiency of the wind farm. Provide as either constant (float) or
         power efficiency curve (pd.DataFrame) containing 'wind_speed' and
         'efficiency' columns with wind speeds in m/s and the corresponding
         dimensionless wind farm efficiency. Default: None.
+    name : str (optional)
+        Can be used as an identifier of the wind farm. Default: ''.
 
     Attributes
     ----------
-    name : str or None
-        Name of the wind farm.
     wind_turbine_fleet : list(dict)
         Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
         (contains a :class:`~.wind_turbine.WindTurbine` object) and
         'number_of_turbines' (number of wind turbines of the same turbine type
         in the wind farm) as keys.
-    coordinates : list(float) or None
-        List with coordinates [lat, lon] of location. Default: None.
     efficiency : float or :pandas:`pandas.DataFrame<frame>` or None
         Efficiency of the wind farm. Either constant (float) power efficiency
         curve (pd.DataFrame) containing 'wind_speed' and 'efficiency'
         columns with wind speeds in m/s and the corresponding
         dimensionless wind farm efficiency. Default: None.
+    name : str
+        If set this is used as an identifier of the wind farm.
     hub_height : float
         The calculated mean hub height of the wind farm. See
         :py:func:`mean_hub_height` for more information.
     nominal_power : float
         The nominal power is the sum of the nominal power of all turbines in
         the wind farm in W.
-    installed_power : float
-        Installed nominal power of the wind farm in W. Deprecated! Use
-        :attr:`~.wind_farm.WindFarm.nominal_power` instead.
     power_curve : :pandas:`pandas.DataFrame<frame>` or None
         The calculated power curve of the wind farm. See
         :py:func:`assign_power_curve` for more information.
-    power_output : :pandas:`pandas.Series<series>`
-        The calculated power output of the wind farm.
 
     Examples
     --------
@@ -73,9 +64,7 @@ class WindFarm(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'name': 'E-126/4200',
-    ...    'fetch_curve': 'power_curve',
-    ...    'data_source': 'oedb'}
+    ...    'turbine_type': 'E-126/4200'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> example_farm_data = {
     ...    'name': 'example_farm',
@@ -87,40 +76,28 @@ class WindFarm(object):
 
     """
 
-    def __init__(self, name, wind_turbine_fleet, coordinates=None,
-                 efficiency=None, **kwargs):
+    def __init__(self, wind_turbine_fleet, efficiency=None, name='', **kwargs):
 
-        if coordinates is not None:
-            warnings.warn(
-                "Parameter coordinates is deprecated. In the future the "
-                "parameter can only be set after instantiation of WindFarm "
-                "object.", FutureWarning)
-
-        self.name = name
         self.wind_turbine_fleet = wind_turbine_fleet
-        self.coordinates = coordinates
         self.efficiency = efficiency
+        self.name = name
 
         self.hub_height = None
         self._nominal_power = None
-        self._installed_power = None
         self.power_curve = None
-        self.power_output = None
 
-    @property
-    def installed_power(self):
-        r"""
-        The installed nominal power of the wind farm. (Deprecated!)
+    def __repr__(self):
 
-        """
-        warnings.warn(
-            'installed_power is deprecated, use nominal_power instead.',
-            FutureWarning)
-        return self.nominal_power
-
-    @installed_power.setter
-    def installed_power(self, installed_power):
-        self._installed_power = installed_power
+        if self.name is not '':
+            repr = 'Wind farm: {name}'.format(name=self.name)
+        else:
+            info = []
+            for turbine_dict in self.wind_turbine_fleet:
+                info.append(r"{number}x {type}".format(
+                    number=turbine_dict['number_of_turbines'],
+                    type=turbine_dict['wind_turbine']))
+            repr = r'Wind farm with: {info}'.format(info=info)
+        return repr
 
     @property
     def nominal_power(self):
@@ -208,7 +185,7 @@ class WindFarm(object):
             wind_dict['number_of_turbines']
             for wind_dict in self.wind_turbine_fleet)
 
-    def assign_power_curve(self, wake_losses_model='power_efficiency_curve',
+    def assign_power_curve(self, wake_losses_model='wind_farm_efficiency',
                            smoothing=False, block_width=0.5,
                            standard_deviation_method='turbulence_intensity',
                            smoothing_order='wind_farm_power_curves',
@@ -228,8 +205,8 @@ class WindFarm(object):
         ----------
         wake_losses_model : str
             Defines the method for taking wake losses within the farm into
-            consideration. Options: 'power_efficiency_curve',
-            'constant_efficiency' or None. Default: 'power_efficiency_curve'.
+            consideration. Options: 'wind_farm_efficiency' or None.
+            Default: 'wind_farm_efficiency'.
         smoothing : bool
             If True the power curves will be smoothed before or after the
             aggregation of power curves depending on `smoothing_order`.
@@ -266,19 +243,17 @@ class WindFarm(object):
             if item['wind_turbine'].power_curve is None:
                 raise ValueError("For an aggregated wind farm power curve " +
                                  "each wind turbine needs a power curve " +
-                                 "but `power_curve` of wind turbine " +
-                                 "{} is {}.".format(
-                                     item['wind_turbine'].name if
-                                     item['wind_turbine'].name else '',
-                                     item['wind_turbine'].power_curve))
+                                 "but `power_curve` of '{}' is None.".format(
+                                     item['wind_turbine']))
         # Initialize data frame for power curve values
         df = pd.DataFrame()
         for turbine_type_dict in self.wind_turbine_fleet:
-            # Check if all needed parameters are available and/or assign them
+            # Check if needed parameters are available and/or assign them
             if smoothing:
                 if (standard_deviation_method == 'turbulence_intensity' and
                         turbulence_intensity is None):
-                    if 'roughness_length' in kwargs:
+                    if 'roughness_length' in kwargs and \
+                            kwargs['roughness_length'] is not None:
                         # Calculate turbulence intensity and write to kwargs
                         turbulence_intensity = (
                             tools.estimate_turbulence_intensity(
@@ -291,14 +266,6 @@ class WindFarm(object):
                             "'turbulence_intensity' as " +
                             "`standard_deviation_method` if " +
                             "`turbulence_intensity` is not given")
-            if wake_losses_model is not None:
-                if self.efficiency is None:
-                    raise KeyError(
-                        "`efficiency` is needed if " +
-                        "`wake_losses_model´ is '{0}', but ".format(
-                            wake_losses_model) +
-                        "`efficiency` of wind farm {0} is {1}.".format(
-                            self.name if self.name else '', self.efficiency))
             # Get original power curve
             power_curve = pd.DataFrame(
                 turbine_type_dict['wind_turbine'].power_curve)
@@ -315,13 +282,14 @@ class WindFarm(object):
                     power_curve = pd.concat(
                         [pd.DataFrame(data={
                             'value': [0.0], 'wind_speed': [0.0]}),
-                         power_curve])
+                         power_curve], sort=True)
                 if power_curve.iloc[-1]['value'] != 0.0:
                     power_curve = pd.concat(
                         [power_curve, pd.DataFrame(data={
                             'value': [0.0], 'wind_speed': [
                                 power_curve['wind_speed'].loc[
-                                    power_curve.index[-1]] + 0.5]})])
+                                    power_curve.index[-1]] + 0.5]})],
+                        sort=True)
             # Add power curves of all turbine types to data frame
             # (multiplied by turbine amount)
             df = pd.concat(
@@ -340,13 +308,16 @@ class WindFarm(object):
                 wind_farm_power_curve['value'],
                 standard_deviation_method=standard_deviation_method,
                 block_width=block_width, **kwargs)
-        if (wake_losses_model == 'constant_efficiency' or
-                wake_losses_model == 'power_efficiency_curve'):
-            wind_farm_power_curve = (
-                power_curves.wake_losses_to_power_curve(
-                    wind_farm_power_curve['wind_speed'].values,
-                    wind_farm_power_curve['value'].values,
-                    wake_losses_model=wake_losses_model,
-                    wind_farm_efficiency=self.efficiency))
+        if wake_losses_model == 'wind_farm_efficiency':
+            if self.efficiency is not None:
+                wind_farm_power_curve = (
+                    power_curves.wake_losses_to_power_curve(
+                        wind_farm_power_curve['wind_speed'].values,
+                        wind_farm_power_curve['value'].values,
+                        wind_farm_efficiency=self.efficiency))
+            else:
+                logging.info("`wake_losses_model` is {} but wind farm ".format(
+                    wake_losses_model) + "efficiency is NOT taken into "
+                                         "account as it is None.")
         self.power_curve = wind_farm_power_curve
         return self

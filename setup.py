@@ -15,10 +15,12 @@ setup(name='windpowerlib',
       license=None,
       packages=['windpowerlib'],
       package_data={
-          'windpowerlib': [os.path.join('data', '*.csv')]},
+          'windpowerlib': [os.path.join('data', '*.csv'),
+                           os.path.join('oedb', '*.csv')]},
       long_description=read('README.rst'),
       zip_safe=False,
       install_requires=['pandas >= 0.19.1, < 0.25',
                         'requests < 3.0'],
       extras_require={
-          'dev': ['pytest', 'jupyter', 'sphinx_rtd_theme', 'nbformat']})
+          'dev': ['pytest', 'jupyter', 'sphinx_rtd_theme', 'nbformat',
+                  'numpy']})

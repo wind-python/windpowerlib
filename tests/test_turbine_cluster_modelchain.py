@@ -1,3 +1,4 @@
+import pytest
 import pandas as pd
 import numpy as np
 from pandas.util.testing import assert_series_equal
@@ -35,14 +36,13 @@ class TestTurbineClusterModelChain:
                          np.array([2, 10, 0, 8, 10, 0])])
         self.test_turbine = {'hub_height': 100,
                              'rotor_diameter': 80,
-                             'name': 'E-126/4200',
-                             'fetch_curve': 'power_curve'}
+                             'turbine_type': 'E-126/4200'}
         self.test_turbine_2 = {'hub_height': 90,
                                'rotor_diameter': 60,
-                               'name': 'V90/2000',
-                               'fetch_curve': 'power_curve'}
-        self.test_farm = {'name': 'test farm',
-                          'wind_turbine_fleet': [
+                               'turbine_type': 'V90/2000',
+                               'nominal_power': 2000000.0
+                               }
+        self.test_farm = {'wind_turbine_fleet': [
                               {'wind_turbine':
                                   wt.WindTurbine(**self.test_turbine),
                                'number_of_turbines': 3}]}
@@ -74,7 +74,7 @@ class TestTurbineClusterModelChain:
         assert_series_equal(test_tc_mc.power_output, power_output_exp)
 
         # Test constant efficiency
-        parameters['wake_losses_model'] = 'constant_efficiency'
+        parameters['wake_losses_model'] = 'wind_farm_efficiency'
         test_wind_farm = wf.WindFarm(**self.test_farm)
         test_wind_farm.efficiency = 0.9
         power_output_exp = pd.Series(data=[4420994.806920091,
@@ -137,7 +137,7 @@ class TestTurbineClusterModelChain:
         assert_series_equal(test_tc_mc.power_output, power_output_exp)
 
         # Test constant efficiency
-        parameters['wake_losses_model'] = 'constant_efficiency'
+        parameters['wake_losses_model'] = 'wind_farm_efficiency'
         test_cluster = wtc.WindTurbineCluster(**self.test_cluster)
         for farm in test_cluster.wind_farms:
             farm.efficiency = 0.9
@@ -186,3 +186,65 @@ class TestTurbineClusterModelChain:
             power_plant=test_cluster, **parameters)
         test_tc_mc.run_model(self.weather_df)
         assert_series_equal(test_tc_mc.power_output, power_output_exp)
+
+    def test_error_raising(self):
+
+        # Raise ValueError when aggregated wind farm power curve needs to be
+        # calculated but turbine does not have a power curve
+        test_turbine = {
+            'hub_height': 100,
+            'rotor_diameter': 98,
+            'turbine_type': 'V90/2000',
+            'power_curve': True}
+        test_farm = {'wind_turbine_fleet':
+                         [{'wind_turbine':
+                               wt.WindTurbine(**self.test_turbine),
+                           'number_of_turbines': 3},
+                          {'wind_turbine':
+                               wt.WindTurbine(**test_turbine),
+                           'number_of_turbines': 3}]}
+        test_tc_mc = tc_mc.TurbineClusterModelChain(
+            power_plant=wf.WindFarm(**test_farm))
+        with pytest.raises(ValueError):
+            test_tc_mc.run_model(self.weather_df)
+
+        # Raise ValueError when neither turbulence intensity nor roughness
+        # length are provided to apply power curve smoothing with standard
+        # deviation method 'turbulence_intensity'
+        parameters = {'smoothing': True,
+                      'standard_deviation_method': 'turbulence_intensity'}
+        test_tc_mc = tc_mc.TurbineClusterModelChain(
+            power_plant=wf.WindFarm(**self.test_farm), **parameters)
+        weather_df = self.weather_df.copy()
+        weather_df.pop('roughness_length')
+        with pytest.raises(ValueError):
+            test_tc_mc.run_model(weather_df)
+
+    def test_ignore_wake_losses(self):
+        """Run model without wake losses."""
+        parameters = {'wake_losses_model': None,
+                      'smoothing': False,
+                      'standard_deviation_method': 'turbulence_intensity',
+                      'smoothing_order': 'wind_farm_power_curves'}
+
+        # Test modelchain with default values
+        test_tc_mc = tc_mc.TurbineClusterModelChain(
+            power_plant=wtc.WindTurbineCluster(**self.test_cluster),
+            **parameters)
+        test_tc_mc.run_model(self.weather_df)
+
+    def test_wind_farm_repr(self):
+        """Test string representation of WindFarm"""
+        assert 'E-126/4200' in repr(wf.WindFarm(**self.test_farm))
+
+    def test_wind_turbine_cluster_repr_with_name(self):
+        """Test string representation of WindTurbineCluster with a name."""
+        assert 'Wind turbine cluster:' in repr(
+            wtc.WindTurbineCluster(**self.test_cluster))
+
+    def test_wind_turbine_cluster_repr_without_name(self):
+        """Test string representation of WindTurbineCluster without a name."""
+        test_cluster = {'wind_farms': [wf.WindFarm(**self.test_farm),
+                                       wf.WindFarm(**self.test_farm_2)]}
+        assert 'Wind turbine cluster with:' in repr(
+            wtc.WindTurbineCluster(**test_cluster))

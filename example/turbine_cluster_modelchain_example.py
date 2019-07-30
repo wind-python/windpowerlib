@@ -32,24 +32,22 @@ def initialize_wind_farms(my_turbine, e126):
     r"""
     Initializes two :class:`~.wind_farm.WindFarm` objects.
 
-    This function shows how to initialize a WindFarm object. You need to
-    provide at least a name and a the wind farm's wind turbine fleet as done
-    below for 'example_farm'. Optionally you can provide a wind farm efficiency
-    (which can be constant or dependent on the wind speed) and coordinates as
-    done for 'example_farm_2'. In this example the coordinates are not being
-    used as just a single weather data set is provided as example data.
+    This function shows how to initialize a WindFarm object. A WindFarm needs
+    a wind turbine fleet. Optionally, you can provide a wind farm efficiency
+    (which can be constant or dependent on the wind speed) and a name as an
+    identifier. See :class:`~.wind_farm.WindFarm` for more information.
 
     Parameters
     ----------
-    my_turbine : WindTurbine
+    my_turbine : :class:`~.wind_turbine.WindTurbine`
         WindTurbine object with self provided power curve.
-    e126 : WindTurbine
-        WindTurbine object with power curve from data file provided by the
-        windpowerlib.
+    e126 : :class:`~.wind_turbine.WindTurbine`
+        WindTurbine object with power curve from the OpenEnergy Database
+        turbine library.
 
     Returns
     -------
-    Tuple (WindFarm, WindFarm)
+    tuple(:class:`~.wind_farm.WindFarm`, :class:`~.wind_farm.WindFarm`)
 
     """
 
@@ -61,21 +59,17 @@ def initialize_wind_farms(my_turbine, e126):
                                {'wind_turbine': e126,
                                 'number_of_turbines': 3}
                                ]}
-
     # initialize WindFarm object
     example_farm = WindFarm(**example_farm_data)
 
     # specification of wind farm data (2) containing a wind farm efficiency
-    # and coordinates
     example_farm_2_data = {
         'name': 'example_farm_2',
         'wind_turbine_fleet': [{'wind_turbine': my_turbine,
                                 'number_of_turbines': 6},
                                {'wind_turbine': e126,
                                 'number_of_turbines': 3}],
-        'efficiency': 0.9,
-        'coordinates': [52.2, 13.1]}
-
+        'efficiency': 0.9}
     # initialize WindFarm object
     example_farm_2 = WindFarm(**example_farm_2_data)
 
@@ -86,19 +80,21 @@ def initialize_wind_turbine_cluster(example_farm, example_farm_2):
     r"""
     Initializes a :class:`~.wind_turbine_cluster.WindTurbineCluster` object.
 
-    Function shows how to initialize a WindTurbineCluster object. In this case
-    the cluster only contains two wind farms.
+    Function shows how to initialize a WindTurbineCluster object. A
+    WindTurbineCluster consists of wind farms that are specified through the
+    `wind_farms` parameter. Optionally, you can provide a name as an
+    identifier.
 
     Parameters
     ----------
-    example_farm : WindFarm
-        WindFarm object.
-    example_farm_2 : WindFarm
-        WindFarm object constant wind farm efficiency and coordinates.
+    example_farm : :class:`~.wind_farm.WindFarm`
+        WindFarm object without provided efficiency.
+    example_farm_2 : :class:`~.wind_farm.WindFarm`
+        WindFarm object with constant wind farm efficiency.
 
     Returns
     -------
-    WindTurbineCluster
+    :class:`~.wind_turbine_cluster.WindTurbineCluster`
 
     """
 
@@ -106,7 +102,6 @@ def initialize_wind_turbine_cluster(example_farm, example_farm_2):
     example_cluster_data = {
         'name': 'example_cluster',
         'wind_farms': [example_farm, example_farm_2]}
-
     # initialize WindTurbineCluster object
     example_cluster = WindTurbineCluster(**example_cluster_data)
 
@@ -126,16 +121,14 @@ def calculate_power_output(weather, example_farm, example_cluster):
 
     Parameters
     ----------
-    weather : pd.DataFrame
+    weather : :pandas:`pandas.DataFrame<frame>`
         Contains weather data time series.
-    example_farm : WindFarm
-        WindFarm object.
-    example_cluster : WindTurbineCluster
+    example_farm : :class:`~.wind_farm.WindFarm`
+        WindFarm object without provided efficiency.
+    example_cluster : :class:`~.wind_turbine_cluster.WindTurbineCluster`
         WindTurbineCluster object.
 
     """
-
-    # set efficiency of example_farm to apply wake losses
     example_farm.efficiency = 0.9
     # power output calculation for example_farm
     # initialize TurbineClusterModelChain with default parameters and use
@@ -147,11 +140,10 @@ def calculate_power_output(weather, example_farm, example_cluster):
     # power output calculation for turbine_cluster
     # own specifications for TurbineClusterModelChain setup
     modelchain_data = {
-        'wake_losses_model': 'constant_efficiency',  #
-                                           # 'dena_mean' (default), None,
-                                           # 'power_efficiency_curve',
-                                           # 'constant_efficiency' or name of
-                                           #  a wind efficiency curve
+        'wake_losses_model':
+            'wind_farm_efficiency',  # 'dena_mean' (default), None,
+                                     # 'wind_farm_efficiency' or name
+                                     #  of another wind efficiency curve
                 #  see :py:func:`~.wake_losses.get_wind_efficiency_curve`
         'smoothing': True,  # False (default) or True
         'block_width': 0.5,  # default: 0.5
@@ -189,10 +181,10 @@ def plot_or_print(example_farm, example_cluster):
 
     Parameters
     ----------
-    example_farm : WindFarm
-        WindFarm object.
-    example_farm_2 : WindFarm
-        WindFarm object constant wind farm efficiency and coordinates.
+    example_farm : :class:`~.wind_farm.WindFarm`
+        WindFarm object without provided efficiency.
+    example_cluster : :class:`~.wind_turbine_cluster.WindTurbineCluster`
+        WindTurbineCluster object.
 
     """
 
@@ -200,6 +192,8 @@ def plot_or_print(example_farm, example_cluster):
     if plt:
         example_cluster.power_output.plot(legend=True, label='example cluster')
         example_farm.power_output.plot(legend=True, label='example farm')
+        plt.xlabel('Wind speed in m/s')
+        plt.ylabel('Power in W')
         plt.show()
     else:
         print(example_cluster.power_output)

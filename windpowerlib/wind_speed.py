@@ -23,13 +23,13 @@ def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
 
     Parameters
     ----------
-    wind_speed : pandas.Series or numpy.array
+    wind_speed : :pandas:`pandas.Series<series>` or numpy.array
         Wind speed time series.
     wind_speed_height : float
         Height for which the parameter `wind_speed` applies.
     hub_height : float
         Hub height of wind turbine.
-    roughness_length : pandas.Series or numpy.array or float
+    roughness_length : :pandas:`pandas.Series<series>` or numpy.array or float
         Roughness length.
     obstacle_height : float
         Height of obstacles in the surrounding area of the wind turbine. Set
@@ -37,12 +37,12 @@ def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
 
     Returns
     -------
-    pandas.Series or numpy.array
+    :pandas:`pandas.Series<series>` or numpy.array
         Wind speed at hub height. Data type depends on type of `wind_speed`.
 
     Notes
     -----
-    The following equation is used [1]_, [2]_, [3]_:
+    The following equation is used [1]_ [2]_ [3]_:
 
     .. math:: v_{wind,hub}=v_{wind,data}\cdot
         \frac{\ln\left(\frac{h_{hub}-d}{z_{0}}\right)}{\ln\left(
@@ -52,7 +52,7 @@ def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
         v: wind speed, h: height, :math:`z_{0}`: roughness length,
         d: boundary layer offset (estimated by d = 0.7 * `obstacle_height`)
 
-    For  d = 0 it results in the following equation [2]_, [3]_:
+    For  d = 0 it results in the following equation [2]_ [3]_:
 
     .. math:: v_{wind,hub}=v_{wind,data}\cdot\frac{\ln\left(\frac{h_{hub}}
         {z_{0}}\right)}{\ln\left(\frac{h_{data}}{z_{0}}\right)}
@@ -100,13 +100,13 @@ def hellman(wind_speed, wind_speed_height, hub_height,
 
     Parameters
     ----------
-    wind_speed : pandas.Series or numpy.array
+    wind_speed : :pandas:`pandas.Series<series>` or numpy.array
         Wind speed time series.
     wind_speed_height : float
         Height for which the parameter `wind_speed` applies.
     hub_height : float
         Hub height of wind turbine.
-    roughness_length : pandas.Series or numpy.array or float
+    roughness_length : :pandas:`pandas.Series<series>` or numpy.array or float
         Roughness length. If given and `hellman_exponent` is None:
         `hellman_exponent` = 1 / ln(hub_height/roughness_length),
         otherwise `hellman_exponent` = 1/7. Default: None.
@@ -119,12 +119,12 @@ def hellman(wind_speed, wind_speed_height, hub_height,
 
     Returns
     -------
-    pandas.Series or numpy.array
+    :pandas:`pandas.Series<series>` or numpy.array
         Wind speed at hub height. Data type depends on type of `wind_speed`.
 
     Notes
     -----
-    The following equation is used [1]_, [2]_, [3]_:
+    The following equation is used [1]_ [2]_ [3]_:
 
     .. math:: v_{wind,hub}=v_{wind,data}\cdot \left(\frac{h_{hub}}{h_{data}}
         \right)^\alpha
@@ -138,7 +138,7 @@ def hellman(wind_speed, wind_speed_height, hub_height,
 
     For the Hellman exponent :math:`\alpha` many studies use a value of 1/7 for
     onshore and a value of 1/9 for offshore. The Hellman exponent can also
-    be calulated by the following equation [2]_, [3]_:
+    be calulated by the following equation [2]_ [3]_:
 
     .. math:: \alpha = \frac{1}{\ln\left(\frac{h_{hub}}{z_0} \right)}
 

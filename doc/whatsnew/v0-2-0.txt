@@ -3,22 +3,37 @@ v0.2.0 ()
 
 New features
 ############
+* get_turbine_types() can now be used to get provided turbine types of oedb turbine_library as well as provided turbine types of local files
 
-Bug fixes
-#########
-
-API changes
-###########
-
-Other changes
+Documentation
 #############
+
 
 Testing
 #######
 
+
+Bug fixes
+#########
+
+
+API changes
+#############
+* Removed unnecessary `wake_losses_model` parameter in :py:func:`~.power_curves.wake_losses_to_power_curve`. Whether a constant wind farm efficiency or a wind farm efficiency curve is used is decided by the type of the wind farm efficiency.
+* Combined options 'constant_efficiency' and 'power_efficiency_curve' of `wake_losses_model` parameter in :py:func:`~.turbine_cluster_modelchain.TurbineClusterModelChain` to 'wind_farm_efficiency'. Therefore, default value of `wake_losses_model` in :py:func:`~.wind_farm.WindFarm.assign_power_curve` and :py:func:`~.wind_turbine_cluster.WindTurbineCluster.assign_power_curve` changed to 'wind_farm_efficiency'.
+* Removed `overwrite` parameter from :py:func:`~.wind_turbine.get_turbine_data_from_oedb`
+* Removed `data_source` and `fetch_curve` parameters from :py:func:`~.wind_turbine.WindTurbine` and :py:func:`~.wind_turbine.WindTurbine.fetch_turbine_data`. Now the source and if a curve is fetched or not is specified by the parameters `power_curve`, `power_coefficient_curve` and `nominal_power`. See :py:func:`~.wind_turbine.WindTurbine.fetch_turbine_data` for a description.
+
+Other changes
+#############
+* Power curves and nominal power of wind turbines are now saved in file in W instead of kW.
+* Restructured csv reading for offline usage of windpowerlib. The nominal power of wind turbines is now saved to a separate file along with other turbine data from the oedb turbine library.
+
+
 Deprecations
 ############
 
-
 Contributors
 ############
+* Sabine Haas
+

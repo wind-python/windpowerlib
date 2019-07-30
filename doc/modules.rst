@@ -67,9 +67,8 @@ power curve or power coefficient curve needed by the :py:class:`~.wind_turbine.W
 .. autosummary::
    :toctree: temp/
 
-   wind_turbine.WindTurbine.fetch_turbine_data
    wind_turbine.get_turbine_data_from_file
-   wind_turbine.get_turbine_data_from_oedb
+   wind_turbine.get_oedb_turbine_data
    wind_turbine.load_turbine_data_from_oedb
    wind_turbine.get_turbine_types
 
