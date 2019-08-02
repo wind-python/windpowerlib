@@ -233,10 +233,6 @@ class TestTurbineClusterModelChain:
             **parameters)
         test_tc_mc.run_model(self.weather_df)
 
-    def test_wind_farm_repr(self):
-        """Test string representation of WindFarm"""
-        assert 'E-126/4200' in repr(wf.WindFarm(**self.test_farm))
-
     def test_wind_turbine_cluster_repr_with_name(self):
         """Test string representation of WindTurbineCluster with a name."""
         assert 'Wind turbine cluster:' in repr(
