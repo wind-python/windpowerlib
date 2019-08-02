@@ -12,6 +12,7 @@ from windpowerlib import tools, power_curves, WindTurbine
 import numpy as np
 import pandas as pd
 import logging
+import warnings
 
 
 class WindFarm(object):
@@ -20,13 +21,13 @@ class WindFarm(object):
 
     Parameters
     ----------
-    wind_turbine_fleet : list(dict)
-        Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
-        (contains a :class:`~.wind_turbine.WindTurbine` object) and
-        either 'number_of_turbines' (number of wind turbines of the same
-        turbine type in the wind farm) or 'total_capacity' (installed capacity
-        of wind turbines of the same turbine type in the wind farm) as keys.
-        See example below.
+    wind_turbine_fleet : :pandas:`pandas.DataFrame<frame>` or list(dict)
+        Wind turbines of wind farm. DataFrame/Dictionaries must have
+        'wind_turbine' containing a :class:`~.wind_turbine.WindTurbine` object
+        and either 'number_of_turbines' (number of wind turbines of the same
+        turbine type in the wind farm, can be a float) or 'total_capacity'
+        (installed capacity of wind turbines of the same turbine type in the
+        wind farm) as columns/keys. See example below.
     efficiency : float or :pandas:`pandas.DataFrame<frame>` or None (optional)
         Efficiency of the wind farm. Provide as either constant (float) or
         power efficiency curve (pd.DataFrame) containing 'wind_speed' and
@@ -62,25 +63,37 @@ class WindFarm(object):
     Examples
     --------
     >>> from windpowerlib import wind_farm
-    >>> from windpowerlib import wind_turbine
+    >>> from windpowerlib import WindTurbine
+    >>> import pandas as pd
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
     ...    'turbine_type': 'E-126/4200'}
-    >>> e126 = wind_turbine.WindTurbine(**enerconE126)
+    >>> e126 = WindTurbine(**enerconE126)
+    >>> vestasV90 = {
+    ...     'hub_height': 90,
+    ...     'turbine_type': 'V90/2000',
+    ...     'nominal_power': 2e6}
+    >>> v90 = WindTurbine(**vestasV90)
+    >>> # turbine fleet as DataFrame with number of turbines provided
+    >>> wind_turbine_fleet = pd.DataFrame(
+    ...     {'wind_turbine': [e126, v90],
+    ...      'number_of_turbines': [6, 3]})
+    >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet)
+    >>> print(example_farm.nominal_power)
+    31200000.0
+    >>> # turbine fleet as list with total capacity of each turbine type
+    >>> # provided
     >>> example_farm_data = {
     ...    'name': 'example_farm',
     ...    'wind_turbine_fleet': [{'wind_turbine': e126,
-    ...                            'number_of_turbines': 6}]}
+    ...                            'total_capacity': 6 * 4.2e6},
+    ...                           {'wind_turbine': v90,
+    ...                            'total_capacity': 3 * 2e6}]}
     >>> example_farm = wind_farm.WindFarm(**example_farm_data)
     >>> print(example_farm.nominal_power)
-    25200000.0
-    >>> example_farm_data = {
-    ...    'wind_turbine_fleet': [{'wind_turbine': e126,
-    ...                            'total_capacity': 8.4e6}]}
-    >>> example_farm = wind_farm.WindFarm(**example_farm_data)
-    >>> print(example_farm.nominal_power)
-    8400000.0
+    31200000.0
+
     """
 
     def __init__(self, wind_turbine_fleet, efficiency=None, name='', **kwargs):
@@ -93,52 +106,97 @@ class WindFarm(object):
         self._nominal_power = None
         self.power_curve = None
 
-        # check integrity of given wind turbine fleet
-        for turbine_type in self.wind_turbine_fleet:
-            turbine_keys = list(turbine_type.keys())
-            # check wind turbine
-            if 'wind_turbine' in turbine_keys:
-                if not isinstance(turbine_type['wind_turbine'], WindTurbine):
+        self.check_and_complete_wind_turbine_fleet()
+
+    def check_and_complete_wind_turbine_fleet(self):
+        """
+        Function to check wind turbine fleet user input.
+
+        Besides checking if all necessary parameters to fully define the wind
+        turbine fleet are provided, this function also fills in the
+        number of turbines or total capacity of each turbine type and checks
+        if they are consistent.
+
+        """
+        # convert list to dataframe if necessary
+        if isinstance(self.wind_turbine_fleet, list):
+            try:
+                self.wind_turbine_fleet = pd.DataFrame(self.wind_turbine_fleet)
+            except ValueError:
+                raise ValueError("Wind turbine fleet not provided properly.")
+
+        # check wind turbines
+        try:
+            for turbine in self.wind_turbine_fleet['wind_turbine']:
+                if not isinstance(turbine, WindTurbine):
                     raise ValueError(
                         'Wind turbine must be provided as WindTurbine object '
-                        'but was provided as {}.'.format(
-                            type(turbine_type['wind_turbine'])))
-            else:
-                raise ValueError('Missing wind_turbine key in wind turbine '
-                                 'fleet entry {}.'.format(turbine_type))
-            # check if number of turbines is provided
-            if not 'number_of_turbines' in turbine_keys:
-                if 'total_capacity' in turbine_keys:
-                    try:
-                        turbine_type['number_of_turbines'] = \
-                            turbine_type['total_capacity'] / \
-                            turbine_type['wind_turbine'].nominal_power
-                    except:
-                        raise ValueError(
-                            'Number of turbines of type {turbine} can not be '
-                            'deduced from total capacity. Please either '
-                            'provide `number_of_turbines` in the turbine '
-                            'fleet definition or set the nominal power of the '
-                            'wind turbine.'.format(
-                                turbine=turbine_type['wind_turbine']))
+                        'but was provided as {}.'.format(type(turbine)))
+        except KeyError:
+            raise ValueError('Missing wind_turbine key/column in '
+                             'wind_turbine_fleet parameter.')
+
+        # add columns for number of turbines and total capacity if they don't
+        # yet exist
+        if 'number_of_turbines' not in self.wind_turbine_fleet.columns:
+            self.wind_turbine_fleet['number_of_turbines'] = np.nan
+        if 'total_capacity' not in self.wind_turbine_fleet.columns:
+            self.wind_turbine_fleet['total_capacity'] = np.nan
+
+        # calculate number of turbines if necessary
+        number_turbines_not_provided = self.wind_turbine_fleet[
+            self.wind_turbine_fleet['number_of_turbines'].isnull()]
+        for ix, row in number_turbines_not_provided.iterrows():
+            msg = 'Number of turbines of type {0} can not be deduced ' \
+                  'from total capacity. Please either provide ' \
+                  '`number_of_turbines` in the turbine fleet definition or ' \
+                  'set the nominal power of the wind turbine.'
+            try:
+                number_of_turbines = row['total_capacity'] / \
+                    row['wind_turbine'].nominal_power
+                if np.isnan(number_of_turbines):
+                    raise ValueError(msg.format(row['wind_turbine']))
                 else:
+                    self.wind_turbine_fleet.loc[ix, 'number_of_turbines'] = \
+                        number_of_turbines
+            except:
+                raise ValueError(msg.format(row['wind_turbine']))
+
+        # calculate total capacity if necessary and check that total capacity
+        # and number of turbines is consistent if both are provided
+        for ix, row in self.wind_turbine_fleet.iterrows():
+            if np.isnan(row['total_capacity']):
+                try:
+                    self.wind_turbine_fleet.loc[ix, 'total_capacity'] = \
+                        row['number_of_turbines'] * \
+                        row['wind_turbine'].nominal_power
+                except:
                     raise ValueError(
-                        'Please provide `number_of_turbines` or '
-                        '`total_capacity` for wind turbine {} in wind farm '
-                        'definition.'.format(turbine_type['wind_turbine']))
+                        'Total capacity of turbines of type {turbine} cannot '
+                        'be deduced. Please check if the nominal power of the '
+                        'wind turbine is set.'.format(
+                            turbine=row['wind_turbine']))
+            else:
+                if not row['total_capacity'] == (
+                        row['number_of_turbines'] *
+                        row['wind_turbine'].nominal_power):
+                    self.wind_turbine_fleet.loc[ix, 'total_capacity'] = \
+                        row['number_of_turbines'] * \
+                        row['wind_turbine'].nominal_power
+                    msg = (
+                        'The provided total capacity of WindTurbine {0} has '
+                        'been overwritten as it was not consistent with the '
+                        'number of turbines provided for this type.')
+                    warnings.warn(msg.format(row['wind_turbine']),
+                                  tools.WindpowerlibUserWarning)
 
     def __repr__(self):
-
         if self.name is not '':
-            repr = 'Wind farm: {name}'.format(name=self.name)
+            return 'Wind farm: {name}'.format(name=self.name)
         else:
-            info = []
-            for turbine_dict in self.wind_turbine_fleet:
-                info.append(r"{number}x {type}".format(
-                    number=turbine_dict['number_of_turbines'],
-                    type=turbine_dict['wind_turbine']))
-            repr = r'Wind farm with: {info}'.format(info=info)
-        return repr
+            return 'Wind farm with turbine fleet: [number, type]\n {}'.format(
+                self.wind_turbine_fleet.loc[
+                    :, ['number_of_turbines', 'wind_turbine']].values)
 
     @property
     def nominal_power(self):
@@ -159,7 +217,7 @@ class WindFarm(object):
 
         """
         if not self._nominal_power:
-            self.nominal_power = self.get_installed_power()
+            self.nominal_power = self.wind_turbine_fleet.total_capacity.sum()
         return self._nominal_power
 
     @nominal_power.setter
@@ -203,28 +261,10 @@ class WindFarm(object):
 
         """
         self.hub_height = np.exp(
-            sum(np.log(wind_dict['wind_turbine'].hub_height) *
-                wind_dict['wind_turbine'].nominal_power *
-                wind_dict['number_of_turbines']
-                for wind_dict in self.wind_turbine_fleet) /
-            self.get_installed_power())
+            sum(np.log(row['wind_turbine'].hub_height) * row['total_capacity']
+                for ix, row in self.wind_turbine_fleet.iterrows()) /
+            self.nominal_power)
         return self
-
-    def get_installed_power(self):
-        r"""
-        Calculates :py:attr:`~nominal_power` of the wind farm.
-
-        Returns
-        -------
-        float
-            Nominal power of the wind farm in W. See :py:attr:`~nominal_power`
-            for further information.
-
-        """
-        return sum(
-            wind_dict['wind_turbine'].nominal_power *
-            wind_dict['number_of_turbines']
-            for wind_dict in self.wind_turbine_fleet)
 
     def assign_power_curve(self, wake_losses_model='wind_farm_efficiency',
                            smoothing=False, block_width=0.5,
@@ -280,15 +320,15 @@ class WindFarm(object):
 
         """
         # Check if all wind turbines have a power curve as attribute
-        for item in self.wind_turbine_fleet:
-            if item['wind_turbine'].power_curve is None:
+        for turbine in self.wind_turbine_fleet['wind_turbine']:
+            if turbine.power_curve is None:
                 raise ValueError("For an aggregated wind farm power curve " +
                                  "each wind turbine needs a power curve " +
                                  "but `power_curve` of '{}' is None.".format(
-                                     item['wind_turbine']))
+                                     turbine))
         # Initialize data frame for power curve values
         df = pd.DataFrame()
-        for turbine_type_dict in self.wind_turbine_fleet:
+        for ix, row in self.wind_turbine_fleet.iterrows():
             # Check if needed parameters are available and/or assign them
             if smoothing:
                 if (standard_deviation_method == 'turbulence_intensity' and
@@ -298,7 +338,7 @@ class WindFarm(object):
                         # Calculate turbulence intensity and write to kwargs
                         turbulence_intensity = (
                             tools.estimate_turbulence_intensity(
-                                turbine_type_dict['wind_turbine'].hub_height,
+                                row['wind_turbine'].hub_height,
                                 kwargs['roughness_length']))
                         kwargs['turbulence_intensity'] = turbulence_intensity
                     else:
@@ -308,8 +348,7 @@ class WindFarm(object):
                             "`standard_deviation_method` if " +
                             "`turbulence_intensity` is not given")
             # Get original power curve
-            power_curve = pd.DataFrame(
-                turbine_type_dict['wind_turbine'].power_curve)
+            power_curve = pd.DataFrame(row['wind_turbine'].power_curve)
             # Editions to the power curves before the summation
             if smoothing and smoothing_order == 'turbine_power_curves':
                 power_curve = power_curves.smooth_power_curve(
@@ -335,7 +374,7 @@ class WindFarm(object):
             # (multiplied by turbine amount)
             df = pd.concat(
                 [df, pd.DataFrame(power_curve.set_index(['wind_speed']) *
-                 turbine_type_dict['number_of_turbines'])], axis=1)
+                 row['number_of_turbines'])], axis=1)
         # Aggregate all power curves
         wind_farm_power_curve = pd.DataFrame(
             df.interpolate(method='index').sum(axis=1))
