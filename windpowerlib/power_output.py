@@ -44,8 +44,7 @@ def power_coefficient_curve(wind_speed, power_coefficient_curve_wind_speeds,
 
     Notes
     -----
-    The following equation is used if the parameter `density_corr` is False
-    [1]_ [2]_:
+    The following equation is used [1]_ [2]_:
 
     .. math:: P=\frac{1}{8}\cdot\rho_{hub}\cdot d_{rotor}^{2}
         \cdot\pi\cdot v_{wind}^{3}\cdot cp\left(v_{wind}\right)
