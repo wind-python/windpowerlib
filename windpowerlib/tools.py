@@ -29,14 +29,14 @@ class WindpowerlibUserWarning(UserWarning):
 
 def linear_interpolation_extrapolation(df, target_height):
     r"""
-    Linear inter- or extrapolates between the values of a data frame.
+    Linearly inter- or extrapolates between the values of a data frame.
 
-    This function can be used for the inter-/extrapolation of a parameter
-    (e.g wind speed) available at two or more different heights, to approximate
-    the value at hub height. The function is carried out when the parameter
-    `wind_speed_model`, `density_model` or `temperature_model` of an
-    instance of the :class:`~.modelchain.ModelChain` class is
-    'interpolation_extrapolation'.
+    This function can be used for the linear inter-/extrapolation of a
+    parameter (e.g wind speed) available at two or more different heights, to
+    approximate the value at hub height.
+    The function is carried out when the parameter `wind_speed_model`,
+    `density_model` or `temperature_model` of an instance of the
+    :class:`~.modelchain.ModelChain` class is 'interpolation_extrapolation'.
 
     Parameters
     ----------
@@ -91,12 +91,13 @@ def linear_interpolation_extrapolation(df, target_height):
 
 def logarithmic_interpolation_extrapolation(df, target_height):
     r"""
-    Logarithmic inter- or extrapolates between the values of a data frame.
+    Logarithmic inter- or extrapolation between the values of a data frame.
 
-    This function can be used for the inter-/extrapolation of the wind speed if
-    it is available at two or more different heights, to approximate
-    the value at hub height. The function is carried out when the parameter
-    `wind_speed_model` :class:`~.modelchain.ModelChain` class is
+    This function can be used for the logarithmic inter-/extrapolation of the
+    wind speed if it is available at two or more different heights, to
+    approximate the value at hub height.
+    The function is carried out when the parameter `wind_speed_model`
+    :class:`~.modelchain.ModelChain` class is
     'log_interpolation_extrapolation'.
 
     Parameters
