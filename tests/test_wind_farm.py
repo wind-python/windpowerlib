@@ -46,6 +46,13 @@ class TestWindFarm:
         windfarm = WindFarm(wind_turbine_fleet=wind_turbine_fleet)
         assert 3 * 4.2e6 + 2 * 2e6 == windfarm.nominal_power
 
+    def test_initialization_1(self):
+        """test catching error when wind_turbine_fleet not provided as list"""
+        msg = 'Wind turbine fleet not provided properly.'
+        with pytest.raises(ValueError, match=msg):
+            WindFarm(wind_turbine_fleet=[{'wind_turbine': 'turbine',
+                                          'number_of_turbines': 2}, 'dummy'])
+
     def test_initialization_2(self):
         """test catching error when WindTurbine in wind_turbine_fleet
         not initialized"""
@@ -106,6 +113,17 @@ class TestWindFarm:
             {'wind_turbine': WindTurbine(**self.test_turbine),
              'number_of_turbine': 3e6}]}
         msg = 'Number of turbines of type '
+        with pytest.raises(ValueError, match=msg):
+            WindFarm(**test_farm)
+
+    def test_initialization_7(self):
+        """test catching error when total capacity cannot be deduced"""
+        wt = WindTurbine(**self.test_turbine)
+        wt.nominal_power = None
+        test_farm = {'wind_turbine_fleet': [
+            {'wind_turbine': wt,
+             'number_of_turbines': 3}]}
+        msg = 'Total capacity of turbines of type'
         with pytest.raises(ValueError, match=msg):
             WindFarm(**test_farm)
 
