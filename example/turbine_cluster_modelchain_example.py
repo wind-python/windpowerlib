@@ -33,9 +33,11 @@ def initialize_wind_farms(my_turbine, e126):
     Initializes two :class:`~.wind_farm.WindFarm` objects.
 
     This function shows how to initialize a WindFarm object. A WindFarm needs
-    a wind turbine fleet. Optionally, you can provide a wind farm efficiency
-    (which can be constant or dependent on the wind speed) and a name as an
-    identifier. See :class:`~.wind_farm.WindFarm` for more information.
+    a wind turbine fleet specifying the wind turbines and their number or
+    total installed capacity (in Watt) in the farm. Optionally, you can provide
+    a wind farm efficiency (which can be constant or dependent on the wind
+    speed) and a name as an identifier. See :class:`~.wind_farm.WindFarm` for
+    more information.
 
     Parameters
     ----------
@@ -54,11 +56,15 @@ def initialize_wind_farms(my_turbine, e126):
     # specification of wind farm data
     example_farm_data = {
         'name': 'example_farm',
-        'wind_turbine_fleet': [{'wind_turbine': my_turbine,
-                                'number_of_turbines': 6},
-                               {'wind_turbine': e126,
-                                'number_of_turbines': 3}
-                               ]}
+        'wind_turbine_fleet': [
+            {'wind_turbine': my_turbine,  # as windpowerlib.WindTurbine
+             'number_of_turbines': 6},  # number of `my_turbine` turbines in
+                                        # farm (float values are possible as
+                                        # well)
+            {'wind_turbine': e126,
+             'total_capacity': 12.6e6  # installed capacity of `my_turbine`
+                                       # turbines in farm in Watt
+             }]}
     # initialize WindFarm object
     example_farm = WindFarm(**example_farm_data)
 
