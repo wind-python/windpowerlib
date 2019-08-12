@@ -113,10 +113,10 @@ class ModelChain(object):
     density_correction : bool
         Used to set `density_correction` parameter in
         :func:`~.power_output.power_curve`.
-    hellman_exp : float
-        Used to set `hellman_exponent` in :func:`~.wind_speed.hellman`.
     obstacle_height : float
         Used to set `obstacle_height` in :func:`~.wind_speed.logarithmic`.
+    hellman_exp : float
+        Used to set `hellman_exponent` in :func:`~.wind_speed.hellman`.
     power_output : :pandas:`pandas.Series<series>`
         Electrical power output of the wind turbine in W.
 

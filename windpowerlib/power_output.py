@@ -88,7 +88,7 @@ def power_curve(wind_speed, power_curve_wind_speeds, power_curve_values,
     This function is carried out when the parameter `power_output_model` of an
     instance of the :class:`~.modelchain.ModelChain` class is 'power_curve'. If
     the parameter `density_correction` is True the density corrected power
-    curve (See :py:func:`~.power_curve_density_correction`) is used.
+    curve (see :py:func:`~.power_curve_density_correction`) is used.
 
     Parameters
     ----------
@@ -104,8 +104,9 @@ def power_curve(wind_speed, power_curve_wind_speeds, power_curve_values,
         Density of air at hub height in kg/m³. This parameter is needed
         if `density_correction` is True. Default: None.
     density_correction : bool
-        If the parameter is True the density corrected power curve is used for
-        the calculation of the turbine power output. In this case `density`
+        If the parameter is True the density corrected power curve (see
+        :py:func:`~.power_curve_density_correction`) is used for the
+        calculation of the turbine power output. In this case `density`
         cannot be None. Default: False.
 
     Returns
