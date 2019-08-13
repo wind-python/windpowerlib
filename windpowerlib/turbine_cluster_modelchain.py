@@ -39,10 +39,10 @@ class TurbineClusterModelChain(ModelChain):
 
        Default: 'dena_mean'.
     smoothing : bool
-        If True the power curves will be smoothed before or after the
-        aggregation of power curves depending on `smoothing_order`.
-        See :func:`~.power_curves.smooth_power_curve` or more information.
-        Default: False.
+        If True the power curves will be smoothed. Depending on the parameter
+        `smoothing_order` the power curves are smoothed before or after the
+        aggregation. See :func:`~.power_curves.smooth_power_curve` for more
+        information. Default: False.
     block_width : float
         Width between the wind speeds in the sum of the equation in
         :py:func:`~.power_curves.smooth_power_curve`. Default: 0.5.
@@ -148,7 +148,7 @@ class TurbineClusterModelChain(ModelChain):
         Defines the method for taking wake losses within the farm into
         consideration.
     smoothing : bool
-        If True the power curves will be smoothed.
+        If True the power curves are smoothed.
     block_width : float
         Width between the wind speeds in the sum of the equation in
         :py:func:`~.power_curves.smooth_power_curve`.
