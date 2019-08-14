@@ -270,7 +270,7 @@ def get_turbine_data_from_file(turbine_type, path):
         return wpp_df
 
 
-def load_turbine_data_from_oedb(schema='supply', table='turbine_library'):
+def load_turbine_data_from_oedb(schema='supply', table='wind_turbine_library'):
     r"""
     Loads turbine library from the OpenEnergy database (oedb).
 
