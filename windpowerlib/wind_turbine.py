@@ -172,6 +172,16 @@ class WindTurbine(object):
                    " Check if the turbine type {0} is in your database file"
                    " or if you passed a valid curve.")
             warnings.warn(msg.format(turbine_type), WindpowerlibUserWarning)
+        else:
+            # sort power (coefficient) curve by wind speed and bring columns in
+            # order: 1) 'wind_speed' 2) 'value'
+            if isinstance(self.power_curve, pd.DataFrame):
+                self.power_curve.sort_values(by='wind_speed')
+                self.power_curve = self.power_curve[['wind_speed', 'value']]
+            if isinstance(self.power_coefficient_curve, pd.DataFrame):
+                self.power_coefficient_curve.sort_values(by='wind_speed')
+                self.power_coefficient_curve = self.power_coefficient_curve[[
+                    'wind_speed', 'value']]
 
     def __repr__(self):
         info = []
