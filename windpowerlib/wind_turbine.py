@@ -173,6 +173,12 @@ class WindTurbine(object):
                    " or if you passed a valid curve.")
             warnings.warn(msg.format(turbine_type), WindpowerlibUserWarning)
         else:
+            # power (coefficient) curve to pd.DataFrame in case of being dict
+            if isinstance(self.power_curve, dict):
+                self.power_curve = pd.DataFrame(self.power_curve)
+            if isinstance(self.power_coefficient_curve, dict):
+                self.power_coefficient_curve = pd.DataFrame(
+                    self.power_coefficient_curve)
             # sort power (coefficient) curve by wind speed and bring columns in
             # order: 1) 'wind_speed' 2) 'value'
             if isinstance(self.power_curve, pd.DataFrame):
