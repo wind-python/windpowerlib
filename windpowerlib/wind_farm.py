@@ -378,7 +378,7 @@ class WindFarm(object):
         wind_farm_power_curve = pd.DataFrame(
             df.interpolate(method='index').sum(axis=1))
         wind_farm_power_curve.columns = ['value']
-        wind_farm_power_curve.reset_index('wind_speed', inplace=True)
+        wind_farm_power_curve.reset_index(inplace=True)
         # Apply power curve smoothing and consideration of wake losses
         # after the summation
         if smoothing and smoothing_order == 'wind_farm_power_curves':
