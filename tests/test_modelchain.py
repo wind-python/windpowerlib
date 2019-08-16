@@ -304,8 +304,8 @@ class TestModelChain:
                                     **test_modelchain)
             test_mc.run_model(self.weather_df)
 
-    def test_modelchain_with_power_coefficient_curve_as_dict(self):
-        """Test power (coefficient) curves as dict"""
+    def test_modelchain_with_power_curve_as_dict(self):
+        """Test power curves as dict"""
         my_turbine = {'nominal_power': 3e6, 'hub_height': 105,
                       'rotor_diameter': 70,
                       'power_curve': {
@@ -315,9 +315,28 @@ class TestModelChain:
                       'power_coefficient_curve': {
                           'value': [0.0, 0.43, 0.45, 0.35, 0.12, 0.03],
                           'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]}}
-        # run model with power curve
-        mc.ModelChain(wt.WindTurbine(**my_turbine)).run_model(self.weather_df)
-        # run model with power coefficient curve
-        mc.ModelChain(wt.WindTurbine(**my_turbine),
-                      power_output_model='power_coefficient_curve').run_model(
-            self.weather_df)
+        power_output_exp = pd.Series(data=[919055.54840,
+                                           1541786.60559],
+                                     name='feedin_power_plant')
+        test_mc = mc.ModelChain(wt.WindTurbine(**my_turbine))
+        test_mc.run_model(self.weather_df)
+        assert_series_equal(test_mc.power_output, power_output_exp)
+
+    def test_modelchain_with_power_coefficient_curve_as_dict(self):
+        """Test power coefficient curves as dict"""
+        my_turbine = {'nominal_power': 3e6, 'hub_height': 105,
+                      'rotor_diameter': 70,
+                      'power_curve': {
+                          'value': [p * 1000 for p in [
+                              0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],
+                          'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]},
+                      'power_coefficient_curve': {
+                          'value': [0.0, 0.43, 0.45, 0.35, 0.12, 0.03],
+                          'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]}}
+        power_output_exp = pd.Series(data=[469518.35104,
+                                           901794.28532],
+                                     name='feedin_power_plant')
+        test_mc = mc.ModelChain(wt.WindTurbine(**my_turbine),
+                                power_output_model='power_coefficient_curve')
+        test_mc.run_model(self.weather_df)
+        assert_series_equal(test_mc.power_output, power_output_exp)
