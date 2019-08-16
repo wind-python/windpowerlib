@@ -362,13 +362,13 @@ class WindFarm(object):
                     power_curve = pd.concat(
                         [pd.DataFrame(data={
                             'wind_speed': [0.0], 'value': [0.0]}),
-                            power_curve])
+                            power_curve], join='inner')
                 if power_curve.iloc[-1]['value'] != 0.0:
                     power_curve = pd.concat(
                         [power_curve, pd.DataFrame(data={
                             'wind_speed': [power_curve['wind_speed'].loc[
                                                power_curve.index[-1]] + 0.5],
-                            'value': [0.0]})])
+                            'value': [0.0]})], join='inner')
             # Add power curves of all turbine types to data frame
             # (multiplied by turbine amount)
             df = pd.concat(
