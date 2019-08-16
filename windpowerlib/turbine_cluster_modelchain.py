@@ -31,24 +31,41 @@ class TurbineClusterModelChain(ModelChain):
         * None -
           Wake losses are not taken into account.
         * 'wind_farm_efficiency' -
+          The values of the wind farm power curve(s) are reduced by the wind
+          farm efficiency, which needs to be set in the
+          :py:class:`~.wind_farm.WindFarm` class. Note: The wind farm
+          efficiency has no effect if `wake_losses_model` is not set to
+          'wind_farm_efficiency'.
           See :func:`~.power_curves.wake_losses_to_power_curve` for more
           information.
         * 'dena_mean' or name of other wind efficiency curve -
+          The values of the wind speed time series are reduced by the chosen
+          wind efficiency curve in :func:`~.run_model` before the power output
+          calculations.
           See :func:`~.wake_losses.reduce_wind_speed` and
           :func:`~.wake_losses.get_wind_efficiency_curve` for more information.
 
        Default: 'dena_mean'.
     smoothing : bool
-        If True the power curves will be smoothed. Depending on the parameter
-        `smoothing_order` the power curves are smoothed before or after the
-        aggregation. See :func:`~.power_curves.smooth_power_curve` for more
-        information. Default: False.
+        If True the power curves will be smoothed to account for the
+        distribution of wind speeds over space. Depending on the parameter
+        `smoothing_order` the power curves are smoothed before or after
+        aggregating wind turbine power curves to one representative power
+        curve of the wind farm or cluster.
+        See :func:`~.power_curves.smooth_power_curve` for more information.
+
+        Default: False.
     block_width : float
         Width between the wind speeds in the sum of the equation in
-        :py:func:`~.power_curves.smooth_power_curve`. Default: 0.5.
+        :py:func:`~.power_curves.smooth_power_curve`. This parameter is only
+        used if `smoothing` is True. To achieve a smooth curve without steps a
+        value not much higher than the step width between the power curve wind
+        speeds should be chosen.
+
+        Default: 0.5.
     standard_deviation_method : str
         Method for calculating the standard deviation for the Gauss
-        distribution.
+        distribution if `smoothing` is True.
 
         * 'turbulence_intensity' -
           See :func:`~.power_curves.smooth_power_curve` for more information.
