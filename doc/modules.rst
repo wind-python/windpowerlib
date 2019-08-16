@@ -83,8 +83,9 @@ as the aggregated power curve of a :py:class:`~.wind_farm.WindFarm` object.
 .. autosummary::
    :toctree: temp/
 
+   wind_farm.WindFarm.check_and_complete_wind_turbine_fleet
+   wind_farm.WindFarm.nominal_power
    wind_farm.WindFarm.mean_hub_height
-   wind_farm.WindFarm.get_installed_power
    wind_farm.WindFarm.assign_power_curve
 
 .. _wind_turbine_cluster_label:
@@ -100,6 +101,7 @@ the :py:class:`~.wind_farm.WindFarm` class.
 .. autosummary::
    :toctree: temp/
 
+   wind_turbine_cluster.WindTurbineCluster.nominal_power
    wind_turbine_cluster.WindTurbineCluster.mean_hub_height
    wind_turbine_cluster.WindTurbineCluster.get_installed_power
    wind_turbine_cluster.WindTurbineCluster.assign_power_curve
