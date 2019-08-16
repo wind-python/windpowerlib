@@ -42,9 +42,11 @@ class TurbineClusterModelChain(ModelChain):
           The values of the wind speed time series are reduced by the chosen
           wind efficiency curve in :func:`~.run_model` before the power output
           calculations.
-          See :func:`~.wake_losses.reduce_wind_speed` and
-          :func:`~.wake_losses.get_wind_efficiency_curve` for more information.
-
+          See :func:`~.wake_losses.reduce_wind_speed` for more information.
+          Use :func:`~.wake_losses.get_wind_efficiency_curve` to get a
+          DataFrame of all provided wind efficiency curves and see the provided
+          example on how to plot the wind efficiency curves.
+          
        Default: 'dena_mean'.
     smoothing : bool
         If True the power curves will be smoothed to account for the
