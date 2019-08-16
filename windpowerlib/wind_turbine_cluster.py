@@ -127,8 +127,8 @@ class WindTurbineCluster(object):
 
         """
         self.hub_height = np.exp(sum(
-            np.log(wind_farm.hub_height) * wind_farm.get_installed_power() for
-            wind_farm in self.wind_farms) / self.get_installed_power())
+            np.log(wind_farm.hub_height) * wind_farm.nominal_power for
+            wind_farm in self.wind_farms) / self.nominal_power)
         return self
 
     def get_installed_power(self):
@@ -143,7 +143,7 @@ class WindTurbineCluster(object):
 
         """
         for wind_farm in self.wind_farms:
-            wind_farm.nominal_power = wind_farm.get_installed_power()
+            wind_farm.nominal_power = wind_farm.nominal_power
         return sum(wind_farm.nominal_power for wind_farm in self.wind_farms)
 
     def assign_power_curve(self, wake_losses_model='wind_farm_efficiency',
