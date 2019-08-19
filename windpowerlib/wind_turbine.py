@@ -182,8 +182,18 @@ class WindTurbine(object):
             # sort power (coefficient) curve by wind speed
             if isinstance(self.power_curve, pd.DataFrame):
                 self.power_curve.sort_values(by='wind_speed')
+            elif self.power_curve is not None:
+                msg = "Type of power curve of {} is {} but should be " \
+                      "pd.DataFrame or dict."
+                raise TypeError(msg.format(self.__repr__(),
+                                           type(self.power_curve)))
             if isinstance(self.power_coefficient_curve, pd.DataFrame):
                 self.power_coefficient_curve.sort_values(by='wind_speed')
+            elif self.power_coefficient_curve is not None:
+                msg = "Type of power coefficient curve of {} is {} but " \
+                      "should be pd.DataFrame or dict."
+                raise TypeError(msg.format(self.__repr__(),
+                                           type(self.power_coefficient_curve)))
 
     def __repr__(self):
         info = []
