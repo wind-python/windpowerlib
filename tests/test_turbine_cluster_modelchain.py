@@ -259,6 +259,11 @@ class TestTurbineClusterModelChain:
                          'number_of_turbines': 3}]}
         my_cluster =  {'wind_farms': [wf.WindFarm(**my_farm),
                                       wf.WindFarm(**self.test_farm)]}
+        power_output_exp = pd.Series(data=[10853277.966972714,
+                                           21731814.593688786],
+                                     name='feedin_power_plant')
         # run model with my_cluster
-        tc_mc.TurbineClusterModelChain(power_plant=wtc.WindTurbineCluster(
-            **my_cluster)).run_model(self.weather_df)
+        test_tc_mc = tc_mc.TurbineClusterModelChain(
+            power_plant=wtc.WindTurbineCluster(**my_cluster))
+        test_tc_mc.run_model(self.weather_df)
+        assert_series_equal(test_tc_mc.power_output, power_output_exp)

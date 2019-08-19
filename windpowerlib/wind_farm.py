@@ -361,7 +361,7 @@ class WindFarm(object):
                 if power_curve.iloc[0]['wind_speed'] != 0.0:
                     power_curve = pd.concat(
                         [pd.DataFrame(data={
-                            'wind_speed': [0.0], 'value': [0.0]}),
+                            'value': [0.0], 'wind_speed': [0.0]}),
                             power_curve], join='inner')
                 if power_curve.iloc[-1]['value'] != 0.0:
                     power_curve = pd.concat(
