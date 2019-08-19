@@ -16,6 +16,10 @@ from windpowerlib import (wind_speed, density, temperature, power_output,
 class ModelChain(object):
     r"""Model to determine the output of a wind turbine
 
+    The ModelChain class provides a standardized, high-level
+    interface for all of the modeling steps necessary for calculating wind
+    turbine power output from weather time series inputs.
+
     Parameters
     ----------
     power_plant : :class:`~.wind_turbine.WindTurbine`
@@ -23,31 +27,73 @@ class ModelChain(object):
         turbine.
     wind_speed_model : str
         Parameter to define which model to use to calculate the wind speed at
-        hub height. Valid options are 'logarithmic', 'hellman' and
-        'interpolation_extrapolation', 'log_interpolation_extrapolation'.
+        hub height. Valid options are:
+
+        * 'logarithmic' -
+          See :func:`~.wind_speed.logarithmic_profile` for more information.
+          The parameter `obstacle_height` can be used to set the height of
+          obstacles in the surrounding area of the wind turbine.
+        * 'hellman' -
+          See :func:`~.wind_speed.hellman` for more information.
+        * 'interpolation_extrapolation' -
+          See :func:`~.tools.linear_interpolation_extrapolation` for more
+          information.
+        * 'log_interpolation_extrapolation' -
+          See :func:`~.tools.logarithmic_interpolation_extrapolation` for more
+          information.
+
         Default: 'logarithmic'.
     temperature_model : str
         Parameter to define which model to use to calculate the temperature of
-        air at hub height. Valid options are 'linear_gradient' and
-        'interpolation_extrapolation'. Default: 'linear_gradient'.
+        air at hub height. Valid options are:
+
+        * 'linear_gradient' -
+          See :func:`~.temperature.linear_gradient` for more
+          information.
+        * 'interpolation_extrapolation' -
+          See :func:`~.tools.linear_interpolation_extrapolation` for more
+          information.
+
+        Default: 'linear_gradient'.
     density_model : str
         Parameter to define which model to use to calculate the density of air
-        at hub height. Valid options are 'barometric', 'ideal_gas' and
-        'interpolation_extrapolation'. Default: 'barometric'.
+        at hub height. Valid options are:
+
+        * 'barometric' -
+          See :func:`~.density.barometric` for more information.
+        * 'ideal_gas' -
+          See :func:`~.density.ideal_gas` for more information.
+        * 'interpolation_extrapolation' -
+          See :func:`~.tools.linear_interpolation_extrapolation` for more
+          information.
+
+        Default: 'barometric'.
     power_output_model : str
         Parameter to define which model to use to calculate the turbine power
-        output. Valid options are 'power_curve' and 'power_coefficient_curve'.
+        output. Valid options are:
+
+        * 'power_curve' -
+          See :func:`~.power_output.power_curve` for more information. In order
+          to use the density corrected power curve to calculate the power
+          output set parameter `density_correction` to True.
+        * 'power_coefficient_curve' -
+          See :func:`~.power_output.power_coefficient_curve` for more
+          information.
+
         Default: 'power_curve'.
     density_correction : bool
-        If the parameter is True the density corrected power curve is used for
-        the calculation of the turbine power output. Default: False.
+        This parameter is only used if the parameter `power_output_model` is
+        'power_curve'. For more information on this parameter see parameter
+        `density_correction` in :func:`~.power_output.power_curve`.
+        Default: False.
     obstacle_height : float
-        Height of obstacles in the surrounding area of the wind turbine in m.
-        Set `obstacle_height` to zero for wide spread obstacles. Default: 0.
+        This parameter is only used if the parameter `wind_speed_model` is
+        'logarithmic'. For more information on this parameter see parameter
+        `obstacle_height` in :func:`~.wind_speed.logarithmic`. Default: 0.
     hellman_exp : float
-        The Hellman exponent, which combines the increase in wind speed due to
-        stability of atmospheric conditions and surface roughness into one
-        constant. Default: None.
+        This parameter is only used if the parameter `wind_speed_model` is
+        'hellman'. For more information on this parameter see parameter
+        `hellman_exponent` in :func:`~.wind_speed.hellman`. Default: None.
 
     Attributes
     ----------
@@ -55,32 +101,22 @@ class ModelChain(object):
         A :class:`~.wind_turbine.WindTurbine` object representing the wind
         turbine.
     wind_speed_model : str
-        Parameter to define which model to use to calculate the wind speed at
-        hub height. Valid options are 'logarithmic', 'hellman' and
-        'interpolation_extrapolation', 'log_interpolation_extrapolation'.
-        Default: 'logarithmic'.
+        Defines which model is used to calculate the wind speed at hub height.
     temperature_model : str
-        Parameter to define which model to use to calculate the temperature of
-        air at hub height. Valid options are 'linear_gradient' and
-        'interpolation_extrapolation'. Default: 'linear_gradient'.
+        Defines which model is used to calculate the temperature of air at hub
+        height.
     density_model : str
-        Parameter to define which model to use to calculate the density of air
-        at hub height. Valid options are 'barometric', 'ideal_gas' and
-        'interpolation_extrapolation'. Default: 'barometric'.
+        Defines which model is used to calculate the density of air at hub
+        height.
     power_output_model : str
-        Parameter to define which model to use to calculate the turbine power
-        output. Valid options are 'power_curve' and 'power_coefficient_curve'.
-        Default: 'power_curve'.
+        Defines which model is used to calculate the turbine power output.
     density_correction : bool
-        If the parameter is True the density corrected power curve is used for
-        the calculation of the turbine power output. Default: False.
-    hellman_exp : float
-        The Hellman exponent, which combines the increase in wind speed due to
-        stability of atmospheric conditions and surface roughness into one
-        constant. Default: None.
+        Used to set `density_correction` parameter in
+        :func:`~.power_output.power_curve`.
     obstacle_height : float
-        Height of obstacles in the surrounding area of the wind turbine in m.
-        Set `obstacle_height` to zero for wide spread obstacles. Default: 0.
+        Used to set `obstacle_height` in :func:`~.wind_speed.logarithmic`.
+    hellman_exp : float
+        Used to set `hellman_exponent` in :func:`~.wind_speed.hellman`.
     power_output : :pandas:`pandas.Series<series>`
         Electrical power output of the wind turbine in W.
 
