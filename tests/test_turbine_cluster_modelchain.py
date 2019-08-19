@@ -40,8 +40,7 @@ class TestTurbineClusterModelChain:
         self.test_turbine_2 = {'hub_height': 90,
                                'rotor_diameter': 60,
                                'turbine_type': 'V90/2000',
-                               'nominal_power': 2000000.0
-                               }
+                               'nominal_power': 2000000.0}
         self.test_farm = {'wind_turbine_fleet': [
                               {'wind_turbine':
                                   wt.WindTurbine(**self.test_turbine),
@@ -191,17 +190,18 @@ class TestTurbineClusterModelChain:
 
         # Raise ValueError when aggregated wind farm power curve needs to be
         # calculated but turbine does not have a power curve
-        test_turbine = {
+        test_turbine_data = {
             'hub_height': 100,
             'rotor_diameter': 98,
-            'turbine_type': 'V90/2000',
-            'power_curve': True}
+            'turbine_type': 'V90/2000'}
+        test_turbine = wt.WindTurbine(**test_turbine_data)
+        test_turbine.power_curve = True
         test_farm = {'wind_turbine_fleet':
                          [{'wind_turbine':
                                wt.WindTurbine(**self.test_turbine),
                            'number_of_turbines': 3},
                           {'wind_turbine':
-                               wt.WindTurbine(**test_turbine),
+                               test_turbine,
                            'number_of_turbines': 3}]}
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=wf.WindFarm(**test_farm))

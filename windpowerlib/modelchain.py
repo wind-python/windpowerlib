@@ -91,8 +91,7 @@ class ModelChain(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'turbine_type': 'E-126/4200',
-    ...    'power_curve': True}
+    ...    'turbine_type': 'E-126/4200'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> modelchain_data = {'density_model': 'ideal_gas'}
     >>> e126_mc = modelchain.ModelChain(e126, **modelchain_data)

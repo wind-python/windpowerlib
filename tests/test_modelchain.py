@@ -21,7 +21,9 @@ class TestModelChain:
         """Setup default values"""
         self.test_turbine = {'hub_height': 100,
                              'turbine_type': 'E-126/4200',
-                             'power_curve': True}
+                             'power_curve': pd.DataFrame(
+                                 data={'value': [0.0, 4200 * 1000],
+                                       'wind_speed': [0.0, 25.0]})}
 
         temperature_2m = np.array([[267], [268]])
         temperature_10m = np.array([[267], [266]])
