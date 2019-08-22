@@ -177,9 +177,9 @@ class WindFarm(object):
                         'wind turbine is set.'.format(
                             turbine=row['wind_turbine']))
             else:
-                if not round(row['total_capacity'], 3) == round(
+                if not abs(row['total_capacity'] - (
                         row['number_of_turbines'] *
-                        row['wind_turbine'].nominal_power, 3):
+                        row['wind_turbine'].nominal_power)) < 1:
                     self.wind_turbine_fleet.loc[ix, 'total_capacity'] = \
                         row['number_of_turbines'] * \
                         row['wind_turbine'].nominal_power
