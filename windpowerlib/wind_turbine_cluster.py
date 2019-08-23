@@ -55,13 +55,13 @@ class WindTurbineCluster(object):
 
     def __repr__(self):
         if self.name is not '':
-            repr = 'Wind turbine cluster: {name}'.format(name=self.name)
+            wf_repr = 'Wind turbine cluster: {name}'.format(name=self.name)
         else:
             info = []
             for wind_farm in self.wind_farms:
                 info.append(wind_farm)
-            repr = r'Wind turbine cluster with: {info}'.format(info=info)
-        return repr
+            wf_repr = r'Wind turbine cluster with: {info}'.format(info=info)
+        return wf_repr
 
     @property
     def nominal_power(self):
