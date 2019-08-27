@@ -198,6 +198,16 @@ class WindTurbine(object):
 
         return turbine_repr
 
+    def to_group(self, number_turbines=None, total_capacity=None):
+        if number_turbines is not None and total_capacity is not None:
+            raise ValueError("The 'number' and the 'total_capacity are"
+                             " mutually exclusive. Use just one of them.")
+        elif total_capacity is not None:
+            number_turbines = total_capacity / self.nominal_power
+        elif number_turbines is None:
+            number_turbines = 1
+        return {'wind_turbine': self, 'number_of_turbines': number_turbines}
+
 
 def get_turbine_data_from_file(turbine_type, path):
     r"""
