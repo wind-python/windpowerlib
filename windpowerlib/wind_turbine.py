@@ -113,14 +113,6 @@ class WindTurbine(object):
     18000.0
     >>> print(e_t_1.nominal_power)
     1500000.0
-    >>> print(e_t_1.to_group(5)['number_of_turbines'])
-    5
-    >>> print(e_t_1.to_group()['number_of_turbines'])
-    1
-    >>> print(e_t_1.to_group(number_turbines=7)['number_of_turbines'])
-    7
-    >>> print(e_t_1.to_group(total_capacity=4500000)['number_of_turbines'])
-    3.0
     """
 
     def __init__(self, hub_height, nominal_power=None, path='oedb',
@@ -207,6 +199,11 @@ class WindTurbine(object):
 
     def to_group(self, number_turbines=None, total_capacity=None):
         """
+        Creates a WindTurbine group as a dictionary with the keys
+        'number_of_turbines' and 'wind_turbine'. It can be used to calculate
+        the number of turbines for a given total capacity or to create a
+        dictionary that can be used to define a WindFarm object.
+
         Parameters
         ----------
         number_turbines : float
@@ -216,7 +213,26 @@ class WindTurbine(object):
 
         Returns
         -------
+        dict
+            A dictionary with two keys ('number_of_turbines' and 'wind_turbine'
 
+        Examples
+        --------
+        >>> from windpowerlib import WindTurbine
+        >>> enerconE126 = {
+        ...    'hub_height': 135,
+        ...    'turbine_type': 'E-126/4200'}
+        >>> e126 = WindTurbine(**enerconE126)
+        >>> e126.to_group(5)['number_of_turbines']
+        5
+        >>> e126.to_group()['number_of_turbines']
+        1
+        >>> e126.to_group(number_turbines=7)['number_of_turbines']
+        7
+        >>> e126.to_group(total_capacity=12600000)['number_of_turbines']
+        3.0
+        >>> e126.to_group(total_capacity=14700000)['number_of_turbines']
+        3.5
         """
         if number_turbines is not None and total_capacity is not None:
             raise ValueError("The 'number' and the 'total_capacity parameter "
