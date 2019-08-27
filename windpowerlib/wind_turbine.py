@@ -13,6 +13,7 @@ import logging
 import warnings
 import requests
 import os
+from collections import namedtuple
 from windpowerlib.tools import WindpowerlibUserWarning
 
 
@@ -213,8 +214,9 @@ class WindTurbine(object):
 
         Returns
         -------
-        dict
-            A dictionary with two keys ('number_of_turbines' and 'wind_turbine'
+        namedtuple
+            A namedtuple with two fields: 'number_of_turbines' and
+            'wind_turbine'.
 
         Examples
         --------
@@ -223,16 +225,18 @@ class WindTurbine(object):
         ...    'hub_height': 135,
         ...    'turbine_type': 'E-126/4200'}
         >>> e126 = WindTurbine(**enerconE126)
-        >>> e126.to_group(5)['number_of_turbines']
+        >>> e126.to_group(5).number_of_turbines
         5
-        >>> e126.to_group()['number_of_turbines']
+        >>> e126.to_group().number_of_turbines
         1
-        >>> e126.to_group(number_turbines=7)['number_of_turbines']
+        >>> e126.to_group(number_turbines=7).number_of_turbines
         7
-        >>> e126.to_group(total_capacity=12600000)['number_of_turbines']
+        >>> e126.to_group(total_capacity=12600000).number_of_turbines
         3.0
-        >>> e126.to_group(total_capacity=14700000)['number_of_turbines']
+        >>> e126.to_group(total_capacity=14700000).number_of_turbines
         3.5
+        >>> e126.to_group(total_capacity=12600000).wind_turbine.nominal_power
+        4200000.0
         """
         if number_turbines is not None and total_capacity is not None:
             raise ValueError("The 'number' and the 'total_capacity parameter "
@@ -241,7 +245,10 @@ class WindTurbine(object):
             number_turbines = total_capacity / self.nominal_power
         elif number_turbines is None:
             number_turbines = 1
-        return {'wind_turbine': self, 'number_of_turbines': number_turbines}
+        wind_turbine_group = namedtuple('WindTurbineGroup',
+                                        'wind_turbine number_of_turbines')
+        return wind_turbine_group(
+            wind_turbine=self, number_of_turbines=number_turbines)
 
 
 def get_turbine_data_from_file(turbine_type, path):
