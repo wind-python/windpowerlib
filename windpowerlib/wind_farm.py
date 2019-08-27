@@ -125,10 +125,7 @@ class WindFarm(object):
         """
         # convert list to dataframe if necessary
         if isinstance(self.wind_turbine_fleet, list):
-            try:
-                self.wind_turbine_fleet = pd.DataFrame(self.wind_turbine_fleet)
-            except ValueError:
-                raise ValueError("Wind turbine fleet not provided properly.")
+            self.wind_turbine_fleet = pd.DataFrame(self.wind_turbine_fleet)
 
         # check wind turbines
         try:
