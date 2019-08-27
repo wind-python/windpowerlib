@@ -99,7 +99,6 @@ class WindFarm(object):
     >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet)
     >>> print(example_farm.nominal_power)
     31200000.0
-
     """
 
     def __init__(self, wind_turbine_fleet, efficiency=None, name='', **kwargs):
@@ -128,7 +127,7 @@ class WindFarm(object):
         if isinstance(self.wind_turbine_fleet, list):
             try:
                 self.wind_turbine_fleet = pd.DataFrame(self.wind_turbine_fleet)
-            except:
+            except ValueError:
                 raise ValueError("Wind turbine fleet not provided properly.")
 
         # check wind turbines
@@ -165,7 +164,7 @@ class WindFarm(object):
                 else:
                     self.wind_turbine_fleet.loc[ix, 'number_of_turbines'] = \
                         number_of_turbines
-            except:
+            except ValueError:
                 raise ValueError(msg.format(row['wind_turbine']))
 
         # calculate total capacity if necessary and check that total capacity
@@ -176,7 +175,7 @@ class WindFarm(object):
                     self.wind_turbine_fleet.loc[ix, 'total_capacity'] = \
                         row['number_of_turbines'] * \
                         row['wind_turbine'].nominal_power
-                except:
+                except ValueError:
                     raise ValueError(
                         'Total capacity of turbines of type {turbine} cannot '
                         'be deduced. Please check if the nominal power of the '
