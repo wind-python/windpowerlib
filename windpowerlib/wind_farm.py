@@ -93,6 +93,12 @@ class WindFarm(object):
     >>> example_farm = wind_farm.WindFarm(**example_farm_data)
     >>> print(example_farm.nominal_power)
     31200000.0
+    >>> # turbine fleet as list of WindTurbine using the 'to_group' method.
+    >>> wind_turbine_fleet = [e126.to_group(number_turbines=6),
+    ...                       v90.to_group(total_capacity=3 * 2e6)]
+    >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet)
+    >>> print(example_farm.nominal_power)
+    31200000.0
 
     """
 

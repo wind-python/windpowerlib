@@ -16,12 +16,16 @@ from windpowerlib.wind_turbine import (get_turbine_data_from_file, WindTurbine,
 
 class TestWindTurbine:
 
+    @classmethod
+    def setup_class(cls):
+        """Setup default values"""
+        cls.source = os.path.join(os.path.dirname(__file__), '../example/data')
+
     def test_warning(self, recwarn):
-        source = os.path.join(os.path.dirname(__file__), '../example/data')
         test_turbine_data = {'hub_height': 100,
                              'rotor_diameter': 80,
                              'turbine_type': 'turbine_not_in_file',
-                             'path': source}
+                             'path': self.source}
         assert(WindTurbine(**test_turbine_data).power_curve is None)
         assert recwarn.pop(WindpowerlibUserWarning)
 
@@ -50,3 +54,27 @@ class TestWindTurbine:
     @pytest.mark.filterwarnings("ignore:The WindTurbine")
     def test_string_representation_of_wind_turbine(self):
         assert "Wind turbine: ['hub height=120 m'" in repr(WindTurbine(120))
+
+    def test_to_group_method(self):
+        example_turbine = {
+           'hub_height': 100,
+           'rotor_diameter': 70,
+           'turbine_type': 'DUMMY 3',
+           'path': self.source}
+        e_t_1 = WindTurbine(**example_turbine)
+        assert(isinstance(e_t_1.to_group(5), dict))
+        assert(e_t_1.to_group(5)['number_of_turbines'] == 5)
+        assert(e_t_1.to_group(number_turbines=5)['number_of_turbines'] == 5)
+        assert(e_t_1.to_group(total_capacity=3e6)['number_of_turbines'] == 2.0)
+
+    def test_wrongly_defined_to_group_method(self):
+        example_turbine = {
+           'hub_height': 100,
+           'rotor_diameter': 70,
+           'turbine_type': 'DUMMY 3',
+           'path': self.source}
+        e_t_1 = WindTurbine(**example_turbine)
+        with pytest.raises(ValueError,
+                           match="The 'number' and the 'total_capacity"
+                                 " parameter are mutually exclusive."):
+            e_t_1.to_group(5, 3000)
