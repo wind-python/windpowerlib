@@ -237,6 +237,10 @@ class WindTurbine(object):
         3.5
         >>> e126.to_group(total_capacity=12600000).wind_turbine.nominal_power
         4200000.0
+        >>> e126.to_group(5)
+        WindTurbineGroup(wind_turbine=Wind turbine: E-126/4200 ['nominal\
+ power=4200000.0 W', 'hub height=135 m', 'rotor diameter=127.0 m',\
+ 'power_coefficient_curve=True', 'power_curve=True'], number_of_turbines=5)
         """
         if number_turbines is not None and total_capacity is not None:
             raise ValueError("The 'number' and the 'total_capacity parameter "
