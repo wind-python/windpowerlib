@@ -113,6 +113,8 @@ class WindTurbine(object):
     18000.0
     >>> print(e_t_1.nominal_power)
     1500000.0
+    >>> print(e_t_1.to_group(5)['number_of_turbines'])
+    5
 
     """
 
