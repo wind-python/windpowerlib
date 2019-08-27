@@ -21,7 +21,7 @@ class WindFarm(object):
 
     Parameters
     ----------
-    wind_turbine_fleet : :pandas:`pandas.DataFrame<frame>` or list(dict)
+    wind_turbine_fleet : :pandas:`pandas.DataFrame<frame>` or list()
         Wind turbines of wind farm. DataFrame/Dictionaries must have
         'wind_turbine' containing a :class:`~.wind_turbine.WindTurbine` object
         and either 'number_of_turbines' (number of wind turbines of the same
@@ -38,11 +38,11 @@ class WindFarm(object):
 
     Attributes
     ----------
-    wind_turbine_fleet : list(dict)
-        Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
+    wind_turbine_fleet : :pandas:`pandas.DataFrame<frame>`
+        Wind turbines of wind farm. DataFrame must have 'wind_turbine'
         (contains a :class:`~.wind_turbine.WindTurbine` object) and
         'number_of_turbines' (number of wind turbines of the same turbine type
-        in the wind farm) as keys.
+        in the wind farm) as columns.
     efficiency : float or :pandas:`pandas.DataFrame<frame>` or None
         Efficiency of the wind farm. Either constant (float) power efficiency
         curve (pd.DataFrame) containing 'wind_speed' and 'efficiency'
