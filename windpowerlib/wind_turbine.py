@@ -115,7 +115,12 @@ class WindTurbine(object):
     1500000.0
     >>> print(e_t_1.to_group(5)['number_of_turbines'])
     5
-
+    >>> print(e_t_1.to_group()['number_of_turbines'])
+    1
+    >>> print(e_t_1.to_group(number_turbines=7)['number_of_turbines'])
+    7
+    >>> print(e_t_1.to_group(total_capacity=4500000)['number_of_turbines'])
+    3.0
     """
 
     def __init__(self, hub_height, nominal_power=None, path='oedb',
@@ -201,6 +206,18 @@ class WindTurbine(object):
         return turbine_repr
 
     def to_group(self, number_turbines=None, total_capacity=None):
+        """
+        Parameters
+        ----------
+        number_turbines : float
+            Number of turbines of the defined type.
+        total_capacity : float
+            Total capacity of the group of wind turbines of the same type.
+
+        Returns
+        -------
+
+        """
         if number_turbines is not None and total_capacity is not None:
             raise ValueError("The 'number' and the 'total_capacity parameter "
                              "are mutually exclusive. Use just one of them.")
