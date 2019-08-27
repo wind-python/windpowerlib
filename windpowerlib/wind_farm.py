@@ -135,8 +135,8 @@ class WindFarm(object):
                         'Wind turbine must be provided as WindTurbine object '
                         'but was provided as {}.'.format(type(turbine)))
         except KeyError:
-            raise ValueError('Missing wind_turbine key/column in '
-                             'wind_turbine_fleet parameter.')
+            raise KeyError('Missing wind_turbine key/column in '
+                           'wind_turbine_fleet parameter.')
 
         # add columns for number of turbines and total capacity if they don't
         # yet exist
@@ -161,7 +161,7 @@ class WindFarm(object):
                 else:
                     self.wind_turbine_fleet.loc[ix, 'number_of_turbines'] = \
                         number_of_turbines
-            except ValueError:
+            except TypeError:
                 raise ValueError(msg.format(row['wind_turbine']))
 
         # calculate total capacity if necessary and check that total capacity
@@ -172,7 +172,7 @@ class WindFarm(object):
                     self.wind_turbine_fleet.loc[ix, 'total_capacity'] = \
                         row['number_of_turbines'] * \
                         row['wind_turbine'].nominal_power
-                except ValueError:
+                except TypeError:
                     raise ValueError(
                         'Total capacity of turbines of type {turbine} cannot '
                         'be deduced. Please check if the nominal power of the '

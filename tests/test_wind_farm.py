@@ -48,10 +48,11 @@ class TestWindFarm:
 
     def test_initialization_1(self):
         """test catching error when wind_turbine_fleet not provided as list"""
-        msg = 'Wind turbine fleet not provided properly.'
+        msg = 'Wind turbine must be provided as WindTurbine object'
         with pytest.raises(ValueError, match=msg):
-            WindFarm(wind_turbine_fleet=[{'wind_turbine': 'turbine',
-                                          'number_of_turbines': 2}, 'dummy'])
+            WindFarm(wind_turbine_fleet={'wind_turbine': 'turbine',
+                                         'number_of_turbines': 2},
+                     name='dummy')
 
     def test_initialization_2(self):
         """test catching error when WindTurbine in wind_turbine_fleet
@@ -71,7 +72,7 @@ class TestWindFarm:
                                    WindTurbine(**self.test_turbine_2)],
                   'number_of_turbines': [3, 2]})
         msg = 'Missing wind_turbine key/column in wind_turbine_fleet'
-        with pytest.raises(ValueError, match=msg):
+        with pytest.raises(KeyError, match=msg):
             WindFarm(wind_turbine_fleet=wind_turbine_fleet)
 
     def test_initialization_4(self, recwarn):
