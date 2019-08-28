@@ -8,9 +8,9 @@ __license__ = "GPLv3"
 import pytest
 import os
 from windpowerlib.tools import WindpowerlibUserWarning
-from collections import namedtuple
+
 from windpowerlib.wind_turbine import (get_turbine_data_from_file, WindTurbine,
-                                       get_turbine_types,
+                                       get_turbine_types, WindTurbineGroup,
                                        load_turbine_data_from_oedb)
 
 
@@ -62,7 +62,7 @@ class TestWindTurbine:
            'turbine_type': 'DUMMY 3',
            'path': self.source}
         e_t_1 = WindTurbine(**example_turbine)
-        assert(isinstance(e_t_1.to_group(), tuple))
+        assert(isinstance(e_t_1.to_group(), WindTurbineGroup))
         assert(e_t_1.to_group(5).number_of_turbines == 5)
         assert(e_t_1.to_group(number_turbines=5).number_of_turbines == 5)
         assert(e_t_1.to_group(total_capacity=3e6).number_of_turbines == 2.0)

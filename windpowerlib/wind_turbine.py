@@ -13,8 +13,8 @@ import logging
 import warnings
 import requests
 import os
-from collections import namedtuple
 from windpowerlib.tools import WindpowerlibUserWarning
+from typing import NamedTuple
 
 
 class WindTurbine(object):
@@ -199,11 +199,14 @@ class WindTurbine(object):
         return turbine_repr
 
     def to_group(self, number_turbines=None, total_capacity=None):
-        """
-        Creates a WindTurbine group as a dictionary with the keys
-        'number_of_turbines' and 'wind_turbine'. It can be used to calculate
-        the number of turbines for a given total capacity or to create a
-        dictionary that can be used to define a WindFarm object.
+        r"""
+        Creates a :class:`~windpowerlib.wind_turbine.WindTurbineGroup`, a
+        NamedTuple data container with the fields 'number_of_turbines' and
+        'wind_turbine'.
+
+        It can be used to calculate the number of turbines for a given total
+        capacity or to create a namedtuple that can be used to define a
+        :class:`~windpowerlib.wind_farm.WindFarm` object.
 
         Parameters
         ----------
@@ -214,7 +217,7 @@ class WindTurbine(object):
 
         Returns
         -------
-        namedtuple
+        WindTurbineGroup
             A namedtuple with two fields: 'number_of_turbines' and
             'wind_turbine'.
 
@@ -253,10 +256,22 @@ class WindTurbine(object):
             number_turbines = total_capacity / self.nominal_power
         elif number_turbines is None:
             number_turbines = 1
-        wind_turbine_group = namedtuple('WindTurbineGroup',
-                                        'wind_turbine number_of_turbines')
-        return wind_turbine_group(
+
+        return WindTurbineGroup(
             wind_turbine=self, number_of_turbines=number_turbines)
+
+
+# This is working for Python >= 3.5.
+# There a cleaner solutions for Python >= 3.6, once the support of 3.5 is
+# dropped: https://stackoverflow.com/a/50038614
+class WindTurbineGroup(NamedTuple('WindTurbineGroup', [
+        ('wind_turbine', WindTurbine), ('number_of_turbines', float)])):
+    """
+    A simple data container to define more than one turbine of the same type.
+    Use the :func:`~windpowerlib.wind_turbine.WindTurbine.to_group` method to
+    easily create a WindTurbineGroup from a :class:`~windpowerlib.wind_turbine.WindTurbine` object.
+    """
+    __slots__ = ()
 
 
 def get_turbine_data_from_file(turbine_type, path):
