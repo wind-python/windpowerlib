@@ -282,7 +282,8 @@ class WindTurbineGroup(NamedTuple('WindTurbineGroup', [
     __slots__ = ()
 
 
-WindTurbineGroup.wind_turbine.__doc__ = ':class:`~windpowerlib.wind_farm.WindFarm`'
+WindTurbineGroup.wind_turbine.__doc__ = (
+    'A :class:`~windpowerlib.wind_farm.WindTurbine` object.')
 WindTurbineGroup.number_of_turbines.__doc__ = (
     'Number of turbines of type WindTurbine')
 
