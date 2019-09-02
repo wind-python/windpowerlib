@@ -72,14 +72,15 @@ power curve or power coefficient curve needed by the :py:class:`~.wind_turbine.W
 
 .. _create_input_types_label:
 
-Create Data Container
+Data Container
 =====================
 
-Create groups to be used as an input in classes und functions.
+Create data container to be used as an input in classes und functions.
 
 .. autosummary::
    :toctree: temp/
 
+   wind_turbine.WindTurbineGroup
    wind_turbine.WindTurbine.to_group
 
 .. _wind_farm_label:

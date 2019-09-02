@@ -269,9 +269,22 @@ class WindTurbineGroup(NamedTuple('WindTurbineGroup', [
     """
     A simple data container to define more than one turbine of the same type.
     Use the :func:`~windpowerlib.wind_turbine.WindTurbine.to_group` method to
-    easily create a WindTurbineGroup from a :class:`~windpowerlib.wind_turbine.WindTurbine` object.
+    easily create a WindTurbineGroup from a
+    :class:`~windpowerlib.wind_turbine.WindTurbine` object.
+
+    Parameters
+    ----------
+    'wind_turbine' : WindTurbine
+        A WindTurbine object with all necessary attributes.
+    'number_of_turbines' : float
+        The number of turbines. The number is not restricted to integer values.
     """
     __slots__ = ()
+
+
+WindTurbineGroup.wind_turbine.__doc__ = ':class:`~windpowerlib.wind_farm.WindFarm`'
+WindTurbineGroup.number_of_turbines.__doc__ = (
+    'Number of turbines of type WindTurbine')
 
 
 def get_turbine_data_from_file(turbine_type, path):
