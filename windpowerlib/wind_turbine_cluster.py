@@ -35,9 +35,6 @@ class WindTurbineCluster(object):
     hub_height : float
         The calculated average hub height of the wind turbine cluster. See
         :py:func:`mean_hub_height` for more information.
-    nominal_power : float
-        The nominal power is the sum of the nominal power of all turbines in
-        the wind turbine cluster in W.
     power_curve : :pandas:`pandas.DataFrame<frame>` or None
         The calculated power curve of the wind turbine cluster. See
         :py:func:`assign_power_curve` for more information.
@@ -65,15 +62,13 @@ class WindTurbineCluster(object):
     @property
     def nominal_power(self):
         r"""
-        The nominal power of the wind turbine cluster.
-
-        See :attr:`~.wind_turbine_cluster.WindTurbineCluster.nominal_power`
-        for further information.
+        The nominal power is the sum of the nominal power of all turbines in
+        the wind turbine cluster.
 
         Returns
         -------
         float
-            Nominal power of the wind turbine cluster in w.
+            Nominal power of the wind turbine cluster in W.
 
         """
         if not self._nominal_power:
