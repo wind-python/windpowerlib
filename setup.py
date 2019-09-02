@@ -17,7 +17,7 @@ setup(name='windpowerlib',
       package_data={
           'windpowerlib': [os.path.join('data', '*.csv')]},
       long_description=read('README.rst'),
-      long_description_content_type='text/rst',
+      long_description_content_type='text/x-rst',
       zip_safe=False,
       install_requires=['pandas >= 0.19.1, < 0.26',
                         'requests < 3.0'],
