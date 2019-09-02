@@ -360,7 +360,7 @@ def load_turbine_data_from_oedb():
     oep_url = 'http://oep.iks.cs.ovgu.de/'
     # location of data
     schema = 'supply'
-    table = 'turbine_library'
+    table = 'wind_turbine_library'
     # load data
     result = requests.get(
         oep_url + '/api/v0/schema/{}/tables/{}/rows/?'.format(
@@ -394,9 +394,8 @@ def load_turbine_data_from_oedb():
         # add nominal power to power (coefficient) data frame
         curves_df = pd.merge(
             left=curves_df, right=turbine_data[['turbine_type',
-                                                'installed_capacity']],
-            on='turbine_type').set_index('turbine_type').rename(
-                columns={'installed_capacity': 'nominal_power'})
+                                                'nominal_power']],
+            on='turbine_type').set_index('turbine_type')
         curves_df.to_csv(filename.format('{}s'.format(curve_type)))
 
     return turbine_data

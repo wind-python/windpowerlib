@@ -1,0 +1,11 @@
+v0.1.3 (September 2, 2019)
+++++++++++++++++++++++++++++++
+
+Bug fixes
+#########
+* Acces to renamed oedb table has been fixed (`Issue #71 <https://github.com/wind-python/windpowerlib/issues/71>`_).
+
+Contributors
+############
+* Birgit Schachler
+* Uwe Krien
