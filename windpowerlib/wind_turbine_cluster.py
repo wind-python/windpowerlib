@@ -83,7 +83,8 @@ class WindTurbineCluster(object):
 
         """
         if not self._nominal_power:
-            self.nominal_power = self.get_installed_power()
+            self.nominal_power = sum(wind_farm.nominal_power
+                                     for wind_farm in self.wind_farms)
         return self._nominal_power
 
     @nominal_power.setter
@@ -130,21 +131,6 @@ class WindTurbineCluster(object):
             np.log(wind_farm.hub_height) * wind_farm.nominal_power for
             wind_farm in self.wind_farms) / self.nominal_power)
         return self
-
-    def get_installed_power(self):
-        r"""
-        Calculates the :py:attr:`~nominal_power` of a wind turbine cluster.
-
-        Returns
-        -------
-        float
-            Nominal power of the wind farm in W. See :py:attr:`~nominal_power`
-            for further information.
-
-        """
-        for wind_farm in self.wind_farms:
-            wind_farm.nominal_power = wind_farm.nominal_power
-        return sum(wind_farm.nominal_power for wind_farm in self.wind_farms)
 
     def assign_power_curve(self, wake_losses_model='wind_farm_efficiency',
                            smoothing=False, block_width=0.5,
