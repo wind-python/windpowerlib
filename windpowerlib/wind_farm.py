@@ -307,6 +307,10 @@ class WindFarm(object):
             Turbulence intensity at hub height of the wind farm for power curve
             smoothing with 'turbulence_intensity' method. Can be calculated
             from `roughness_length` instead. Default: None.
+        roughness_length : float (optional)
+            Roughness length. If `standard_deviation_method` is
+            'turbulence_intensity' and `turbulence_intensity` is not given
+            the turbulence intensity is calculated via the roughness length.
 
         Returns
         -------
