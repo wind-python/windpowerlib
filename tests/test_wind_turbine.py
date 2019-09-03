@@ -75,6 +75,6 @@ class TestWindTurbine:
            'path': self.source}
         e_t_1 = WindTurbine(**example_turbine)
         with pytest.raises(ValueError,
-                           match="The 'number' and the 'total_capacity"
-                                 " parameter are mutually exclusive."):
+                           match="The 'number' and the 'total_capacity' "
+                                 "parameter are mutually exclusive."):
             e_t_1.to_group(5, 3000)
