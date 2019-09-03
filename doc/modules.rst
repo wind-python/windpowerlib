@@ -93,7 +93,7 @@ as the aggregated power curve of a :py:class:`~.wind_farm.WindFarm` object.
 Wind turbine cluster calculations
 =================================
 
-Functions and methods to calculate the mean hub height, installed power as well
+Functions and methods to calculate the mean hub height, nominal power as well
 as the aggregated power curve of a :py:class:`~.wind_turbine_cluster.WindTurbineCluster` object.
 This is realized in a new module as the functions differ from the functions in
 the :py:class:`~.wind_farm.WindFarm` class.
@@ -103,7 +103,6 @@ the :py:class:`~.wind_farm.WindFarm` class.
 
    wind_turbine_cluster.WindTurbineCluster.nominal_power
    wind_turbine_cluster.WindTurbineCluster.mean_hub_height
-   wind_turbine_cluster.WindTurbineCluster.get_installed_power
    wind_turbine_cluster.WindTurbineCluster.assign_power_curve
 
 .. _poweroutput_module_label:
