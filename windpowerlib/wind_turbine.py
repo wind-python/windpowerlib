@@ -224,7 +224,8 @@ class WindTurbine(object):
         r"""
         Creates a :class:`~windpowerlib.wind_turbine.WindTurbineGroup`, a
         NamedTuple data container with the fields 'number_of_turbines' and
-        'wind_turbine'.
+        'wind_turbine'. If no parameter is passed the number of turbines is
+        set to one.
 
         It can be used to calculate the number of turbines for a given total
         capacity or to create a namedtuple that can be used to define a
@@ -233,7 +234,7 @@ class WindTurbine(object):
         Parameters
         ----------
         number_turbines : float
-            Number of turbines of the defined type.
+            Number of turbines of the defined type. Default: 1
         total_capacity : float
             Total capacity of the group of wind turbines of the same type.
 
