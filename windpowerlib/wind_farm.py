@@ -362,14 +362,13 @@ class WindFarm(object):
                     power_curve = pd.concat(
                         [pd.DataFrame(data={
                             'value': [0.0], 'wind_speed': [0.0]}),
-                         power_curve], sort=True)
+                            power_curve], join='inner')
                 if power_curve.iloc[-1]['value'] != 0.0:
                     power_curve = pd.concat(
                         [power_curve, pd.DataFrame(data={
-                            'value': [0.0], 'wind_speed': [
-                                power_curve['wind_speed'].loc[
-                                    power_curve.index[-1]] + 0.5]})],
-                        sort=True)
+                            'wind_speed': [power_curve['wind_speed'].loc[
+                                               power_curve.index[-1]] + 0.5],
+                            'value': [0.0]})], join='inner')
             # Add power curves of all turbine types to data frame
             # (multiplied by turbine amount)
             df = pd.concat(
@@ -379,7 +378,7 @@ class WindFarm(object):
         wind_farm_power_curve = pd.DataFrame(
             df.interpolate(method='index').sum(axis=1))
         wind_farm_power_curve.columns = ['value']
-        wind_farm_power_curve.reset_index('wind_speed', inplace=True)
+        wind_farm_power_curve.reset_index(inplace=True)
         # Apply power curve smoothing and consideration of wake losses
         # after the summation
         if smoothing and smoothing_order == 'wind_farm_power_curves':

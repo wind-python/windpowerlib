@@ -40,8 +40,7 @@ class TestTurbineClusterModelChain:
         self.test_turbine_2 = {'hub_height': 90,
                                'rotor_diameter': 60,
                                'turbine_type': 'V90/2000',
-                               'nominal_power': 2000000.0
-                               }
+                               'nominal_power': 2000000.0}
         self.test_farm = {'wind_turbine_fleet': [
                               {'wind_turbine':
                                   wt.WindTurbine(**self.test_turbine),
@@ -191,17 +190,18 @@ class TestTurbineClusterModelChain:
 
         # Raise ValueError when aggregated wind farm power curve needs to be
         # calculated but turbine does not have a power curve
-        test_turbine = {
+        test_turbine_data = {
             'hub_height': 100,
             'rotor_diameter': 98,
-            'turbine_type': 'V90/2000',
-            'power_curve': True}
+            'turbine_type': 'V90/2000'}
+        test_turbine = wt.WindTurbine(**test_turbine_data)
+        test_turbine.power_curve = True
         test_farm = {'wind_turbine_fleet':
                          [{'wind_turbine':
                                wt.WindTurbine(**self.test_turbine),
                            'number_of_turbines': 3},
                           {'wind_turbine':
-                               wt.WindTurbine(**test_turbine),
+                               test_turbine,
                            'number_of_turbines': 3}]}
         test_tc_mc = tc_mc.TurbineClusterModelChain(
             power_plant=wf.WindFarm(**test_farm))
@@ -244,3 +244,26 @@ class TestTurbineClusterModelChain:
                                        wf.WindFarm(**self.test_farm_2)]}
         assert 'Wind turbine cluster with:' in repr(
             wtc.WindTurbineCluster(**test_cluster))
+
+    def test_tc_modelchain_with_power_curve_as_dict(self):
+        """Test power curves as dict in TurbineClusterModelChain.run_model()"""
+        my_turbine = {'nominal_power': 3e6, 'hub_height': 105,
+                      'power_curve': {
+                          'value': [p * 1000 for p in [
+                              0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],
+                          'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]}}
+        my_farm = {'wind_turbine_fleet':
+                       [{'wind_turbine': wt.WindTurbine(**my_turbine),
+                         'number_of_turbines': 3},
+                        {'wind_turbine': wt.WindTurbine(**self.test_turbine),
+                         'number_of_turbines': 3}]}
+        my_cluster =  {'wind_farms': [wf.WindFarm(**my_farm),
+                                      wf.WindFarm(**self.test_farm)]}
+        power_output_exp = pd.Series(data=[10853277.966972714,
+                                           21731814.593688786],
+                                     name='feedin_power_plant')
+        # run model with my_cluster
+        test_tc_mc = tc_mc.TurbineClusterModelChain(
+            power_plant=wtc.WindTurbineCluster(**my_cluster))
+        test_tc_mc.run_model(self.weather_df)
+        assert_series_equal(test_tc_mc.power_output, power_output_exp)

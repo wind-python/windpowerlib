@@ -172,6 +172,28 @@ class WindTurbine(object):
                    " Check if the turbine type {0} is in your database file"
                    " or if you passed a valid curve.")
             warnings.warn(msg.format(turbine_type), WindpowerlibUserWarning)
+        else:
+            # power (coefficient) curve to pd.DataFrame in case of being dict
+            if isinstance(self.power_curve, dict):
+                self.power_curve = pd.DataFrame(self.power_curve)
+            if isinstance(self.power_coefficient_curve, dict):
+                self.power_coefficient_curve = pd.DataFrame(
+                    self.power_coefficient_curve)
+            # sort power (coefficient) curve by wind speed
+            if isinstance(self.power_curve, pd.DataFrame):
+                self.power_curve.sort_values(by='wind_speed')
+            elif self.power_curve is not None:
+                msg = "Type of power curve of {} is {} but should be " \
+                      "pd.DataFrame or dict."
+                raise TypeError(msg.format(self.__repr__(),
+                                           type(self.power_curve)))
+            if isinstance(self.power_coefficient_curve, pd.DataFrame):
+                self.power_coefficient_curve.sort_values(by='wind_speed')
+            elif self.power_coefficient_curve is not None:
+                msg = "Type of power coefficient curve of {} is {} but " \
+                      "should be pd.DataFrame or dict."
+                raise TypeError(msg.format(self.__repr__(),
+                                           type(self.power_coefficient_curve)))
 
     def __repr__(self):
         info = []

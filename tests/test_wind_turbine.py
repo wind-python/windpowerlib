@@ -42,7 +42,6 @@ class TestWindTurbine:
 
     def test_wrong_url_load_turbine_data(self):
         """Load turbine data from oedb."""
-
         with pytest.raises(ConnectionError,
                            match="Database connection not successful"):
             load_turbine_data_from_oedb('wrong_schema')
@@ -50,3 +49,22 @@ class TestWindTurbine:
     @pytest.mark.filterwarnings("ignore:The WindTurbine")
     def test_string_representation_of_wind_turbine(self):
         assert "Wind turbine: ['hub height=120 m'" in repr(WindTurbine(120))
+
+    def test_power_curve_is_of_wrong_type(self):
+        """Error raising due to wrong type of WindTurbine.power_curve."""
+        test_turbine_data = {'hub_height': 100,
+                             'rotor_diameter': 80,
+                             'turbine_type': 'test_type',
+                             'power_curve': 'string'}
+        with pytest.raises(TypeError):
+            WindTurbine(**test_turbine_data)
+
+    def test_power_coefficient_curve_is_of_wrong_type(self):
+        """Error raising due to wrong type of
+        WindTurbine.power_coefficient_curve."""
+        test_turbine_data = {'hub_height': 100,
+                             'rotor_diameter': 80,
+                             'turbine_type': 'test_type',
+                             'power_coefficient_curve': 'string'}
+        with pytest.raises(TypeError):
+            WindTurbine(**test_turbine_data)
