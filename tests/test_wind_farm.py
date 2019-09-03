@@ -149,7 +149,6 @@ class TestWindFarm:
         """Test WindFarm.assign_power_curve() with missing power_curve."""
         wt1 = WindTurbine(**self.test_turbine)
         wt1.power_curve = None
-        print(wt1)
         wind_turbine_fleet = [
             {'wind_turbine': wt1,
              'number_of_turbines': 3},
