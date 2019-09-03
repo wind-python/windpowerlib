@@ -207,6 +207,6 @@ class WindTurbineCluster(object):
             df.interpolate(method='index').sum(axis=1))
         cluster_power_curve.columns = ['value']
         # Return wind speed (index) to a column of the data frame
-        cluster_power_curve.reset_index('wind_speed', inplace=True)
+        cluster_power_curve.reset_index(inplace=True)
         self.power_curve = cluster_power_curve
         return self

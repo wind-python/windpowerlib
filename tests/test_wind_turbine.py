@@ -55,6 +55,25 @@ class TestWindTurbine:
     def test_string_representation_of_wind_turbine(self):
         assert "Wind turbine: ['hub height=120 m'" in repr(WindTurbine(120))
 
+    def test_power_curve_is_of_wrong_type(self):
+        """Error raising due to wrong type of WindTurbine.power_curve."""
+        test_turbine_data = {'hub_height': 100,
+                             'rotor_diameter': 80,
+                             'turbine_type': 'test_type',
+                             'power_curve': 'string'}
+        with pytest.raises(TypeError):
+            WindTurbine(**test_turbine_data)
+
+    def test_power_coefficient_curve_is_of_wrong_type(self):
+        """Error raising due to wrong type of
+        WindTurbine.power_coefficient_curve."""
+        test_turbine_data = {'hub_height': 100,
+                             'rotor_diameter': 80,
+                             'turbine_type': 'test_type',
+                             'power_coefficient_curve': 'string'}
+        with pytest.raises(TypeError):
+            WindTurbine(**test_turbine_data)
+
     def test_to_group_method(self):
         example_turbine = {
            'hub_height': 100,
