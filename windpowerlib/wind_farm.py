@@ -82,30 +82,29 @@ class WindFarm(object):
     ...     'turbine_type': 'V90/2000',
     ...     'nominal_power': 2e6}
     >>> v90 = WindTurbine(**vestasV90)
-    >>> # turbine fleet as DataFrame with number of turbines provided
+    >>> # turbine fleet as DataFrame with number of turbines provided (1)
     >>> wind_turbine_fleet = pd.DataFrame(
     ...     {'wind_turbine': [e126, v90],
-    ...      'number_of_turbines': [6, 3]})
-    >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet)
+    ...      'number_of_turbines': [6, None],
+    ...      'total_capacity': [None, 3 * 2e6]})
+    >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet, name='my_farm')
     >>> print(example_farm.nominal_power)
     31200000.0
-    >>> # turbine fleet as list with total capacity of each turbine type
-    >>> # provided
+    >>> # turbine fleet as a list of WindTurbineGroup objects using the
+    >>> # 'to_group' method (2).
+    >>> wind_turbine_fleet = [e126.to_group(6),
+    ...                       v90.to_group(total_capacity=3 * 2e6)]
+    >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet, name='my_farm')
+    >>> print(example_farm.nominal_power)
+    31200000.0
+    >>> # turbine fleet as list of dictionaries (not recommended)
     >>> example_farm_data = {
-    ...    'name': 'example_farm',
+    ...    'name': 'my_farm',
     ...    'wind_turbine_fleet': [{'wind_turbine': e126,
-    ...                            'total_capacity': 6 * 4.2e6},
+    ...                            'number_of_turbines': 6},
     ...                           {'wind_turbine': v90,
     ...                            'total_capacity': 3 * 2e6}]}
     >>> example_farm = wind_farm.WindFarm(**example_farm_data)
-    >>> print(example_farm.nominal_power)
-    31200000.0
-    >>> # turbine fleet as a list of WindTurbineGroup namedtuples using the
-    >>> # 'to_group' method.
-    >>> wind_turbine_fleet = [e126.to_group(number_turbines=5),
-    ...                       e126.to_group(),
-    ...                       v90.to_group(total_capacity=3 * 2e6)]
-    >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet)
     >>> print(example_farm.nominal_power)
     31200000.0
     """
