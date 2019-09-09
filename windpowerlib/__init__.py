@@ -1,6 +1,6 @@
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
-__version__ = '0.2.0'
+__version__ = '0.2.1dev'
 
 from windpowerlib.wind_turbine import WindTurbine
 from windpowerlib.wind_farm import WindFarm
