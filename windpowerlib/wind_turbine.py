@@ -240,7 +240,7 @@ class WindTurbine(object):
 
         Returns
         -------
-        WindTurbineGroup
+        :class:`~windpowerlib.wind_turbine.WindTurbineGroup`
             A namedtuple with two fields: 'number_of_turbines' and
             'wind_turbine'.
 
