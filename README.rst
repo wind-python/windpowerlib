@@ -26,44 +26,54 @@ Go to the `download page <http://readthedocs.org/projects/windpowerlib/downloads
 Installation
 ============
 
-If you have a working Python 3 environment, use pypi to install the latest windpowerlib version. We highly recommend to use virtual environments.
+If you have a working Python 3 environment, use pypi to install the latest windpowerlib version:
 
 ::
 
     pip install windpowerlib
 
-The windpowerlib is designed for Python 3 and tested on Python >= 3.5.
+The windpowerlib is designed for Python 3 and tested on Python >= 3.5. We highly recommend to use virtual environments.
 Please see the `installation page <http://oemof.readthedocs.io/en/stable/installation_and_setup.html>`_ of the oemof documentation for complete instructions on how to install python and a virtual environment on your operating system.
-
-For retrieving power (coefficient) curves from the OpenEnergy Database (oedb) the python package requests will be installed with your windpowerlib installation. The windpowerlib was tested with requests version 2.20.1 but might work with lower versions.
 
 Optional Packages
 ~~~~~~~~~~~~~~~~~
 
 To see the plots of the windpowerlib example in the `Examples and basic usage <http://windpowerlib.readthedocs.io/en/stable/getting_started.html#examplereference-label>`_ section you should `install the matplotlib package <http://matplotlib.org/users/installing.html>`_.
-Matplotlib can be installed using pip3 though some Linux users reported that it is easier and more stable to use the pre-built packages of your Linux distribution.
+Matplotlib can be installed using pip:
 
+::
+
+    pip install matplotlib
 
 .. _examplereference-label:
 
 Examples and basic usage
 =========================
 
-The basic usage of the windpowerlib is shown in the `modelchain_example <http://windpowerlib.readthedocs.io/en/stable/modelchain_example_notebook.html>`_. The presented example is available as jupyter notebook and python script. You can download them along with example weather data:
+The basic usage of the windpowerlib is shown in the `ModelChain example <http://windpowerlib.readthedocs.io/en/stable/modelchain_example_notebook.html>`_ that is available as jupyter notebook and python script:
+The basic usage of the windpowerlib is shown in the `modelchain_example <http://windpowerlib.readthedocs.io/en/stable/modelchain_example_notebook.html>`_.
+The presented example is available as jupyter notebook and python script:
 
  * `ModelChain example (Python script) <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/modelchain_example.py>`_
  * `ModelChain example (Jupyter notebook) <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/modelchain_example.ipynb>`_
- * `Example data file <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/weather.csv>`_
 
-To run the examples you first have to install the windpowerlib. To run the notebook you also need to install notebook using pip3. To launch jupyter notebook type ``jupyter notebook`` in terminal.
+To run the example you need the example weather and turbine data used:
+
+ * `Example weather data file <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/weather.csv>`_
+ * `Example power curve data file <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/data/example_power_curves.csv>`_
+ * `Example power coefficient curve data file <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/data/example_power_coefficient_curves.csv>`_
+ * `Example nominal power data file <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/data/example_turbine_data.csv>`_
+
+Furthermore, you have to install the windpowerlib. To run the notebook you also need to install `notebook` using pip3. To launch jupyter notebook type ``jupyter notebook`` in the terminal.
 This will open a browser window. Navigate to the directory containing the notebook to open it. See the jupyter notebook quick start guide for more information on `how to install <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/install.html>`_ and
 `how to run <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/execute.html>`_ jupyter notebooks.
 
-Further functionalities, like the modelling of wind farms and wind turbine clusters, are shown in the `turbine_cluster_modelchain_example <http://windpowerlib.readthedocs.io/en/stable/turbine_cluster_modelchain_example_notebook.html>`_. As the ModelChain example it is available as jupyter notebook and as python script. The weather data in this example is the same as in the example above.
+Further functionalities, like the modelling of wind farms and wind turbine clusters, are shown in the `turbine_cluster_modelchain_example <http://windpowerlib.readthedocs.io/en/stable/turbine_cluster_modelchain_example_notebook.html>`_. As the ModelChain example it is available as jupyter notebook and as python script. The weather and turbine datadata used in this example is the same as in the example above.
 
  * `TurbineClusterModelChain example (Python script) <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/turbine_cluster_modelchain_example.py>`_
  * `TurbineClusterModelChain example (Jupyter notebook) <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/turbine_cluster_modelchain_example.ipynb>`_
 
+You can also look at the examples in the `Example <http://windpowerlib.readthedocs.io/en/stable/examples.html>`_ section.
 
 Wind turbine data
 ==================
@@ -119,7 +129,6 @@ As the windpowerlib started with contributors from the `oemof developer group <h
 
     pytest
 
-
 Citing the windpowerlib
 ========================
 
@@ -128,7 +137,7 @@ We use the zenodo project to get a DOI for each version. `Search zenodo for the 
 License
 ============
 
-Copyright (C) 2017 oemof developing group
+Copyright (C) 2017 oemof developer group
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
