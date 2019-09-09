@@ -9,22 +9,38 @@ __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
 import numpy as np
+import warnings
+
+
+class WindpowerlibUserWarning(UserWarning):
+    """
+    The WindpowerlibUserWarning is used to warn users if they use the
+    windpowerlib in an untypical way. It is not necessarily wrong but could
+    lead to an unwanted behaviour if you do not know what you are doing.
+    If you know what you are doing you can easily switch the warnings off:
+
+    Examples
+    --------
+    >>> import warnings
+    >>> warnings.filterwarnings("ignore", category=WindpowerlibUserWarning)
+    """
+    pass
 
 
 def linear_interpolation_extrapolation(df, target_height):
     r"""
-    Linear inter- or extrapolates between the values of a data frame.
+    Linearly inter- or extrapolates between the values of a data frame.
 
-    This function can be used for the inter-/extrapolation of a parameter
-    (e.g wind speed) available at two or more different heights, to approximate
-    the value at hub height. The function is carried out when the parameter
-    `wind_speed_model`, `density_model` or `temperature_model` of an
-    instance of the :class:`~.modelchain.ModelChain` class is
-    'interpolation_extrapolation'.
+    This function can be used for the linear inter-/extrapolation of a
+    parameter (e.g wind speed) available at two or more different heights, to
+    approximate the value at hub height.
+    The function is carried out when the parameter `wind_speed_model`,
+    `density_model` or `temperature_model` of an instance of the
+    :class:`~.modelchain.ModelChain` class is 'interpolation_extrapolation'.
 
     Parameters
     ----------
-    df : pandas.DataFrame
+    df : :pandas:`pandas.DataFrame<frame>`
         DataFrame with time series for parameter that is to be interpolated or
         extrapolated. The columns of the DataFrame are the different heights
         for which the parameter is available. If more than two heights are
@@ -35,7 +51,7 @@ def linear_interpolation_extrapolation(df, target_height):
 
     Returns
     -------
-    pandas.Series
+    :pandas:`pandas.Series<series>`
         Result of the inter-/extrapolation (e.g. wind speed at hub height).
 
     Notes
@@ -75,17 +91,18 @@ def linear_interpolation_extrapolation(df, target_height):
 
 def logarithmic_interpolation_extrapolation(df, target_height):
     r"""
-    Logarithmic inter- or extrapolates between the values of a data frame.
+    Logarithmic inter- or extrapolation between the values of a data frame.
 
-    This function can be used for the inter-/extrapolation of the wind speed if
-    it is available at two or more different heights, to approximate
-    the value at hub height. The function is carried out when the parameter
-    `wind_speed_model` :class:`~.modelchain.ModelChain` class is
+    This function can be used for the logarithmic inter-/extrapolation of the
+    wind speed if it is available at two or more different heights, to
+    approximate the value at hub height.
+    The function is carried out when the parameter `wind_speed_model`
+    :class:`~.modelchain.ModelChain` class is
     'log_interpolation_extrapolation'.
 
     Parameters
     ----------
-    df : pandas.DataFrame
+    df : :pandas:`pandas.DataFrame<frame>`
         DataFrame with time series for parameter that is to be interpolated or
         extrapolated. The columns of the DataFrame are the different heights
         for which the parameter is available. If more than two heights are
@@ -97,7 +114,7 @@ def logarithmic_interpolation_extrapolation(df, target_height):
 
     Returns
     -------
-    pandas.Series
+    :pandas:`pandas.Series<series>`
         Result of the inter-/extrapolation (e.g. wind speed at hub height).
 
     Notes
@@ -141,12 +158,12 @@ def gauss_distribution(function_variable, standard_deviation, mean=0):
         Variable of the gaussian distribution.
     standard_deviation : float
         Standard deviation of the Gauss distribution.
-    mean : Float
+    mean : float
         Defines the offset of the Gauss distribution. Default: 0.
 
     Returns
     -------
-    pandas.Series or numpy.array
+    :pandas:`pandas.Series<series>` or numpy.array
         Wind speed at hub height. Data type depends on the type of
         `wind_speed`.
 

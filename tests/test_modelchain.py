@@ -1,3 +1,10 @@
+"""
+Testing the ``modelchain`` module.
+"""
+
+__copyright__ = "Copyright oemof developer group"
+__license__ = "GPLv3"
+
 import pandas as pd
 import numpy as np
 import pytest
@@ -11,15 +18,31 @@ class TestModelChain:
 
     @classmethod
     def setup_class(self):
+        """Setup default values"""
         self.test_turbine = {'hub_height': 100,
-                             'rotor_diameter': 80,
-                             'name': 'E-126/4200',
-                             'fetch_curve': 'power_curve'}
+                             'turbine_type': 'E-126/4200',
+                             'power_curve': pd.DataFrame(
+                                 data={'value': [0.0, 4200 * 1000],
+                                       'wind_speed': [0.0, 25.0]})}
+
+        temperature_2m = np.array([[267], [268]])
+        temperature_10m = np.array([[267], [266]])
+        pressure_0m = np.array([[101125], [101000]])
+        wind_speed_8m = np.array([[4.0], [5.0]])
+        wind_speed_10m = np.array([[5.0], [6.5]])
+        roughness_length = np.array([[0.15], [0.15]])
+        self.weather_df = pd.DataFrame(
+            np.hstack((temperature_2m, temperature_10m, pressure_0m,
+                       wind_speed_8m, wind_speed_10m, roughness_length)),
+            index=[0, 1],
+            columns=[np.array(['temperature', 'temperature', 'pressure',
+                               'wind_speed', 'wind_speed',
+                               'roughness_length']),
+                     np.array([2, 10, 0, 8, 10, 0])])
 
     def test_temperature_hub(self):
         # Test modelchain with temperature_model='linear_gradient'
-        test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
-                                temperature_model='linear_gradient')
+        test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine))
         # Test modelchain with temperature_model='interpolation_extrapolation'
         test_mc_2 = mc.ModelChain(
             wt.WindTurbine(**self.test_turbine),
@@ -57,8 +80,7 @@ class TestModelChain:
 
     def test_density_hub(self):
         # Test modelchain with density_model='barometric'
-        test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
-                                density_model='barometric')
+        test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine))
         # Test modelchain with density_model='ideal_gas'
         test_mc_2 = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
                                   density_model='ideal_gas')
@@ -115,8 +137,7 @@ class TestModelChain:
 
     def test_wind_speed_hub(self):
         # Test modelchain with wind_speed_model='logarithmic'
-        test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
-                                wind_speed_model='logarithmic')
+        test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine))
         # Test modelchain with wind_speed_model='hellman'
         test_mc_2 = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
                                   wind_speed_model='hellman')
@@ -160,43 +181,25 @@ class TestModelChain:
         v_wind_exp = pd.Series(data=[5.0, 6.5], name=100)
         assert_series_equal(test_mc.wind_speed_hub(weather_df), v_wind_exp)
 
-    def test_run_model(self):
+    # ***** test_run_model *********
 
-        temperature_2m = np.array([[267], [268]])
-        temperature_10m = np.array([[267], [266]])
-        pressure_0m = np.array([[101125], [101000]])
-        wind_speed_8m = np.array([[4.0], [5.0]])
-        wind_speed_10m = np.array([[5.0], [6.5]])
-        roughness_length = np.array([[0.15], [0.15]])
-        weather_df = pd.DataFrame(np.hstack((temperature_2m,
-                                             temperature_10m,
-                                             pressure_0m,
-                                             wind_speed_8m,
-                                             wind_speed_10m,
-                                             roughness_length)),
-                                  index=[0, 1],
-                                  columns=[np.array(['temperature',
-                                                     'temperature',
-                                                     'pressure',
-                                                     'wind_speed',
-                                                     'wind_speed',
-                                                     'roughness_length']),
-                                           np.array([2, 10, 0, 8, 10, 0])])
-
+    def test_with_default_parameter(self):
+        """Test with default parameters of modelchain (power curve)"""
         test_turbine = {'hub_height': 100,
                         'rotor_diameter': 80,
-                        'name': 'E-126/4200',
-                        'fetch_curve': 'power_curve'}
-
-        # Test with default parameters of modelchain (power curve)
+                        'turbine_type': 'E-126/4200'}
         power_output_exp = pd.Series(data=[1637405.4840444783,
                                            3154438.3894902095],
                                      name='feedin_power_plant')
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine))
-        test_mc.run_model(weather_df)
+        test_mc.run_model(self.weather_df)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
-        # Test with density corrected power curve and hellman
+    def test_with_density_corrected_power_curve_and_hellman(self):
+        """Test with density corrected power curve and hellman"""
+        test_turbine = {'hub_height': 100,
+                        'rotor_diameter': 80,
+                        'turbine_type': 'E-126/4200'}
         test_modelchain = {'wind_speed_model': 'hellman',
                            'power_output_model': 'power_curve',
                            'density_correction': True}
@@ -205,70 +208,137 @@ class TestModelChain:
                                      name='feedin_power_plant')
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                 **test_modelchain)
-        test_mc.run_model(weather_df)
+        test_mc.run_model(self.weather_df)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
-        # Test with power coefficient curve and hellman
+    def test_with_power_coefficient_curve_and_hellman(self):
+        """Test with power coefficient curve and hellman"""
+        test_turbine = {'hub_height': 100,
+                        'rotor_diameter': 80,
+                        'turbine_type': 'E-126/4200'}
         power_output_exp = pd.Series(data=[534137.5112701517,
                                            1103611.1736067757],
                                      name='feedin_power_plant')
-        test_turbine['fetch_curve'] = 'power_coefficient_curve'
         test_modelchain = {'wind_speed_model': 'hellman',
                            'power_output_model': 'power_coefficient_curve',
                            'density_correction': False}
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                 **test_modelchain)
-        test_mc.run_model(weather_df)
+        test_mc.run_model(self.weather_df)
         assert_series_equal(test_mc.power_output, power_output_exp)
 
-        # Raise ValueErrors due to wrong spelling of parameters
+    def test_wrong_spelling_power_output_model(self):
+        """Raise ValueErrors due to wrong spelling of power_output_model"""
         with pytest.raises(ValueError):
-            test_modelchain['power_output_model'] = 'wrong_spelling'
-            test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
+            test_modelchain = {'wind_speed_model': 'hellman',
+                               'power_output_model': 'wrong_spelling',
+                               'density_correction': False}
+            test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
                                     **test_modelchain)
-            test_mc.run_model(weather_df)
-        with pytest.raises(ValueError):
-            test_modelchain['density_model'] = 'wrong_spelling'
-            test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
-                                    **test_modelchain)
-            test_mc.run_model(weather_df)
-        with pytest.raises(ValueError):
-            test_modelchain['temperature_model'] = 'wrong_spelling'
-            test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
-                                    **test_modelchain)
-            test_mc.run_model(weather_df)
-        with pytest.raises(ValueError):
-            test_modelchain['wind_speed_model'] = 'wrong_spelling'
-            test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
-                                    **test_modelchain)
-            test_mc.run_model(weather_df)
+            test_mc.run_model(self.weather_df)
 
-        # Raise TypeErrors due to wrong type of `density_correction`
+    def test_wrong_spelling_density_model(self):
+        """Raise ValueErrors due to wrong spelling of density_model"""
+        with pytest.raises(ValueError):
+            test_modelchain = {'wind_speed_model': 'hellman',
+                               'power_output_model': 'power_coefficient_curve',
+                               'density_correction': False,
+                               'density_model': 'wrong_spelling'}
+            test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
+                                    **test_modelchain)
+            test_mc.run_model(self.weather_df)
+
+    def test_wrong_spelling_temperature_model(self):
+        """Raise ValueErrors due to wrong spelling of temperature_model"""
+        with pytest.raises(ValueError):
+            test_modelchain = {'wind_speed_model': 'hellman',
+                               'power_output_model': 'power_coefficient_curve',
+                               'density_correction': False,
+                               'temperature_model': 'wrong_spelling'}
+            test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
+                                    **test_modelchain)
+            test_mc.run_model(self.weather_df)
+
+    def test_wrong_spelling_wind_speed_model(self):
+        """Raise ValueErrors due to wrong spelling of wind_speed_model"""
+        with pytest.raises(ValueError):
+            test_modelchain = {'wind_speed_model': 'wrong_spelling',
+                               'power_output_model': 'power_coefficient_curve',
+                               'density_correction': False}
+            test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
+                                    **test_modelchain)
+            test_mc.run_model(self.weather_df)
+
+    def test_wrong_density_correction_type(self):
+        """Raise TypeErrors due to wrong type of `density_correction`"""
         with pytest.raises(TypeError):
             test_modelchain = {'power_output_model': 'power_curve',
                                'density_correction': 'wrong_type'}
-            test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
+            test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine),
                                     **test_modelchain)
-            test_mc.run_model(weather_df)
+            test_mc.run_model(self.weather_df)
 
-        # Raise TypeErrors due to missing cp- or p-values
-        with pytest.raises(TypeError):
-            test_turbine = {'hub_height': 100,
-                            'rotor_diameter': 80,
-                            'name': 'E-126/4200',
-                            'fetch_curve': 'power_curve'}
+    @pytest.mark.filterwarnings("ignore:The WindTurbine")
+    def test_missing_cp_values(self):
+        """Raise TypeErrors due to missing cp-values"""
+        test_turbine = {'hub_height': 100,
+                        'rotor_diameter': 80,
+                        'turbine_type': 'E-126/4201'}
+        msg = "Power coefficient curve values of"
+        with pytest.raises(TypeError, match=msg):
             test_modelchain = {'power_output_model': 'power_coefficient_curve',
                                'density_correction': True}
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                     **test_modelchain)
-            test_mc.run_model(weather_df)
-        with pytest.raises(TypeError):
-            test_turbine = {'hub_height': 100,
-                            'rotor_diameter': 80,
-                            'name': 'E-126/4200',
-                            'fetch_curve': 'power_coefficient_curve'}
+            test_mc.run_model(self.weather_df)
+
+    @pytest.mark.filterwarnings("ignore:The WindTurbine")
+    def test_missing_p_values(self):
+        """Raise TypeErrors due to missing p-values"""
+        test_turbine = {'hub_height': 100,
+                        'rotor_diameter': 80,
+                        'turbine_type': 'E-126/4205'}
+        msg = "Power curve values of"
+        with pytest.raises(TypeError, match=msg):
             test_modelchain = {'power_output_model': 'power_curve',
                                'density_corr': True}
             test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                     **test_modelchain)
-            test_mc.run_model(weather_df)
+            test_mc.run_model(self.weather_df)
+
+    def test_modelchain_with_power_curve_as_dict(self):
+        """Test power curves as dict"""
+        my_turbine = {'nominal_power': 3e6, 'hub_height': 105,
+                      'rotor_diameter': 70,
+                      'power_curve': {
+                          'value': [p * 1000 for p in [
+                              0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],
+                          'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]},
+                      'power_coefficient_curve': {
+                          'value': [0.0, 0.43, 0.45, 0.35, 0.12, 0.03],
+                          'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]}}
+        power_output_exp = pd.Series(data=[919055.54840,
+                                           1541786.60559],
+                                     name='feedin_power_plant')
+        test_mc = mc.ModelChain(wt.WindTurbine(**my_turbine))
+        test_mc.run_model(self.weather_df)
+        assert_series_equal(test_mc.power_output, power_output_exp)
+
+    def test_modelchain_with_power_coefficient_curve_as_dict(self):
+        """Test power coefficient curves as dict"""
+        my_turbine = {'nominal_power': 3e6, 'hub_height': 105,
+                      'rotor_diameter': 70,
+                      'power_curve': {
+                          'value': [p * 1000 for p in [
+                              0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],
+                          'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]},
+                      'power_coefficient_curve': {
+                          'value': [0.0, 0.43, 0.45, 0.35, 0.12, 0.03],
+                          'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]}}
+        power_output_exp = pd.Series(data=[469518.35104,
+                                           901794.28532],
+                                     name='feedin_power_plant')
+        test_mc = mc.ModelChain(wt.WindTurbine(**my_turbine),
+                                power_output_model='power_coefficient_curve')
+        test_mc.run_model(self.weather_df)
+        assert_series_equal(test_mc.power_output, power_output_exp)

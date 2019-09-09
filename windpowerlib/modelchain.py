@@ -16,72 +16,108 @@ from windpowerlib import (wind_speed, density, temperature, power_output,
 class ModelChain(object):
     r"""Model to determine the output of a wind turbine
 
+    The ModelChain class provides a standardized, high-level
+    interface for all of the modeling steps necessary for calculating wind
+    turbine power output from weather time series inputs.
+
     Parameters
     ----------
-    power_plant : WindTurbine
+    power_plant : :class:`~.wind_turbine.WindTurbine`
         A :class:`~.wind_turbine.WindTurbine` object representing the wind
         turbine.
-    wind_speed_model : string
+    wind_speed_model : str
         Parameter to define which model to use to calculate the wind speed at
-        hub height. Valid options are 'logarithmic', 'hellman' and
-        'interpolation_extrapolation', 'log_interpolation_extrapolation'.
+        hub height. Valid options are:
+
+        * 'logarithmic' -
+          See :func:`~.wind_speed.logarithmic_profile` for more information.
+          The parameter `obstacle_height` can be used to set the height of
+          obstacles in the surrounding area of the wind turbine.
+        * 'hellman' -
+          See :func:`~.wind_speed.hellman` for more information.
+        * 'interpolation_extrapolation' -
+          See :func:`~.tools.linear_interpolation_extrapolation` for more
+          information.
+        * 'log_interpolation_extrapolation' -
+          See :func:`~.tools.logarithmic_interpolation_extrapolation` for more
+          information.
+
         Default: 'logarithmic'.
-    temperature_model : string
+    temperature_model : str
         Parameter to define which model to use to calculate the temperature of
-        air at hub height. Valid options are 'linear_gradient' and
-        'interpolation_extrapolation'. Default: 'linear_gradient'.
-    density_model : string
+        air at hub height. Valid options are:
+
+        * 'linear_gradient' -
+          See :func:`~.temperature.linear_gradient` for more
+          information.
+        * 'interpolation_extrapolation' -
+          See :func:`~.tools.linear_interpolation_extrapolation` for more
+          information.
+
+        Default: 'linear_gradient'.
+    density_model : str
         Parameter to define which model to use to calculate the density of air
-        at hub height. Valid options are 'barometric', 'ideal_gas' and
-        'interpolation_extrapolation'. Default: 'barometric'.
-    power_output_model : string
+        at hub height. Valid options are:
+
+        * 'barometric' -
+          See :func:`~.density.barometric` for more information.
+        * 'ideal_gas' -
+          See :func:`~.density.ideal_gas` for more information.
+        * 'interpolation_extrapolation' -
+          See :func:`~.tools.linear_interpolation_extrapolation` for more
+          information.
+
+        Default: 'barometric'.
+    power_output_model : str
         Parameter to define which model to use to calculate the turbine power
-        output. Valid options are 'power_curve' and 'power_coefficient_curve'.
+        output. Valid options are:
+
+        * 'power_curve' -
+          See :func:`~.power_output.power_curve` for more information. In order
+          to use the density corrected power curve to calculate the power
+          output set parameter `density_correction` to True.
+        * 'power_coefficient_curve' -
+          See :func:`~.power_output.power_coefficient_curve` for more
+          information.
+
         Default: 'power_curve'.
-    density_correction : boolean
-        If the parameter is True the density corrected power curve is used for
-        the calculation of the turbine power output. Default: False.
+    density_correction : bool
+        This parameter is only used if the parameter `power_output_model` is
+        'power_curve'. For more information on this parameter see parameter
+        `density_correction` in :func:`~.power_output.power_curve`.
+        Default: False.
     obstacle_height : float
-        Height of obstacles in the surrounding area of the wind turbine in m.
-        Set `obstacle_height` to zero for wide spread obstacles. Default: 0.
+        This parameter is only used if the parameter `wind_speed_model` is
+        'logarithmic'. For more information on this parameter see parameter
+        `obstacle_height` in :func:`~.wind_speed.logarithmic`. Default: 0.
     hellman_exp : float
-        The Hellman exponent, which combines the increase in wind speed due to
-        stability of atmospheric conditions and surface roughness into one
-        constant. Default: None.
+        This parameter is only used if the parameter `wind_speed_model` is
+        'hellman'. For more information on this parameter see parameter
+        `hellman_exponent` in :func:`~.wind_speed.hellman`. Default: None.
 
     Attributes
     ----------
-    power_plant : WindTurbine
+    power_plant : :class:`~.wind_turbine.WindTurbine`
         A :class:`~.wind_turbine.WindTurbine` object representing the wind
         turbine.
-    wind_speed_model : string
-        Parameter to define which model to use to calculate the wind speed at
-        hub height. Valid options are 'logarithmic', 'hellman' and
-        'interpolation_extrapolation', 'log_interpolation_extrapolation'.
-        Default: 'logarithmic'.
-    temperature_model : string
-        Parameter to define which model to use to calculate the temperature of
-        air at hub height. Valid options are 'linear_gradient' and
-        'interpolation_extrapolation'. Default: 'linear_gradient'.
-    density_model : string
-        Parameter to define which model to use to calculate the density of air
-        at hub height. Valid options are 'barometric', 'ideal_gas' and
-        'interpolation_extrapolation'. Default: 'barometric'.
-    power_output_model : string
-        Parameter to define which model to use to calculate the turbine power
-        output. Valid options are 'power_curve' and 'power_coefficient_curve'.
-        Default: 'power_curve'.
-    density_correction : boolean
-        If the parameter is True the density corrected power curve is used for
-        the calculation of the turbine power output. Default: False.
-    hellman_exp : float
-        The Hellman exponent, which combines the increase in wind speed due to
-        stability of atmospheric conditions and surface roughness into one
-        constant. Default: None.
+    wind_speed_model : str
+        Defines which model is used to calculate the wind speed at hub height.
+    temperature_model : str
+        Defines which model is used to calculate the temperature of air at hub
+        height.
+    density_model : str
+        Defines which model is used to calculate the density of air at hub
+        height.
+    power_output_model : str
+        Defines which model is used to calculate the turbine power output.
+    density_correction : bool
+        Used to set `density_correction` parameter in
+        :func:`~.power_output.power_curve`.
     obstacle_height : float
-        Height of obstacles in the surrounding area of the wind turbine in m.
-        Set `obstacle_height` to zero for wide spread obstacles. Default: 0.
-    power_output : pandas.Series
+        Used to set `obstacle_height` in :func:`~.wind_speed.logarithmic`.
+    hellman_exp : float
+        Used to set `hellman_exponent` in :func:`~.wind_speed.hellman`.
+    power_output : :pandas:`pandas.Series<series>`
         Electrical power output of the wind turbine in W.
 
     Examples
@@ -91,9 +127,7 @@ class ModelChain(object):
     >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
-    ...    'name': 'E-126/4200',
-    ...    'fetch_curve': 'power_curve',
-    ...     'data_source': 'oedb'}
+    ...    'turbine_type': 'E-126/4200'}
     >>> e126 = wind_turbine.WindTurbine(**enerconE126)
     >>> modelchain_data = {'density_model': 'ideal_gas'}
     >>> e126_mc = modelchain.ModelChain(e126, **modelchain_data)
@@ -130,7 +164,7 @@ class ModelChain(object):
 
         Parameters
         ----------
-        weather_df : pandas.DataFrame
+        weather_df : :pandas:`pandas.DataFrame<frame>`
             DataFrame with time series for temperature `temperature` in K.
             The columns of the DataFrame are a MultiIndex where the first level
             contains the variable name (e.g. temperature) and the second level
@@ -141,7 +175,7 @@ class ModelChain(object):
 
         Returns
         -------
-        temperature_hub : pandas.Series or numpy.array
+        :pandas:`pandas.Series<series>` or numpy.array
             Temperature of air in K at hub height.
 
         Notes
@@ -185,7 +219,7 @@ class ModelChain(object):
 
         Parameters
         ----------
-        weather_df : pandas.DataFrame
+        weather_df : :pandas:`pandas.DataFrame<frame>`
             DataFrame with time series for temperature `temperature` in K,
             pressure `pressure` in Pa and/or density `density` in kg/m³,
             depending on the `density_model` used.
@@ -198,7 +232,7 @@ class ModelChain(object):
 
         Returns
         -------
-        density_hub : pandas.Series or numpy.array
+        :pandas:`pandas.Series<series>` or numpy.array
             Density of air in kg/m³ at hub height.
 
         Notes
@@ -252,7 +286,7 @@ class ModelChain(object):
 
         Parameters
         ----------
-        weather_df : pandas.DataFrame
+        weather_df : :pandas:`pandas.DataFrame<frame>`
             DataFrame with time series for wind speed `wind_speed` in m/s and
             roughness length `roughness_length` in m.
             The columns of the DataFrame are a MultiIndex where the first level
@@ -264,7 +298,7 @@ class ModelChain(object):
 
         Returns
         -------
-        wind_speed_hub : pandas.Series or numpy.array
+        :pandas:`pandas.Series<series>` or numpy.array
             Wind speed in m/s at hub height.
 
         Notes
@@ -324,22 +358,21 @@ class ModelChain(object):
 
         Parameters
         ----------
-        wind_speed_hub : pandas.Series or numpy.array
+        wind_speed_hub : :pandas:`pandas.Series<series>` or numpy.array
             Wind speed at hub height in m/s.
-        density_hub : pandas.Series or numpy.array
+        density_hub : :pandas:`pandas.Series<series>` or numpy.array
             Density of air at hub height in kg/m³.
 
         Returns
         -------
-        pandas.Series
+        :pandas:`pandas.Series<series>`
             Electrical power output of the wind turbine in W.
 
         """
         if self.power_output_model == 'power_curve':
             if self.power_plant.power_curve is None:
-                raise TypeError("Power curve values of " +
-                                self.power_plant.name +
-                                " are missing.")
+                raise TypeError("Power curve values of {} are missing.".format(
+                    self.power_plant))
             logging.debug('Calculating power output using power curve.')
             return (power_output.power_curve(
                         wind_speed_hub,
@@ -348,9 +381,8 @@ class ModelChain(object):
                         density_hub, self.density_correction))
         elif self.power_output_model == 'power_coefficient_curve':
             if self.power_plant.power_coefficient_curve is None:
-                raise TypeError("Power coefficient curve values of " +
-                                self.power_plant.name +
-                                " are missing.")
+                raise TypeError("Power coefficient curve values of {} are "
+                                "missing.".format(self.power_plant))
             logging.debug('Calculating power output using power coefficient '
                           'curve.')
             return (power_output.power_coefficient_curve(
@@ -372,7 +404,7 @@ class ModelChain(object):
 
         Parameters
         ----------
-        weather_df : pandas.DataFrame
+        weather_df : :pandas:`pandas.DataFrame<frame>`
             DataFrame with time series for wind speed `wind_speed` in m/s, and
             roughness length `roughness_length` in m, as well as optionally
             temperature `temperature` in K, pressure `pressure` in Pa and
@@ -384,16 +416,9 @@ class ModelChain(object):
             measured at a height of 10 m). See below for an example on how to
             create the weather_df DataFrame.
 
-        Other Parameters
-        ----------------
-        roughness_length : Float, optional.
-            Roughness length.
-        turbulence_intensity : Float, optional.
-            Turbulence intensity.
-
         Returns
         -------
-        self
+        :class:`~.modelchain.ModelChain`
 
         Examples
         ---------

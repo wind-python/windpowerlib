@@ -19,7 +19,7 @@ def linear_gradient(temperature, temperature_height, hub_height):
 
     Parameters
     ----------
-    temperature : pandas.Series or numpy.array
+    temperature : :pandas:`pandas.Series<series>` or numpy.array
         Air temperature in K.
     temperature_height : float
         Height in m for which the parameter `temperature` applies.
@@ -28,7 +28,7 @@ def linear_gradient(temperature, temperature_height, hub_height):
 
     Returns
     -------
-    pandas.Series or numpy.array
+    :pandas:`pandas.Series<series>` or numpy.array
         Temperature at hub height in K.
 
     Notes

@@ -11,7 +11,6 @@ __license__ = "GPLv3"
 import numpy as np
 import pandas as pd
 from windpowerlib import tools
-import warnings
 
 
 def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
@@ -19,17 +18,17 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
                        standard_deviation_method='turbulence_intensity',
                        mean_gauss=0, **kwargs):
     r"""
-    Smooths the input power curve values by using a Gauss distribution.
+    Smoothes a power curve by using a Gauss distribution.
 
     The smoothing serves for taking the distribution of wind speeds over space
     into account.
 
     Parameters
     ----------
-    power_curve_wind_speeds : pandas.Series or numpy.array
+    power_curve_wind_speeds : :pandas:`pandas.Series<series>` or numpy.array
         Wind speeds in m/s for which the power curve values are provided in
         `power_curve_values`.
-    power_curve_values : pandas.Series or numpy.array
+    power_curve_values : :pandas:`pandas.Series<series>` or numpy.array
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
     block_width : float
@@ -38,7 +37,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     wind_speed_range : float
         The sum in the equation below is taken for this wind speed range below
         and above the power curve wind speed. Default: 15.0.
-    standard_deviation_method : string
+    standard_deviation_method : str
         Method for calculating the standard deviation for the Gauss
         distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
         Default: 'turbulence_intensity'.
@@ -54,7 +53,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
     Returns
     -------
-    smoothed_power_curve_df : pd.DataFrame
+    :pandas:`pandas.DataFrame<frame>`
         Smoothed power curve. DataFrame has 'wind_speed' and 'value' columns
         with wind speeds in m/s and the corresponding power curve value in W.
 
@@ -77,7 +76,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         :math:`\Delta v_i` is the interval length between
         :math:`v_\text{i}` and :math:`v_\text{i+1}`
 
-    Power curve smoothing is applied to take account for the spatial
+    Power curve smoothing is applied to take account of the spatial
     distribution of wind speed. This way of smoothing power curves is also used
     in [2]_ and [3]_.
 
@@ -131,10 +130,12 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     # Initialize list for power curve values
     smoothed_power_curve_values = []
     # Append wind speeds to `power_curve_wind_speeds`
-    maximum_value = power_curve_wind_speeds.values[-1] + wind_speed_range
+    maximum_value = power_curve_wind_speeds.iloc[-1] + wind_speed_range
     while power_curve_wind_speeds.values[-1] < maximum_value:
         power_curve_wind_speeds = power_curve_wind_speeds.append(
-            pd.Series(power_curve_wind_speeds.iloc[-1] + 0.5,
+            pd.Series(power_curve_wind_speeds.iloc[-1] +
+                      (power_curve_wind_speeds.iloc[5] -
+                       power_curve_wind_speeds.iloc[4]),
                       index=[power_curve_wind_speeds.index[-1] + 1]))
         power_curve_values = power_curve_values.append(
             pd.Series(0.0, index=[power_curve_values.index[-1] + 1]))
@@ -174,60 +175,42 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
 
 def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
-                               wind_farm_efficiency,
-                               wake_losses_model='power_efficiency_curve'):
+                               wind_farm_efficiency):
     r"""
     Reduces the power values of a power curve by an efficiency (curve).
 
     Parameters
     ----------
-    power_curve_wind_speeds : pandas.Series or numpy.array
+    power_curve_wind_speeds : :pandas:`pandas.Series<series>` or numpy.array
         Wind speeds in m/s for which the power curve values are provided in
         `power_curve_values`.
-    power_curve_values : pandas.Series or numpy.array
+    power_curve_values : :pandas:`pandas.Series<series>` or numpy.array
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
-    wind_farm_efficiency : float or pd.DataFrame
+    wind_farm_efficiency : float or :pandas:`pandas.DataFrame<frame>`
         Efficiency of the wind farm. Either constant (float) or efficiency
         curve (pd.DataFrame) containing 'wind_speed' and 'efficiency' columns
         with wind speeds in m/s and the corresponding dimensionless wind farm
         efficiency (reduction of power). Default: None.
-    wake_losses_model : String
-        Defines the method for taking wake losses within the farm into
-        consideration. Options: 'power_efficiency_curve',
-        'constant_efficiency'. Default: 'power_efficiency_curve'.
 
     Returns
     -------
-    power_curve_df : pd.DataFrame
+    :pandas:`pandas.DataFrame<frame>`
         Power curve with power values reduced by a wind farm efficiency.
         DataFrame has 'wind_speed' and 'value' columns with wind speeds in m/s
         and the corresponding power curve value in W.
 
     """
-    warnings.warn(
-        'wake_losses_model is deprecated, will be defined by the type of '
-        'wind_farm_efficiency.',
-        FutureWarning)
     # Create power curve DataFrame
     power_curve_df = pd.DataFrame(
         data=[list(power_curve_wind_speeds),
               list(power_curve_values)]).transpose()
     # Rename columns of DataFrame
     power_curve_df.columns = ['wind_speed', 'value']
-    if wake_losses_model == 'constant_efficiency':
-        if not isinstance(wind_farm_efficiency, float):
-            raise TypeError("'wind_farm_efficiency' must be float if " +
-                            "`wake_losses_model´ is '{}' but is {}".format(
-                                wake_losses_model, wind_farm_efficiency))
+    if isinstance(wind_farm_efficiency, float):
         power_curve_df['value'] = power_curve_values * wind_farm_efficiency
-    elif wake_losses_model == 'power_efficiency_curve':
-        if (not isinstance(wind_farm_efficiency, dict) and
-                not isinstance(wind_farm_efficiency, pd.DataFrame)):
-            raise TypeError(
-                "'wind_farm_efficiency' must be pd.DataFrame if " +
-                "`wake_losses_model´ is '{}' but is {}".format(
-                    wake_losses_model, wind_farm_efficiency))
+    elif (isinstance(wind_farm_efficiency, dict) or
+          isinstance(wind_farm_efficiency, pd.DataFrame)):
         df = pd.concat([power_curve_df.set_index('wind_speed'),
                         wind_farm_efficiency.set_index('wind_speed')], axis=1)
         # Add column with reduced power (nan values of efficiency are
@@ -239,8 +222,7 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
                                        reduced_power.values]).transpose()
         power_curve_df.columns = ['wind_speed', 'value']
     else:
-        raise ValueError(
-            "`wake_losses_model` is {} but should be ".format(
-                wake_losses_model) +
-            "'constant_efficiency' or 'power_efficiency_curve'")
+        raise TypeError(
+            "'wind_farm_efficiency' must be float, dict or pd.DataFrame "
+            "but is {}".format(type(wind_farm_efficiency)))
     return power_curve_df

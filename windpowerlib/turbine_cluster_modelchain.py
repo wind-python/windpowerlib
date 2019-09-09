@@ -26,55 +26,81 @@ class TurbineClusterModelChain(ModelChain):
         representing the wind turbine cluster.
     wake_losses_model : str or None
         Defines the method for taking wake losses within the farm into
-        consideration. Options: None, 'power_efficiency_curve' or
-        'constant_efficiency' or the name of a wind efficiency curve like
-        'dena_mean'. Default: 'dena_mean'.
-        Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
-        wind efficiency curves.
+        consideration.
+
+        * None -
+          Wake losses are not taken into account.
+        * 'wind_farm_efficiency' -
+          The values of the wind farm power curve(s) are reduced by the wind
+          farm efficiency, which needs to be set in the
+          :py:class:`~.wind_farm.WindFarm` class. Note: The wind farm
+          efficiency has no effect if `wake_losses_model` is not set to
+          'wind_farm_efficiency'.
+          See :func:`~.power_curves.wake_losses_to_power_curve` for more
+          information.
+        * 'dena_mean' or name of other wind efficiency curve -
+          The values of the wind speed time series are reduced by the chosen
+          wind efficiency curve in :func:`~.run_model` before the power output
+          calculations.
+          See :func:`~.wake_losses.reduce_wind_speed` for more information.
+          Use :func:`~.wake_losses.get_wind_efficiency_curve` to get a
+          DataFrame of all provided wind efficiency curves and see the provided
+          example on how to plot the wind efficiency curves.
+          
+       Default: 'dena_mean'.
     smoothing : bool
-        If True the power curves will be smoothed before or after the
-        aggregation of power curves depending on `smoothing_order`.
+        If True the power curves will be smoothed to account for the
+        distribution of wind speeds over space. Depending on the parameter
+        `smoothing_order` the power curves are smoothed before or after
+        aggregating wind turbine power curves to one representative power
+        curve of the wind farm or cluster.
+        See :func:`~.power_curves.smooth_power_curve` for more information.
+
         Default: False.
     block_width : float
         Width between the wind speeds in the sum of the equation in
-        :py:func:`~.power_curves.smooth_power_curve`. Default: 0.5.
+        :py:func:`~.power_curves.smooth_power_curve`. This parameter is only
+        used if `smoothing` is True. To achieve a smooth curve without steps a
+        value not much higher than the step width between the power curve wind
+        speeds should be chosen.
+
+        Default: 0.5.
     standard_deviation_method : str
         Method for calculating the standard deviation for the Gauss
-        distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
+        distribution if `smoothing` is True.
+
+        * 'turbulence_intensity' -
+          See :func:`~.power_curves.smooth_power_curve` for more information.
+        * 'Staffell_Pfenninger' -
+          See :func:`~.power_curves.smooth_power_curve` for more information.
+
         Default: 'turbulence_intensity'.
     smoothing_order : str
-        Defines when the smoothing takes place if `smoothing` is True. Options:
-        'turbine_power_curves' (to the single turbine power curves),
-        'wind_farm_power_curves'. Default: 'wind_farm_power_curves'.
+        Defines when the smoothing takes place if `smoothing` is True.
+
+        * 'turbine_power_curves' -
+          Smoothing is applied to wind turbine power curves.
+        * 'wind_farm_power_curves' -
+          Smoothing is applied to wind farm power curves.
+
+        Default: 'wind_farm_power_curves'.
 
     Other Parameters
     ----------------
-    wind_speed_model : str
-        Parameter to define which model to use to calculate the wind speed
-        at hub height. Valid options are 'logarithmic', 'hellman' and
-        'interpolation_extrapolation'.
-    temperature_model : str
-        Parameter to define which model to use to calculate the temperature
-        of air at hub height. Valid options are 'linear_gradient' and
-        'interpolation_extrapolation'.
-    density_model : str
-        Parameter to define which model to use to calculate the density of
-        air at hub height. Valid options are 'barometric', 'ideal_gas' and
-        'interpolation_extrapolation'.
-    power_output_model : str
-        Parameter to define which model to use to calculate the turbine
-        power output. Valid options are 'power_curve' and
-        'power_coefficient_curve'.
-    density_correction : bool
-        If the parameter is True the density corrected power curve is used
-        for the calculation of the turbine power output.
-    obstacle_height : float
-        Height of obstacles in the surrounding area of the wind turbine in
-        m. Set `obstacle_height` to zero for wide spread obstacles.
-    hellman_exp : float
-        The Hellman exponent, which combines the increase in wind speed due
-        to stability of atmospheric conditions and surface roughness into
-        one constant.
+    wind_speed_model :
+        See :py:class:`~.modelchain.ModelChain` for more information.
+    temperature_model :
+        See :py:class:`~.modelchain.ModelChain` for more information.
+    density_model :
+        See :py:class:`~.modelchain.ModelChain` for more information.
+    power_output_model :
+        See :py:class:`~.modelchain.ModelChain` for more information.
+    density_correction :
+        See :py:class:`~.modelchain.ModelChain` for more information.
+    obstacle_height :
+        See :py:class:`~.modelchain.ModelChain` for more information.
+    hellman_exp :
+        See :py:class:`~.modelchain.ModelChain` for more information.
 
     Attributes
     ----------
@@ -84,56 +110,38 @@ class TurbineClusterModelChain(ModelChain):
         representing the wind turbine cluster.
     wake_losses_model : str or None
         Defines the method for taking wake losses within the farm into
-        consideration. Options: None, 'power_efficiency_curve' or
-        'constant_efficiency' or the name of a wind efficiency curve like
-        'dena_mean'. Default: 'dena_mean'.
-        Use :py:func:`~.wake_losses.get_wind_efficiency_curve` for all provided
-        wind efficiency curves.
+        consideration.
     smoothing : bool
-        If True the power curves will be smoothed before or after the
-        aggregation of power curves depending on `smoothing_order`.
-        Default: False.
+        If True the power curves are smoothed.
     block_width : float
         Width between the wind speeds in the sum of the equation in
-        :py:func:`~.power_curves.smooth_power_curve`. Default: 0.5.
+        :py:func:`~.power_curves.smooth_power_curve`.
     standard_deviation_method : str
         Method for calculating the standard deviation for the Gauss
-        distribution. Options: 'turbulence_intensity', 'Staffell_Pfenninger'.
-        Default: 'turbulence_intensity'.
+        distribution.
     smoothing_order : str
-        Defines when the smoothing takes place if `smoothing` is True. Options:
-        'turbine_power_curves' (to the single turbine power curves),
-        'wind_farm_power_curves'. Default: 'wind_farm_power_curves'.
+        Defines when the smoothing takes place if `smoothing` is True.
     power_output : :pandas:`pandas.Series<series>`
         Electrical power output of the wind turbine in W.
     power_curve : :pandas:`pandas.Dataframe<frame>` or None
         The calculated power curve of the wind farm.
     wind_speed_model : str
-        Parameter to define which model to use to calculate the wind speed
-        at hub height. Valid options are 'logarithmic', 'hellman' and
-        'interpolation_extrapolation'.
+        Defines which model is used to calculate the wind speed at hub height.
     temperature_model : str
-        Parameter to define which model to use to calculate the temperature
-        of air at hub height. Valid options are 'linear_gradient' and
-        'interpolation_extrapolation'.
+        Defines which model is used to calculate the temperature of air at hub
+        height.
     density_model : str
-        Parameter to define which model to use to calculate the density of
-        air at hub height. Valid options are 'barometric', 'ideal_gas' and
-        'interpolation_extrapolation'.
+        Defines which model is used to calculate the density of air at hub
+        height.
     power_output_model : str
-        Parameter to define which model to use to calculate the turbine
-        power output. Valid options are 'power_curve' and
-        'power_coefficient_curve'.
+        Defines which model is used to calculate the turbine power output.
     density_correction : bool
-        If the parameter is True the density corrected power curve is used
-        for the calculation of the turbine power output.
+        Used to set `density_correction` parameter in
+        :func:`~.power_output.power_curve`.
     obstacle_height : float
-        Height of obstacles in the surrounding area of the wind turbine in
-        m. Set `obstacle_height` to zero for wide spread obstacles.
+        Used to set `obstacle_height` in :func:`~.wind_speed.logarithmic`.
     hellman_exp : float
-        The Hellman exponent, which combines the increase in wind speed due
-        to stability of atmospheric conditions and surface roughness into
-        one constant.
+        Used to set `hellman_exponent` in :func:`~.wind_speed.hellman`.
 
     """
     def __init__(self, power_plant, wake_losses_model='dena_mean',
@@ -163,19 +171,16 @@ class TurbineClusterModelChain(ModelChain):
 
         Parameters
         ----------
-        weather_df : pandas.DataFrame
-            DataFrame with time series for wind speed `wind_speed` in m/s, and
-            roughness length `roughness_length` in m, as well as optionally
-            temperature `temperature` in K, pressure `pressure` in Pa,
-            density `density` in kg/m³ and turbulence intensity
-            `turbulence_intensity` depending on `power_output_model`,
-            `density_model` and `standard_deviation_model` chosen.
-            The columns of the DataFrame are a MultiIndex where the first level
-            contains the variable name (e.g. wind_speed) and the second level
-            contains the height at which it applies (e.g. 10, if it was
-            measured at a height of 10 m).  See documentation of
-            :func:`TurbineClusterModelChain.run_model` for an example on how
-            to create the weather_df DataFrame.
+        weather_df : :pandas:`pandas.DataFrame<frame>`
+            DataFrame with weather data time series. If power curve smoothing
+            :py:attr:`~smoothing` is True and chosen method for calculating the
+            standard deviation :py:attr:`~standard_deviation_method` is
+            `turbulence_intensity` the weather dataframe needs to either
+            contain the turbulence intensity in column 'turbulence_intensity'
+            or the roughness length in m in column 'roughness_length'. The
+            turbulence intensity should be provided at hub height or at least
+            at a height close to the hub height, as it cannot be inter- or
+            extrapolated.
 
         Returns
         -------
@@ -187,9 +192,12 @@ class TurbineClusterModelChain(ModelChain):
             weather_df['turbulence_intensity'].values.mean() if
             'turbulence_intensity' in
             weather_df.columns.get_level_values(0) else None)
+        roughness_length = (
+            weather_df['roughness_length'].values.mean() if
+            'roughness_length' in weather_df.columns.get_level_values(0) else
+            None)
         # Assign power curve
-        if (self.wake_losses_model == 'power_efficiency_curve' or
-                self.wake_losses_model == 'constant_efficiency' or
+        if (self.wake_losses_model == 'wind_farm_efficiency' or
                 self.wake_losses_model is None):
             wake_losses_model_to_power_curve = self.wake_losses_model
             if self.wake_losses_model is None:
@@ -206,10 +214,10 @@ class TurbineClusterModelChain(ModelChain):
             smoothing=self.smoothing, block_width=self.block_width,
             standard_deviation_method=self.standard_deviation_method,
             smoothing_order=self.smoothing_order,
-            roughness_length=weather_df['roughness_length'][0].mean(),
+            roughness_length=roughness_length,
             turbulence_intensity=turbulence_intensity)
         # Further logging messages
-        if self.smoothing is None:
+        if self.smoothing is False:
             logging.debug('Aggregated power curve not smoothed.')
         else:
             logging.debug('Aggregated power curve smoothed by method: ' +
@@ -223,7 +231,7 @@ class TurbineClusterModelChain(ModelChain):
 
         Parameters
         ----------
-        weather_df : pandas.DataFrame
+        weather_df : :pandas:`pandas.DataFrame<frame>`
             DataFrame with time series for wind speed `wind_speed` in m/s, and
             roughness length `roughness_length` in m, as well as optionally
             temperature `temperature` in K, pressure `pressure` in Pa,
@@ -267,8 +275,7 @@ class TurbineClusterModelChain(ModelChain):
         density_hub = (None if (self.power_output_model == 'power_curve' and
                                 self.density_correction is False)
                        else self.density_hub(weather_df))
-        if (self.wake_losses_model != 'power_efficiency_curve' and
-                self.wake_losses_model != 'constant_efficiency' and
+        if (self.wake_losses_model != 'wind_farm_efficiency' and
                 self.wake_losses_model is not None):
             # Reduce wind speed with wind efficiency curve
             wind_speed_hub = wake_losses.reduce_wind_speed(

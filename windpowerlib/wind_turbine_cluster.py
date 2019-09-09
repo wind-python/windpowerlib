@@ -13,7 +13,6 @@ __license__ = "GPLv3"
 
 import numpy as np
 import pandas as pd
-import warnings
 
 
 class WindTurbineCluster(object):
@@ -22,91 +21,59 @@ class WindTurbineCluster(object):
 
     Parameters
     ----------
-    name : str or None
-        Name of the wind turbine cluster.
-    wind_farms : list (:class:`~.wind_farm.WindFarm`)
+    wind_farms : list(:class:`~.wind_farm.WindFarm`)
         List of wind farms in cluster.
-    coordinates : list(float) or None (optional)
-        List with coordinates [lat, lon] of location. Default: None.
+    name : str (optional)
+        Can be used as an identifier of the wind turbine cluster. Default: ''.
 
     Attributes
     ----------
-    name : str or None
-        Name of the wind turbine cluster.
-    wind_farms : list (:class:`~.wind_farm.WindFarm`)
+    wind_farms : list(:class:`~.wind_farm.WindFarm`)
         List of wind farms in cluster.
-    coordinates : list(float) or None
-        List with coordinates [lat, lon] of location. Default: None.
+    name : str
+        If set this is used as an identifier of the wind turbine cluster.
     hub_height : float
         The calculated average hub height of the wind turbine cluster. See
         :py:func:`mean_hub_height` for more information.
-    nominal_power : float
-        The nominal power is the sum of the nominal power of all turbines in
-        the wind turbine cluster in W.
-    installed_power : float
-        Installed nominal power of the wind turbine cluster in W. Deprecated!
-        Use :attr:`~.wind_farm.WindFarm.nominal_power` instead.
     power_curve : :pandas:`pandas.DataFrame<frame>` or None
         The calculated power curve of the wind turbine cluster. See
         :py:func:`assign_power_curve` for more information.
-    power_output : :pandas:`pandas.Series<series>`
-        The calculated power output of the wind turbine cluster.
 
     """
-    def __init__(self, name, wind_farms, coordinates=None, **kwargs):
+    def __init__(self, wind_farms, name='', **kwargs):
 
-        if coordinates is not None:
-            warnings.warn(
-                "Parameter coordinates is deprecated. In the future the "
-                "parameter can only be set after instantiation of "
-                "WindTurbineCluster object.", FutureWarning)
-
-        self.name = name
         self.wind_farms = wind_farms
-        self.coordinates = coordinates
+        self.name = name
 
         self.hub_height = None
         self._nominal_power = None
-        self._installed_power = None
         self.power_curve = None
-        self.power_output = None
 
-    @property
-    def installed_power(self):
-        r"""
-        The installed nominal power of the wind turbine cluster. (Deprecated!)
-
-        """
-        warnings.warn(
-            'installed_power is deprecated, use nominal_power instead.',
-            FutureWarning)
-        return self.nominal_power
-
-    @installed_power.setter
-    def installed_power(self, installed_power):
-        self._installed_power = installed_power
+    def __repr__(self):
+        if self.name is not '':
+            wf_repr = 'Wind turbine cluster: {name}'.format(name=self.name)
+        else:
+            info = []
+            for wind_farm in self.wind_farms:
+                info.append(wind_farm)
+            wf_repr = r'Wind turbine cluster with: {info}'.format(info=info)
+        return wf_repr
 
     @property
     def nominal_power(self):
         r"""
-        The nominal power of the wind turbine cluster.
-
-        See :attr:`~.wind_turbine_cluster.WindTurbineCluster.nominal_power`
-        for further information.
-
-        Parameters
-        -----------
-        nominal_power : float
-            Nominal power of the wind turbine cluster in w.
+        The nominal power is the sum of the nominal power of all turbines in
+        the wind turbine cluster.
 
         Returns
         -------
         float
-            Nominal power of the wind turbine cluster in w.
+            Nominal power of the wind turbine cluster in W.
 
         """
         if not self._nominal_power:
-            self.nominal_power = self.get_installed_power()
+            self.nominal_power = sum(wind_farm.nominal_power
+                                     for wind_farm in self.wind_farms)
         return self._nominal_power
 
     @nominal_power.setter
@@ -150,26 +117,11 @@ class WindTurbineCluster(object):
 
         """
         self.hub_height = np.exp(sum(
-            np.log(wind_farm.hub_height) * wind_farm.get_installed_power() for
-            wind_farm in self.wind_farms) / self.get_installed_power())
+            np.log(wind_farm.hub_height) * wind_farm.nominal_power for
+            wind_farm in self.wind_farms) / self.nominal_power)
         return self
 
-    def get_installed_power(self):
-        r"""
-        Calculates the :py:attr:`~nominal_power` of a wind turbine cluster.
-
-        Returns
-        -------
-        float
-            Nominal power of the wind farm in W. See :py:attr:`~nominal_power`
-            for further information.
-
-        """
-        for wind_farm in self.wind_farms:
-            wind_farm.nominal_power = wind_farm.get_installed_power()
-        return sum(wind_farm.nominal_power for wind_farm in self.wind_farms)
-
-    def assign_power_curve(self, wake_losses_model='power_efficiency_curve',
+    def assign_power_curve(self, wake_losses_model='wind_farm_efficiency',
                            smoothing=False, block_width=0.5,
                            standard_deviation_method='turbulence_intensity',
                            smoothing_order='wind_farm_power_curves',
@@ -189,8 +141,8 @@ class WindTurbineCluster(object):
         ----------
         wake_losses_model : str
             Defines the method for taking wake losses within the farm into
-            consideration. Options: 'power_efficiency_curve',
-            'constant_efficiency' or None. Default: 'power_efficiency_curve'.
+            consideration. Options: 'wind_farm_efficiency' or None.
+            Default: 'wind_farm_efficiency'.
         smoothing : bool
             If True the power curves will be smoothed before or after the
             aggregation of power curves depending on `smoothing_order`.
@@ -237,13 +189,14 @@ class WindTurbineCluster(object):
                 turbulence_intensity=turbulence_intensity, **kwargs)
         # Create data frame from power curves of all wind farms
         df = pd.concat([farm.power_curve.set_index(['wind_speed']).rename(
-            columns={'value': farm.name}) for
-            farm in self.wind_farms], axis=1)
+            columns={'value': i}) for
+            farm, i in zip(self.wind_farms,
+                           list(range(len(self.wind_farms))))], axis=1)
         # Sum up power curves
         cluster_power_curve = pd.DataFrame(
             df.interpolate(method='index').sum(axis=1))
         cluster_power_curve.columns = ['value']
         # Return wind speed (index) to a column of the data frame
-        cluster_power_curve.reset_index('wind_speed', inplace=True)
+        cluster_power_curve.reset_index(inplace=True)
         self.power_curve = cluster_power_curve
         return self

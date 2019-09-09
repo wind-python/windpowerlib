@@ -22,7 +22,7 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
 
     Parameters
     ----------
-    wind_speed : pandas.Series or numpy.array
+    wind_speed : :pandas:`pandas.Series<series>` or numpy.array
         Wind speed time series.
     wind_efficiency_curve_name : str
         Name of the wind efficiency curve. Use
@@ -31,7 +31,7 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
 
     Returns
     -------
-    reduced_wind_speed : pd.Series or np.array
+    :pandas:`pandas.Series<series>` or np.array
         `wind_speed` reduced by wind efficiency curve.
 
     References
@@ -62,14 +62,14 @@ def get_wind_efficiency_curve(curve_name='all'):
 
     Parameters
     ----------
-    curve_name : str or list
+    curve_name : str or list(str)
         Specifies the curve. Use 'all' to get all curves in a MultiIndex
         DataFrame or one of the curve names to retrieve a single curve.
         Default: 'all'.
 
     Returns
     -------
-    efficiency_curve : pd.DataFrame
+    :pandas:`pandas.DataFrame<frame>`
         Wind efficiency curve. Contains 'wind_speed' and 'efficiency' columns
         with wind speed in m/s and wind efficiency (dimensionless).
         If `curve_name` is 'all' or a list of strings a MultiIndex DataFrame is
@@ -79,8 +79,8 @@ def get_wind_efficiency_curve(curve_name='all'):
     -----
     The wind efficiency curves were generated in the "Dena Netzstudie" [1]_ and
     in the work of Kaspar Knorr [2]_. The mean wind efficiency curve is an
-    average curve from 12 wind farm distributed over Germany ([1]_) or
-    respectively an average from over 2000 wind farms in Germany ([2]_). Curves
+    average curve from 12 wind farm distributed over Germany [1]_ or
+    respectively an average from over 2000 wind farms in Germany [2]_. Curves
     with the appendix 'extreme' are wind efficiency curves of single wind farms
     that are extremely deviating from the respective mean wind efficiency
     curve. For more information see [1]_ and [2]_.

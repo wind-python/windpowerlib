@@ -7,7 +7,7 @@ def read(fname):
 
 
 setup(name='windpowerlib',
-      version='0.1.3',
+      version='0.2.0',
       description='Creating time series of wind power plants.',
       url='http://github.com/wind-python/windpowerlib',
       author='oemof developer group',
@@ -15,11 +15,13 @@ setup(name='windpowerlib',
       license=None,
       packages=['windpowerlib'],
       package_data={
-          'windpowerlib': [os.path.join('data', '*.csv')]},
+          'windpowerlib': [os.path.join('data', '*.csv'),
+                           os.path.join('oedb', '*.csv')]},
       long_description=read('README.rst'),
       long_description_content_type='text/x-rst',
       zip_safe=False,
-      install_requires=['pandas >= 0.19.1, < 0.26',
+      install_requires=['pandas >= 0.20.0, < 0.26',
                         'requests < 3.0'],
       extras_require={
-          'dev': ['pytest', 'jupyter', 'sphinx_rtd_theme', 'nbformat']})
+          'dev': ['pytest', 'jupyter', 'sphinx_rtd_theme', 'nbformat',
+                  'numpy']})

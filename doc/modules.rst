@@ -63,15 +63,25 @@ Wind turbine data
 Functions and methods to obtain the nominal power as well as 
 power curve or power coefficient curve needed by the :py:class:`~.wind_turbine.WindTurbine` class.
 
+.. autosummary::
+   :toctree: temp/
+
+   wind_turbine.get_turbine_data_from_file
+   wind_turbine.load_turbine_data_from_oedb
+   wind_turbine.get_turbine_types
+
+.. _create_input_types_label:
+
+Data Container
+=====================
+
+Create data container to be used as an input in classes und functions.
 
 .. autosummary::
    :toctree: temp/
 
-   wind_turbine.WindTurbine.fetch_turbine_data
-   wind_turbine.get_turbine_data_from_file
-   wind_turbine.get_turbine_data_from_oedb
-   wind_turbine.load_turbine_data_from_oedb
-   wind_turbine.get_turbine_types
+   wind_turbine.WindTurbineGroup
+   wind_turbine.WindTurbine.to_group
 
 .. _wind_farm_label:
 
@@ -85,8 +95,9 @@ as the aggregated power curve of a :py:class:`~.wind_farm.WindFarm` object.
 .. autosummary::
    :toctree: temp/
 
+   wind_farm.WindFarm.check_and_complete_wind_turbine_fleet
+   wind_farm.WindFarm.nominal_power
    wind_farm.WindFarm.mean_hub_height
-   wind_farm.WindFarm.get_installed_power
    wind_farm.WindFarm.assign_power_curve
 
 .. _wind_turbine_cluster_label:
@@ -94,7 +105,7 @@ as the aggregated power curve of a :py:class:`~.wind_farm.WindFarm` object.
 Wind turbine cluster calculations
 =================================
 
-Functions and methods to calculate the mean hub height, installed power as well
+Functions and methods to calculate the mean hub height, nominal power as well
 as the aggregated power curve of a :py:class:`~.wind_turbine_cluster.WindTurbineCluster` object.
 This is realized in a new module as the functions differ from the functions in
 the :py:class:`~.wind_farm.WindFarm` class.
@@ -102,8 +113,8 @@ the :py:class:`~.wind_farm.WindFarm` class.
 .. autosummary::
    :toctree: temp/
 
+   wind_turbine_cluster.WindTurbineCluster.nominal_power
    wind_turbine_cluster.WindTurbineCluster.mean_hub_height
-   wind_turbine_cluster.WindTurbineCluster.get_installed_power
    wind_turbine_cluster.WindTurbineCluster.assign_power_curve
 
 .. _poweroutput_module_label:
