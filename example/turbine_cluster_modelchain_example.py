@@ -12,6 +12,8 @@ of wind turbines, are imported and used without further explanations.
 __copyright__ = "Copyright oemof developer group"
 __license__ = "GPLv3"
 
+import pandas as pd
+
 try:
     from matplotlib import pyplot as plt
 except ImportError:
@@ -53,28 +55,26 @@ def initialize_wind_farms(my_turbine, e126):
 
     """
 
-    # specification of wind farm data
-    example_farm_data = {
-        'name': 'example_farm',
-        'wind_turbine_fleet': [
-            {'wind_turbine': my_turbine,  # as windpowerlib.WindTurbine
-             'number_of_turbines': 6},  # number of `my_turbine` turbines in
-                                        # farm (float values are possible as
-                                        # well)
-            {'wind_turbine': e126,
-             'total_capacity': 12.6e6  # installed capacity of `my_turbine`
-                                       # turbines in farm in Watt
-             }]}
+    # specification of wind farm data where turbine fleet is provided in a
+    # pandas.DataFrame
+    # for each turbine type you can either specify the number of turbines of
+    # that type in the wind farm (float values are possible as well) or the
+    # total installed capacity of that turbine type in W
+    wind_turbine_fleet = pd.DataFrame(
+        {'wind_turbine': [my_turbine, e126],  # as windpowerlib.WindTurbine
+         'number_of_turbines': [6, None],
+         'total_capacity': [None, 12.6e6]}
+    )
     # initialize WindFarm object
-    example_farm = WindFarm(**example_farm_data)
+    example_farm = WindFarm(name='example_farm',
+                            wind_turbine_fleet=wind_turbine_fleet)
 
     # specification of wind farm data (2) containing a wind farm efficiency
+    # wind turbine fleet is provided using the to_group function
     example_farm_2_data = {
         'name': 'example_farm_2',
-        'wind_turbine_fleet': [{'wind_turbine': my_turbine,
-                                'number_of_turbines': 6},
-                               {'wind_turbine': e126,
-                                'number_of_turbines': 3}],
+        'wind_turbine_fleet': [my_turbine.to_group(6),
+                               e126.to_group(total_capacity=12.6e6)],
         'efficiency': 0.9}
     # initialize WindFarm object
     example_farm_2 = WindFarm(**example_farm_2_data)
