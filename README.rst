@@ -89,7 +89,7 @@ To update your local files with the latest version of the `oedb turbine library 
   load_turbine_data_from_oedb()
 
 We would like to encourage anyone to contribute to the turbine library by adding turbine data or reporting errors in the data.
-See `here <https://github.com/OpenEnergyPlatform/data-preprocessing/issues/28v>`_ for more information on how to contribute.
+See `here <https://github.com/OpenEnergyPlatform/data-preprocessing/issues/28>`_ for more information on how to contribute.
 
 Contributing
 ==============
