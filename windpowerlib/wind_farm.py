@@ -21,23 +21,29 @@ class WindFarm(object):
 
     Parameters
     ----------
-    wind_turbine_fleet : :pandas:`pandas.DataFrame<frame>` or list()
-        Wind turbines of the wind farm.
+    wind_turbine_fleet : :pandas:`pandas.DataFrame<frame>` or list(:class:`~windpowerlib.wind_turbine.WindTurbineGroup`)
+        The wind turbine fleet specifies the turbine types in the wind farm and
+        their corresponding number or total installed capacity. There are
+        different options to provide the wind turbine fleet (see also examples
+        below):
 
-        1. DataFrame must have 'wind_turbine' containing a
-        :class:`~.wind_turbine.WindTurbine` object and either
-        'number_of_turbines' (number of wind turbines of the same turbine type
-        in the wind farm, can be a float) or 'total_capacity'
-        (installed capacity of wind turbines of the same turbine type in the
-        wind farm) as columns/keys. See example below.
+        * :pandas:`pandas.DataFrame<frame>` -
+          DataFrame must have columns 'wind_turbine' containing a
+          :class:`~.wind_turbine.WindTurbine` object and either
+          'number_of_turbines' (number of wind turbines of the same turbine
+          type in the wind farm, can be a float) or 'total_capacity'
+          (installed capacity of wind turbines of the same turbine type in the
+          wind farm).
 
-        2. A list of :class:`~windpowerlib.wind_turbine.WindTurbineGroup`
-        objects. A WindTurbineGroup can be created from a
-        :class:`~windpowerlib.wind_turbine.WindTurbine` using the
-        :func:`~windpowerlib.wind_turbine.WindTurbine.to_group` method.
+        * list(:class:`~windpowerlib.wind_turbine.WindTurbineGroup`) -
+          A :class:`~windpowerlib.wind_turbine.WindTurbineGroup` can be created
+          from a :class:`~windpowerlib.wind_turbine.WindTurbine` using the
+          :func:`~windpowerlib.wind_turbine.WindTurbine.to_group` method.
 
-        3. It is still possible to use a list of dict (see example) but we
-        recommend to use one of the other options above.
+        * list(dict) -
+          It is still possible to use a list of dictionaries (see example) but
+          we recommend to use one of the other options above.
+
     efficiency : float or :pandas:`pandas.DataFrame<frame>` or None (optional)
         Efficiency of the wind farm. Provide as either constant (float) or
         power efficiency curve (pd.DataFrame) containing 'wind_speed' and
