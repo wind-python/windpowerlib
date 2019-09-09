@@ -23,20 +23,20 @@ Go to the `download page <http://readthedocs.org/projects/windpowerlib/downloads
 Installation
 ============
 
-If you have a working Python 3 environment, use pypi to install the latest windpowerlib version. We highly recommend to use virtual environments.
+If you have a working Python 3 environment, use pypi to install the latest windpowerlib version:
 
 ::
 
     pip install windpowerlib
 
-The windpowerlib is designed for Python 3 and tested on Python >= 3.5.
+The windpowerlib is designed for Python 3 and tested on Python >= 3.5. We highly recommend to use virtual environments.
 Please see the `installation page <http://oemof.readthedocs.io/en/stable/installation_and_setup.html>`_ of the oemof documentation for complete instructions on how to install python and a virtual environment on your operating system.
 
 Optional Packages
 ~~~~~~~~~~~~~~~~~
 
 To see the plots of the windpowerlib example in the :ref:`examplereference-label` section you should `install the matplotlib package <http://matplotlib.org/users/installing.html>`_.
-Matplotlib can be installed using pip3:
+Matplotlib can be installed using pip:
 
 ::
 
