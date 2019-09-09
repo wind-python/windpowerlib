@@ -63,13 +63,25 @@ Wind turbine data
 Functions and methods to obtain the nominal power as well as 
 power curve or power coefficient curve needed by the :py:class:`~.wind_turbine.WindTurbine` class.
 
-
 .. autosummary::
    :toctree: temp/
 
    wind_turbine.get_turbine_data_from_file
    wind_turbine.load_turbine_data_from_oedb
    wind_turbine.get_turbine_types
+
+.. _create_input_types_label:
+
+Data Container
+=====================
+
+Create data container to be used as an input in classes und functions.
+
+.. autosummary::
+   :toctree: temp/
+
+   wind_turbine.WindTurbineGroup
+   wind_turbine.WindTurbine.to_group
 
 .. _wind_farm_label:
 

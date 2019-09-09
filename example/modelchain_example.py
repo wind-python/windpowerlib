@@ -94,15 +94,15 @@ def initialize_wind_turbines():
     Initializes three :class:`~.wind_turbine.WindTurbine` objects.
 
     This function shows three ways to initialize a WindTurbine object. You can
-    either specify your own turbine by directly providing a power (coefficient)
-    curve, as done below for 'my_turbine', or provide your own turbine data in
-    csv files as done for 'dummy_turbine', or you can use power and/or power
-    coefficient curve data from the OpenEnergy Database
-    (oedb) turbine library that is provided along with the windpowerlib,
-    as done for the 'enercon_e126'. Execute
-    ``windpowerlib.wind_turbine.get_turbine_types()`` to get a table
-    including all wind turbines for which power and/or power coefficient curves
-    are provided.
+    either use turbine data from the OpenEnergy Database (oedb) turbine library
+    that is provided along with the windpowerlib, as done for the
+    'enercon_e126', or specify your own turbine by directly providing a power
+    (coefficient) curve, as done below for 'my_turbine', or provide your own
+    turbine data in csv files, as done for 'dummy_turbine'.
+
+    To get a list of all wind turbines for which power and/or power coefficient
+    curves are provided execute `
+    `windpowerlib.wind_turbine.get_turbine_types()``.
 
     Returns
     -------
@@ -111,6 +111,15 @@ def initialize_wind_turbines():
            :class:`~.wind_turbine.WindTurbine`)
 
     """
+
+    # specification of wind turbine where data is provided in the oedb
+    # turbine library
+    enercon_e126 = {
+        'turbine_type': 'E-126/4200',  # turbine type as in register
+        'hub_height': 135  # in m
+    }
+    # initialize WindTurbine object
+    e126 = WindTurbine(**enercon_e126)
 
     # specification of own wind turbine (Note: power values and nominal power
     # have to be in Watt)
@@ -136,18 +145,6 @@ def initialize_wind_turbines():
     }
     # initialize WindTurbine object
     dummy_turbine = WindTurbine(**dummy_turbine)
-
-    # specification of wind turbine where power curve is provided in the oedb
-    # turbine library
-    # if you want to use the power coefficient curve change the value of
-    # 'power_coefficient_curve' to True.
-    enercon_e126 = {
-        'turbine_type': 'E-126/4200',  # turbine type as in register
-        'hub_height': 135,  # in m
-        'rotor_diameter': 127,  # in m
-    }
-    # initialize WindTurbine object
-    e126 = WindTurbine(**enercon_e126)
 
     return my_turbine, e126, dummy_turbine
 

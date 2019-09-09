@@ -48,10 +48,11 @@ class TestWindFarm:
 
     def test_initialization_1(self):
         """test catching error when wind_turbine_fleet not provided as list"""
-        msg = 'Wind turbine fleet not provided properly.'
+        msg = 'Wind turbine must be provided as WindTurbine object'
         with pytest.raises(ValueError, match=msg):
-            WindFarm(wind_turbine_fleet=[{'wind_turbine': 'turbine',
-                                          'number_of_turbines': 2}, 'dummy'])
+            WindFarm(wind_turbine_fleet={'wind_turbine': 'turbine',
+                                         'number_of_turbines': 2},
+                     name='dummy')
 
     def test_initialization_2(self):
         """test catching error when WindTurbine in wind_turbine_fleet
@@ -71,7 +72,7 @@ class TestWindFarm:
                                    WindTurbine(**self.test_turbine_2)],
                   'number_of_turbines': [3, 2]})
         msg = 'Missing wind_turbine key/column in wind_turbine_fleet'
-        with pytest.raises(ValueError, match=msg):
+        with pytest.raises(KeyError, match=msg):
             WindFarm(wind_turbine_fleet=wind_turbine_fleet)
 
     def test_initialization_4(self, recwarn):
@@ -144,4 +145,16 @@ class TestWindFarm:
                        'number_of_turbines': 2}]
         assert 'E-126/4200' in repr(WindFarm(wind_turbine_fleet=test_fleet))
 
-
+    def test_aggregation_of_power_curve_with_missing_power_curve(self):
+        """Test WindFarm.assign_power_curve() with missing power_curve."""
+        wt1 = WindTurbine(**self.test_turbine)
+        wt1.power_curve = None
+        wind_turbine_fleet = [
+            {'wind_turbine': wt1,
+             'number_of_turbines': 3},
+            {'wind_turbine': WindTurbine(**self.test_turbine_2),
+             'number_of_turbines': 2}]
+        windfarm = WindFarm(wind_turbine_fleet=wind_turbine_fleet)
+        msg = 'For an aggregated wind farm power curve each wind'
+        with pytest.raises(ValueError, match=msg):
+            windfarm.assign_power_curve()
