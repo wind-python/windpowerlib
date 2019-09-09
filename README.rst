@@ -51,8 +51,6 @@ Examples and basic usage
 =========================
 
 The basic usage of the windpowerlib is shown in the `ModelChain example <http://windpowerlib.readthedocs.io/en/stable/modelchain_example_notebook.html>`_ that is available as jupyter notebook and python script:
-The basic usage of the windpowerlib is shown in the `modelchain_example <http://windpowerlib.readthedocs.io/en/stable/modelchain_example_notebook.html>`_.
-The presented example is available as jupyter notebook and python script:
 
  * `ModelChain example (Python script) <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/modelchain_example.py>`_
  * `ModelChain example (Jupyter notebook) <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/modelchain_example.ipynb>`_
@@ -68,7 +66,7 @@ Furthermore, you have to install the windpowerlib. To run the notebook you also 
 This will open a browser window. Navigate to the directory containing the notebook to open it. See the jupyter notebook quick start guide for more information on `how to install <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/install.html>`_ and
 `how to run <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/execute.html>`_ jupyter notebooks.
 
-Further functionalities, like the modelling of wind farms and wind turbine clusters, are shown in the `turbine_cluster_modelchain_example <http://windpowerlib.readthedocs.io/en/stable/turbine_cluster_modelchain_example_notebook.html>`_. As the ModelChain example it is available as jupyter notebook and as python script. The weather and turbine datadata used in this example is the same as in the example above.
+Further functionalities, like the modelling of wind farms and wind turbine clusters, are shown in the `TurbineClusterModelChain example <http://windpowerlib.readthedocs.io/en/stable/turbine_cluster_modelchain_example_notebook.html>`_. As the ModelChain example it is available as jupyter notebook and as python script. The weather and turbine datadata used in this example is the same as in the example above.
 
  * `TurbineClusterModelChain example (Python script) <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/turbine_cluster_modelchain_example.py>`_
  * `TurbineClusterModelChain example (Jupyter notebook) <https://raw.githubusercontent.com/wind-python/windpowerlib/master/example/turbine_cluster_modelchain_example.ipynb>`_
@@ -79,7 +77,7 @@ Wind turbine data
 ==================
 
 The windpowerlib provides `wind turbine data <https://github.com/wind-python/windpowerlib/tree/master/windpowerlib/oedb>`_
-(power curves, hub heights, etc.) for a large set of wind turbines. See `here <http://windpowerlib.readthedocs.io/en/stable/modelchain_example_notebook.html#Initialize-wind-turbine>`_ on how
+(power curves, hub heights, etc.) for a large set of wind turbines. Have a look at the `example <http://windpowerlib.readthedocs.io/en/stable/modelchain_example_notebook.html#Initialize-wind-turbine>`_ on how
 to use this data in your simulations.
 
 The dataset is hosted and maintained on the `OpenEnergy database <https://openenergy-platform.org/dataedit/>`_ (oedb).
