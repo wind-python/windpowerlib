@@ -70,6 +70,24 @@ Further functionalities, like the modelling of wind farms and wind turbine clust
 
 You can also look at the examples in the :ref:`examples_section_label` section.
 
+Wind turbine data
+==================
+
+The windpowerlib provides `wind turbine data <https://github.com/wind-python/windpowerlib/tree/master/windpowerlib/oedb>`_
+(power curves, hub heights, etc.) for a large set of wind turbines. See `Initialize wind turbine` in :ref:`examples_section_label` on how
+to use this data in your simulations.
+
+The dataset is hosted and maintained on the `OpenEnergy database <https://openenergy-platform.org/dataedit/>`_ (oedb).
+To update your local files with the latest version of the `oedb turbine library <https://openenergy-platform.org/dataedit/view/supply/wind_turbine_library>`_ you can execute the following in your python console:
+
+.. code:: python
+
+  from windpowerlib.wind_turbine import load_turbine_data_from_oedb
+  load_turbine_data_from_oedb()
+
+We would like to encourage anyone to contribute to the turbine library by adding turbine data or reporting errors in the data.
+See `here <https://github.com/OpenEnergyPlatform/data-preprocessing/issues/28v>`_ for more information on how to contribute.
+
 Contributing
 ==============
 
