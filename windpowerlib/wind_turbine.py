@@ -14,6 +14,7 @@ import warnings
 import requests
 import os
 from windpowerlib.tools import WindpowerlibUserWarning
+from typing import NamedTuple
 
 
 class WindTurbine(object):
@@ -113,7 +114,6 @@ class WindTurbine(object):
     18000.0
     >>> print(e_t_1.nominal_power)
     1500000.0
-
     """
 
     def __init__(self, hub_height, nominal_power=None, path='oedb',
@@ -219,6 +219,96 @@ class WindTurbine(object):
             turbine_repr = 'Wind turbine: {info}'.format(info=info)
 
         return turbine_repr
+
+    def to_group(self, number_turbines=None, total_capacity=None):
+        r"""
+        Creates a :class:`~windpowerlib.wind_turbine.WindTurbineGroup`, a
+        NamedTuple data container with the fields 'number_of_turbines' and
+        'wind_turbine'. If no parameter is passed the number of turbines is
+        set to one.
+
+        It can be used to calculate the number of turbines for a given total
+        capacity or to create a namedtuple that can be used to define a
+        :class:`~windpowerlib.wind_farm.WindFarm` object.
+
+        Parameters
+        ----------
+        number_turbines : float
+            Number of turbines of the defined type. Default: 1
+        total_capacity : float
+            Total capacity of the group of wind turbines of the same type.
+
+        Returns
+        -------
+        WindTurbineGroup
+            A namedtuple with two fields: 'number_of_turbines' and
+            'wind_turbine'.
+
+        Examples
+        --------
+        >>> from windpowerlib import WindTurbine
+        >>> enerconE126 = {
+        ...    'hub_height': 135,
+        ...    'turbine_type': 'E-126/4200'}
+        >>> e126 = WindTurbine(**enerconE126)
+        >>> e126.to_group(5).number_of_turbines
+        5
+        >>> e126.to_group().number_of_turbines
+        1
+        >>> e126.to_group(number_turbines=7).number_of_turbines
+        7
+        >>> e126.to_group(total_capacity=12600000).number_of_turbines
+        3.0
+        >>> e126.to_group(total_capacity=14700000).number_of_turbines
+        3.5
+        >>> e126.to_group(total_capacity=12600000).wind_turbine.nominal_power
+        4200000.0
+        >>> type(e126.to_group(5))
+        <class 'windpowerlib.wind_turbine.WindTurbineGroup'>
+        >>> e126.to_group(5)  # doctest: +NORMALIZE_WHITESPACE
+        WindTurbineGroup(wind_turbine=Wind turbine: E-126/4200 ['nominal
+        power=4200000.0 W', 'hub height=135 m', 'rotor diameter=127.0 m',
+        'power_coefficient_curve=True', 'power_curve=True'],
+        number_of_turbines=5)
+        """
+
+        if number_turbines is not None and total_capacity is not None:
+            raise ValueError("The 'number' and the 'total_capacity' parameter "
+                             "are mutually exclusive. Use just one of them.")
+        elif total_capacity is not None:
+            number_turbines = total_capacity / self.nominal_power
+        elif number_turbines is None:
+            number_turbines = 1
+
+        return WindTurbineGroup(
+            wind_turbine=self, number_of_turbines=number_turbines)
+
+
+# This is working for Python >= 3.5.
+# There a cleaner solutions for Python >= 3.6, once the support of 3.5 is
+# dropped: https://stackoverflow.com/a/50038614
+class WindTurbineGroup(NamedTuple('WindTurbineGroup', [
+        ('wind_turbine', WindTurbine), ('number_of_turbines', float)])):
+    """
+    A simple data container to define more than one turbine of the same type.
+    Use the :func:`~windpowerlib.wind_turbine.WindTurbine.to_group` method to
+    easily create a WindTurbineGroup from a
+    :class:`~windpowerlib.wind_turbine.WindTurbine` object.
+
+    Parameters
+    ----------
+    'wind_turbine' : WindTurbine
+        A WindTurbine object with all necessary attributes.
+    'number_of_turbines' : float
+        The number of turbines. The number is not restricted to integer values.
+    """
+    __slots__ = ()
+
+
+WindTurbineGroup.wind_turbine.__doc__ = (
+    'A :class:`~windpowerlib.wind_farm.WindTurbine` object.')
+WindTurbineGroup.number_of_turbines.__doc__ = (
+    'Number of turbines of type WindTurbine')
 
 
 def get_turbine_data_from_file(turbine_type, path):

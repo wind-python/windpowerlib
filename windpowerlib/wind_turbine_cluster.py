@@ -13,7 +13,6 @@ __license__ = "GPLv3"
 
 import numpy as np
 import pandas as pd
-import warnings
 
 
 class WindTurbineCluster(object):
@@ -36,9 +35,6 @@ class WindTurbineCluster(object):
     hub_height : float
         The calculated average hub height of the wind turbine cluster. See
         :py:func:`mean_hub_height` for more information.
-    nominal_power : float
-        The nominal power is the sum of the nominal power of all turbines in
-        the wind turbine cluster in W.
     power_curve : :pandas:`pandas.DataFrame<frame>` or None
         The calculated power curve of the wind turbine cluster. See
         :py:func:`assign_power_curve` for more information.
@@ -55,31 +51,24 @@ class WindTurbineCluster(object):
 
     def __repr__(self):
         if self.name is not '':
-            repr = 'Wind turbine cluster: {name}'.format(name=self.name)
+            wf_repr = 'Wind turbine cluster: {name}'.format(name=self.name)
         else:
             info = []
             for wind_farm in self.wind_farms:
                 info.append(wind_farm)
-            repr = r'Wind turbine cluster with: {info}'.format(info=info)
-        return repr
+            wf_repr = r'Wind turbine cluster with: {info}'.format(info=info)
+        return wf_repr
 
     @property
     def nominal_power(self):
         r"""
-        The nominal power of the wind turbine cluster.
-
-        See :attr:`~.wind_turbine_cluster.WindTurbineCluster.nominal_power`
-        for further information.
-
-        Parameters
-        -----------
-        nominal_power : float
-            Nominal power of the wind turbine cluster in w.
+        The nominal power is the sum of the nominal power of all turbines in
+        the wind turbine cluster.
 
         Returns
         -------
         float
-            Nominal power of the wind turbine cluster in w.
+            Nominal power of the wind turbine cluster in W.
 
         """
         if not self._nominal_power:

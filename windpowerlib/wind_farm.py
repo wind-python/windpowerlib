@@ -21,13 +21,29 @@ class WindFarm(object):
 
     Parameters
     ----------
-    wind_turbine_fleet : :pandas:`pandas.DataFrame<frame>` or list(dict)
-        Wind turbines of wind farm. DataFrame/Dictionaries must have
-        'wind_turbine' containing a :class:`~.wind_turbine.WindTurbine` object
-        and either 'number_of_turbines' (number of wind turbines of the same
-        turbine type in the wind farm, can be a float) or 'total_capacity'
-        (installed capacity of wind turbines of the same turbine type in the
-        wind farm) as columns/keys. See example below.
+    wind_turbine_fleet : :pandas:`pandas.DataFrame<frame>` or list(:class:`~windpowerlib.wind_turbine.WindTurbineGroup`)
+        The wind turbine fleet specifies the turbine types in the wind farm and
+        their corresponding number or total installed capacity. There are
+        different options to provide the wind turbine fleet (see also examples
+        below):
+
+        * :pandas:`pandas.DataFrame<frame>` -
+          DataFrame must have columns 'wind_turbine' containing a
+          :class:`~.wind_turbine.WindTurbine` object and either
+          'number_of_turbines' (number of wind turbines of the same turbine
+          type in the wind farm, can be a float) or 'total_capacity'
+          (installed capacity of wind turbines of the same turbine type in the
+          wind farm).
+
+        * list(:class:`~windpowerlib.wind_turbine.WindTurbineGroup`) -
+          A :class:`~windpowerlib.wind_turbine.WindTurbineGroup` can be created
+          from a :class:`~windpowerlib.wind_turbine.WindTurbine` using the
+          :func:`~windpowerlib.wind_turbine.WindTurbine.to_group` method.
+
+        * list(dict) -
+          It is still possible to use a list of dictionaries (see example) but
+          we recommend to use one of the other options above.
+
     efficiency : float or :pandas:`pandas.DataFrame<frame>` or None (optional)
         Efficiency of the wind farm. Provide as either constant (float) or
         power efficiency curve (pd.DataFrame) containing 'wind_speed' and
@@ -38,11 +54,11 @@ class WindFarm(object):
 
     Attributes
     ----------
-    wind_turbine_fleet : list(dict)
-        Wind turbines of wind farm. Dictionaries must have 'wind_turbine'
+    wind_turbine_fleet : :pandas:`pandas.DataFrame<frame>`
+        Wind turbines of wind farm. DataFrame must have 'wind_turbine'
         (contains a :class:`~.wind_turbine.WindTurbine` object) and
         'number_of_turbines' (number of wind turbines of the same turbine type
-        in the wind farm) as keys.
+        in the wind farm) as columns.
     efficiency : float or :pandas:`pandas.DataFrame<frame>` or None
         Efficiency of the wind farm. Either constant (float) power efficiency
         curve (pd.DataFrame) containing 'wind_speed' and 'efficiency'
@@ -53,9 +69,6 @@ class WindFarm(object):
     hub_height : float
         The calculated mean hub height of the wind farm. See
         :py:func:`mean_hub_height` for more information.
-    nominal_power : float
-        The nominal power is the sum of the nominal power of all turbines in
-        the wind farm in W.
     power_curve : :pandas:`pandas.DataFrame<frame>` or None
         The calculated power curve of the wind farm. See
         :py:func:`assign_power_curve` for more information.
@@ -75,25 +88,31 @@ class WindFarm(object):
     ...     'turbine_type': 'V90/2000',
     ...     'nominal_power': 2e6}
     >>> v90 = WindTurbine(**vestasV90)
-    >>> # turbine fleet as DataFrame with number of turbines provided
+    >>> # turbine fleet as DataFrame
     >>> wind_turbine_fleet = pd.DataFrame(
     ...     {'wind_turbine': [e126, v90],
-    ...      'number_of_turbines': [6, 3]})
-    >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet)
+    ...      'number_of_turbines': [6, None],
+    ...      'total_capacity': [None, 3 * 2e6]})
+    >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet, name='my_farm')
     >>> print(example_farm.nominal_power)
     31200000.0
-    >>> # turbine fleet as list with total capacity of each turbine type
-    >>> # provided
+    >>> # turbine fleet as a list of WindTurbineGroup objects using the
+    >>> # 'to_group' method.
+    >>> wind_turbine_fleet = [e126.to_group(6),
+    ...                       v90.to_group(total_capacity=3 * 2e6)]
+    >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet, name='my_farm')
+    >>> print(example_farm.nominal_power)
+    31200000.0
+    >>> # turbine fleet as list of dictionaries (not recommended)
     >>> example_farm_data = {
-    ...    'name': 'example_farm',
+    ...    'name': 'my_farm',
     ...    'wind_turbine_fleet': [{'wind_turbine': e126,
-    ...                            'total_capacity': 6 * 4.2e6},
+    ...                            'number_of_turbines': 6},
     ...                           {'wind_turbine': v90,
     ...                            'total_capacity': 3 * 2e6}]}
     >>> example_farm = wind_farm.WindFarm(**example_farm_data)
     >>> print(example_farm.nominal_power)
     31200000.0
-
     """
 
     def __init__(self, wind_turbine_fleet, efficiency=None, name='', **kwargs):
@@ -120,10 +139,7 @@ class WindFarm(object):
         """
         # convert list to dataframe if necessary
         if isinstance(self.wind_turbine_fleet, list):
-            try:
-                self.wind_turbine_fleet = pd.DataFrame(self.wind_turbine_fleet)
-            except:
-                raise ValueError("Wind turbine fleet not provided properly.")
+            self.wind_turbine_fleet = pd.DataFrame(self.wind_turbine_fleet)
 
         # check wind turbines
         try:
@@ -133,8 +149,8 @@ class WindFarm(object):
                         'Wind turbine must be provided as WindTurbine object '
                         'but was provided as {}.'.format(type(turbine)))
         except KeyError:
-            raise ValueError('Missing wind_turbine key/column in '
-                             'wind_turbine_fleet parameter.')
+            raise KeyError('Missing wind_turbine key/column in '
+                           'wind_turbine_fleet parameter.')
 
         # add columns for number of turbines and total capacity if they don't
         # yet exist
@@ -159,7 +175,7 @@ class WindFarm(object):
                 else:
                     self.wind_turbine_fleet.loc[ix, 'number_of_turbines'] = \
                         number_of_turbines
-            except:
+            except TypeError:
                 raise ValueError(msg.format(row['wind_turbine']))
 
         # calculate total capacity if necessary and check that total capacity
@@ -170,7 +186,7 @@ class WindFarm(object):
                     self.wind_turbine_fleet.loc[ix, 'total_capacity'] = \
                         row['number_of_turbines'] * \
                         row['wind_turbine'].nominal_power
-                except:
+                except TypeError:
                     raise ValueError(
                         'Total capacity of turbines of type {turbine} cannot '
                         'be deduced. Please check if the nominal power of the '
@@ -201,14 +217,7 @@ class WindFarm(object):
     @property
     def nominal_power(self):
         r"""
-        The nominal power of the wind farm.
-
-        See :attr:`~.wind_farm.WindFarm.nominal_power` for further information.
-
-        Parameters
-        -----------
-        nominal_power : float
-            Nominal power of the wind farm in W.
+        The nominal power is the sum of the nominal power of all turbines.
 
         Returns
         -------
