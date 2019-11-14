@@ -12,10 +12,6 @@ windpowerlib functions to calculate the feed-in time series.
 
 
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import os
 import pandas as pd
 

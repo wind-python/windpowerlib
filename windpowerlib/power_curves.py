@@ -4,10 +4,6 @@ power curve smoothing or reducing power values by an efficiency to the power
 curve of a wind turbine, wind farm or wind turbine cluster.
 
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import numpy as np
 import pandas as pd
 from windpowerlib import tools

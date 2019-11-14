@@ -3,10 +3,6 @@ The ``wind_speed`` module contains functions to calculate the wind speed at
 hub height of a wind turbine.
 
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import numpy as np
 import pandas as pd
 

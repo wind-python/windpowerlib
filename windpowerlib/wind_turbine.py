@@ -4,10 +4,6 @@ a wind turbine in the windpowerlib and functions needed for the modelling of a
 wind turbine.
 
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import pandas as pd
 import logging
 import warnings

@@ -1,10 +1,6 @@
 """
 Testing the wind_turbine module.
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import pytest
 import os
 from windpowerlib.tools import WindpowerlibUserWarning

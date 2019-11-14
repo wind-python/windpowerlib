@@ -3,11 +3,6 @@ The ``tools`` module contains a collection of helper functions used in the
 windpowerlib.
 
 """
-
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import numpy as np
 import warnings
 

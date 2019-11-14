@@ -1,10 +1,6 @@
 """
 Testing the ``modelchain`` module.
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import pandas as pd
 import numpy as np
 import pytest

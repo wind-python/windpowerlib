@@ -4,10 +4,6 @@ windpowerlib. This module makes it easy to get started with the windpowerlib
 and demonstrates standard ways to use the library.
 
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import logging
 from windpowerlib import (wind_speed, density, temperature, power_output,
                           tools)

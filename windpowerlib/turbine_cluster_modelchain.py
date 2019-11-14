@@ -5,10 +5,6 @@ and shows use cases for the power output calculation of wind farms and wind
 turbine clusters.
 
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import logging
 from windpowerlib import wake_losses
 from windpowerlib.modelchain import ModelChain

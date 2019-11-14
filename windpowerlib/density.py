@@ -4,9 +4,6 @@ temperature at hub height of a wind turbine.
 
 """
 
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 
 def barometric(pressure, pressure_height, hub_height, temperature_hub_height):
     r"""

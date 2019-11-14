@@ -4,9 +4,6 @@ hub height of a wind turbine.
 
 """
 
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 
 def linear_gradient(temperature, temperature_height, hub_height):
     r"""

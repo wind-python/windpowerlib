@@ -6,11 +6,6 @@ A wind turbine cluster comprises wind farms and wind turbines belonging to the
 same weather data point.
 
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
-
 import numpy as np
 import pandas as pd
 

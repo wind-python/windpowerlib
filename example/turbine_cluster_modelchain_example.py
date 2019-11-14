@@ -8,10 +8,6 @@ Functions that are used in the ``modelchain_example``, like the initialization
 of wind turbines, are imported and used without further explanations.
 
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import pandas as pd
 
 try:
