@@ -3,6 +3,8 @@ The ``wind_farm`` module contains the class WindFarm that implements
 a wind farm in the windpowerlib and functions needed for the modelling of a
 wind farm.
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
 from windpowerlib import tools, power_curves, WindTurbine
 import numpy as np

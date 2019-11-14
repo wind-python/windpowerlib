@@ -2,6 +2,8 @@
 The ``tools`` module contains a collection of helper functions used in the
 windpowerlib.
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
 import numpy as np
 import warnings

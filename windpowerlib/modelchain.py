@@ -3,6 +3,8 @@ The ``modelchain`` module contains functions and classes of the
 windpowerlib. This module makes it easy to get started with the windpowerlib
 and demonstrates standard ways to use the library.
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
 import logging
 from windpowerlib import (wind_speed, density, temperature, power_output,

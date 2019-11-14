@@ -2,6 +2,8 @@
 The ``wake_losses`` module contains functions for modelling wake losses by wind
 efficiency curves (reduction of wind speed).
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
 import numpy as np
 import pandas as pd

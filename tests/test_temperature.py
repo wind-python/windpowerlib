@@ -1,3 +1,8 @@
+"""
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
+"""
+
 import pandas as pd
 import numpy as np
 from pandas.util.testing import assert_series_equal

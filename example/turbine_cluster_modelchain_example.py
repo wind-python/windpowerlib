@@ -7,6 +7,8 @@ which you want to use one single weather data point.
 Functions that are used in the ``modelchain_example``, like the initialization
 of wind turbines, are imported and used without further explanations.
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
 import pandas as pd
 

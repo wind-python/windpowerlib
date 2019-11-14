@@ -4,6 +4,8 @@ windpowerlib. This module makes it easy to get started with the windpowerlib
 and shows use cases for the power output calculation of wind farms and wind
 turbine clusters.
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
 import logging
 from windpowerlib import wake_losses

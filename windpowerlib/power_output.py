@@ -2,6 +2,8 @@
 The ``power_output`` module contains functions to calculate the power output
 of a wind turbine.
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
 import numpy as np
 import pandas as pd

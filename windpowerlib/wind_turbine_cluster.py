@@ -5,6 +5,8 @@ needed for modelling a wind turbine cluster.
 A wind turbine cluster comprises wind farms and wind turbines belonging to the
 same weather data point.
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
 import numpy as np
 import pandas as pd

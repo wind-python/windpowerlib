@@ -3,6 +3,8 @@ The ``power_curves`` module contains functions for applying alterations like
 power curve smoothing or reducing power values by an efficiency to the power
 curve of a wind turbine, wind farm or wind turbine cluster.
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
 import numpy as np
 import pandas as pd
