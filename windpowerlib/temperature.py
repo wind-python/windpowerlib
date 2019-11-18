@@ -2,10 +2,9 @@
 The ``temperature`` module contains functions to calculate the temperature at
 hub height of a wind turbine.
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
 
 
 def linear_gradient(temperature, temperature_height, hub_height):

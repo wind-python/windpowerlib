@@ -1,9 +1,9 @@
 """
 Testing the wind_turbine module.
-"""
 
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
+"""
 
 import pytest
 import os

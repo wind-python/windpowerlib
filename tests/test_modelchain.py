@@ -1,10 +1,9 @@
 """
 Testing the ``modelchain`` module.
+
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import pandas as pd
 import numpy as np
 import pytest

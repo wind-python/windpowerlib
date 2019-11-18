@@ -2,10 +2,9 @@
 The ``density`` module contains functions to calculate the density and
 temperature at hub height of a wind turbine.
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
 
 
 def barometric(pressure, pressure_height, hub_height, temperature_hub_height):

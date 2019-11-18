@@ -3,11 +3,9 @@ The ``wind_turbine`` module contains the class WindTurbine that implements
 a wind turbine in the windpowerlib and functions needed for the modelling of a
 wind turbine.
 
+SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
+SPDX-License-Identifier: MIT
 """
-
-__copyright__ = "Copyright oemof developer group"
-__license__ = "GPLv3"
-
 import pandas as pd
 import logging
 import warnings

@@ -12,7 +12,7 @@ setup(name='windpowerlib',
       url='http://github.com/wind-python/windpowerlib',
       author='oemof developer group',
       author_email='windpowerlib@rl-institut.de',
-      license=None,
+      license='MIT',
       packages=['windpowerlib'],
       package_data={
           'windpowerlib': [os.path.join('data', '*.csv'),
