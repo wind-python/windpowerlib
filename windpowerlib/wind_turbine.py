@@ -486,7 +486,7 @@ def get_turbine_types(turbine_library='local', print_out=True, filter_=True):
     turbine type itself) is missing you can contact us via github or
     windpowerlib@rl-institut.de. You can help us by providing data in the
     format as shown in
-    `the data base <https://openenergy-platform.org/dataedit/view/model_draft/openfred_windpower_powercurve>`_.
+    `the data base <https://openenergy-platform.org/dataedit/view/supply/wind_turbine_library>`_.
 
     Examples
     --------
