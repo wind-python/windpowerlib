@@ -1,0 +1,5 @@
+# Used by https://mybinder.org for setting up Docker container.
+#
+# setup.py does not specify matplotlib in ``install_requires``, therefore, in
+# order to produce plots in Binder install matplotlib:
+python -m pip install matplotlib
