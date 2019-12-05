@@ -402,8 +402,10 @@ class WindFarm(object):
                         wind_farm_power_curve['value'].values,
                         wind_farm_efficiency=self.efficiency))
             else:
-                logging.info("`wake_losses_model` is {} but wind farm ".format(
-                    wake_losses_model) + "efficiency is NOT taken into "
-                                         "account as it is None.")
+                msg = (
+                    "If you use `wake_losses_model` '{model}' your WindFarm "
+                    "needs an efficiency but `efficiency` of {farm} is {eff}.")
+                raise ValueError(msg.format(model=wake_losses_model, farm=self,
+                                            eff=self.efficiency))
         self.power_curve = wind_farm_power_curve
         return self
