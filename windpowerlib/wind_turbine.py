@@ -507,8 +507,7 @@ def get_turbine_types(turbine_library='local', print_out=True, filter_=True):
 
     """
     if turbine_library == 'local':
-        filename = os.path.join(os.path.dirname(__file__), 'oedb',
-                                'turbine_data.csv')
+        filename = os.path.join(os.path.dirname(__file__), 'oedb', 'turbine_data.csv')
         df = pd.read_csv(filename, index_col=0).reset_index()
     elif turbine_library == 'oedb':
         df = load_turbine_data_from_oedb()
