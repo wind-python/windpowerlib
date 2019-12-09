@@ -1,13 +1,4 @@
 linters:
     flake8:
       python: 3
-    black:
-      config: ./pyproject.toml
-      fixer: true
-
-files:
-    ignore:
-        - '.github/*'
-
-fixers:
-    enable: true
+      max-line-length: 79
