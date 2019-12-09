@@ -1,0 +1,13 @@
+linters:
+    flake8:
+      python: 3
+    black:
+      config: ./pyproject.toml
+      fixer: true:
+
+files:
+    ignore:
+        - 'src/generated/*'
+
+fixers:
+    enable: true
