@@ -3,11 +3,11 @@ linters:
       python: 3
     black:
       config: ./pyproject.toml
-      fixer: true:
+      fixer: true
 
 files:
     ignore:
-        - 'src/generated/*'
+        - '.github/*'
 
 fixers:
     enable: true
