@@ -7,6 +7,7 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 import logging
+import pandas as pd
 from windpowerlib import (wind_speed, density, temperature, power_output,
                           tools)
 
@@ -438,6 +439,11 @@ class ModelChain(object):
         'wind_speed'
 
         """
+        # Convert data heights to integer. In some case they are strings.
+        weather_df.columns = pd.MultiIndex.from_arrays([
+            weather_df.columns.get_level_values(0),
+            weather_df.columns.get_level_values(1).astype(int)])
+
         wind_speed_hub = self.wind_speed_hub(weather_df)
         density_hub = (None if (self.power_output_model == 'power_curve' and
                                 self.density_correction is False)
