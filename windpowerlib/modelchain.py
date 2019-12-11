@@ -442,7 +442,7 @@ class ModelChain(object):
         # Convert data heights to integer. In some case they are strings.
         weather_df.columns = pd.MultiIndex.from_arrays([
             weather_df.columns.get_level_values(0),
-            weather_df.columns.get_level_values(1).astype(int)])
+            pd.to_numeric(weather_df.columns.get_level_values(1))])
 
         wind_speed_hub = self.wind_speed_hub(weather_df)
         density_hub = (None if (self.power_output_model == 'power_curve' and
