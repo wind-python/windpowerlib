@@ -94,20 +94,20 @@ class WindTurbine(object):
     --------
     >>> import os
     >>> from windpowerlib import WindTurbine
-    >>> enerconE126 = {
+    >>> enerconE126={
     ...    'hub_height': 135,
     ...    'turbine_type': 'E-126/4200'}
-    >>> e126 = WindTurbine(**enerconE126)
+    >>> e126=WindTurbine(**enerconE126)
     >>> print(e126.nominal_power)
     4200000.0
     >>> # Example with own path
-    >>> path = os.path.join(os.path.dirname(__file__), '../example/data')
-    >>> example_turbine = {
+    >>> path=os.path.join(os.path.dirname(__file__), '../example/data')
+    >>> example_turbine={
     ...    'hub_height': 100,
     ...    'rotor_diameter': 70,
     ...    'turbine_type': 'DUMMY 3',
     ...    'path' : path}
-    >>> e_t_1 = WindTurbine(**example_turbine)
+    >>> e_t_1=WindTurbine(**example_turbine)
     >>> print(e_t_1.power_curve['value'][7])
     18000.0
     >>> print(e_t_1.nominal_power)
@@ -118,53 +118,53 @@ class WindTurbine(object):
                  power_curve=None, power_coefficient_curve=None,
                  rotor_diameter=None, turbine_type=None, **kwargs):
 
-        self.hub_height = hub_height
-        self.turbine_type = turbine_type
-        self.rotor_diameter = rotor_diameter
-        self.nominal_power = nominal_power
-        self.power_curve = power_curve
-        self.power_coefficient_curve = power_coefficient_curve
+        self.hub_height=hub_height
+        self.turbine_type=turbine_type
+        self.rotor_diameter=rotor_diameter
+        self.nominal_power=nominal_power
+        self.power_curve=power_curve
+        self.power_coefficient_curve=power_coefficient_curve
 
         if path == 'oedb':
-            path = os.path.join(os.path.dirname(__file__), 'oedb')
+            path=os.path.join(os.path.dirname(__file__), 'oedb')
 
         if turbine_type is not None and path is not None:
             if power_curve is None:
                 try:
-                    fn = os.path.join(path, 'power_curves.csv')
-                    self.power_curve = get_turbine_data_from_file(
+                    fn=os.path.join(path, 'power_curves.csv')
+                    self.power_curve=get_turbine_data_from_file(
                         self.turbine_type, fn)
                 except KeyError:
-                    msg = "No power curve found for {0}"
+                    msg="No power curve found for {0}"
                     logging.debug(msg.format(self.turbine_type))
             if power_coefficient_curve is None:
                 try:
-                    fn = os.path.join(path, 'power_coefficient_curves.csv')
-                    self.power_coefficient_curve = get_turbine_data_from_file(
+                    fn=os.path.join(path, 'power_coefficient_curves.csv')
+                    self.power_coefficient_curve=get_turbine_data_from_file(
                         self.turbine_type, fn)
                 except KeyError:
-                    msg = "No power coefficient curve found for {0}"
+                    msg="No power coefficient curve found for {0}"
                     logging.debug(msg.format(self.turbine_type))
 
             if nominal_power is None or (
                     rotor_diameter is None and
                     self.power_coefficient_curve is not None):
-                turbine_data = None
+                turbine_data=None
                 try:
-                    fn = os.path.join(path, 'turbine_data.csv')
-                    turbine_data = get_turbine_data_from_file(
+                    fn=os.path.join(path, 'turbine_data.csv')
+                    turbine_data=get_turbine_data_from_file(
                         self.turbine_type, fn)
                 except KeyError:
-                    msg = "No turbine data found for {0}"
+                    msg="No turbine data found for {0}"
                     logging.debug(msg.format(self.turbine_type))
 
                 if self.nominal_power is None and turbine_data is not None:
-                    self.nominal_power = float(turbine_data['nominal_power'])
+                    self.nominal_power=float(turbine_data['nominal_power'])
                 if self.rotor_diameter is None and turbine_data is not None:
-                    self.rotor_diameter = float(turbine_data['rotor_diameter'])
+                    self.rotor_diameter=float(turbine_data['rotor_diameter'])
 
         if self.power_curve is None and self.power_coefficient_curve is None:
-            msg = ("The WindTurbine has been initialised without a power curve"
+            msg=("The WindTurbine has been initialised without a power curve"
                    " and without a power coefficient curve.\nYou will not be"
                    " able to calculate the power output.\n"
                    " Check if the turbine type {0} is in your database file"
@@ -173,28 +173,28 @@ class WindTurbine(object):
         else:
             # power (coefficient) curve to pd.DataFrame in case of being dict
             if isinstance(self.power_curve, dict):
-                self.power_curve = pd.DataFrame(self.power_curve)
+                self.power_curve=pd.DataFrame(self.power_curve)
             if isinstance(self.power_coefficient_curve, dict):
-                self.power_coefficient_curve = pd.DataFrame(
+                self.power_coefficient_curve=pd.DataFrame(
                     self.power_coefficient_curve)
             # sort power (coefficient) curve by wind speed
             if isinstance(self.power_curve, pd.DataFrame):
                 self.power_curve.sort_values(by='wind_speed')
             elif self.power_curve is not None:
-                msg = "Type of power curve of {} is {} but should be " \
+                msg="Type of power curve of {} is {} but should be " \
                       "pd.DataFrame or dict."
                 raise TypeError(msg.format(self.__repr__(),
                                            type(self.power_curve)))
             if isinstance(self.power_coefficient_curve, pd.DataFrame):
                 self.power_coefficient_curve.sort_values(by='wind_speed')
             elif self.power_coefficient_curve is not None:
-                msg = "Type of power coefficient curve of {} is {} but " \
+                msg="Type of power coefficient curve of {} is {} but " \
                       "should be pd.DataFrame or dict."
                 raise TypeError(msg.format(self.__repr__(),
                                            type(self.power_coefficient_curve)))
 
     def __repr__(self):
-        info = []
+        info=[]
         if self.nominal_power is not None:
             info.append('nominal power={} W'.format(self.nominal_power))
         if self.hub_height is not None:
@@ -211,10 +211,10 @@ class WindTurbine(object):
             info.append('power_curve={}'.format('False'))
 
         if self.turbine_type is not None:
-            turbine_repr = 'Wind turbine: {name} {info}'.format(
+            turbine_repr='Wind turbine: {name} {info}'.format(
                 name=self.turbine_type, info=info)
         else:
-            turbine_repr = 'Wind turbine: {info}'.format(info=info)
+            turbine_repr='Wind turbine: {info}'.format(info=info)
 
         return turbine_repr
 
@@ -245,10 +245,10 @@ class WindTurbine(object):
         Examples
         --------
         >>> from windpowerlib import WindTurbine
-        >>> enerconE126 = {
+        >>> enerconE126={
         ...    'hub_height': 135,
         ...    'turbine_type': 'E-126/4200'}
-        >>> e126 = WindTurbine(**enerconE126)
+        >>> e126=WindTurbine(**enerconE126)
         >>> e126.to_group(5).number_of_turbines
         5
         >>> e126.to_group().number_of_turbines
@@ -274,9 +274,9 @@ class WindTurbine(object):
             raise ValueError("The 'number' and the 'total_capacity' parameter "
                              "are mutually exclusive. Use just one of them.")
         elif total_capacity is not None:
-            number_turbines = total_capacity / self.nominal_power
+            number_turbines=total_capacity / self.nominal_power
         elif number_turbines is None:
-            number_turbines = 1
+            number_turbines=1
 
         return WindTurbineGroup(
             wind_turbine=self, number_of_turbines=number_turbines)
@@ -300,12 +300,12 @@ class WindTurbineGroup(NamedTuple('WindTurbineGroup', [
     'number_of_turbines' : float
         The number of turbines. The number is not restricted to integer values.
     """
-    __slots__ = ()
+    __slots__=()
 
 
-WindTurbineGroup.wind_turbine.__doc__ = (
+WindTurbineGroup.wind_turbine.__doc__=(
     'A :class:`~windpowerlib.wind_farm.WindTurbine` object.')
-WindTurbineGroup.number_of_turbines.__doc__ = (
+WindTurbineGroup.number_of_turbines.__doc__=(
     'Number of turbines of type WindTurbine')
 
 
@@ -339,9 +339,9 @@ def get_turbine_data_from_file(turbine_type, path):
     --------
     >>> from windpowerlib import wind_turbine
     >>> import os
-    >>> path = os.path.join(os.path.dirname(__file__), '../example/data',
+    >>> path=os.path.join(os.path.dirname(__file__), '../example/data',
     ...     'power_curves.csv')
-    >>> d3 = get_turbine_data_from_file('DUMMY 3', path)
+    >>> d3=get_turbine_data_from_file('DUMMY 3', path)
     >>> print(d3['value'][7])
     18000.0
     >>> print(d3['value'].max())
@@ -349,13 +349,13 @@ def get_turbine_data_from_file(turbine_type, path):
     """
 
     try:
-        df = pd.read_csv(path, index_col=0)
+        df=pd.read_csv(path, index_col=0)
     except FileNotFoundError:
         raise FileNotFoundError("The file '{}' was not found.".format(path))
-    wpp_df = df[df.index == turbine_type].copy()
+    wpp_df=df[df.index == turbine_type].copy()
     # if turbine not in data file
     if wpp_df.shape[0] == 0:
-        msg = "Wind converter type {0} not provided. Possible types: {1}"
+        msg="Wind converter type {0} not provided. Possible types: {1}"
         raise KeyError(msg.format(turbine_type, list(df.index)))
     # if turbine in data file
     # get nominal power or power (coefficient) curve
@@ -363,10 +363,10 @@ def get_turbine_data_from_file(turbine_type, path):
         return wpp_df
     else:
         wpp_df.dropna(axis=1, inplace=True)
-        wpp_df = wpp_df.transpose().reset_index()
-        wpp_df.columns = ['wind_speed', 'value']
+        wpp_df=wpp_df.transpose().reset_index()
+        wpp_df.columns=['wind_speed', 'value']
         # transform wind speeds to floats
-        wpp_df['wind_speed'] = wpp_df['wind_speed'].apply(lambda x: float(x))
+        wpp_df['wind_speed']=wpp_df['wind_speed'].apply(lambda x: float(x))
         return wpp_df
 
 
@@ -393,52 +393,52 @@ def load_turbine_data_from_oedb(schema='supply', table='wind_turbine_library'):
 
     """
     # url of OpenEnergy Platform that contains the oedb
-    oep_url = 'http://oep.iks.cs.ovgu.de/'
+    oep_url='http://oep.iks.cs.ovgu.de/'
 
     # load data
-    result = requests.get(
+    result=requests.get(
         oep_url + '/api/v0/schema/{}/tables/{}/rows/?'.format(
             schema, table), )
     if not result.status_code == 200:
         raise ConnectionError("Database connection not successful. "
                               "Response: [{}]".format(result.status_code))
     # extract data to dataframe
-    turbine_data = pd.DataFrame(result.json())
+    turbine_data=pd.DataFrame(result.json())
     # standard file name for saving data
-    filename = os.path.join(os.path.dirname(__file__), 'oedb',
+    filename=os.path.join(os.path.dirname(__file__), 'oedb',
                             '{}.csv')
     # get all power (coefficient) curves and save to file
     # for curve_type in ['power_curve', 'power_coefficient_curve']:
     for curve_type in ['power_curve', 'power_coefficient_curve']:
-        curves_df = pd.DataFrame(columns=['wind_speed'])
+        curves_df=pd.DataFrame(columns=['wind_speed'])
         for index in turbine_data.index:
             if (turbine_data['{}_wind_speeds'.format(curve_type)][index]
                     and turbine_data['{}_values'.format(curve_type)][index]):
-                df = pd.DataFrame(data=[
+                df=pd.DataFrame(data=[
                     eval(turbine_data['{}_wind_speeds'.format(curve_type)][
                              index]),
                     eval(turbine_data['{}_values'.format(curve_type)][
                              index])]).transpose().rename(
                     columns={0: 'wind_speed',
                              1: turbine_data['turbine_type'][index]})
-                curves_df = pd.merge(left=curves_df, right=df, how='outer',
+                curves_df=pd.merge(left=curves_df, right=df, how='outer',
                                      on='wind_speed')
-        curves_df = curves_df.set_index('wind_speed').sort_index().transpose()
+        curves_df=curves_df.set_index('wind_speed').sort_index().transpose()
         # power curve values in W
         if curve_type == 'power_curve':
             curves_df *= 1000
-        curves_df.index.name = 'turbine_type'
+        curves_df.index.name='turbine_type'
         curves_df.to_csv(filename.format('{}s'.format(curve_type)))
 
     # get turbine data and save to file (excl. curves)
-    turbine_data_df = turbine_data.drop(
+    turbine_data_df=turbine_data.drop(
         ['power_curve_wind_speeds', 'power_curve_values',
          'power_coefficient_curve_wind_speeds',
          'power_coefficient_curve_values',
          'thrust_coefficient_curve_wind_speeds',
          'thrust_coefficient_curve_values'], axis=1).set_index('turbine_type')
     # nominal power in W
-    turbine_data_df['nominal_power'] = turbine_data_df[
+    turbine_data_df['nominal_power']=turbine_data_df[
                                            'nominal_power'] * 1000
     turbine_data_df.to_csv(filename.format('turbine_data'))
     return turbine_data
@@ -491,7 +491,7 @@ def get_turbine_types(turbine_library='local', print_out=True, filter_=True):
     Examples
     --------
     >>> from windpowerlib import wind_turbine
-    >>> df = wind_turbine.get_turbine_types(print_out=False)
+    >>> df=wind_turbine.get_turbine_types(print_out=False)
     >>> print(df[df["turbine_type"].str.contains("E-126")].iloc[0])
     manufacturer          Enercon
     turbine_type       E-126/4200
@@ -507,22 +507,22 @@ def get_turbine_types(turbine_library='local', print_out=True, filter_=True):
 
     """
     if turbine_library == 'local':
-        filename = os.path.join(os.path.dirname(__file__), 'oedb', 'turbine_data.csv')
-        df = pd.read_csv(filename, index_col=0).reset_index()
+        filename=os.path.join(os.path.dirname(__file__), 'oedb', 'turbine_data.csv')
+        df=pd.read_csv(filename, index_col=0).reset_index()
     elif turbine_library == 'oedb':
-        df = load_turbine_data_from_oedb()
+        df=load_turbine_data_from_oedb()
     else:
         raise ValueError("`turbine_library` is '{}' ".format(turbine_library) +
                          "but must be 'local' or 'oedb'.")
     if filter_:
-        cp_curves_df = df.loc[df['has_cp_curve']][
+        cp_curves_df=df.loc[df['has_cp_curve']][
             ['manufacturer', 'turbine_type', 'has_cp_curve']]
-        p_curves_df = df.loc[df['has_power_curve']][
+        p_curves_df=df.loc[df['has_power_curve']][
             ['manufacturer', 'turbine_type', 'has_power_curve']]
-        curves_df = pd.merge(p_curves_df, cp_curves_df, how='outer',
+        curves_df=pd.merge(p_curves_df, cp_curves_df, how='outer',
                              sort=True).fillna(False)
     else:
-        curves_df = df[['manufacturer', 'turbine_type', 'has_power_curve',
+        curves_df=df[['manufacturer', 'turbine_type', 'has_power_curve',
                         'has_cp_curve']]
     if print_out:
         pd.set_option('display.max_rows', len(curves_df))

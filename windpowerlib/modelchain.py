@@ -122,13 +122,13 @@ class ModelChain(object):
     --------
     >>> from windpowerlib import modelchain
     >>> from windpowerlib import wind_turbine
-    >>> enerconE126 = {
+    >>> enerconE126={
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
     ...    'turbine_type': 'E-126/4200'}
-    >>> e126 = wind_turbine.WindTurbine(**enerconE126)
-    >>> modelchain_data = {'density_model': 'ideal_gas'}
-    >>> e126_mc = modelchain.ModelChain(e126, **modelchain_data)
+    >>> e126=wind_turbine.WindTurbine(**enerconE126)
+    >>> modelchain_data={'density_model': 'ideal_gas'}
+    >>> e126_mc=modelchain.ModelChain(e126, **modelchain_data)
     >>> print(e126_mc.density_model)
     ideal_gas
 
@@ -143,15 +143,15 @@ class ModelChain(object):
                  obstacle_height=0,
                  hellman_exp=None, **kwargs):
 
-        self.power_plant = power_plant
-        self.obstacle_height = obstacle_height
-        self.wind_speed_model = wind_speed_model
-        self.temperature_model = temperature_model
-        self.density_model = density_model
-        self.power_output_model = power_output_model
-        self.density_correction = density_correction
-        self.hellman_exp = hellman_exp
-        self.power_output = None
+        self.power_plant=power_plant
+        self.obstacle_height=obstacle_height
+        self.wind_speed_model=wind_speed_model
+        self.temperature_model=temperature_model
+        self.density_model=density_model
+        self.power_output_model=power_output_model
+        self.density_correction=density_correction
+        self.hellman_exp=hellman_exp
+        self.power_output=None
 
     def temperature_hub(self, weather_df):
         r"""
@@ -183,22 +183,22 @@ class ModelChain(object):
 
         """
         if self.power_plant.hub_height in weather_df['temperature']:
-            temperature_hub = weather_df['temperature'][
+            temperature_hub=weather_df['temperature'][
                 self.power_plant.hub_height]
         elif self.temperature_model == 'linear_gradient':
             logging.debug('Calculating temperature using temperature '
                           'gradient.')
-            closest_height = weather_df['temperature'].columns[
+            closest_height=weather_df['temperature'].columns[
                 min(range(len(weather_df['temperature'].columns)),
                     key=lambda i: abs(weather_df['temperature'].columns[i] -
                                       self.power_plant.hub_height))]
-            temperature_hub = temperature.linear_gradient(
+            temperature_hub=temperature.linear_gradient(
                 weather_df['temperature'][closest_height], closest_height,
                 self.power_plant.hub_height)
         elif self.temperature_model == 'interpolation_extrapolation':
             logging.debug('Calculating temperature using linear inter- or '
                           'extrapolation.')
-            temperature_hub = tools.linear_interpolation_extrapolation(
+            temperature_hub=tools.linear_interpolation_extrapolation(
                 weather_df['temperature'], self.power_plant.hub_height)
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
@@ -242,32 +242,32 @@ class ModelChain(object):
         density.
         """
         if self.density_model != 'interpolation_extrapolation':
-            temperature_hub = self.temperature_hub(weather_df)
+            temperature_hub=self.temperature_hub(weather_df)
 
         # Calculation of density in kg/m³ at hub height
         if self.density_model == 'barometric':
             logging.debug('Calculating density using barometric height '
                           'equation.')
-            closest_height = weather_df['pressure'].columns[
+            closest_height=weather_df['pressure'].columns[
                 min(range(len(weather_df['pressure'].columns)),
                     key=lambda i: abs(weather_df['pressure'].columns[i] -
                                       self.power_plant.hub_height))]
-            density_hub = density.barometric(
+            density_hub=density.barometric(
                 weather_df['pressure'][closest_height], closest_height,
                 self.power_plant.hub_height, temperature_hub)
         elif self.density_model == 'ideal_gas':
             logging.debug('Calculating density using ideal gas equation.')
-            closest_height = weather_df['pressure'].columns[
+            closest_height=weather_df['pressure'].columns[
                 min(range(len(weather_df['pressure'].columns)),
                     key=lambda i: abs(weather_df['pressure'].columns[i] -
                                       self.power_plant.hub_height))]
-            density_hub = density.ideal_gas(
+            density_hub=density.ideal_gas(
                 weather_df['pressure'][closest_height], closest_height,
                 self.power_plant.hub_height, temperature_hub)
         elif self.density_model == 'interpolation_extrapolation':
             logging.debug('Calculating density using linear inter- or '
                           'extrapolation.')
-            density_hub = tools.linear_interpolation_extrapolation(
+            density_hub=tools.linear_interpolation_extrapolation(
                 weather_df['density'], self.power_plant.hub_height)
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
@@ -306,27 +306,27 @@ class ModelChain(object):
 
         """
         if self.power_plant.hub_height in weather_df['wind_speed']:
-            wind_speed_hub = weather_df['wind_speed'][
+            wind_speed_hub=weather_df['wind_speed'][
                 self.power_plant.hub_height]
         elif self.wind_speed_model == 'logarithmic':
             logging.debug('Calculating wind speed using logarithmic wind '
                           'profile.')
-            closest_height = weather_df['wind_speed'].columns[
+            closest_height=weather_df['wind_speed'].columns[
                 min(range(len(weather_df['wind_speed'].columns)),
                     key=lambda i: abs(weather_df['wind_speed'].columns[i] -
                                       self.power_plant.hub_height))]
-            wind_speed_hub = wind_speed.logarithmic_profile(
+            wind_speed_hub=wind_speed.logarithmic_profile(
                 weather_df['wind_speed'][closest_height], closest_height,
                 self.power_plant.hub_height,
                 weather_df['roughness_length'].iloc[:, 0],
                 self.obstacle_height)
         elif self.wind_speed_model == 'hellman':
             logging.debug('Calculating wind speed using hellman equation.')
-            closest_height = weather_df['wind_speed'].columns[
+            closest_height=weather_df['wind_speed'].columns[
                 min(range(len(weather_df['wind_speed'].columns)),
                     key=lambda i: abs(weather_df['wind_speed'].columns[i] -
                                       self.power_plant.hub_height))]
-            wind_speed_hub = wind_speed.hellman(
+            wind_speed_hub=wind_speed.hellman(
                 weather_df['wind_speed'][closest_height], closest_height,
                 self.power_plant.hub_height,
                 weather_df['roughness_length'].iloc[:, 0],
@@ -334,12 +334,12 @@ class ModelChain(object):
         elif self.wind_speed_model == 'interpolation_extrapolation':
             logging.debug('Calculating wind speed using linear inter- or '
                           'extrapolation.')
-            wind_speed_hub = tools.linear_interpolation_extrapolation(
+            wind_speed_hub=tools.linear_interpolation_extrapolation(
                 weather_df['wind_speed'], self.power_plant.hub_height)
         elif self.wind_speed_model == 'log_interpolation_extrapolation':
             logging.debug('Calculating wind speed using logarithmic inter- or '
                           'extrapolation.')
-            wind_speed_hub = tools.logarithmic_interpolation_extrapolation(
+            wind_speed_hub=tools.logarithmic_interpolation_extrapolation(
                 weather_df['wind_speed'], self.power_plant.hub_height)
         else:
             raise ValueError("'{0}' is an invalid value. ".format(
@@ -422,7 +422,7 @@ class ModelChain(object):
         ---------
         >>> import numpy as np
         >>> import pandas as pd
-        >>> weather_df = pd.DataFrame(np.random.rand(2,6),
+        >>> weather_df=pd.DataFrame(np.random.rand(2,6),
         ...                           index=pd.date_range('1/1/2012',
         ...                                               periods=2,
         ...                                               freq='H'),
@@ -438,10 +438,10 @@ class ModelChain(object):
         'wind_speed'
 
         """
-        wind_speed_hub = self.wind_speed_hub(weather_df)
-        density_hub = (None if (self.power_output_model == 'power_curve' and
+        wind_speed_hub=self.wind_speed_hub(weather_df)
+        density_hub=(None if (self.power_output_model == 'power_curve' and
                                 self.density_correction is False)
                        else self.density_hub(weather_df))
-        self.power_output = self.calculate_power_output(wind_speed_hub,
+        self.power_output=self.calculate_power_output(wind_speed_hub,
                                                         density_hub)
         return self

@@ -60,7 +60,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     The following equation is used to calculated the power curves values of the
     smoothed power curve [1]_:
 
-    .. math:: P_{smoothed}(v_{std}) = \sum\limits_{v_i} \Delta v_i \cdot P(v_i)
+    .. math:: P_{smoothed}(v_{std})=\sum\limits_{v_i} \Delta v_i \cdot P(v_i)
         \cdot \frac{1}{\sigma \sqrt{2 \pi}}
         \exp \left[-\frac{(v_{std} - v_i -\mu)^2}{2 \sigma^2} \right]
        :label: power
@@ -83,7 +83,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
     'turbulence_intensity' [2]_:
 
-    .. math:: \sigma = v_\text{std} \cdot \sigma_\text{n} = v_\text{std}
+    .. math:: \sigma=v_\text{std} \cdot \sigma_\text{n}=v_\text{std}
         \cdot TI
 
     with:
@@ -91,7 +91,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
 
     'Staffell_Pfenninger' [4]_:
 
-    .. math:: \sigma = 0.6 \cdot 0.2 \cdot v_\text{std}
+    .. math:: \sigma=0.6 \cdot 0.2 \cdot v_\text{std}
 
     References
     ----------
@@ -113,37 +113,37 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
     if standard_deviation_method == 'turbulence_intensity':
         if ('turbulence_intensity' in kwargs and
                 kwargs['turbulence_intensity'] is not np.nan):
-            normalized_standard_deviation = kwargs['turbulence_intensity']
+            normalized_standard_deviation=kwargs['turbulence_intensity']
         else:
             raise ValueError("Turbulence intensity must be defined for " +
                              "using 'turbulence_intensity' as " +
                              "`standard_deviation_method`")
     elif standard_deviation_method == 'Staffell_Pfenninger':
-        normalized_standard_deviation = 0.2
+        normalized_standard_deviation=0.2
     else:
         raise ValueError("{} is no valid `standard_deviation_method`. Valid "
                          + "options are 'turbulence_intensity', or "
                          + "'Staffell_Pfenninger'".format(
                                  standard_deviation_method))
     # Initialize list for power curve values
-    smoothed_power_curve_values = []
+    smoothed_power_curve_values=[]
     # Append wind speeds to `power_curve_wind_speeds`
-    maximum_value = power_curve_wind_speeds.iloc[-1] + wind_speed_range
+    maximum_value=power_curve_wind_speeds.iloc[-1] + wind_speed_range
     while power_curve_wind_speeds.values[-1] < maximum_value:
-        power_curve_wind_speeds = power_curve_wind_speeds.append(
+        power_curve_wind_speeds=power_curve_wind_speeds.append(
             pd.Series(power_curve_wind_speeds.iloc[-1] +
                       (power_curve_wind_speeds.iloc[5] -
                        power_curve_wind_speeds.iloc[4]),
                       index=[power_curve_wind_speeds.index[-1] + 1]))
-        power_curve_values = power_curve_values.append(
+        power_curve_values=power_curve_values.append(
             pd.Series(0.0, index=[power_curve_values.index[-1] + 1]))
     for power_curve_wind_speed in power_curve_wind_speeds:
         # Create array of wind speeds for the sum
-        wind_speeds_block = (np.arange(
+        wind_speeds_block=(np.arange(
             -wind_speed_range, wind_speed_range + block_width, block_width) +
             power_curve_wind_speed)
         # Get standard deviation for Gauss function
-        standard_deviation = (
+        standard_deviation=(
             (power_curve_wind_speed * normalized_standard_deviation + 0.6)
             if standard_deviation_method is 'Staffell_Pfenninger'
             else power_curve_wind_speed * normalized_standard_deviation)
@@ -151,9 +151,9 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         if standard_deviation == 0.0:
             # The gaussian distribution is not defined for a standard deviation
             # of zero. Smoothed power curve value is set to zero.
-            smoothed_value = 0.0
+            smoothed_value=0.0
         else:
-            smoothed_value = sum(
+            smoothed_value=sum(
                 block_width * np.interp(wind_speed, power_curve_wind_speeds,
                                         power_curve_values, left=0, right=0) *
                 tools.gauss_distribution(
@@ -164,11 +164,11 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         # distribution for a standard deviation of zero.
         smoothed_power_curve_values.append(smoothed_value)
     # Create smoothed power curve data frame
-    smoothed_power_curve_df = pd.DataFrame(
+    smoothed_power_curve_df=pd.DataFrame(
         data=[list(power_curve_wind_speeds.values),
               smoothed_power_curve_values]).transpose()
     # Rename columns of the data frame
-    smoothed_power_curve_df.columns = ['wind_speed', 'value']
+    smoothed_power_curve_df.columns=['wind_speed', 'value']
     return smoothed_power_curve_df
 
 
@@ -200,25 +200,25 @@ def wake_losses_to_power_curve(power_curve_wind_speeds, power_curve_values,
 
     """
     # Create power curve DataFrame
-    power_curve_df = pd.DataFrame(
+    power_curve_df=pd.DataFrame(
         data=[list(power_curve_wind_speeds),
               list(power_curve_values)]).transpose()
     # Rename columns of DataFrame
-    power_curve_df.columns = ['wind_speed', 'value']
+    power_curve_df.columns=['wind_speed', 'value']
     if isinstance(wind_farm_efficiency, float):
-        power_curve_df['value'] = power_curve_values * wind_farm_efficiency
+        power_curve_df['value']=power_curve_values * wind_farm_efficiency
     elif (isinstance(wind_farm_efficiency, dict) or
           isinstance(wind_farm_efficiency, pd.DataFrame)):
-        df = pd.concat([power_curve_df.set_index('wind_speed'),
+        df=pd.concat([power_curve_df.set_index('wind_speed'),
                         wind_farm_efficiency.set_index('wind_speed')], axis=1)
         # Add column with reduced power (nan values of efficiency are
         # interpolated)
-        df['reduced_power'] = df['value'] * df['efficiency'].interpolate(
+        df['reduced_power']=df['value'] * df['efficiency'].interpolate(
             method='index')
-        reduced_power = df['reduced_power'].dropna()
-        power_curve_df = pd.DataFrame([reduced_power.index,
+        reduced_power=df['reduced_power'].dropna()
+        power_curve_df=pd.DataFrame([reduced_power.index,
                                        reduced_power.values]).transpose()
-        power_curve_df.columns = ['wind_speed', 'value']
+        power_curve_df.columns=['wind_speed', 'value']
     else:
         raise TypeError(
             "'wind_farm_efficiency' must be float, dict or pd.DataFrame "

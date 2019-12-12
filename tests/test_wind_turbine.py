@@ -19,10 +19,10 @@ class TestWindTurbine:
     @classmethod
     def setup_class(cls):
         """Setup default values"""
-        cls.source = os.path.join(os.path.dirname(__file__), '../example/data')
+        cls.source=os.path.join(os.path.dirname(__file__), '../example/data')
 
     def test_warning(self, recwarn):
-        test_turbine_data = {'hub_height': 100,
+        test_turbine_data={'hub_height': 100,
                              'rotor_diameter': 80,
                              'turbine_type': 'turbine_not_in_file',
                              'path': self.source}
@@ -37,10 +37,10 @@ class TestWindTurbine:
 
     def test_get_turbine_types(self, capsys):
         get_turbine_types()
-        captured = capsys.readouterr()
+        captured=capsys.readouterr()
         assert 'Enercon' in captured.out
         get_turbine_types('oedb', print_out=False, filter_=False)
-        msg = "`turbine_library` is 'wrong' but must be 'local' or 'oedb'."
+        msg="`turbine_library` is 'wrong' but must be 'local' or 'oedb'."
         with pytest.raises(ValueError, match=msg):
             get_turbine_types('wrong')
 
@@ -57,7 +57,7 @@ class TestWindTurbine:
 
     def test_power_curve_is_of_wrong_type(self):
         """Error raising due to wrong type of WindTurbine.power_curve."""
-        test_turbine_data = {'hub_height': 100,
+        test_turbine_data={'hub_height': 100,
                              'rotor_diameter': 80,
                              'turbine_type': 'test_type',
                              'power_curve': 'string'}
@@ -67,7 +67,7 @@ class TestWindTurbine:
     def test_power_coefficient_curve_is_of_wrong_type(self):
         """Error raising due to wrong type of
         WindTurbine.power_coefficient_curve."""
-        test_turbine_data = {'hub_height': 100,
+        test_turbine_data={'hub_height': 100,
                              'rotor_diameter': 80,
                              'turbine_type': 'test_type',
                              'power_coefficient_curve': 'string'}
@@ -75,24 +75,24 @@ class TestWindTurbine:
             WindTurbine(**test_turbine_data)
 
     def test_to_group_method(self):
-        example_turbine = {
+        example_turbine={
            'hub_height': 100,
            'rotor_diameter': 70,
            'turbine_type': 'DUMMY 3',
            'path': self.source}
-        e_t_1 = WindTurbine(**example_turbine)
+        e_t_1=WindTurbine(**example_turbine)
         assert(isinstance(e_t_1.to_group(), WindTurbineGroup))
         assert(e_t_1.to_group(5).number_of_turbines == 5)
         assert(e_t_1.to_group(number_turbines=5).number_of_turbines == 5)
         assert(e_t_1.to_group(total_capacity=3e6).number_of_turbines == 2.0)
 
     def test_wrongly_defined_to_group_method(self):
-        example_turbine = {
+        example_turbine={
            'hub_height': 100,
            'rotor_diameter': 70,
            'turbine_type': 'DUMMY 3',
            'path': self.source}
-        e_t_1 = WindTurbine(**example_turbine)
+        e_t_1=WindTurbine(**example_turbine)
         with pytest.raises(ValueError,
                            match="The 'number' and the 'total_capacity' "
                                  "parameter are mutually exclusive."):

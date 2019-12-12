@@ -148,15 +148,15 @@ class TurbineClusterModelChain(ModelChain):
                  smoothing_order='wind_farm_power_curves', **kwargs):
         super(TurbineClusterModelChain, self).__init__(power_plant, **kwargs)
 
-        self.power_plant = power_plant
-        self.wake_losses_model = wake_losses_model
-        self.smoothing = smoothing
-        self.block_width = block_width
-        self.standard_deviation_method = standard_deviation_method
-        self.smoothing_order = smoothing_order
+        self.power_plant=power_plant
+        self.wake_losses_model=wake_losses_model
+        self.smoothing=smoothing
+        self.block_width=block_width
+        self.standard_deviation_method=standard_deviation_method
+        self.smoothing_order=smoothing_order
 
-        self.power_curve = None
-        self.power_output = None
+        self.power_curve=None
+        self.power_output=None
 
     def assign_power_curve(self, weather_df):
         r"""
@@ -186,18 +186,18 @@ class TurbineClusterModelChain(ModelChain):
 
         """
         # Get turbulence intensity from weather if existent
-        turbulence_intensity = (
+        turbulence_intensity=(
             weather_df['turbulence_intensity'].values.mean() if
             'turbulence_intensity' in
             weather_df.columns.get_level_values(0) else None)
-        roughness_length = (
+        roughness_length=(
             weather_df['roughness_length'].values.mean() if
             'roughness_length' in weather_df.columns.get_level_values(0) else
             None)
         # Assign power curve
         if (self.wake_losses_model == 'wind_farm_efficiency' or
                 self.wake_losses_model is None):
-            wake_losses_model_to_power_curve = self.wake_losses_model
+            wake_losses_model_to_power_curve=self.wake_losses_model
             if self.wake_losses_model is None:
                 logging.debug('Wake losses in wind farms are not considered.')
             else:
@@ -206,7 +206,7 @@ class TurbineClusterModelChain(ModelChain):
         else:
             logging.debug('Wake losses considered by {} wind '.format(
                 self.wake_losses_model) + 'efficiency curve.')
-            wake_losses_model_to_power_curve = None
+            wake_losses_model_to_power_curve=None
         self.power_plant.assign_power_curve(
             wake_losses_model=wake_losses_model_to_power_curve,
             smoothing=self.smoothing, block_width=self.block_width,
@@ -250,7 +250,7 @@ class TurbineClusterModelChain(ModelChain):
         ---------
         >>> import numpy as np
         >>> import pandas as pd
-        >>> weather_df = pd.DataFrame(np.random.rand(2,6),
+        >>> weather_df=pd.DataFrame(np.random.rand(2,6),
         ...                           index=pd.date_range('1/1/2012',
         ...                                               periods=2,
         ...                                               freq='H'),
@@ -269,16 +269,16 @@ class TurbineClusterModelChain(ModelChain):
 
         self.assign_power_curve(weather_df)
         self.power_plant.mean_hub_height()
-        wind_speed_hub = self.wind_speed_hub(weather_df)
-        density_hub = (None if (self.power_output_model == 'power_curve' and
+        wind_speed_hub=self.wind_speed_hub(weather_df)
+        density_hub=(None if (self.power_output_model == 'power_curve' and
                                 self.density_correction is False)
                        else self.density_hub(weather_df))
         if (self.wake_losses_model != 'wind_farm_efficiency' and
                 self.wake_losses_model is not None):
             # Reduce wind speed with wind efficiency curve
-            wind_speed_hub = wake_losses.reduce_wind_speed(
+            wind_speed_hub=wake_losses.reduce_wind_speed(
                 wind_speed_hub,
                 wind_efficiency_curve_name=self.wake_losses_model)
-        self.power_output = self.calculate_power_output(wind_speed_hub,
+        self.power_output=self.calculate_power_output(wind_speed_hub,
                                                         density_hub)
         return self

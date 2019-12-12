@@ -15,7 +15,7 @@ import pandas as pd
 try:
     from matplotlib import pyplot as plt
 except ImportError:
-    plt = None
+    plt=None
 
 from example import modelchain_example as mc_e
 from windpowerlib import WindFarm
@@ -58,24 +58,24 @@ def initialize_wind_farms(my_turbine, e126):
     # for each turbine type you can either specify the number of turbines of
     # that type in the wind farm (float values are possible as well) or the
     # total installed capacity of that turbine type in W
-    wind_turbine_fleet = pd.DataFrame(
+    wind_turbine_fleet=pd.DataFrame(
         {'wind_turbine': [my_turbine, e126],  # as windpowerlib.WindTurbine
          'number_of_turbines': [6, None],
          'total_capacity': [None, 12.6e6]}
     )
     # initialize WindFarm object
-    example_farm = WindFarm(name='example_farm',
+    example_farm=WindFarm(name='example_farm',
                             wind_turbine_fleet=wind_turbine_fleet)
 
     # specification of wind farm data (2) containing a wind farm efficiency
     # wind turbine fleet is provided using the to_group function
-    example_farm_2_data = {
+    example_farm_2_data={
         'name': 'example_farm_2',
         'wind_turbine_fleet': [my_turbine.to_group(6),
                                e126.to_group(total_capacity=12.6e6)],
         'efficiency': 0.9}
     # initialize WindFarm object
-    example_farm_2 = WindFarm(**example_farm_2_data)
+    example_farm_2=WindFarm(**example_farm_2_data)
 
     return example_farm, example_farm_2
 
@@ -103,11 +103,11 @@ def initialize_wind_turbine_cluster(example_farm, example_farm_2):
     """
 
     # specification of cluster data
-    example_cluster_data = {
+    example_cluster_data={
         'name': 'example_cluster',
         'wind_farms': [example_farm, example_farm_2]}
     # initialize WindTurbineCluster object
-    example_cluster = WindTurbineCluster(**example_cluster_data)
+    example_cluster=WindTurbineCluster(**example_cluster_data)
 
     return example_cluster
 
@@ -133,17 +133,17 @@ def calculate_power_output(weather, example_farm, example_cluster):
         WindTurbineCluster object.
 
     """
-    example_farm.efficiency = 0.9
+    example_farm.efficiency=0.9
     # power output calculation for example_farm
     # initialize TurbineClusterModelChain with default parameters and use
     # run_model method to calculate power output
-    mc_example_farm = TurbineClusterModelChain(example_farm).run_model(weather)
+    mc_example_farm=TurbineClusterModelChain(example_farm).run_model(weather)
     # write power output time series to WindFarm object
-    example_farm.power_output = mc_example_farm.power_output
+    example_farm.power_output=mc_example_farm.power_output
 
     # power output calculation for turbine_cluster
     # own specifications for TurbineClusterModelChain setup
-    modelchain_data = {
+    modelchain_data={
         'wake_losses_model':
             'wind_farm_efficiency',  # 'dena_mean' (default), None,
                                      # 'wind_farm_efficiency' or name
@@ -171,10 +171,10 @@ def calculate_power_output(weather, example_farm, example_cluster):
         'hellman_exp': None}  # None (default) or None
     # initialize TurbineClusterModelChain with own specifications and use
     # run_model method to calculate power output
-    mc_example_cluster = TurbineClusterModelChain(
+    mc_example_cluster=TurbineClusterModelChain(
             example_cluster, **modelchain_data).run_model(weather)
     # write power output time series to WindTurbineCluster object
-    example_cluster.power_output = mc_example_cluster.power_output
+    example_cluster.power_output=mc_example_cluster.power_output
 
     return
 
@@ -209,10 +209,10 @@ def run_example():
     Runs the example.
 
     """
-    weather = mc_e.get_weather_data('weather.csv')
-    my_turbine, e126, dummy_turbine = mc_e.initialize_wind_turbines()
-    example_farm, example_farm_2 = initialize_wind_farms(my_turbine, e126)
-    example_cluster = initialize_wind_turbine_cluster(example_farm,
+    weather=mc_e.get_weather_data('weather.csv')
+    my_turbine, e126, dummy_turbine=mc_e.initialize_wind_turbines()
+    example_farm, example_farm_2=initialize_wind_farms(my_turbine, e126)
+    example_cluster=initialize_wind_turbine_cluster(example_farm,
                                                       example_farm_2)
     calculate_power_output(weather, example_farm, example_cluster)
     plot_or_print(example_farm, example_cluster)

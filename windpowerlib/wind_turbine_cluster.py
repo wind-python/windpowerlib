@@ -39,21 +39,21 @@ class WindTurbineCluster(object):
     """
     def __init__(self, wind_farms, name='', **kwargs):
 
-        self.wind_farms = wind_farms
-        self.name = name
+        self.wind_farms=wind_farms
+        self.name=name
 
-        self.hub_height = None
-        self._nominal_power = None
-        self.power_curve = None
+        self.hub_height=None
+        self._nominal_power=None
+        self.power_curve=None
 
     def __repr__(self):
         if self.name is not '':
-            wf_repr = 'Wind turbine cluster: {name}'.format(name=self.name)
+            wf_repr='Wind turbine cluster: {name}'.format(name=self.name)
         else:
-            info = []
+            info=[]
             for wind_farm in self.wind_farms:
                 info.append(wind_farm)
-            wf_repr = r'Wind turbine cluster with: {info}'.format(info=info)
+            wf_repr=r'Wind turbine cluster with: {info}'.format(info=info)
         return wf_repr
 
     @property
@@ -69,13 +69,13 @@ class WindTurbineCluster(object):
 
         """
         if not self._nominal_power:
-            self.nominal_power = sum(wind_farm.nominal_power
+            self.nominal_power=sum(wind_farm.nominal_power
                                      for wind_farm in self.wind_farms)
         return self._nominal_power
 
     @nominal_power.setter
     def nominal_power(self, nominal_power):
-        self._nominal_power = nominal_power
+        self._nominal_power=nominal_power
 
     def mean_hub_height(self):
         r"""
@@ -97,7 +97,7 @@ class WindTurbineCluster(object):
         -----
         The following equation is used [1]_:
 
-        .. math:: h_{WTC} = e^{\sum\limits_{k}{ln(h_{WF,k})}
+        .. math:: h_{WTC}=e^{\sum\limits_{k}{ln(h_{WF,k})}
                            \frac{P_{N,k}}{\sum\limits_{k}{P_{N,k}}}}
 
         with:
@@ -113,7 +113,7 @@ class WindTurbineCluster(object):
                  p. 35
 
         """
-        self.hub_height = np.exp(sum(
+        self.hub_height=np.exp(sum(
             np.log(wind_farm.hub_height) * wind_farm.nominal_power for
             wind_farm in self.wind_farms) / self.nominal_power)
         return self
@@ -185,15 +185,15 @@ class WindTurbineCluster(object):
                 smoothing_order=smoothing_order,
                 turbulence_intensity=turbulence_intensity, **kwargs)
         # Create data frame from power curves of all wind farms
-        df = pd.concat([farm.power_curve.set_index(['wind_speed']).rename(
+        df=pd.concat([farm.power_curve.set_index(['wind_speed']).rename(
             columns={'value': i}) for
             farm, i in zip(self.wind_farms,
                            list(range(len(self.wind_farms))))], axis=1)
         # Sum up power curves
-        cluster_power_curve = pd.DataFrame(
+        cluster_power_curve=pd.DataFrame(
             df.interpolate(method='index').sum(axis=1))
-        cluster_power_curve.columns = ['value']
+        cluster_power_curve.columns=['value']
         # Return wind speed (index) to a column of the data frame
         cluster_power_curve.reset_index(inplace=True)
-        self.power_curve = cluster_power_curve
+        self.power_curve=cluster_power_curve
         return self

@@ -48,9 +48,9 @@ def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
 
     with:
         v: wind speed, h: height, :math:`z_{0}`: roughness length,
-        d: boundary layer offset (estimated by d = 0.7 * `obstacle_height`)
+        d: boundary layer offset (estimated by d=0.7 * `obstacle_height`)
 
-    For  d = 0 it results in the following equation [2]_ [3]_:
+    For  d=0 it results in the following equation [2]_ [3]_:
 
     .. math:: v_{wind,hub}=v_{wind,data}\cdot\frac{\ln\left(\frac{h_{hub}}
         {z_{0}}\right)}{\ln\left(\frac{h_{data}}{z_{0}}\right)}
@@ -79,7 +79,7 @@ def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
     # Return np.array if wind_speed is np.array
     if (isinstance(wind_speed, np.ndarray) and
             isinstance(roughness_length, pd.Series)):
-        roughness_length = np.array(roughness_length)
+        roughness_length=np.array(roughness_length)
 
     return (wind_speed * np.log((hub_height - 0.7 * obstacle_height) /
                                 roughness_length) /
@@ -106,14 +106,14 @@ def hellman(wind_speed, wind_speed_height, hub_height,
         Hub height of wind turbine.
     roughness_length : :pandas:`pandas.Series<series>` or numpy.array or float
         Roughness length. If given and `hellman_exponent` is None:
-        `hellman_exponent` = 1 / ln(hub_height/roughness_length),
-        otherwise `hellman_exponent` = 1/7. Default: None.
+        `hellman_exponent`=1 / ln(hub_height/roughness_length),
+        otherwise `hellman_exponent`=1/7. Default: None.
     hellman_exponent : None or float
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
         constant. If None and roughness length is given
-        `hellman_exponent` = 1 / ln(hub_height/roughness_length),
-        otherwise `hellman_exponent` = 1/7. Default: None.
+        `hellman_exponent`=1 / ln(hub_height/roughness_length),
+        otherwise `hellman_exponent`=1/7. Default: None.
 
     Returns
     -------
@@ -138,7 +138,7 @@ def hellman(wind_speed, wind_speed_height, hub_height,
     onshore and a value of 1/9 for offshore. The Hellman exponent can also
     be calulated by the following equation [2]_ [3]_:
 
-    .. math:: \alpha = \frac{1}{\ln\left(\frac{h_{hub}}{z_0} \right)}
+    .. math:: \alpha=\frac{1}{\ln\left(\frac{h_{hub}}{z_0} \right)}
 
     with:
         :math:`z_{0}`: roughness length
@@ -162,8 +162,8 @@ def hellman(wind_speed, wind_speed_height, hub_height,
             # Return np.array if wind_speed is np.array
             if (isinstance(wind_speed, np.ndarray) and
                     isinstance(roughness_length, pd.Series)):
-                roughness_length = np.array(roughness_length)
-            hellman_exponent = 1 / np.log(hub_height / roughness_length)
+                roughness_length=np.array(roughness_length)
+            hellman_exponent=1 / np.log(hub_height / roughness_length)
         else:
-            hellman_exponent = 1/7
+            hellman_exponent=1/7
     return wind_speed * (hub_height / wind_speed_height) ** hellman_exponent
