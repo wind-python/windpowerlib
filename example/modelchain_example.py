@@ -19,7 +19,7 @@ import pandas as pd
 try:
     from matplotlib import pyplot as plt
 except ImportError:
-    plt = None
+    plt=None
 
 from windpowerlib import ModelChain
 from windpowerlib import WindTurbine
@@ -64,29 +64,24 @@ def get_weather_data(filename='weather.csv', **kwargs):
 
     """
 
-    if "datapath" not in kwargs:
-        kwargs["datapath"] = os.path.join(
-            os.path.split(os.path.dirname(__file__))[0], "example"
-        )
-    file = os.path.join(kwargs["datapath"], filename)
+    if 'datapath' not in kwargs:
+        kwargs['datapath']=os.path.join(os.path.split(
+            os.path.dirname(__file__))[0], 'example')
+    file=os.path.join(kwargs['datapath'], filename)
 
     # read csv file
-    weather_df = pd.read_csv(
-        file,
-        index_col=0,
-        header=[0, 1],
-        date_parser=lambda idx: pd.to_datetime(idx, utc=True),
-    )
+    weather_df=pd.read_csv(
+        file, index_col=0, header=[0, 1],
+        date_parser=lambda idx: pd.to_datetime(idx, utc=True))
 
     # change type of index to datetime and set time zone
-    weather_df.index = pd.to_datetime(weather_df.index).tz_convert(
-        "Europe/Berlin"
-    )
+    weather_df.index=pd.to_datetime(weather_df.index).tz_convert(
+        'Europe/Berlin')
 
     # change type of height from str to int by resetting columns
-    l0 = [_[0] for _ in weather_df.columns]
-    l1 = [int(_[1]) for _ in weather_df.columns]
-    weather_df.columns = [l0, l1]
+    l0=[_[0] for _ in weather_df.columns]
+    l1=[int(_[1]) for _ in weather_df.columns]
+    weather_df.columns=[l0, l1]
 
     return weather_df
 
@@ -116,42 +111,37 @@ def initialize_wind_turbines():
 
     # specification of wind turbine where data is provided in the oedb
     # turbine library
-    enercon_e126 = {
-        "turbine_type": "E-126/4200",  # turbine type as in register
-        "hub_height": 135,  # in m
+    enercon_e126={
+        'turbine_type': 'E-126/4200',  # turbine type as in register
+        'hub_height': 135  # in m
     }
     # initialize WindTurbine object
-    e126 = WindTurbine(**enercon_e126)
+    e126=WindTurbine(**enercon_e126)
 
     # specification of own wind turbine (Note: power values and nominal power
     # have to be in Watt)
-    my_turbine = {
-        "nominal_power": 3e6,  # in W
-        "hub_height": 105,  # in m
-        "power_curve": pd.DataFrame(
-            data={
-                "value": [
-                    p * 1000
-                    for p in [0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]
-                ],  # in W
-                "wind_speed": [0.0, 3.0, 5.0, 10.0, 15.0, 25.0],
-            }
-        ),  # in m/s
+    my_turbine={
+        'nominal_power': 3e6,  # in W
+        'hub_height': 105,  # in m
+        'power_curve': pd.DataFrame(
+            data={'value': [p * 1000 for p in [
+                      0.0, 26.0, 180.0, 1500.0, 3000.0, 3000.0]],  # in W
+                  'wind_speed': [0.0, 3.0, 5.0, 10.0, 15.0, 25.0]})  # in m/s
     }
     # initialize WindTurbine object
-    my_turbine = WindTurbine(**my_turbine)
+    my_turbine=WindTurbine(**my_turbine)
 
     # specification of wind turbine where power coefficient curve and nominal
     # power is provided in an own csv file
-    csv_path = os.path.join(os.path.dirname(__file__), "data")
-    dummy_turbine = {
-        "turbine_type": "DUMMY 1",
-        "hub_height": 100,  # in m
-        "rotor_diameter": 70,  # in m
-        "path": csv_path,
+    csv_path=os.path.join(os.path.dirname(__file__), 'data')
+    dummy_turbine={
+        'turbine_type': "DUMMY 1",
+        'hub_height': 100,  # in m
+        'rotor_diameter': 70,  # in m
+        'path': csv_path
     }
     # initialize WindTurbine object
-    dummy_turbine = WindTurbine(**dummy_turbine)
+    dummy_turbine=WindTurbine(**dummy_turbine)
 
     return my_turbine, e126, dummy_turbine
 
@@ -185,38 +175,37 @@ def calculate_power_output(weather, my_turbine, e126, dummy_turbine):
     # power output calculation for my_turbine
     # initialize ModelChain with default parameters and use run_model method
     # to calculate power output
-    mc_my_turbine = ModelChain(my_turbine).run_model(weather)
+    mc_my_turbine=ModelChain(my_turbine).run_model(weather)
     # write power output time series to WindTurbine object
-    my_turbine.power_output = mc_my_turbine.power_output
+    my_turbine.power_output=mc_my_turbine.power_output
 
     # power output calculation for e126
     # own specifications for ModelChain setup
-    modelchain_data = {
-        "wind_speed_model": "logarithmic",  # 'logarithmic' (default),
-        # 'hellman' or
-        # 'interpolation_extrapolation'
-        "density_model": "ideal_gas",  # 'barometric' (default), 'ideal_gas' or
-        # 'interpolation_extrapolation'
-        "temperature_model": "linear_gradient",  # 'linear_gradient' (def.) or
-        # 'interpolation_extrapolation'
-        "power_output_model": "power_curve",  # 'power_curve' (default) or
-        # 'power_coefficient_curve'
-        "density_correction": True,  # False (default) or True
-        "obstacle_height": 0,  # default: 0
-        "hellman_exp": None,
-    }  # None (default) or None
+    modelchain_data={
+        'wind_speed_model': 'logarithmic',  # 'logarithmic' (default),
+                                            # 'hellman' or
+                                            # 'interpolation_extrapolation'
+        'density_model': 'ideal_gas',  # 'barometric' (default), 'ideal_gas' or
+                                       # 'interpolation_extrapolation'
+        'temperature_model': 'linear_gradient',  # 'linear_gradient' (def.) or
+                                                 # 'interpolation_extrapolation'
+        'power_output_model': 'power_curve',  # 'power_curve' (default) or
+                                              # 'power_coefficient_curve'
+        'density_correction': True,  # False (default) or True
+        'obstacle_height': 0,  # default: 0
+        'hellman_exp': None}  # None (default) or None
     # initialize ModelChain with own specifications and use run_model method
     # to calculate power output
-    mc_e126 = ModelChain(e126, **modelchain_data).run_model(weather)
+    mc_e126=ModelChain(e126, **modelchain_data).run_model(weather)
     # write power output time series to WindTurbine object
-    e126.power_output = mc_e126.power_output
+    e126.power_output=mc_e126.power_output
 
     # power output calculation for example_turbine
     # own specification for 'power_output_model'
-    mc_example_turbine = ModelChain(
-        dummy_turbine, power_output_model="power_coefficient_curve"
-    ).run_model(weather)
-    dummy_turbine.power_output = mc_example_turbine.power_output
+    mc_example_turbine=ModelChain(
+        dummy_turbine,
+        power_output_model='power_coefficient_curve').run_model(weather)
+    dummy_turbine.power_output=mc_example_turbine.power_output
 
     return
 
@@ -283,8 +272,8 @@ def run_example():
     Runs the basic example.
 
     """
-    weather = get_weather_data("weather.csv")
-    my_turbine, e126, dummy_turbine = initialize_wind_turbines()
+    weather=get_weather_data('weather.csv')
+    my_turbine, e126, dummy_turbine=initialize_wind_turbines()
     calculate_power_output(weather, my_turbine, e126, dummy_turbine)
     plot_or_print(my_turbine, e126, dummy_turbine)
 
