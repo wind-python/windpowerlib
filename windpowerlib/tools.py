@@ -78,12 +78,15 @@ def linear_interpolation_extrapolation(df, target_height):
 
     """
     # find closest heights
-    heights_sorted=df.columns[
-        sorted(range(len(df.columns)),
-               key=lambda i: abs(df.columns[i] - target_height))]
-    return ((df[heights_sorted[1]] - df[heights_sorted[0]]) /
-            (heights_sorted[1] - heights_sorted[0]) *
-            (target_height - heights_sorted[0]) + df[heights_sorted[0]])
+    heights_sorted = df.columns[
+        sorted(
+            range(len(df.columns)),
+            key=lambda i: abs(df.columns[i] - target_height),
+        )
+    ]
+    return (df[heights_sorted[1]] - df[heights_sorted[0]]) / (
+        heights_sorted[1] - heights_sorted[0]
+    ) * (target_height - heights_sorted[0]) + df[heights_sorted[0]]
 
 
 def logarithmic_interpolation_extrapolation(df, target_height):
@@ -132,14 +135,17 @@ def logarithmic_interpolation_extrapolation(df, target_height):
 
     """
     # find closest heights
-    heights_sorted=df.columns[
-        sorted(range(len(df.columns)),
-               key=lambda i: abs(df.columns[i] - target_height))]
-    return ((np.log(target_height) *
-             (df[heights_sorted[1]] - df[heights_sorted[0]]) -
-             df[heights_sorted[1]] * np.log(heights_sorted[0]) +
-             df[heights_sorted[0]] * np.log(heights_sorted[1])) /
-            (np.log(heights_sorted[1]) - np.log(heights_sorted[0])))
+    heights_sorted = df.columns[
+        sorted(
+            range(len(df.columns)),
+            key=lambda i: abs(df.columns[i] - target_height),
+        )
+    ]
+    return (
+        np.log(target_height) * (df[heights_sorted[1]] - df[heights_sorted[0]])
+        - df[heights_sorted[1]] * np.log(heights_sorted[0])
+        + df[heights_sorted[0]] * np.log(heights_sorted[1])
+    ) / (np.log(heights_sorted[1]) - np.log(heights_sorted[0]))
 
 
 def gauss_distribution(function_variable, standard_deviation, mean=0):
