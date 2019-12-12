@@ -2,25 +2,24 @@ language: python
 
 matrix:
   include:
+    - python: 3.5
     - python: 3.6
-      dist: xenial
-      sudo: true
     - python: 3.7
       dist: xenial
       sudo: true
 
 # command to install dependencies
-before_install:
-  - sudo apt-get install libhdf5-serial-dev proj-bin libproj-dev libgeos-dev libspatialindex-dev 
+#before_install:
+#  - sudo apt-get install coinor-cbc
 
 install:
-  - pip install cython
   - pip install .
-  - pip install coveralls
+  - pip install coveralls sphinx sphinx_rtd_theme nbformat pytest-cov jupyter
 
 # command to run tests
 script:
-  - nosetests --with-doctest --with-coverage -c nose.cfg
+  - coverage run --rcfile=.coveragerc --source windpowerlib -m py.test
+  - coverage report
 
 after_success:
   - coveralls
