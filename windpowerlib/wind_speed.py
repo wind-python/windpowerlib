@@ -171,11 +171,10 @@ def hellman(
     if hellman_exponent is None:
         if roughness_length is not None:
             # Return np.array if wind_speed is np.array
-            if isinstance(wind_speed, np.ndarray) and isinstance(
-                roughness_length, pd.Series
-            ):
-                roughness_length = np.array(roughness_length)
-            hellman_exponent = 1 / np.log(hub_height / roughness_length)
+            if (isinstance(wind_speed, np.ndarray) and
+                    isinstance(roughness_length, pd.Series)):
+                roughness_length=np.array(roughness_length)
+            hellman_exponent=1 / np.log(hub_height / roughness_length)
         else:
-            hellman_exponent = 1 / 7
+            hellman_exponent=1/7
     return wind_speed * (hub_height / wind_speed_height) ** hellman_exponent

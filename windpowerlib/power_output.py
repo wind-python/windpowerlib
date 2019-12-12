@@ -237,37 +237,18 @@ def power_curve_density_correction(
 
     """
     if density is None:
-        raise TypeError(
-            "`density` is None. For the calculation with a "
-            + "density corrected power curve density at hub "
-            + "height is needed."
-        )
-    power_output = [
-        (
-            np.interp(
-                wind_speed[i],
-                power_curve_wind_speeds
-                * (1.225 / density[i])
-                ** (
-                    np.interp(
-                        power_curve_wind_speeds, [7.5, 12.5], [1 / 3, 2 / 3]
-                    )
-                ),
-                power_curve_values,
-                left=0,
-                right=0,
-            )
-        )
-        for i in range(len(wind_speed))
-    ]
+        raise TypeError("`density` is None. For the calculation with a " +
+                        "density corrected power curve density at hub " +
+                        "height is needed.")
+    power_output=[(np.interp(
+        wind_speed[i], power_curve_wind_speeds * (1.225 / density[i]) ** (
+            np.interp(power_curve_wind_speeds, [7.5, 12.5], [1/3, 2/3])),
+        power_curve_values, left=0, right=0)) for i in range(len(wind_speed))]
 
     # Power_output as pd.Series if wind_speed is pd.Series (else: np.array)
     if isinstance(wind_speed, pd.Series):
-        power_output = pd.Series(
-            data=power_output,
-            index=wind_speed.index,
-            name="feedin_power_plant",
-        )
+        power_output=pd.Series(data=power_output, index=wind_speed.index,
+                                 name='feedin_power_plant')
     else:
-        power_output = np.array(power_output)
+        power_output=np.array(power_output)
     return power_output
