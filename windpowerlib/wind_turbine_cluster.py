@@ -48,7 +48,7 @@ class WindTurbineCluster(object):
         self.power_curve = None
 
     def __repr__(self):
-        if self.name is not "":
+        if self.name != "":
             wf_repr = "Wind turbine cluster: {name}".format(name=self.name)
         else:
             info = []
