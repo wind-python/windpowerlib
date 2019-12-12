@@ -73,22 +73,33 @@ def logarithmic_profile(wind_speed, wind_speed_height, hub_height,
 
     """
     if 0.7 * obstacle_height > wind_speed_height:
-        raise ValueError("To take an obstacle height of {0} m ".format(
-                         obstacle_height) + "into consideration, wind " +
-                         "speed data of a greater height is needed.")
+        raise ValueError(
+            "To take an obstacle height of {0} m ".format(obstacle_height)
+            + "into consideration, wind "
+            + "speed data of a greater height is needed."
+        )
     # Return np.array if wind_speed is np.array
-    if (isinstance(wind_speed, np.ndarray) and
-            isinstance(roughness_length, pd.Series)):
-        roughness_length=np.array(roughness_length)
+    if isinstance(wind_speed, np.ndarray) and isinstance(
+        roughness_length, pd.Series
+    ):
+        roughness_length = np.array(roughness_length)
 
-    return (wind_speed * np.log((hub_height - 0.7 * obstacle_height) /
-                                roughness_length) /
-            np.log((wind_speed_height - 0.7 * obstacle_height) /
-                   roughness_length))
+    return (
+        wind_speed
+        * np.log((hub_height - 0.7 * obstacle_height) / roughness_length)
+        / np.log(
+            (wind_speed_height - 0.7 * obstacle_height) / roughness_length
+        )
+    )
 
 
-def hellman(wind_speed, wind_speed_height, hub_height,
-            roughness_length=None, hellman_exponent=None):
+def hellman(
+    wind_speed,
+    wind_speed_height,
+    hub_height,
+    roughness_length=None,
+    hellman_exponent=None,
+):
     r"""
     Calculates the wind speed at hub height using the hellman equation.
 

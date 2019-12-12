@@ -142,21 +142,28 @@ class TurbineClusterModelChain(ModelChain):
         Used to set `hellman_exponent` in :func:`~.wind_speed.hellman`.
 
     """
-    def __init__(self, power_plant, wake_losses_model='dena_mean',
-                 smoothing=False, block_width=0.5,
-                 standard_deviation_method='turbulence_intensity',
-                 smoothing_order='wind_farm_power_curves', **kwargs):
+
+    def __init__(
+        self,
+        power_plant,
+        wake_losses_model="dena_mean",
+        smoothing=False,
+        block_width=0.5,
+        standard_deviation_method="turbulence_intensity",
+        smoothing_order="wind_farm_power_curves",
+        **kwargs,
+    ):
         super(TurbineClusterModelChain, self).__init__(power_plant, **kwargs)
 
-        self.power_plant=power_plant
-        self.wake_losses_model=wake_losses_model
-        self.smoothing=smoothing
-        self.block_width=block_width
-        self.standard_deviation_method=standard_deviation_method
-        self.smoothing_order=smoothing_order
+        self.power_plant = power_plant
+        self.wake_losses_model = wake_losses_model
+        self.smoothing = smoothing
+        self.block_width = block_width
+        self.standard_deviation_method = standard_deviation_method
+        self.smoothing_order = smoothing_order
 
-        self.power_curve=None
-        self.power_output=None
+        self.power_curve = None
+        self.power_output = None
 
     def assign_power_curve(self, weather_df):
         r"""
@@ -186,40 +193,55 @@ class TurbineClusterModelChain(ModelChain):
 
         """
         # Get turbulence intensity from weather if existent
-        turbulence_intensity=(
-            weather_df['turbulence_intensity'].values.mean() if
-            'turbulence_intensity' in
-            weather_df.columns.get_level_values(0) else None)
-        roughness_length=(
-            weather_df['roughness_length'].values.mean() if
-            'roughness_length' in weather_df.columns.get_level_values(0) else
-            None)
+        turbulence_intensity = (
+            weather_df["turbulence_intensity"].values.mean()
+            if "turbulence_intensity" in weather_df.columns.get_level_values(0)
+            else None
+        )
+        roughness_length = (
+            weather_df["roughness_length"].values.mean()
+            if "roughness_length" in weather_df.columns.get_level_values(0)
+            else None
+        )
         # Assign power curve
-        if (self.wake_losses_model == 'wind_farm_efficiency' or
-                self.wake_losses_model is None):
-            wake_losses_model_to_power_curve=self.wake_losses_model
+        if (
+            self.wake_losses_model == "wind_farm_efficiency"
+            or self.wake_losses_model is None
+        ):
+            wake_losses_model_to_power_curve = self.wake_losses_model
             if self.wake_losses_model is None:
-                logging.debug('Wake losses in wind farms are not considered.')
+                logging.debug("Wake losses in wind farms are not considered.")
             else:
-                logging.debug('Wake losses considered with {}.'.format(
-                    self.wake_losses_model))
+                logging.debug(
+                    "Wake losses considered with {}.".format(
+                        self.wake_losses_model
+                    )
+                )
         else:
-            logging.debug('Wake losses considered by {} wind '.format(
-                self.wake_losses_model) + 'efficiency curve.')
-            wake_losses_model_to_power_curve=None
+            logging.debug(
+                "Wake losses considered by {} wind ".format(
+                    self.wake_losses_model
+                )
+                + "efficiency curve."
+            )
+            wake_losses_model_to_power_curve = None
         self.power_plant.assign_power_curve(
             wake_losses_model=wake_losses_model_to_power_curve,
-            smoothing=self.smoothing, block_width=self.block_width,
+            smoothing=self.smoothing,
+            block_width=self.block_width,
             standard_deviation_method=self.standard_deviation_method,
             smoothing_order=self.smoothing_order,
             roughness_length=roughness_length,
-            turbulence_intensity=turbulence_intensity)
+            turbulence_intensity=turbulence_intensity,
+        )
         # Further logging messages
         if self.smoothing is False:
-            logging.debug('Aggregated power curve not smoothed.')
+            logging.debug("Aggregated power curve not smoothed.")
         else:
-            logging.debug('Aggregated power curve smoothed by method: ' +
-                          self.standard_deviation_method)
+            logging.debug(
+                "Aggregated power curve smoothed by method: "
+                + self.standard_deviation_method
+            )
 
         return self
 
@@ -269,16 +291,25 @@ class TurbineClusterModelChain(ModelChain):
 
         self.assign_power_curve(weather_df)
         self.power_plant.mean_hub_height()
-        wind_speed_hub=self.wind_speed_hub(weather_df)
-        density_hub=(None if (self.power_output_model == 'power_curve' and
-                                self.density_correction is False)
-                       else self.density_hub(weather_df))
-        if (self.wake_losses_model != 'wind_farm_efficiency' and
-                self.wake_losses_model is not None):
+        wind_speed_hub = self.wind_speed_hub(weather_df)
+        density_hub = (
+            None
+            if (
+                self.power_output_model == "power_curve"
+                and self.density_correction is False
+            )
+            else self.density_hub(weather_df)
+        )
+        if (
+            self.wake_losses_model != "wind_farm_efficiency"
+            and self.wake_losses_model is not None
+        ):
             # Reduce wind speed with wind efficiency curve
-            wind_speed_hub=wake_losses.reduce_wind_speed(
+            wind_speed_hub = wake_losses.reduce_wind_speed(
                 wind_speed_hub,
-                wind_efficiency_curve_name=self.wake_losses_model)
-        self.power_output=self.calculate_power_output(wind_speed_hub,
-                                                        density_hub)
+                wind_efficiency_curve_name=self.wake_losses_model,
+            )
+        self.power_output = self.calculate_power_output(
+            wind_speed_hub, density_hub
+        )
         return self
