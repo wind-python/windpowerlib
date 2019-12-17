@@ -405,7 +405,8 @@ class WindFarm(object):
             else:
                 msg = (
                     "If you use `wake_losses_model` '{model}' your WindFarm "
-                    "needs an efficiency but `efficiency` of {farm} is {eff}.")
+                    "needs an efficiency but `efficiency` is {eff}. \n\n"
+                    "Failing farm:\n {farm}")
                 raise ValueError(msg.format(model=wake_losses_model, farm=self,
                                             eff=self.efficiency))
         self.power_curve = wind_farm_power_curve
