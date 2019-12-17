@@ -97,3 +97,13 @@ class TestWindTurbine:
                            match="The 'number' and the 'total_capacity' "
                                  "parameter are mutually exclusive."):
             e_t_1.to_group(5, 3000)
+
+    def test_create_unphysical_turbine(self):
+        char = {
+           'hub_height': 80,
+           'rotor_diameter': 160,
+           'turbine_type': 'DUMMY 3',
+           'path': self.source
+        }
+        with pytest.raises(ValueError):
+            WindTurbine(**char)
