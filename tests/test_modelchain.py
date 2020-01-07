@@ -341,3 +341,26 @@ class TestModelChain:
                                 power_output_model='power_coefficient_curve')
         test_mc.run_model(self.weather_df)
         assert_series_equal(test_mc.power_output, power_output_exp)
+
+    def test_heigths_as_string(self):
+        """Test run_model if data heights are of type string."""
+        test_turbine = {'hub_height': 100,
+                        'rotor_diameter': 80,
+                        'turbine_type': 'E-126/4200'}
+
+        # Convert data heights to str
+        string_weather = self.weather_df.copy()
+        string_weather.columns = pd.MultiIndex.from_arrays([
+            string_weather.columns.get_level_values(0),
+            string_weather.columns.get_level_values(1).astype(str)])
+
+        # Heights in the original DataFrame are of type np.int64
+        assert isinstance(self.weather_df.columns.get_level_values(1)[0],
+                          np.int64)
+        assert isinstance(string_weather.columns.get_level_values(1)[0], str)
+
+        test_modelchain = {'power_output_model': 'power_curve',
+                           'density_corr': True}
+        test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
+                                **test_modelchain)
+        test_mc.run_model(string_weather)
