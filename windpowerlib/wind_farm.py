@@ -227,7 +227,7 @@ class WindFarm(object):
                     )
 
     def __repr__(self):
-        if self.name is not "":
+        if self.name != "":
             return "Wind farm: {name}".format(name=self.name)
         else:
             return "Wind farm with turbine fleet: [number, type]\n {}".format(
