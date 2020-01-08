@@ -8,6 +8,7 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 import logging
+import pandas as pd
 from windpowerlib import wake_losses
 from windpowerlib.modelchain import ModelChain
 
@@ -266,6 +267,10 @@ class TurbineClusterModelChain(ModelChain):
         'wind_speed'
 
         """
+        # Convert data heights to integer. In some case they are strings.
+        weather_df.columns = pd.MultiIndex.from_arrays([
+            weather_df.columns.get_level_values(0),
+            pd.to_numeric(weather_df.columns.get_level_values(1))])
 
         self.assign_power_curve(weather_df)
         self.power_plant.mean_hub_height()

@@ -272,3 +272,21 @@ class TestTurbineClusterModelChain:
             power_plant=wtc.WindTurbineCluster(**my_cluster))
         test_tc_mc.run_model(self.weather_df)
         assert_series_equal(test_tc_mc.power_output, power_output_exp)
+
+    def test_heigths_as_string(self):
+        """Test run_model if data heights are of type string."""
+
+        # Convert data heights to str
+        string_weather = self.weather_df.copy()
+        string_weather.columns = pd.MultiIndex.from_arrays([
+            string_weather.columns.get_level_values(0),
+            string_weather.columns.get_level_values(1).astype(str)])
+
+        # Heights in the original DataFrame are of type np.int64
+        assert isinstance(self.weather_df.columns.get_level_values(1)[0],
+                          np.int64)
+        assert isinstance(string_weather.columns.get_level_values(1)[0], str)
+
+        test_mc = tc_mc.TurbineClusterModelChain(
+            power_plant=wtc.WindTurbineCluster(**self.test_cluster))
+        test_mc.run_model(string_weather)
