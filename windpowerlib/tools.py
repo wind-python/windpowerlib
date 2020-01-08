@@ -56,16 +56,16 @@ def linear_interpolation_extrapolation(df, target_height):
 
     For the inter- and extrapolation the following equation is used:
 
-    .. math:: f(x) = \frac{(f(x_2) - f(x_1))}{(x_2 - x_1)} \cdot
+    .. math:: f(x)=\frac{(f(x_2) - f(x_1))}{(x_2 - x_1)} \cdot
         (x - x_1) + f(x_1)
 
     Examples
     ---------
     >>> import numpy as np
     >>> import pandas as pd
-    >>> wind_speed_10m = np.array([[3], [4]])
-    >>> wind_speed_80m = np.array([[6], [6]])
-    >>> weather_df = pd.DataFrame(np.hstack((wind_speed_10m,
+    >>> wind_speed_10m=np.array([[3], [4]])
+    >>> wind_speed_80m=np.array([[6], [6]])
+    >>> weather_df=pd.DataFrame(np.hstack((wind_speed_10m,
     ...                                      wind_speed_80m)),
     ...                           index=pd.date_range('1/1/2012',
     ...                                               periods=2,
@@ -73,17 +73,20 @@ def linear_interpolation_extrapolation(df, target_height):
     ...                           columns=[np.array(['wind_speed',
     ...                                              'wind_speed']),
     ...                                    np.array([10, 80])])
-    >>> value = linear_interpolation_extrapolation(
+    >>> value=linear_interpolation_extrapolation(
     ...     weather_df['wind_speed'], 100)[0]
 
     """
     # find closest heights
     heights_sorted = df.columns[
-        sorted(range(len(df.columns)),
-               key=lambda i: abs(df.columns[i] - target_height))]
-    return ((df[heights_sorted[1]] - df[heights_sorted[0]]) /
-            (heights_sorted[1] - heights_sorted[0]) *
-            (target_height - heights_sorted[0]) + df[heights_sorted[0]])
+        sorted(
+            range(len(df.columns)),
+            key=lambda i: abs(df.columns[i] - target_height),
+        )
+    ]
+    return (df[heights_sorted[1]] - df[heights_sorted[0]]) / (
+        heights_sorted[1] - heights_sorted[0]
+    ) * (target_height - heights_sorted[0]) + df[heights_sorted[0]]
 
 
 def logarithmic_interpolation_extrapolation(df, target_height):
@@ -120,7 +123,7 @@ def logarithmic_interpolation_extrapolation(df, target_height):
     For the logarithmic inter- and extrapolation the following equation is
     used [1]_:
 
-    .. math:: f(x) = \frac{\ln(x) \cdot (f(x_2) - f(x_1)) - f(x_2) \cdot
+    .. math:: f(x)=\frac{\ln(x) \cdot (f(x_2) - f(x_1)) - f(x_2) \cdot
         \ln(x_1) + f(x_1) \cdot \ln(x_2)}{\ln(x_2) - \ln(x_1)}
 
     References
@@ -133,13 +136,16 @@ def logarithmic_interpolation_extrapolation(df, target_height):
     """
     # find closest heights
     heights_sorted = df.columns[
-        sorted(range(len(df.columns)),
-               key=lambda i: abs(df.columns[i] - target_height))]
-    return ((np.log(target_height) *
-             (df[heights_sorted[1]] - df[heights_sorted[0]]) -
-             df[heights_sorted[1]] * np.log(heights_sorted[0]) +
-             df[heights_sorted[0]] * np.log(heights_sorted[1])) /
-            (np.log(heights_sorted[1]) - np.log(heights_sorted[0])))
+        sorted(
+            range(len(df.columns)),
+            key=lambda i: abs(df.columns[i] - target_height),
+        )
+    ]
+    return (
+        np.log(target_height) * (df[heights_sorted[1]] - df[heights_sorted[0]])
+        - df[heights_sorted[1]] * np.log(heights_sorted[0])
+        + df[heights_sorted[0]] * np.log(heights_sorted[1])
+    ) / (np.log(heights_sorted[1]) - np.log(heights_sorted[0]))
 
 
 def gauss_distribution(function_variable, standard_deviation, mean=0):
@@ -168,7 +174,7 @@ def gauss_distribution(function_variable, standard_deviation, mean=0):
     -----
     The following equation is used [1]_:
 
-    .. math:: f(x) = \frac{1}{\sigma \sqrt{2 \pi}} \exp
+    .. math:: f(x)=\frac{1}{\sigma \sqrt{2 \pi}} \exp
                      \left[-\frac{(x-\mu)^2}{2 \sigma^2}\right]
 
     with:
@@ -201,7 +207,7 @@ def estimate_turbulence_intensity(height, roughness_length):
     -----
     The following equation is used [1]_:
 
-    .. math:: TI = \frac{1}{\ln\left(\frac{h}{z_\text{0}}\right)}
+    .. math:: TI=\frac{1}{\ln\left(\frac{h}{z_\text{0}}\right)}
 
     with:
         TI: turbulence intensity, h: height, :math:`z_{0}`: roughness length

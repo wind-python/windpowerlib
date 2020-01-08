@@ -293,9 +293,8 @@ class WindFarm(object):
         ----------
         wake_losses_model : str
             Defines the method for taking wake losses within the farm into
-            consideration. Options: 'wind_farm_efficiency' or None. If
-            'wind_farm_efficiency' is chosen the `efficiency` of the WindFarm
-            must be set. Default: 'wind_farm_efficiency'.
+            consideration. Options: 'wind_farm_efficiency' or None.
+            Default: 'wind_farm_efficiency'.
         smoothing : bool
             If True the power curves will be smoothed before or after the
             aggregation of power curves depending on `smoothing_order`.

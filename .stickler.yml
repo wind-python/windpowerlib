@@ -1,0 +1,12 @@
+linters:
+    flake8:
+      python: 3
+      max-line-length: 79
+      select: C,E,F,W,B,B950
+      ignore: E203, E501, W503
+    black:
+      config: ./pyproject.toml
+      fixer: true
+
+fixers:
+    enable: true

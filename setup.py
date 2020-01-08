@@ -24,4 +24,4 @@ setup(name='windpowerlib',
                         'requests < 3.0'],
       extras_require={
           'dev': ['pytest', 'jupyter', 'sphinx_rtd_theme', 'nbformat',
-                  'numpy']})
+                  'numpy', 'matplotlib']})

@@ -46,15 +46,18 @@ def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
     """
     # Get wind efficiency curve
     wind_efficiency_curve = get_wind_efficiency_curve(
-        curve_name=wind_efficiency_curve_name)
+        curve_name=wind_efficiency_curve_name
+    )
     # Reduce wind speed by wind efficiency
     reduced_wind_speed = wind_speed * np.interp(
-        wind_speed, wind_efficiency_curve['wind_speed'],
-        wind_efficiency_curve['efficiency'])
+        wind_speed,
+        wind_efficiency_curve["wind_speed"],
+        wind_efficiency_curve["efficiency"],
+    )
     return reduced_wind_speed
 
 
-def get_wind_efficiency_curve(curve_name='all'):
+def get_wind_efficiency_curve(curve_name="all"):
     r"""
     Reads wind efficiency curve(s) specified in `curve_name`.
 
@@ -98,20 +101,26 @@ def get_wind_efficiency_curve(curve_name='all'):
     --------
     .. parsed-literal::
         # Example to plot all curves
-        fig, ax = plt.subplots() /n
-        df = get_wind_efficiency_curve(curve_name='all')
+        fig, ax=plt.subplots() /n
+        df=get_wind_efficiency_curve(curve_name='all')
         for t in df.columns.get_level_values(0).unique():
-            p = df[t].set_index('wind_speed')['efficiency']
-            p.name = t
-            ax = p.plot(ax=ax, legend=True)
+            p=df[t].set_index('wind_speed')['efficiency']
+            p.name=t
+            ax=p.plot(ax=ax, legend=True)
         plt.show()
 
     """
-    possible_curve_names = ['dena_mean', 'knorr_mean', 'dena_extreme1',
-                            'dena_extreme2', 'knorr_extreme1',
-                            'knorr_extreme2', 'knorr_extreme3']
+    possible_curve_names = [
+        "dena_mean",
+        "knorr_mean",
+        "dena_extreme1",
+        "dena_extreme2",
+        "knorr_extreme1",
+        "knorr_extreme2",
+        "knorr_extreme3",
+    ]
 
-    if curve_name == 'all':
+    if curve_name == "all":
         curve_names = possible_curve_names
     elif isinstance(curve_name, str):
         curve_names = [curve_name]
@@ -121,31 +130,39 @@ def get_wind_efficiency_curve(curve_name='all'):
     efficiency_curve = pd.DataFrame()
 
     for curve_name in curve_names:
-        if curve_name.split('_')[0] not in ['dena', 'knorr']:
-            raise ValueError("`curve_name` must be one of the following: " +
-                             "{} but is {}".format(possible_curve_names,
-                                                   curve_name))
-        path = os.path.join(os.path.dirname(__file__), 'data',
-                            'wind_efficiency_curves_{}.csv'.format(
-                                curve_name.split('_')[0]))
+        if curve_name.split("_")[0] not in ["dena", "knorr"]:
+            raise ValueError(
+                "`curve_name` must be one of the following: "
+                + "{} but is {}".format(possible_curve_names, curve_name)
+            )
+        path = os.path.join(
+            os.path.dirname(__file__),
+            "data",
+            "wind_efficiency_curves_{}.csv".format(curve_name.split("_")[0]),
+        )
         # Read wind efficiency curves from file
         wind_efficiency_curves = pd.read_csv(path)
         # Raise error if wind efficiency curve specified in 'curve_name' does
         # not exist
         if curve_name not in list(wind_efficiency_curves):
-            msg = ("Efficiency curve <{0}> does not exist. Must be one of the "
-                   "following: {1}.")
+            msg = (
+                "Efficiency curve <{0}> does not exist. Must be one of the "
+                "following: {1}."
+            )
             raise ValueError(msg.format(curve_name, *possible_curve_names))
 
         # Get wind efficiency curve and rename column containing efficiency
-        wec = wind_efficiency_curves[['wind_speed', curve_name]]
+        wec = wind_efficiency_curves[["wind_speed", curve_name]]
         if efficiency_curve.empty:
             efficiency_curve = pd.DataFrame(
-                {(curve_name, 'wind_speed'): wec['wind_speed'],
-                 (curve_name, 'efficiency'): wec[curve_name]})
+                {
+                    (curve_name, "wind_speed"): wec["wind_speed"],
+                    (curve_name, "efficiency"): wec[curve_name],
+                }
+            )
         else:
-            efficiency_curve[(curve_name, 'wind_speed')] = wec['wind_speed']
-            efficiency_curve[(curve_name, 'efficiency')] = wec[curve_name]
+            efficiency_curve[(curve_name, "wind_speed")] = wec["wind_speed"]
+            efficiency_curve[(curve_name, "efficiency")] = wec[curve_name]
     if len(curve_names) == 1:
         return efficiency_curve[curve_names[0]]
     else:
