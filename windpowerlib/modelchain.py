@@ -7,6 +7,7 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 import logging
+import warnings
 import pandas as pd
 from windpowerlib import (wind_speed, density, temperature, power_output,
                           tools)
@@ -515,6 +516,13 @@ class ModelChain(object):
         weather_df.columns = pd.MultiIndex.from_arrays([
             weather_df.columns.get_level_values(0),
             pd.to_numeric(weather_df.columns.get_level_values(1))])
+
+        if weather_df.isnull().any().any():
+            nan_columns = list(weather_df.columns[weather_df.isnull().any()])
+            msg = ("The following columns of the weather data contain invalid "
+                   "values like 'nan': {0}")
+            warnings.warn(msg.format(nan_columns),
+                          tools.WindpowerlibUserWarning)
 
         wind_speed_hub = self.wind_speed_hub(weather_df)
         density_hub = (
