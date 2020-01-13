@@ -233,14 +233,19 @@ def check_weather_data(weather_df):
 
     """
     # Convert data heights to integer. In some case they are strings.
-    weather_df.columns = pd.MultiIndex.from_arrays([
-        weather_df.columns.get_level_values(0),
-        pd.to_numeric(weather_df.columns.get_level_values(1))])
+    weather_df.columns = pd.MultiIndex.from_arrays(
+        [
+            weather_df.columns.get_level_values(0),
+            pd.to_numeric(weather_df.columns.get_level_values(1)),
+        ]
+    )
 
     # check for nan values
     if weather_df.isnull().any().any():
         nan_columns = list(weather_df.columns[weather_df.isnull().any()])
-        msg = ("The following columns of the weather data contain invalid "
-               "values like 'nan': {0}")
+        msg = (
+            "The following columns of the weather data contain invalid "
+            "values like 'nan': {0}"
+        )
         warnings.warn(msg.format(nan_columns), WindpowerlibUserWarning)
     return weather_df
