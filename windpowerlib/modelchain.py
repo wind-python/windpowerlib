@@ -7,10 +7,8 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 import logging
-import warnings
 import pandas as pd
-from windpowerlib import (wind_speed, density, temperature, power_output,
-                          tools)
+from windpowerlib import wind_speed, density, temperature, power_output, tools
 
 
 class ModelChain(object):
