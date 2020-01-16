@@ -165,7 +165,7 @@ class WindTurbine(object):
 
         if self.rotor_diameter:
             if self.hub_height <= 0.5*self.rotor_diameter:
-                msg = "1/2*rotor_diameter cannot be higher than hub_height"
+                msg = "1/2rotor_diameter cannot be greater than hub_height"
                 raise ValueError(msg)
 
         if self.power_curve is None and self.power_coefficient_curve is None:
