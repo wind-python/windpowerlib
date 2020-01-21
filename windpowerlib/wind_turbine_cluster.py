@@ -148,8 +148,10 @@ class WindTurbineCluster(object):
         Parameters
         ----------
         wake_losses_model : str
-            Defines the method for taking wake losses within the farm into
-            consideration. Options: 'wind_farm_efficiency' or None.
+            Defines the method for taking wake losses within the wind farms of
+            the  cluster into consideration. Options: 'wind_farm_efficiency'
+            or None. If 'wind_farm_efficiency' is chosen the `efficiency`
+            attribute of the WindFarms must be set.
             Default: 'wind_farm_efficiency'.
         smoothing : bool
             If True the power curves will be smoothed before or after the

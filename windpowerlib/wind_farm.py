@@ -76,39 +76,39 @@ class WindFarm(object):
     >>> from windpowerlib import wind_farm
     >>> from windpowerlib import WindTurbine
     >>> import pandas as pd
-    >>> enerconE126={
+    >>> enerconE126 = {
     ...    'hub_height': 135,
     ...    'rotor_diameter': 127,
     ...    'turbine_type': 'E-126/4200'}
-    >>> e126=WindTurbine(**enerconE126)
-    >>> vestasV90={
+    >>> e126 = WindTurbine(**enerconE126)
+    >>> vestasV90 = {
     ...     'hub_height': 90,
     ...     'turbine_type': 'V90/2000',
     ...     'nominal_power': 2e6}
-    >>> v90=WindTurbine(**vestasV90)
+    >>> v90 = WindTurbine(**vestasV90)
     >>> # turbine fleet as DataFrame
-    >>> wind_turbine_fleet=pd.DataFrame(
+    >>> wind_turbine_fleet = pd.DataFrame(
     ...     {'wind_turbine': [e126, v90],
     ...      'number_of_turbines': [6, None],
     ...      'total_capacity': [None, 3 * 2e6]})
-    >>> example_farm=wind_farm.WindFarm(wind_turbine_fleet, name='my_farm')
+    >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet, name='my_farm')
     >>> print(example_farm.nominal_power)
     31200000.0
     >>> # turbine fleet as a list of WindTurbineGroup objects using the
     >>> # 'to_group' method.
-    >>> wind_turbine_fleet=[e126.to_group(6),
+    >>> wind_turbine_fleet = [e126.to_group(6),
     ...                       v90.to_group(total_capacity=3 * 2e6)]
-    >>> example_farm=wind_farm.WindFarm(wind_turbine_fleet, name='my_farm')
+    >>> example_farm = wind_farm.WindFarm(wind_turbine_fleet, name='my_farm')
     >>> print(example_farm.nominal_power)
     31200000.0
     >>> # turbine fleet as list of dictionaries (not recommended)
-    >>> example_farm_data={
+    >>> example_farm_data = {
     ...    'name': 'my_farm',
     ...    'wind_turbine_fleet': [{'wind_turbine': e126,
     ...                            'number_of_turbines': 6},
     ...                           {'wind_turbine': v90,
     ...                            'total_capacity': 3 * 2e6}]}
-    >>> example_farm=wind_farm.WindFarm(**example_farm_data)
+    >>> example_farm = wind_farm.WindFarm(**example_farm_data)
     >>> print(example_farm.nominal_power)
     31200000.0
     """
@@ -275,7 +275,7 @@ class WindFarm(object):
         -----
         The following equation is used [1]_:
 
-        .. math:: h_{WF}=e^{\sum\limits_{k}{ln(h_{WT,k})}
+        .. math:: h_{WF} = e^{\sum\limits_{k}{ln(h_{WT,k})}
                            \frac{P_{N,k}}{\sum\limits_{k}{P_{N,k}}}}
 
         with:
@@ -470,12 +470,15 @@ class WindFarm(object):
                     wind_farm_efficiency=self.efficiency,
                 )
             else:
-                logging.info(
-                    "`wake_losses_model` is {} but wind farm ".format(
-                        wake_losses_model
+                msg = (
+                    "If you use `wake_losses_model` '{model}' your WindFarm "
+                    "needs an efficiency but `efficiency` is {eff}. \n\n"
+                    "Failing farm:\n {farm}"
+                )
+                raise ValueError(
+                    msg.format(
+                        model=wake_losses_model, farm=self, eff=self.efficiency
                     )
-                    + "efficiency is NOT taken into "
-                    "account as it is None."
                 )
         self.power_curve = wind_farm_power_curve
         return self

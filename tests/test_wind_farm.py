@@ -219,3 +219,17 @@ class TestWindFarm:
         msg = "For an aggregated wind farm power curve each wind"
         with pytest.raises(ValueError, match=msg):
             windfarm.assign_power_curve()
+
+    def test_wind_farm_efficiency_with_missing_efficiency(self):
+        """Test WindFarm.assign_power_curve() with missing efficiency while
+        `wake_losses_model` is 'wind_farm_efficiency'."""
+        wind_turbine_fleet = [
+            {
+                "wind_turbine": WindTurbine(**self.test_turbine),
+                "number_of_turbines": 3,
+            }
+        ]
+        windfarm = WindFarm(wind_turbine_fleet=wind_turbine_fleet)
+        msg = "If you use `wake_losses_model`"
+        with pytest.raises(ValueError, match=msg):
+            windfarm.assign_power_curve()
