@@ -11,6 +11,7 @@ from pandas.util.testing import assert_series_equal
 
 import windpowerlib.wind_turbine as wt
 import windpowerlib.modelchain as mc
+from windpowerlib.tools import WindpowerlibUserWarning
 
 
 class TestModelChain:
@@ -454,3 +455,20 @@ class TestModelChain:
         test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
                                 **test_modelchain)
         test_mc.run_model(string_weather)
+
+    def test_weather_with_nan_values(self, recwarn):
+        """Test warning if weather data contain nan values."""
+        test_turbine = {'hub_height': 100,
+                        'rotor_diameter': 80,
+                        'turbine_type': 'E-126/4200'}
+        nan_weather = self.weather_df.copy()
+        nan_weather.loc[1, ("temperature", 10)] = np.nan
+        test_modelchain = {'power_output_model': 'power_curve',
+                           'density_corr': True}
+        test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
+                                **test_modelchain)
+        msg = "'temperature', 10"
+        with pytest.warns(WindpowerlibUserWarning, match=msg):
+            test_mc.run_model(nan_weather)
+        test_mc.run_model(self.weather_df)
+        assert len(recwarn) == 0
