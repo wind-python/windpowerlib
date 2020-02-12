@@ -6,6 +6,8 @@
    :target: https://doi.org/10.5281/zenodo.824267
 .. image:: https://mybinder.org/badge_logo.svg
  :target: https://mybinder.org/v2/gh/wind-python/windpowerlib/dev?filepath=example
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
    
 Introduction
 =============
