@@ -16,9 +16,9 @@ from windpowerlib.tools import WindpowerlibUserWarning
 
 class TestModelChain:
     @classmethod
-    def setup_class(self):
+    def setup_class(cls):
         """Setup default values"""
-        self.test_turbine = {
+        cls.test_turbine = {
             "hub_height": 100,
             "turbine_type": "E-126/4200",
             "power_curve": pd.DataFrame(
@@ -32,7 +32,7 @@ class TestModelChain:
         wind_speed_8m = np.array([[4.0], [5.0]])
         wind_speed_10m = np.array([[5.0], [6.5]])
         roughness_length = np.array([[0.15], [0.15]])
-        self.weather_df = pd.DataFrame(
+        cls.weather_df = pd.DataFrame(
             np.hstack(
                 (
                     temperature_2m,
