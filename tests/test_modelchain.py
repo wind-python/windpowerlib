@@ -435,38 +435,52 @@ class TestModelChain:
 
     def test_heigths_as_string(self):
         """Test run_model if data heights are of type string."""
-        test_turbine = {'hub_height': 100,
-                        'rotor_diameter': 80,
-                        'turbine_type': 'E-126/4200'}
+        test_turbine = {
+            "hub_height": 100,
+            "rotor_diameter": 80,
+            "turbine_type": "E-126/4200",
+        }
 
         # Convert data heights to str
         string_weather = self.weather_df.copy()
-        string_weather.columns = pd.MultiIndex.from_arrays([
-            string_weather.columns.get_level_values(0),
-            string_weather.columns.get_level_values(1).astype(str)])
+        string_weather.columns = pd.MultiIndex.from_arrays(
+            [
+                string_weather.columns.get_level_values(0),
+                string_weather.columns.get_level_values(1).astype(str),
+            ]
+        )
 
         # Heights in the original DataFrame are of type np.int64
-        assert isinstance(self.weather_df.columns.get_level_values(1)[0],
-                          np.int64)
+        assert isinstance(
+            self.weather_df.columns.get_level_values(1)[0], np.int64
+        )
         assert isinstance(string_weather.columns.get_level_values(1)[0], str)
 
-        test_modelchain = {'power_output_model': 'power_curve',
-                           'density_corr': True}
-        test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
-                                **test_modelchain)
+        test_modelchain = {
+            "power_output_model": "power_curve",
+            "density_corr": True,
+        }
+        test_mc = mc.ModelChain(
+            wt.WindTurbine(**test_turbine), **test_modelchain
+        )
         test_mc.run_model(string_weather)
 
     def test_weather_with_nan_values(self, recwarn):
         """Test warning if weather data contain nan values."""
-        test_turbine = {'hub_height': 100,
-                        'rotor_diameter': 80,
-                        'turbine_type': 'E-126/4200'}
+        test_turbine = {
+            "hub_height": 100,
+            "rotor_diameter": 80,
+            "turbine_type": "E-126/4200",
+        }
         nan_weather = self.weather_df.copy()
         nan_weather.loc[1, ("temperature", 10)] = np.nan
-        test_modelchain = {'power_output_model': 'power_curve',
-                           'density_corr': True}
-        test_mc = mc.ModelChain(wt.WindTurbine(**test_turbine),
-                                **test_modelchain)
+        test_modelchain = {
+            "power_output_model": "power_curve",
+            "density_corr": True,
+        }
+        test_mc = mc.ModelChain(
+            wt.WindTurbine(**test_turbine), **test_modelchain
+        )
         msg = "'temperature', 10"
         with pytest.warns(WindpowerlibUserWarning, match=msg):
             test_mc.run_model(nan_weather)
