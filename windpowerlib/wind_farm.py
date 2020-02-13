@@ -9,7 +9,6 @@ SPDX-License-Identifier: MIT
 from windpowerlib import tools, power_curves, WindTurbine
 import numpy as np
 import pandas as pd
-import logging
 import warnings
 
 
