@@ -8,6 +8,9 @@
  :target: https://mybinder.org/v2/gh/wind-python/windpowerlib/dev?filepath=example
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
+
+.. image:: https://img.shields.io/lgtm/grade/python/g/wind-python/windpowerlib.svg?logo=lgtm&logoWidth=18
+    :target: https://lgtm.com/projects/g/wind-python/windpowerlib/context:python
    
 Introduction
 =============
