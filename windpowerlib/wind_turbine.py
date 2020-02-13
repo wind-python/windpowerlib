@@ -101,7 +101,7 @@ class WindTurbine(object):
     >>> print(e126.nominal_power)
     4200000.0
     >>> # Example with own path
-    >>> path=os.path.join(os.path.dirname(__file__), '../example/data')
+    >>> path=os.path.join(os.path.dirname(__file__), '../tests/data')
     >>> example_turbine={
     ...    'hub_height': 100,
     ...    'rotor_diameter': 70,
@@ -378,7 +378,7 @@ def get_turbine_data_from_file(turbine_type, path):
     --------
     >>> from windpowerlib import wind_turbine
     >>> import os
-    >>> path=os.path.join(os.path.dirname(__file__), '../example/data',
+    >>> path=os.path.join(os.path.dirname(__file__), '../tests/data',
     ...     'power_curves.csv')
     >>> d3=get_turbine_data_from_file('DUMMY 3', path)
     >>> print(d3['value'][7])

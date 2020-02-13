@@ -144,12 +144,11 @@ def initialize_wind_turbines():
 
     # ************************************************************************
     # **** Specification of wind turbine with data in own file ***************
-    csv_path = os.path.join(os.path.dirname(__file__), "data")
     dummy_turbine = {
         "turbine_type": "DUMMY 1",
         "hub_height": 100,  # in m
         "rotor_diameter": 70,  # in m
-        "path": csv_path,
+        "path": os.path.dirname(__file__),
     }
     dummy_turbine = WindTurbine(**dummy_turbine)
 

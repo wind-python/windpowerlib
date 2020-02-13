@@ -22,7 +22,7 @@ class TestWindTurbine:
     @classmethod
     def setup_class(cls):
         """Setup default values"""
-        cls.source = os.path.join(os.path.dirname(__file__), "../example/data")
+        cls.source = os.path.join(os.path.dirname(__file__), "data")
 
     def test_warning(self, recwarn):
         test_turbine_data = {
