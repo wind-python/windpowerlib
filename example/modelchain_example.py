@@ -15,6 +15,7 @@ SPDX-License-Identifier: MIT
 """
 import os
 import pandas as pd
+import requests
 
 try:
     from matplotlib import pyplot as plt
@@ -65,10 +66,15 @@ def get_weather_data(filename='weather.csv', **kwargs):
     """
 
     if "datapath" not in kwargs:
-        kwargs["datapath"] = os.path.join(
-            os.path.split(os.path.dirname(__file__))[0], "example"
-        )
+        kwargs["datapath"] = os.path.dirname(__file__)
+
     file = os.path.join(kwargs["datapath"], filename)
+
+    if not os.path.isfile(file):
+        logging.debug("Download weather data for example.")
+        req = requests.get("https://osf.io/59bqn/download")
+        with open(file, "wb") as fout:
+            fout.write(req.content)
 
     # read csv file
     weather_df = pd.read_csv(
