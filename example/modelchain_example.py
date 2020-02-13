@@ -291,9 +291,9 @@ def run_example():
     logging.getLogger().setLevel(logging.DEBUG)
 
     weather = get_weather_data("weather.csv")
-    my_turbine, e126 = initialize_wind_turbines()
-    calculate_power_output(weather, my_turbine, e126)
-    plot_or_print(my_turbine, e126)
+    my_turbine, e126, dummy_turbine = initialize_wind_turbines()
+    calculate_power_output(weather, my_turbine, e126, dummy_turbine)
+    plot_or_print(my_turbine, e126, dummy_turbine)
 
 
 if __name__ == "__main__":
