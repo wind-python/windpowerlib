@@ -154,7 +154,8 @@ def initialize_wind_turbines():
     # >>> my_wind_speed = my_data["my_wind_speed"]
 
     my_power = pd.Series(
-        [0.0, 39000.0, 270000.0, 2250000.0, 4500000.0, 4500000.0])
+        [0.0, 39000.0, 270000.0, 2250000.0, 4500000.0, 4500000.0]
+    )
     my_wind_speed = (0.0, 3.0, 5.0, 10.0, 15.0, 25.0)
 
     my_turbine2 = {

@@ -427,9 +427,7 @@ def create_power_curve(wind_speed, power):
     -------
     pandas.DataFrame
     """
-    return pd.DataFrame(
-        data={"value": power, "wind_speed": wind_speed, }
-    )
+    return pd.DataFrame(data={"value": power, "wind_speed": wind_speed,})
 
 
 def load_turbine_data_from_oedb(schema="supply", table="wind_turbine_library"):
