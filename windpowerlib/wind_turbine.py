@@ -176,7 +176,7 @@ class WindTurbine(object):
                     self.rotor_diameter = float(turbine_data["rotor_diameter"])
 
         if self.rotor_diameter:
-            if self.hub_height <= 0.5*self.rotor_diameter:
+            if self.hub_height <= 0.5 * self.rotor_diameter:
                 msg = "1/2rotor_diameter cannot be greater than hub_height"
                 raise ValueError(msg)
 
@@ -407,6 +407,29 @@ def get_turbine_data_from_file(turbine_type, path):
         # transform wind speeds to floats
         wpp_df["wind_speed"] = wpp_df["wind_speed"].apply(lambda x: float(x))
         return wpp_df
+
+
+def create_power_curve(wind_speed, power):
+    """
+    A list, numpy.array, pandas.Series or other iterables can be passed to
+    define the wind speed and the power output. Make sure that the order is
+    not mutable because, values from both parameters will be used as value
+    pairs.
+
+    Parameters
+    ----------
+    wind_speed : iterable
+        A series of wind speed values in meter per second [m/s].
+    power : iterable
+        A series of power values in Watt [W].
+
+    Returns
+    -------
+    pandas.DataFrame
+    """
+    return pd.DataFrame(
+        data={"value": power, "wind_speed": wind_speed, }
+    )
 
 
 def load_turbine_data_from_oedb(schema="supply", table="wind_turbine_library"):
