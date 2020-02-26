@@ -102,7 +102,7 @@ def initialize_wind_turbines():
     that is provided along with the windpowerlib, as done for the
     'enercon_e126', or specify your own turbine by directly providing a power
     (coefficient) curve, as done below for 'my_turbine', or provide your own
-    turbine data in csv files, as done for 'dummy_turbine'.
+    turbine data in csv files, as done for 'my_turbine2'.
 
     To get a list of all wind turbines for which power and/or power coefficient
     curves are provided execute `
@@ -180,7 +180,7 @@ def calculate_power_output(weather, my_turbine, e126, my_turbine2):
     the default methods for the calculation steps, as done for 'my_turbine',
     or choose different methods, as done for the 'e126'. Of course, you can
     also use the default methods while only changing one or two of them, as
-    done for 'dummy_turbine'.
+    done for 'my_turbine2'.
 
     Parameters
     ----------
@@ -257,7 +257,7 @@ def plot_or_print(my_turbine, e126, my_turbine2):
     if plt:
         e126.power_output.plot(legend=True, label="Enercon E126")
         my_turbine.power_output.plot(legend=True, label="myTurbine")
-        my_turbine2.power_output.plot(legend=True, label="dummyTurbine")
+        my_turbine2.power_output.plot(legend=True, label="myTurbine2")
         plt.xlabel("Time")
         plt.ylabel("Power in W")
         plt.show()
