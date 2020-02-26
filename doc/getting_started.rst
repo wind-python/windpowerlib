@@ -87,6 +87,12 @@ You can also look at the examples in the :ref:`examples_section_label` section.
 Wind turbine data
 ==================
 
+The windpowerlib provides data of many wind turbines but it is also possible to
+use your own turbine data.
+
+Use internal data
+~~~~~~~~~~~~~~~~~
+
 The windpowerlib provides `wind turbine data <https://github.com/wind-python/windpowerlib/tree/master/windpowerlib/oedb>`_
 (power curves, hub heights, etc.) for a large set of wind turbines. See `Initialize wind turbine` in :ref:`examples_section_label` on how
 to use this data in your simulations.
@@ -99,8 +105,61 @@ To update your local files with the latest version of the `oedb turbine library 
   from windpowerlib.wind_turbine import load_turbine_data_from_oedb
   load_turbine_data_from_oedb()
 
+If you find your turbine in the database it is very easy to use it in the
+windpowerlib
+
+.. code:: python
+
+    from windpowerlib import WindTurbine
+    enercon_e126 = {
+        "turbine_type": "E-126/4200",  # turbine type as in register
+        "hub_height": 135,  # in m
+    }
+    e126 = WindTurbine(**enercon_e126)
+
 We would like to encourage anyone to contribute to the turbine library by adding turbine data or reporting errors in the data.
 See `here <https://github.com/OpenEnergyPlatform/data-preprocessing/issues/28>`_ for more information on how to contribute.
+
+Use your own turbine data
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is possible to use your own power curve. However, the most sustainable way
+is to send us the data to be included in the windpowerlib and to be available
+for all users. This may not be possible in all cases.
+
+Assuming the data files looks like this:
+
+.. code::
+
+    wind,power
+    0.0,0.0
+    3.0,39000.0
+    5.0,270000.0
+    10.0,2250000.0
+    15.0,4500000.0
+    25.0,4500000.0
+
+You can use pandas to read the file and pass it to the turbine dictionary. I
+you have basic knowledge of pandas it is easy to use any kind of data file.
+
+.. code:: python
+
+    import pandas as pd
+    from windpowerlib import WindTurbine, create_power_curve
+    my_data = pd.read_csv("path/to/my/data/file.csv")
+
+    my_turbine_data = {
+        "nominal_power": 6e6,  # in W
+        "hub_height": 115,  # in m
+        "power_curve": create_power_curve(
+            wind_speed=my_data["wind"], power=my_data["power"]
+        ),
+    }
+
+    my_turbine = WindTurbine(**my_turbine2)
+
+See the `modelchain_example` for more information.
+
 
 Contributing
 ==============
