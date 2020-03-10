@@ -18,7 +18,7 @@ def smooth_power_curve(
     wind_speed_range=15.0,
     standard_deviation_method="turbulence_intensity",
     mean_gauss=0,
-    **kwargs
+    **kwargs,
 ):
     r"""
     Smoothes a power curve by using a Gauss distribution.
