@@ -144,7 +144,7 @@ class ModelChain(object):
         density_correction=False,
         obstacle_height=0,
         hellman_exp=None,
-        **kwargs
+        **kwargs,
     ):
 
         self.power_plant = power_plant

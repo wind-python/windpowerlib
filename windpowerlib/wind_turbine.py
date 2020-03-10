@@ -123,7 +123,7 @@ class WindTurbine(object):
         power_coefficient_curve=None,
         rotor_diameter=None,
         turbine_type=None,
-        **kwargs
+        **kwargs,
     ):
 
         self.hub_height = hub_height
