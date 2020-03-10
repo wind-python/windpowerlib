@@ -523,7 +523,7 @@ def load_turbine_data_from_oedb(schema="supply", table="wind_turbine_library"):
         axis=1,
     ).set_index("turbine_type")
     # nominal power in W
-    turbine_data_df["nominal_power"] = turbine_data_df["nominal_power"] * 1000
+    turbine_data_df["nominal_power"] *= 1000
     turbine_data_df.to_csv(filename.format("turbine_data"))
     return turbine_data
 
