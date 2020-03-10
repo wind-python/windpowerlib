@@ -114,10 +114,10 @@ class TestWindTurbine:
     def test_create_unphysical_turbine(self):
         err_msg = "1/2rotor_diameter cannot be greater than hub_height"
         char = {
-           'hub_height': 80,
-           'rotor_diameter': 160,
-           'turbine_type': 'DUMMY 3',
-           'path': self.source
+            "hub_height": 80,
+            "rotor_diameter": 160,
+            "turbine_type": "DUMMY 3",
+            "path": self.source,
         }
         with pytest.raises(ValueError, match=err_msg):
             WindTurbine(**char)

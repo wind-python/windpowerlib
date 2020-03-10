@@ -9,9 +9,13 @@ import numpy as np
 import pandas as pd
 
 
-def power_coefficient_curve(wind_speed, power_coefficient_curve_wind_speeds,
-                            power_coefficient_curve_values, rotor_diameter,
-                            density):
+def power_coefficient_curve(
+    wind_speed,
+    power_coefficient_curve_wind_speeds,
+    power_coefficient_curve_values,
+    rotor_diameter,
+    density,
+):
     r"""
     Calculates the turbine power output using a power coefficient curve.
 

@@ -62,8 +62,13 @@ def barometric(pressure, pressure_height, hub_height, temperature_hub_height):
         http://www.dwd.de/DE/service/lexikon/begriffe/D/Druckgradient_pdf.pdf?__blob=publicationFile&v=4
 
     """
-    return ((pressure / 100 - (hub_height - pressure_height) * 1 / 8) * 1.225 *
-            288.15 * 100 / (101330 * temperature_hub_height))
+    return (
+        (pressure / 100 - (hub_height - pressure_height) * 1 / 8)
+        * 1.225
+        * 288.15
+        * 100
+        / (101330 * temperature_hub_height)
+    )
 
 
 def ideal_gas(pressure, pressure_height, hub_height, temperature_hub_height):
@@ -125,5 +130,8 @@ def ideal_gas(pressure, pressure_height, hub_height, temperature_hub_height):
             http://www.dwd.de/DE/service/lexikon/begriffe/D/Druckgradient_pdf.pdf?__blob=publicationFile&v=4
 
     """
-    return ((pressure / 100 - (hub_height - pressure_height) * 1 / 8) * 100 /
-            (287.058 * temperature_hub_height))
+    return (
+        (pressure / 100 - (hub_height - pressure_height) * 1 / 8)
+        * 100
+        / (287.058 * temperature_hub_height)
+    )

@@ -22,6 +22,7 @@ class WindpowerlibUserWarning(UserWarning):
     >>> import warnings
     >>> warnings.filterwarnings("ignore", category=WindpowerlibUserWarning)
     """
+
     pass
 
 
@@ -187,9 +188,13 @@ def gauss_distribution(function_variable, standard_deviation, mean=0):
              New York, Cambridge University Press, 2011, p. 37
 
     """
-    return (1 / (standard_deviation * np.sqrt(2 * np.pi)) *
-            np.exp(-(function_variable - mean)**2 /
-                   (2 * standard_deviation**2)))
+    return (
+        1
+        / (standard_deviation * np.sqrt(2 * np.pi))
+        * np.exp(
+            -((function_variable - mean) ** 2) / (2 * standard_deviation ** 2)
+        )
+    )
 
 
 def estimate_turbulence_intensity(height, roughness_length):
