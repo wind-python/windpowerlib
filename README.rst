@@ -33,7 +33,7 @@ Go to the `download page <http://readthedocs.org/projects/windpowerlib/downloads
 Installation
 ============
 
-If you have a working Python 3 environment, use pypi to install the latest windpowerlib version:
+If you have a working Python 3 (>= 3.6) environment, use pypi to install the latest windpowerlib version:
 
 ::
 
