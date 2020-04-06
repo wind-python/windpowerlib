@@ -101,7 +101,7 @@ class WindTurbine(object):
     >>> print(e126.nominal_power)
     4200000.0
     >>> # Example with own path
-    >>> path=os.path.join(os.path.dirname(__file__), '../example/data')
+    >>> path=os.path.join(os.path.dirname(__file__), '../tests/data')
     >>> example_turbine={
     ...    'hub_height': 100,
     ...    'rotor_diameter': 70,
@@ -123,7 +123,7 @@ class WindTurbine(object):
         power_coefficient_curve=None,
         rotor_diameter=None,
         turbine_type=None,
-        **kwargs
+        **kwargs,
     ):
 
         self.hub_height = hub_height
@@ -176,7 +176,7 @@ class WindTurbine(object):
                     self.rotor_diameter = float(turbine_data["rotor_diameter"])
 
         if self.rotor_diameter:
-            if self.hub_height <= 0.5*self.rotor_diameter:
+            if self.hub_height <= 0.5 * self.rotor_diameter:
                 msg = "1/2rotor_diameter cannot be greater than hub_height"
                 raise ValueError(msg)
 
@@ -378,7 +378,7 @@ def get_turbine_data_from_file(turbine_type, path):
     --------
     >>> from windpowerlib import wind_turbine
     >>> import os
-    >>> path=os.path.join(os.path.dirname(__file__), '../example/data',
+    >>> path=os.path.join(os.path.dirname(__file__), '../tests/data',
     ...     'power_curves.csv')
     >>> d3=get_turbine_data_from_file('DUMMY 3', path)
     >>> print(d3['value'][7])
@@ -407,6 +407,27 @@ def get_turbine_data_from_file(turbine_type, path):
         # transform wind speeds to floats
         wpp_df["wind_speed"] = wpp_df["wind_speed"].apply(lambda x: float(x))
         return wpp_df
+
+
+def create_power_curve(wind_speed, power):
+    """
+    A list, numpy.array, pandas.Series or other iterables can be passed to
+    define the wind speed and the power output. Make sure that the order is
+    not mutable because, values from both parameters will be used as value
+    pairs.
+
+    Parameters
+    ----------
+    wind_speed : iterable
+        A series of wind speed values in meter per second [m/s].
+    power : iterable
+        A series of power values in Watt [W].
+
+    Returns
+    -------
+    pandas.DataFrame
+    """
+    return pd.DataFrame(data={"value": power, "wind_speed": wind_speed})
 
 
 def load_turbine_data_from_oedb(schema="supply", table="wind_turbine_library"):
@@ -502,7 +523,7 @@ def load_turbine_data_from_oedb(schema="supply", table="wind_turbine_library"):
         axis=1,
     ).set_index("turbine_type")
     # nominal power in W
-    turbine_data_df["nominal_power"] = turbine_data_df["nominal_power"] * 1000
+    turbine_data_df["nominal_power"] *= 1000
     turbine_data_df.to_csv(filename.format("turbine_data"))
     return turbine_data
 

@@ -132,7 +132,7 @@ class WindTurbineCluster(object):
         standard_deviation_method="turbulence_intensity",
         smoothing_order="wind_farm_power_curves",
         turbulence_intensity=None,
-        **kwargs
+        **kwargs,
     ):
         r"""
         Calculates the power curve of a wind turbine cluster.

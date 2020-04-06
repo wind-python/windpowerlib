@@ -152,7 +152,7 @@ class TurbineClusterModelChain(ModelChain):
         block_width=0.5,
         standard_deviation_method="turbulence_intensity",
         smoothing_order="wind_farm_power_curves",
-        **kwargs
+        **kwargs,
     ):
         super(TurbineClusterModelChain, self).__init__(power_plant, **kwargs)
 

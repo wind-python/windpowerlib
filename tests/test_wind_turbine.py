@@ -22,7 +22,7 @@ class TestWindTurbine:
     @classmethod
     def setup_class(cls):
         """Setup default values"""
-        cls.source = os.path.join(os.path.dirname(__file__), "../example/data")
+        cls.source = os.path.join(os.path.dirname(__file__), "data")
 
     def test_warning(self, recwarn):
         test_turbine_data = {
@@ -114,10 +114,10 @@ class TestWindTurbine:
     def test_create_unphysical_turbine(self):
         err_msg = "1/2rotor_diameter cannot be greater than hub_height"
         char = {
-           'hub_height': 80,
-           'rotor_diameter': 160,
-           'turbine_type': 'DUMMY 3',
-           'path': self.source
+            "hub_height": 80,
+            "rotor_diameter": 160,
+            "turbine_type": "DUMMY 3",
+            "path": self.source,
         }
         with pytest.raises(ValueError, match=err_msg):
             WindTurbine(**char)

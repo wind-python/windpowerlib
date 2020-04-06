@@ -9,7 +9,6 @@ SPDX-License-Identifier: MIT
 from windpowerlib import tools, power_curves, WindTurbine
 import numpy as np
 import pandas as pd
-import logging
 import warnings
 
 
@@ -308,7 +307,7 @@ class WindFarm(object):
         standard_deviation_method="turbulence_intensity",
         smoothing_order="wind_farm_power_curves",
         turbulence_intensity=None,
-        **kwargs
+        **kwargs,
     ):
         r"""
         Calculates the power curve of a wind farm.

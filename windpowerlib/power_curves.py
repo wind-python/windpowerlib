@@ -11,10 +11,15 @@ import pandas as pd
 from windpowerlib import tools
 
 
-def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
-                       block_width=0.5, wind_speed_range=15.0,
-                       standard_deviation_method='turbulence_intensity',
-                       mean_gauss=0, **kwargs):
+def smooth_power_curve(
+    power_curve_wind_speeds,
+    power_curve_values,
+    block_width=0.5,
+    wind_speed_range=15.0,
+    standard_deviation_method="turbulence_intensity",
+    mean_gauss=0,
+    **kwargs,
+):
     r"""
     Smoothes a power curve by using a Gauss distribution.
 
@@ -159,7 +164,7 @@ def smooth_power_curve(power_curve_wind_speeds, power_curve_values,
         # Get standard deviation for Gauss function
         standard_deviation = (
             (power_curve_wind_speed * normalized_standard_deviation + 0.6)
-            if standard_deviation_method is "Staffell_Pfenninger"
+            if standard_deviation_method == "Staffell_Pfenninger"
             else power_curve_wind_speed * normalized_standard_deviation
         )
         # Get the smoothed value of the power output

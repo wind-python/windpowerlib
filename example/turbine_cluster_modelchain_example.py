@@ -25,6 +25,7 @@ from windpowerlib import TurbineClusterModelChain
 # You can use the logging package to get logging messages from the windpowerlib
 # Change the logging level if you want more or less messages
 import logging
+
 logging.getLogger().setLevel(logging.DEBUG)
 
 
@@ -202,10 +203,10 @@ def plot_or_print(example_farm, example_cluster):
 
     # plot or print power output
     if plt:
-        example_cluster.power_output.plot(legend=True, label='example cluster')
-        example_farm.power_output.plot(legend=True, label='example farm')
-        plt.xlabel('Wind speed in m/s')
-        plt.ylabel('Power in W')
+        example_cluster.power_output.plot(legend=True, label="example cluster")
+        example_farm.power_output.plot(legend=True, label="example farm")
+        plt.xlabel("Wind speed in m/s")
+        plt.ylabel("Power in W")
         plt.show()
     else:
         print(example_cluster.power_output)

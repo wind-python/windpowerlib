@@ -10,7 +10,7 @@ import pandas as pd
 import os
 
 
-def reduce_wind_speed(wind_speed, wind_efficiency_curve_name='dena_mean'):
+def reduce_wind_speed(wind_speed, wind_efficiency_curve_name="dena_mean"):
     r"""
     Reduces wind speed by a wind efficiency curve.
 
