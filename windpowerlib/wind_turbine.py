@@ -338,8 +338,9 @@ class WindTurbineGroup:
         self.wind_turbine = wind_turbine
         self.number_of_turbines = number_of_turbines
         self.hub_height = self.wind_turbine.hub_height
-        self.nominal_power = (self.wind_turbine.nominal_power *
-                              self.number_of_turbines)
+        self.nominal_power = (
+            self.wind_turbine.nominal_power * self.number_of_turbines
+        )
 
 
 # WindTurbineGroup.wind_turbine.__doc__ = (
