@@ -22,7 +22,7 @@ class TestExamples:
         mc_e.calculate_power_output(weather, my_turbine, e126, dummy_turbine)
 
         assert_allclose(
-            2764.194772, (e126.power_output.sum() / e126.nominal_power), 0.01
+            2730.142, (e126.power_output.sum() / e126.nominal_power), 0.01
         )
         assert_allclose(
             1882.7567,
