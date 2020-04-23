@@ -89,9 +89,7 @@ def get_weather_data(filename="weather.csv", **kwargs):
     )
 
     # change time zone
-    weather_df.index = weather_df.index.tz_convert(
-        "Europe/Berlin"
-    )
+    weather_df.index = weather_df.index.tz_convert("Europe/Berlin")
 
     return weather_df
 
