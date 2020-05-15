@@ -38,9 +38,10 @@ def get_weather_data(filename="weather.csv", **kwargs):
 
     The data include wind speed at two different heights in m/s, air
     temperature in two different heights in K, surface roughness length in m
-    and air pressure in Pa. The file is located in the example folder of the
-    windpowerlib. The height in m for which the data applies is specified in
-    the second row.
+    and air pressure in Pa. The height in m for which the data applies is
+    specified in the second row.
+    In case no weather data file exists, an example weather data file is
+    automatically downloaded and stored in the same directory as this example.
 
     Parameters
     ----------
@@ -51,18 +52,19 @@ def get_weather_data(filename="weather.csv", **kwargs):
     ----------------
     datapath : str, optional
         Path where the weather data file is stored.
-        Default: 'windpowerlib/example'.
+        Default is the same directory this example is stored in.
 
     Returns
     -------
     :pandas:`pandas.DataFrame<frame>`
-            DataFrame with time series for wind speed `wind_speed` in m/s,
-            temperature `temperature` in K, roughness length `roughness_length`
-            in m, and pressure `pressure` in Pa.
-            The columns of the DataFrame are a MultiIndex where the first level
-            contains the variable name as string (e.g. 'wind_speed') and the
-            second level contains the height as integer at which it applies
-            (e.g. 10, if it was measured at a height of 10 m).
+        DataFrame with time series for wind speed `wind_speed` in m/s,
+        temperature `temperature` in K, roughness length `roughness_length`
+        in m, and pressure `pressure` in Pa.
+        The columns of the DataFrame are a MultiIndex where the first level
+        contains the variable name as string (e.g. 'wind_speed') and the
+        second level contains the height as integer at which it applies
+        (e.g. 10, if it was measured at a height of 10 m). The index is a
+        DateTimeIndex.
 
     """
 
@@ -71,6 +73,7 @@ def get_weather_data(filename="weather.csv", **kwargs):
 
     file = os.path.join(kwargs["datapath"], filename)
 
+    # download example weather data file in case it does not yet exist
     if not os.path.isfile(file):
         logging.debug("Download weather data for example.")
         req = requests.get("https://osf.io/59bqn/download")
@@ -85,10 +88,8 @@ def get_weather_data(filename="weather.csv", **kwargs):
         date_parser=lambda idx: pd.to_datetime(idx, utc=True),
     )
 
-    # change type of index to datetime and set time zone
-    weather_df.index = pd.to_datetime(weather_df.index).tz_convert(
-        "Europe/Berlin"
-    )
+    # change time zone
+    weather_df.index = weather_df.index.tz_convert("Europe/Berlin")
 
     return weather_df
 
@@ -197,8 +198,7 @@ def calculate_power_output(weather, my_turbine, e126, my_turbine2):
     """
 
     # ************************************************************************
-    # **** Data is provided in the oedb turbine library **********************
-    # **** ModelChain with non-default specifications
+    # **** ModelChain with non-default specifications ************************
     modelchain_data = {
         "wind_speed_model": "logarithmic",  # 'logarithmic' (default),
         # 'hellman' or
@@ -207,8 +207,8 @@ def calculate_power_output(weather, my_turbine, e126, my_turbine2):
         # 'interpolation_extrapolation'
         "temperature_model": "linear_gradient",  # 'linear_gradient' (def.) or
         # 'interpolation_extrapolation'
-        "power_output_model": "power_curve",  # 'power_curve' (default) or
-        # 'power_coefficient_curve'
+        "power_output_model": "power_coefficient_curve",  # 'power_curve'
+        # (default) or 'power_coefficient_curve'
         "density_correction": True,  # False (default) or True
         "obstacle_height": 0,  # default: 0
         "hellman_exp": None,
@@ -220,17 +220,15 @@ def calculate_power_output(weather, my_turbine, e126, my_turbine2):
     e126.power_output = mc_e126.power_output
 
     # ************************************************************************
-    # **** Specification of wind turbine with your own data ******************
-    # **** ModelChain with default parameter
+    # **** ModelChain with default parameter *********************************
     mc_my_turbine = ModelChain(my_turbine).run_model(weather)
     # write power output time series to WindTurbine object
     my_turbine.power_output = mc_my_turbine.power_output
 
     # ************************************************************************
-    # **** Specification of wind turbine with data in own file ***************
-    # **** Using "power_coefficient_curve" as "power_output_model".
+    # **** ModelChain with non-default value for "wind_speed_model" **********
     mc_example_turbine = ModelChain(
-        my_turbine2, power_output_model="power_curve"
+        my_turbine2, wind_speed_model="hellman"
     ).run_model(weather)
     my_turbine2.power_output = mc_example_turbine.power_output
 
