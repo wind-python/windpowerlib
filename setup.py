@@ -24,7 +24,7 @@ setup(
     long_description=read("README.rst"),
     long_description_content_type="text/x-rst",
     zip_safe=False,
-    install_requires=["pandas >= 0.20.0, < 0.26", "requests < 3.0"],
+    install_requires=["pandas >= 0.20.0", "requests"],
     extras_require={
         "dev": [
             "pytest",
