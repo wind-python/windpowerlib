@@ -17,9 +17,6 @@ def test_old_import():
         get_turbine_types()
 
 
-def test_old_name_load_data_from_oedb():
-    with warnings.catch_warnings():
-        warnings.simplefilter("error")
-        msg = "store_turbine_data_from_oedb"
-        with pytest.raises(FutureWarning, match=msg):
-            load_turbine_data_from_oedb()
+def test_old_name_load_data_from_oedb(recwarn):
+    load_turbine_data_from_oedb()
+    assert recwarn.pop(FutureWarning)
