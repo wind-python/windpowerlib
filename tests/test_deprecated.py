@@ -3,8 +3,6 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 
-import warnings
-
 import pytest
 
 from windpowerlib.data import load_turbine_data_from_oedb
