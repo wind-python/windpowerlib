@@ -5,9 +5,9 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 
+import logging
 import os
 import warnings
-import logging
 from datetime import datetime
 from shutil import copyfile
 
@@ -184,7 +184,7 @@ def store_turbine_data_from_oedb(
     """
     turbine_data = fetch_turbine_data_from_oedb(schema=schema, table=table)
     # standard file name for saving data
-    filename = os.path.join(os.path.dirname(__file__), "oedb", "{}.csv")
+    filename = os.path.join(os.path.dirname(__file__), "oedb", "{0}.csv")
 
     time_stamp = datetime.now().strftime("%Y%m%d%H%M%S")
     # get all power (coefficient) curves and save to file
@@ -260,15 +260,10 @@ def store_turbine_data_from_oedb(
 def remove_tmp_file(filename, time_stamp):
     os.remove(filename.format("turbine_data_{0}".format(time_stamp)))
     for curve_type in ["power_curve", "power_coefficient_curve"]:
-        copyfile(
-            filename.format("{0}s_{1}".format(curve_type, time_stamp)),
-            filename.format("{}s".format(curve_type)),
-        )
         os.remove(filename.format("{0}s_{1}".format(curve_type, time_stamp)))
 
 
 def check_imported_data(data, filename, time_stamp):
-    data.to_csv(filename.format("turbine_data"))
     try:
         data = check_data_integretiy(data)
     except Exception as e:
@@ -296,7 +291,7 @@ def check_imported_data(data, filename, time_stamp):
     return data
 
 
-def check_data_integretiy(data):
+def check_data_integretiy(data, min_pc_length=5):
     for dataset in data.iterrows():
         ttype = dataset[0]
         enercon_e126 = {"turbine_type": "{0}".format(ttype), "hub_height": 135}
@@ -316,8 +311,8 @@ def check_data_integretiy(data):
                 logging.warning(
                     "{0}: No cp-curve but has_cp_curve=True.".format(ttype)
                 )
-            if dataset[1].has_power_curve is True:
-                if len(wt.power_curve) < 5:
+            if wt.power_curve is not None:
+                if len(wt.power_curve) < min_pc_length:
                     logging.warning(
                         "{0}: power_curve is to short ({1} values),".format(
                             ttype, len(wt.power_curve)
