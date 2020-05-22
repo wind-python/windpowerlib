@@ -351,9 +351,7 @@ def get_turbine_data_from_file(turbine_type, path):
     r"""
     Fetches turbine data from a csv file.
 
-    See `example_power_curves.csv', `example_power_coefficient_curves.csv` and
-    `example_turbine_data.csv` in example/data for the required format of
-    a csv file. Make sure to provide wind speeds in m/s and power in W or
+    Make sure to provide wind speeds in m/s and power in W or
     convert units after loading the data.
 
     Parameters
