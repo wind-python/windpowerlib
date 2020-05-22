@@ -152,7 +152,7 @@ def fetch_turbine_data_from_oedb(
 def load_turbine_data_from_oedb(schema="supply", table="wind_turbine_library"):
     msg = (
         "\nUse >>store_turbine_data_from_oedb<< and not"
-        " >>load_turbine_data_from_oedb<<"
+        " >>load_turbine_data_from_oedb<< in the future."
     )
     warnings.warn(msg, FutureWarning)
     return store_turbine_data_from_oedb(schema=schema, table=table)
