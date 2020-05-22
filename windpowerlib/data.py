@@ -114,7 +114,8 @@ def get_turbine_types(turbine_library="local", print_out=True, filter_=True):
 
 
 def fetch_turbine_data_from_oedb(
-        schema="supply", table="wind_turbine_library"):
+    schema="supply", table="wind_turbine_library"
+):
     r"""
     Fetches turbine library from the OpenEnergy database (oedb).
 
@@ -148,17 +149,18 @@ def fetch_turbine_data_from_oedb(
     return pd.DataFrame(result.json())
 
 
-def load_turbine_data_from_oedb(
-        schema="supply", table="wind_turbine_library"):
-    msg = ("\nUse >>store_turbine_data_from_oedb<< and not"
-           " >>load_turbine_data_from_oedb<<")
+def load_turbine_data_from_oedb(schema="supply", table="wind_turbine_library"):
+    msg = (
+        "\nUse >>store_turbine_data_from_oedb<< and not"
+        " >>load_turbine_data_from_oedb<<"
+    )
     warnings.warn(msg, FutureWarning)
-    return store_turbine_data_from_oedb(
-        schema=schema, table=table)
+    return store_turbine_data_from_oedb(schema=schema, table=table)
 
 
 def store_turbine_data_from_oedb(
-        schema="supply", table="wind_turbine_library"):
+    schema="supply", table="wind_turbine_library"
+):
     r"""
     Loads turbine library from the OpenEnergy database (oedb).
 
@@ -184,7 +186,7 @@ def store_turbine_data_from_oedb(
     # standard file name for saving data
     filename = os.path.join(os.path.dirname(__file__), "oedb", "{}.csv")
 
-    time_stamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    time_stamp = datetime.now().strftime("%Y%m%d%H%M%S")
     # get all power (coefficient) curves and save to file
     # for curve_type in ['power_curve', 'power_coefficient_curve']:
     for curve_type in ["power_curve", "power_coefficient_curve"]:
@@ -225,8 +227,10 @@ def store_turbine_data_from_oedb(
         if curve_type == "power_curve":
             curves_df *= 1000
         curves_df.index.name = "turbine_type"
-        copyfile(filename.format("{}s".format(curve_type)),
-                 filename.format("{0}s_{1}".format(curve_type, time_stamp)))
+        copyfile(
+            filename.format("{}s".format(curve_type)),
+            filename.format("{0}s_{1}".format(curve_type, time_stamp)),
+        )
         curves_df.to_csv(filename.format("{}s".format(curve_type)))
 
     # get turbine data and save to file (excl. curves)
@@ -243,8 +247,10 @@ def store_turbine_data_from_oedb(
     ).set_index("turbine_type")
     # nominal power in W
     turbine_data_df["nominal_power"] *= 1000
-    copyfile(filename.format("turbine_data"),
-             filename.format("turbine_data_{0}".format(time_stamp)))
+    copyfile(
+        filename.format("turbine_data"),
+        filename.format("turbine_data_{0}".format(time_stamp)),
+    )
     check_imported_data(turbine_data_df, filename, time_stamp)
     turbine_data_df.to_csv(filename.format("turbine_data"))
     remove_tmp_file(filename, time_stamp)
@@ -256,9 +262,9 @@ def remove_tmp_file(filename, time_stamp):
     for curve_type in ["power_curve", "power_coefficient_curve"]:
         copyfile(
             filename.format("{0}s_{1}".format(curve_type, time_stamp)),
-            filename.format("{}s".format(curve_type)))
-        os.remove(
-            filename.format("{0}s_{1}".format(curve_type, time_stamp)))
+            filename.format("{}s".format(curve_type)),
+        )
+        os.remove(filename.format("{0}s_{1}".format(curve_type, time_stamp)))
 
 
 def check_imported_data(data, filename, time_stamp):
@@ -266,19 +272,25 @@ def check_imported_data(data, filename, time_stamp):
     try:
         data = check_data_integretiy(data)
     except Exception as e:
-        copyfile(filename.format("turbine_data"),
-                 filename.format("turbine_data_error{0}".format(time_stamp)))
-        copyfile(filename.format("turbine_data_{0}".format(time_stamp)),
-                 filename.format("turbine_data"))
+        copyfile(
+            filename.format("turbine_data"),
+            filename.format("turbine_data_error{0}".format(time_stamp)),
+        )
+        copyfile(
+            filename.format("turbine_data_{0}".format(time_stamp)),
+            filename.format("turbine_data"),
+        )
         for curve_type in ["power_curve", "power_coefficient_curve"]:
             copyfile(
                 filename.format("{}s".format(curve_type)),
-                filename.format("{0}s_error_{1}".format(
-                    curve_type, time_stamp))
-                )
+                filename.format(
+                    "{0}s_error_{1}".format(curve_type, time_stamp)
+                ),
+            )
             copyfile(
                 filename.format("{0}s_{1}".format(curve_type, time_stamp)),
-                filename.format("{}s".format(curve_type)))
+                filename.format("{}s".format(curve_type)),
+            )
         remove_tmp_file(filename, time_stamp)
         raise e
     return data
@@ -287,9 +299,7 @@ def check_imported_data(data, filename, time_stamp):
 def check_data_integretiy(data):
     for dataset in data.iterrows():
         ttype = dataset[0]
-        enercon_e126 = {
-            "turbine_type": "{0}".format(ttype),
-            "hub_height": 135}
+        enercon_e126 = {"turbine_type": "{0}".format(ttype), "hub_height": 135}
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             wt = WindTurbine(**enercon_e126)
@@ -297,17 +307,20 @@ def check_data_integretiy(data):
                 logging.warning(
                     "{0}: No power curve but has_power_curve=True.".format(
                         ttype
-                    ))
-            if (wt.power_coefficient_curve is None and
-                    dataset[1].has_cp_curve is True):
+                    )
+                )
+            if (
+                wt.power_coefficient_curve is None
+                and dataset[1].has_cp_curve is True
+            ):
                 logging.warning(
-                    "{0}: No cp-curve but has_cp_curve=True.".format(
-                        ttype
-                    ))
+                    "{0}: No cp-curve but has_cp_curve=True.".format(ttype)
+                )
             if dataset[1].has_power_curve is True:
                 if len(wt.power_curve) < 22:
                     logging.warning(
                         "{0}: power_curve is to short ({1} values),".format(
                             ttype, len(wt.power_curve)
-                        ))
+                        )
+                    )
     return data
