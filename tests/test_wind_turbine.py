@@ -12,10 +12,10 @@ from windpowerlib.tools import WindpowerlibUserWarning
 from windpowerlib.wind_turbine import (
     get_turbine_data_from_file,
     WindTurbine,
-    get_turbine_types,
     WindTurbineGroup,
-    load_turbine_data_from_oedb,
 )
+
+from windpowerlib.data import store_turbine_data_from_oedb, get_turbine_types
 
 
 class TestWindTurbine:
@@ -54,7 +54,7 @@ class TestWindTurbine:
         with pytest.raises(
             ConnectionError, match="Database connection not successful"
         ):
-            load_turbine_data_from_oedb("wrong_schema")
+            store_turbine_data_from_oedb("wrong_schema")
 
     @pytest.mark.filterwarnings("ignore:The WindTurbine")
     def test_string_representation_of_wind_turbine(self):

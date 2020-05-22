@@ -7,4 +7,4 @@ from windpowerlib import data
 
 
 def test_integretiy_check():
-    data.check_data_integretiy()
+    pass
