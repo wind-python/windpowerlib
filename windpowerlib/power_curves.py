@@ -266,3 +266,24 @@ def wake_losses_to_power_curve(
             "but is {}".format(type(wind_farm_efficiency))
         )
     return power_curve_df
+
+
+def create_power_curve(wind_speed, power):
+    """
+    A list, numpy.array, pandas.Series or other iterables can be passed to
+    define the wind speed and the power output. Make sure that the order is
+    not mutable because, values from both parameters will be used as value
+    pairs.
+
+    Parameters
+    ----------
+    wind_speed : iterable
+        A series of wind speed values in meter per second [m/s].
+    power : iterable
+        A series of power values in Watt [W].
+
+    Returns
+    -------
+    pandas.DataFrame
+    """
+    return pd.DataFrame(data={"value": power, "wind_speed": wind_speed})
