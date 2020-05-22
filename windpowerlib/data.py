@@ -317,7 +317,7 @@ def check_data_integretiy(data):
                     "{0}: No cp-curve but has_cp_curve=True.".format(ttype)
                 )
             if dataset[1].has_power_curve is True:
-                if len(wt.power_curve) < 22:
+                if len(wt.power_curve) < 5:
                     logging.warning(
                         "{0}: power_curve is to short ({1} values),".format(
                             ttype, len(wt.power_curve)
