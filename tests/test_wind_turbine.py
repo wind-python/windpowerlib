@@ -48,9 +48,11 @@ class TestWindTurbine:
         with pytest.raises(ValueError, match=msg):
             get_turbine_types("wrong")
 
+    def test_store_turbine_data_from_oedb(self):
+        store_turbine_data_from_oedb()
+
     def test_wrong_url_load_turbine_data(self):
         """Load turbine data from oedb."""
-
         with pytest.raises(
             ConnectionError, match="Database connection not successful"
         ):
