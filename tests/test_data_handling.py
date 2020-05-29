@@ -4,14 +4,16 @@ SPDX-License-Identifier: MIT
 """
 
 import os
+import time
 from datetime import datetime
-
 from shutil import copyfile
 
 import pandas as pd
 import pytest
 
-from windpowerlib.data import check_imported_data, check_data_integretiy
+from windpowerlib.data import (
+    check_data_integrity, check_imported_data, get_turbine_types,
+    store_turbine_data_from_oedb)
 
 
 class TestDataCheck:
@@ -58,7 +60,7 @@ class TestDataCheck:
     def test_data_check_logging_warnings(self, caplog):
         self.df.loc["GE158/4800", "has_power_curve"] = True
         self.df.loc["GE100/2750", "has_cp_curve"] = True
-        check_data_integretiy(self.df, min_pc_length=26)
+        check_data_integrity(self.df, min_pc_length=26)
         assert "E48/800: power_curve is to short (25 values)" in caplog.text
         assert "GE158/4800: No power curve" in caplog.text
         assert "GE100/2750: No cp-curve but has_cp_curve" in caplog.text
@@ -75,3 +77,22 @@ class TestDataCheck:
         msg = "could not convert string to float"
         with pytest.raises(ValueError, match=msg):
             check_imported_data(self.df, self.filename, self.time_stamp)
+
+    def test_get_turbine_types(self, capsys):
+        get_turbine_types()
+        captured = capsys.readouterr()
+        assert "Enercon" in captured.out
+        get_turbine_types("oedb", print_out=False, filter_=False)
+        msg = "`turbine_library` is 'wrong' but must be 'local' or 'oedb'."
+        with pytest.raises(ValueError, match=msg):
+            get_turbine_types("wrong")
+
+    def test_store_turbine_data_from_oedb(self):
+        store_turbine_data_from_oedb()
+
+    def test_wrong_url_load_turbine_data(self):
+        """Load turbine data from oedb."""
+        with pytest.raises(
+            ConnectionError, match="Database connection not successful"
+        ):
+            store_turbine_data_from_oedb("wrong_schema")
