@@ -88,7 +88,12 @@ class TestDataCheck:
             get_turbine_types("wrong")
 
     def test_store_turbine_data_from_oedb(self):
+        t = {}
+        for fn in os.listdir(self.orig_path):
+            t[fn] = os.path.getmtime(os.path.join(self.orig_path, fn))
         store_turbine_data_from_oedb()
+        for fn in os.listdir(self.orig_path):
+            assert t[fn] < os.path.getmtime(os.path.join(self.orig_path, fn))
 
     def test_wrong_url_load_turbine_data(self):
         """Load turbine data from oedb."""
