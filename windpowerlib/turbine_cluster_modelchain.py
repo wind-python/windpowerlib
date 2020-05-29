@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 import logging
 import pandas as pd
 from windpowerlib import wake_losses
-from windpowerlib.modelchain import ModelChain, tools
+from windpowerlib.modelchain import ModelChain, data
 
 
 class TurbineClusterModelChain(ModelChain):
@@ -289,7 +289,7 @@ class TurbineClusterModelChain(ModelChain):
         'wind_speed'
 
         """
-        weather_df = tools.check_weather_data(weather_df)
+        weather_df = data.check_weather_data(weather_df)
 
         self.assign_power_curve(weather_df)
         self.power_plant.mean_hub_height()

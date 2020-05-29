@@ -8,7 +8,8 @@ SPDX-License-Identifier: MIT
 """
 import logging
 import pandas as pd
-from windpowerlib import wind_speed, density, temperature, power_output, tools
+from windpowerlib import (wind_speed, density, temperature, power_output,
+                          tools, data)
 
 
 class ModelChain(object):
@@ -510,7 +511,7 @@ class ModelChain(object):
         'wind_speed'
 
         """
-        weather_df = tools.check_weather_data(weather_df)
+        weather_df = data.check_weather_data(weather_df)
 
         wind_speed_hub = self.wind_speed_hub(weather_df)
         density_hub = (
