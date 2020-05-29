@@ -58,8 +58,8 @@ def get_turbine_types(turbine_library="local", print_out=True, filter_=True):
     If the power (coefficient) curve of the desired turbine type (or the
     turbine type itself) is missing you can contact us via github or
     windpowerlib@rl-institut.de. You can help us by providing data in the
-    format as shown in
-    `the data base <https://openenergy-platform.org/dataedit/view/supply/wind_turbine_library>`_.
+    format as shown in `the data base
+    <https://openenergy-platform.org/dataedit/view/supply/wind_turbine_library>`_.
 
     Examples
     --------
@@ -265,7 +265,7 @@ def remove_tmp_file(filename, time_stamp):
 
 def check_imported_data(data, filename, time_stamp):
     try:
-        data = check_data_integretiy(data)
+        data = check_data_integrity(data)
     except Exception as e:
         copyfile(
             filename.format("turbine_data"),
@@ -291,31 +291,32 @@ def check_imported_data(data, filename, time_stamp):
     return data
 
 
-def check_data_integretiy(data, min_pc_length=5):
-    for dataset in data.iterrows():
-        ttype = dataset[0]
-        enercon_e126 = {"turbine_type": "{0}".format(ttype), "hub_height": 135}
+def check_data_integrity(data, min_pc_length=5):
+    for data_set in data.iterrows():
+        wt_type = data_set[0]
+        enercon_e126 = {"turbine_type": "{0}".format(wt_type),
+                        "hub_height": 135}
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             wt = WindTurbine(**enercon_e126)
-            if wt.power_curve is None and dataset[1].has_power_curve is True:
+            if wt.power_curve is None and data_set[1].has_power_curve is True:
                 logging.warning(
                     "{0}: No power curve but has_power_curve=True.".format(
-                        ttype
+                        wt_type
                     )
                 )
             if (
                 wt.power_coefficient_curve is None
-                and dataset[1].has_cp_curve is True
+                and data_set[1].has_cp_curve is True
             ):
                 logging.warning(
-                    "{0}: No cp-curve but has_cp_curve=True.".format(ttype)
+                    "{0}: No cp-curve but has_cp_curve=True.".format(wt_type)
                 )
             if wt.power_curve is not None:
                 if len(wt.power_curve) < min_pc_length:
                     logging.warning(
-                        "{0}: power_curve is to short ({1} values),".format(
-                            ttype, len(wt.power_curve)
+                        "{0}: power_curve is too short ({1} values),".format(
+                            wt_type, len(wt.power_curve)
                         )
                     )
     return data
