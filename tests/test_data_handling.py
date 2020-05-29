@@ -4,7 +4,6 @@ SPDX-License-Identifier: MIT
 """
 
 import os
-import time
 from datetime import datetime
 from shutil import copyfile
 
