@@ -294,8 +294,10 @@ def check_imported_data(data, filename, time_stamp):
 def check_data_integrity(data, min_pc_length=5):
     for data_set in data.iterrows():
         wt_type = data_set[0]
-        enercon_e126 = {"turbine_type": "{0}".format(wt_type),
-                        "hub_height": 135}
+        enercon_e126 = {
+            "turbine_type": "{0}".format(wt_type),
+            "hub_height": 135,
+        }
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             wt = WindTurbine(**enercon_e126)
