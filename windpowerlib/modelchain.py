@@ -8,8 +8,14 @@ SPDX-License-Identifier: MIT
 """
 import logging
 import pandas as pd
-from windpowerlib import (wind_speed, density, temperature, power_output,
-                          tools, data)
+from windpowerlib import (
+    wind_speed,
+    density,
+    temperature,
+    power_output,
+    tools,
+    data,
+)
 
 
 class ModelChain(object):
