@@ -61,7 +61,7 @@ class TestDataCheck:
         self.df.loc["GE158/4800", "has_power_curve"] = True
         self.df.loc["GE100/2750", "has_cp_curve"] = True
         check_data_integrity(self.df, min_pc_length=26)
-        assert "E48/800: power_curve is to short (25 values)" in caplog.text
+        assert "E48/800: power_curve is too short (25 values)" in caplog.text
         assert "GE158/4800: No power curve" in caplog.text
         assert "GE100/2750: No cp-curve but has_cp_curve" in caplog.text
 
