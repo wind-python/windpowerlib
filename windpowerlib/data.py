@@ -15,6 +15,7 @@ import pandas as pd
 import requests
 
 from windpowerlib.wind_turbine import WindTurbine
+from windpowerlib.tools import WindpowerlibUserWarning
 
 
 def get_turbine_types(turbine_library="local", print_out=True, filter_=True):
@@ -322,3 +323,39 @@ def check_data_integrity(data, min_pc_length=5):
                         )
                     )
     return data
+
+
+def check_weather_data(weather_data):
+    """
+    Check weather Data Frame.
+
+    - Raise warning if there are nan values.
+    - Convert columns if heights are string and not numeric.
+
+    Parameters
+    ----------
+    weather_data : pandas.DataFrame
+        A weather table with MultiIndex columns (name, data height)
+
+    Returns
+    -------
+    pandas.DataFrame : A valid weather table.
+
+    """
+    # Convert data heights to integer. In some case they are strings.
+    weather_data.columns = pd.MultiIndex.from_arrays(
+        [
+            weather_data.columns.get_level_values(0),
+            pd.to_numeric(weather_data.columns.get_level_values(1)),
+        ]
+    )
+
+    # check for nan values
+    if weather_data.isnull().any().any():
+        nan_columns = list(weather_data.columns[weather_data.isnull().any()])
+        msg = (
+            "The following columns of the weather data contain invalid "
+            "values like 'nan': {0}"
+        )
+        warnings.warn(msg.format(nan_columns), WindpowerlibUserWarning)
+    return weather_data
