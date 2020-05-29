@@ -410,6 +410,6 @@ def get_turbine_types(turbine_library="local", print_out=True, filter_=True):
     print(turbine_library, print_out, filter_)
     msg = (
         "\nUse >>from windpowerlib import get_turbine_types<< not"
-        ">>from windpowerlib.wind_turbine import get_turbine_types<< not "
+        ">>from windpowerlib.wind_turbine import get_turbine_types<<."
     )
     raise ImportError(msg)
