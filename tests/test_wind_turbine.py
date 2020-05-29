@@ -11,7 +11,10 @@ import pytest
 
 from windpowerlib.tools import WindpowerlibUserWarning
 from windpowerlib.wind_turbine import (
-    WindTurbine, WindTurbineGroup, get_turbine_data_from_file)
+    WindTurbine,
+    WindTurbineGroup,
+    get_turbine_data_from_file,
+)
 
 
 class TestWindTurbine:

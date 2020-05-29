@@ -11,8 +11,11 @@ import pandas as pd
 import pytest
 
 from windpowerlib.data import (
-    check_data_integrity, check_imported_data, get_turbine_types,
-    store_turbine_data_from_oedb)
+    check_data_integrity,
+    check_imported_data,
+    get_turbine_types,
+    store_turbine_data_from_oedb,
+)
 
 
 class TestDataCheck:
