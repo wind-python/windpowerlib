@@ -172,7 +172,8 @@ def power_curve(
 
 
 def power_curve_density_correction(
-    wind_speed, power_curve_wind_speeds, power_curve_values, density):
+    wind_speed, power_curve_wind_speeds, power_curve_values, density
+):
     r"""
     Calculates the turbine power output using a density corrected power curve.
     This function is carried out when the parameter `density_correction` of an
@@ -235,16 +236,16 @@ def power_curve_density_correction(
             + "height is needed."
         )
 
-    #NOTE : CHANGES ARE MADE HERE FOR SPEED IMPROVEMENT
+    # NOTE : CHANGES ARE MADE HERE FOR SPEED IMPROVEMENT
     # create a flag for pandas Series type
     Panda_series = False
-    
+
     if isinstance(wind_speed, pd.Series):
-        #save the indexes for later conversion to pd.Series
+        # save the indexes for later conversion to pd.Series
         indexes = wind_speed.index
-        # change the wind speed Series to numpy array 
+        # change the wind speed Series to numpy array
         wind_speed = wind_speed.values
-        # Set the panda flag True 
+        # Set the panda flag True
         Panda_series = True
 
     power_output = [
@@ -267,10 +268,10 @@ def power_curve_density_correction(
     ]
 
     # Power_output as pd.Series if wind_speed is pd.Series (else: np.array)
-    if Panda_series: #use the flag to check
+    if Panda_series:  # use the flag to check
         power_output = pd.Series(
             data=power_output,
-            index=indexes, # Use previously saved indexes
+            index=indexes,  # Use previously saved indexes
             name="feedin_power_plant",
         )
     else:
