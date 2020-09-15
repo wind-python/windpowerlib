@@ -236,17 +236,16 @@ def power_curve_density_correction(
             + "height is needed."
         )
 
-    # NOTE : CHANGES ARE MADE HERE FOR SPEED IMPROVEMENT
-    # create a flag for pandas Series type
-    Panda_series = False
-
+    # Convert pandas.Series to a numpy array to speed up the interpolation below.    
     if isinstance(wind_speed, pd.Series):
         # save the indexes for later conversion to pd.Series
-        indexes = wind_speed.index
+        wind_speed_indexes = wind_speed.index
         # change the wind speed Series to numpy array
         wind_speed = wind_speed.values
-        # Set the panda flag True
-        Panda_series = True
+        # Set the panda series flag True
+        panda_series = True
+    else:
+        panda_series = False
 
     power_output = [
         (
@@ -268,10 +267,10 @@ def power_curve_density_correction(
     ]
 
     # Power_output as pd.Series if wind_speed is pd.Series (else: np.array)
-    if Panda_series:  # use the flag to check
+    if panda_series:  # use the flag to check if the data should be converted back to pandas.Series
         power_output = pd.Series(
             data=power_output,
-            index=indexes,  # Use previously saved indexes
+            index=wind_speed_indexes,  # Use previously saved wind speed indexes
             name="feedin_power_plant",
         )
     else:
