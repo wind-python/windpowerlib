@@ -2,13 +2,13 @@
 SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
+from typing import Dict
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 from pandas.util.testing import assert_series_equal
-
 from windpowerlib.power_output import (
     power_coefficient_curve,
     power_curve,
@@ -17,8 +17,8 @@ from windpowerlib.power_output import (
 
 
 class TestPowerOutput:
-    def test_power_coefficient_curve(self):
-        parameters = {
+    def setup_class(self):
+        self.parameters: Dict = {
             "wind_speed": pd.Series(data=[2.0, 5.5, 7.0]),
             "density": pd.Series(data=[1.3, 1.3, 1.3]),
             "rotor_diameter": 80,
@@ -26,18 +26,22 @@ class TestPowerOutput:
             "power_coefficient_curve_values": pd.Series([0.3, 0.4, 0.5]),
         }
 
+    def test_power_coefficient_curve_1(self):
         # Test wind_speed as pd.Series with density and power_coefficient_curve
         # as pd.Series and np.array
         power_output_exp = pd.Series(
             data=[0.0, 244615.399, 0.0], name="feedin_power_plant"
         )
         assert_series_equal(
-            power_coefficient_curve(**parameters), power_output_exp
+            power_coefficient_curve(**self.parameters), power_output_exp
         )
-        parameters["density"] = np.array(parameters["density"])
+
+        parameters = self.parameters
+        parameters["density"].to_numpy()
         assert_series_equal(
             power_coefficient_curve(**parameters), power_output_exp
         )
+
         parameters["power_coefficient_curve_values"] = np.array(
             parameters["power_coefficient_curve_values"]
         )
@@ -47,14 +51,22 @@ class TestPowerOutput:
         assert_series_equal(
             power_coefficient_curve(**parameters), power_output_exp
         )
+
+    def test_power_coefficient_curve_output_types(self):
+        parameters = self.parameters
         # Test wind_speed as np.array with density and power_coefficient_curve
         # as np.array and pd.Series
+        assert isinstance(power_coefficient_curve(**parameters), pd.Series)
+        parameters["wind_speed"] = np.array(parameters["wind_speed"])
+        assert isinstance(power_coefficient_curve(**parameters), np.ndarray)
+
+    def test_power_coefficient_curve_2(self):
+        parameters = self.parameters
         power_output_exp = np.array([0.0, 244615.399, 0.0])
         parameters["wind_speed"] = np.array(parameters["wind_speed"])
         assert_allclose(
             power_coefficient_curve(**parameters), power_output_exp
         )
-        assert isinstance(power_coefficient_curve(**parameters), np.ndarray)
         parameters["density"] = pd.Series(data=parameters["density"])
         assert_allclose(
             power_coefficient_curve(**parameters), power_output_exp
