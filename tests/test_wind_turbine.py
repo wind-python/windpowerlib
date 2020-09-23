@@ -52,7 +52,7 @@ class TestWindTurbine:
         """Load turbine data from oedb."""
 
         with pytest.raises(
-            ConnectionError, match="Database connection not successful"
+            ConnectionError, match="Not found"
         ):
             load_turbine_data_from_oedb("wrong_schema")
 

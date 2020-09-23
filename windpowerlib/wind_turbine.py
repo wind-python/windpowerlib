@@ -454,16 +454,19 @@ def load_turbine_data_from_oedb(schema="supply", table="wind_turbine_library"):
     """
     # url of OpenEnergy Platform that contains the oedb
     oep_url = "http://oep.iks.cs.ovgu.de/"
+    url = oep_url + "/api/v0/schema/{}/tables/{}/rows/?".format(schema, table)
 
     # load data
-    result = requests.get(
-        oep_url + "/api/v0/schema/{}/tables/{}/rows/?".format(schema, table),
-    )
+    result = requests.get(url)
+    print(result.json())
     if not result.status_code == 200:
         raise ConnectionError(
-            "Database connection not successful. "
-            "Response: [{}]".format(result.status_code)
+            "Database (oep) connection not successful. \nURL: {2}\n"
+            "Response: [{0}] \n{1}".format(
+                result.status_code, result.text, url
+            )
         )
+
     # extract data to dataframe
     turbine_data = pd.DataFrame(result.json())
     # standard file name for saving data
