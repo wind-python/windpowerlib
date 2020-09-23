@@ -378,9 +378,9 @@ def get_turbine_data_from_file(turbine_type, path):
     --------
     >>> from windpowerlib import wind_turbine
     >>> import os
-    >>> path=os.path.join(os.path.dirname(__file__), '../tests/data',
+    >>> my_path = os.path.join(os.path.dirname(__file__), '../tests/data',
     ...     'power_curves.csv')
-    >>> d3=get_turbine_data_from_file('DUMMY 3', path)
+    >>> d3 = get_turbine_data_from_file('DUMMY 3', my_path)
     >>> print(d3['value'][7])
     18000.0
     >>> print(d3['value'].max())
@@ -578,14 +578,14 @@ def get_turbine_types(turbine_library="local", print_out=True, filter_=True):
     Examples
     --------
     >>> from windpowerlib import wind_turbine
-    >>> df=wind_turbine.get_turbine_types(print_out=False)
-    >>> print(df[df["turbine_type"].str.contains("E-126")].iloc[0])
+    >>> my_df=wind_turbine.get_turbine_types(print_out=False)
+    >>> print(my_df[my_df["turbine_type"].str.contains("E-126")].iloc[0])
     manufacturer          Enercon
     turbine_type       E-126/4200
     has_power_curve          True
     has_cp_curve             True
     Name: 5, dtype: object
-    >>> print(df[df["manufacturer"].str.contains("Enercon")].iloc[0])
+    >>> print(my_df[my_df["manufacturer"].str.contains("Enercon")].iloc[0])
     manufacturer          Enercon
     turbine_type       E-101/3050
     has_power_curve          True
