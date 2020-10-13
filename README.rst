@@ -151,7 +151,7 @@ you have basic knowledge of pandas it is easy to use any kind of data file.
         ),
     }
 
-    my_turbine = WindTurbine(**my_turbine2)
+    my_turbine = WindTurbine(**my_turbine_data)
 
 See the `modelchain_example` for more information.
 
