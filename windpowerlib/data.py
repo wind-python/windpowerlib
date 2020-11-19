@@ -5,6 +5,7 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 
+import filecmp
 import logging
 import os
 import warnings
@@ -13,9 +14,8 @@ from shutil import copyfile
 
 import pandas as pd
 import requests
-
-from windpowerlib.wind_turbine import WindTurbine
 from windpowerlib.tools import WindpowerlibUserWarning
+from windpowerlib.wind_turbine import WindTurbine
 
 
 def get_turbine_types(turbine_library="local", print_out=True, filter_=True):
@@ -187,7 +187,6 @@ def store_turbine_data_from_oedb(
     # standard file name for saving data
     filename = os.path.join(os.path.dirname(__file__), "oedb", "{0}.csv")
 
-    time_stamp = datetime.now().strftime("%Y%m%d%H%M%S")
     # get all power (coefficient) curves and save to file
     # for curve_type in ['power_curve', 'power_coefficient_curve']:
     for curve_type in ["power_curve", "power_coefficient_curve"]:
@@ -228,10 +227,6 @@ def store_turbine_data_from_oedb(
         if curve_type == "power_curve":
             curves_df *= 1000
         curves_df.index.name = "turbine_type"
-        copyfile(
-            filename.format("{}s".format(curve_type)),
-            filename.format("{0}s_{1}".format(curve_type, time_stamp)),
-        )
         curves_df.to_csv(filename.format("{}s".format(curve_type)))
 
     # get turbine data and save to file (excl. curves)
@@ -248,13 +243,8 @@ def store_turbine_data_from_oedb(
     ).set_index("turbine_type")
     # nominal power in W
     turbine_data_df["nominal_power"] *= 1000
-    copyfile(
-        filename.format("turbine_data"),
-        filename.format("turbine_data_{0}".format(time_stamp)),
-    )
-    check_imported_data(turbine_data_df, filename, time_stamp)
     turbine_data_df.to_csv(filename.format("turbine_data"))
-    remove_tmp_file(filename, time_stamp)
+    check_turbine_data(filename)
     return turbine_data
 
 
@@ -264,44 +254,26 @@ def remove_tmp_file(filename, time_stamp):
         os.remove(filename.format("{0}s_{1}".format(curve_type, time_stamp)))
 
 
-def check_imported_data(data, filename, time_stamp):
+def check_turbine_data(filename):
     try:
-        data = check_data_integrity(data)
+        data = check_data_integrity(filename)
     except Exception as e:
-        copyfile(
-            filename.format("turbine_data"),
-            filename.format("turbine_data_error{0}".format(time_stamp)),
-        )
-        copyfile(
-            filename.format("turbine_data_{0}".format(time_stamp)),
-            filename.format("turbine_data"),
-        )
-        for curve_type in ["power_curve", "power_coefficient_curve"]:
-            copyfile(
-                filename.format("{}s".format(curve_type)),
-                filename.format(
-                    "{0}s_error_{1}".format(curve_type, time_stamp)
-                ),
-            )
-            copyfile(
-                filename.format("{0}s_{1}".format(curve_type, time_stamp)),
-                filename.format("{}s".format(curve_type)),
-            )
-        remove_tmp_file(filename, time_stamp)
+        restore_default_turbine_data()
         raise e
     return data
 
 
-def check_data_integrity(data, min_pc_length=5):
+def check_data_integrity(filename, min_pc_length=5):
+    data = pd.read_csv(filename.format("turbine_data"), index_col=[0])
     for data_set in data.iterrows():
         wt_type = data_set[0]
-        enercon_e126 = {
+        turbine_data_set = {
             "turbine_type": "{0}".format(wt_type),
             "hub_height": 135,
         }
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            wt = WindTurbine(**enercon_e126)
+            wt = WindTurbine(**turbine_data_set)
             if wt.power_curve is None and data_set[1].has_power_curve is True:
                 logging.warning(
                     "{0}: No power curve but has_power_curve=True.".format(
@@ -323,6 +295,28 @@ def check_data_integrity(data, min_pc_length=5):
                         )
                     )
     return data
+
+
+def restore_default_turbine_data():
+    """
+
+    Returns
+    -------
+
+    Examples
+    --------
+    >>> restore_default_turbine_data()
+
+    """
+    src_path = os.path.join(
+        os.path.dirname(__file__), "data", "default_turbine_data"
+    )
+    dst_path = os.path.join(os.path.dirname(__file__), "oedb")
+
+    for file in os.listdir(src_path):
+        src = os.path.join(src_path, file)
+        dst = os.path.join(dst_path, file)
+        copyfile(src, dst)
 
 
 def check_weather_data(weather_data):
