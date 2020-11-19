@@ -3,20 +3,15 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 
-import os
-from datetime import datetime
-from shutil import copyfile
 import filecmp
+import os
+from shutil import copyfile
+
 import pandas as pd
 import pytest
-
 from windpowerlib.data import (
-    check_data_integrity,
-    check_turbine_data,
-    get_turbine_types,
-    store_turbine_data_from_oedb,
-    restore_default_turbine_data,
-)
+    check_data_integrity, check_turbine_data, get_turbine_types,
+    restore_default_turbine_data, store_turbine_data_from_oedb)
 
 
 class TestDataCheck:

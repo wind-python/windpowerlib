@@ -5,11 +5,9 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 
-import filecmp
 import logging
 import os
 import warnings
-from datetime import datetime
 from shutil import copyfile
 
 import pandas as pd
