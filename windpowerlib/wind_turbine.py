@@ -351,7 +351,9 @@ def get_turbine_data_from_file(turbine_type, path):
     r"""
     Fetches turbine data from a csv file.
 
-    Make sure to provide wind speeds in m/s and power in W or
+    See `example_power_curves.csv', `example_power_coefficient_curves.csv` and
+    `example_turbine_data.csv` in example/data for the required format of
+    a csv file. Make sure to provide wind speeds in m/s and power in W or
     convert units after loading the data.
 
     Parameters
@@ -375,9 +377,9 @@ def get_turbine_data_from_file(turbine_type, path):
     --------
     >>> from windpowerlib import wind_turbine
     >>> import os
-    >>> path=os.path.join(os.path.dirname(__file__), '../tests/data',
+    >>> my_path = os.path.join(os.path.dirname(__file__), '../tests/data',
     ...     'power_curves.csv')
-    >>> d3=get_turbine_data_from_file('DUMMY 3', path)
+    >>> d3 = get_turbine_data_from_file('DUMMY 3', my_path)
     >>> print(d3['value'][7])
     18000.0
     >>> print(d3['value'].max())

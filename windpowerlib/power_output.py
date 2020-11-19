@@ -176,10 +176,8 @@ def power_curve_density_correction(
 ):
     r"""
     Calculates the turbine power output using a density corrected power curve.
-
     This function is carried out when the parameter `density_correction` of an
     instance of the :class:`~.modelchain.ModelChain` class is True.
-
     Parameters
     ----------
     wind_speed : :pandas:`pandas.Series<series>` or numpy.array
@@ -192,21 +190,17 @@ def power_curve_density_correction(
         `power_curve_wind_speeds`.
     density : :pandas:`pandas.Series<series>` or numpy.array
         Density of air at hub height in kg/m³.
-
     Returns
     -------
     :pandas:`pandas.Series<series>` or numpy.array
         Electrical power output of the wind turbine in W.
         Data type depends on type of `wind_speed`.
-
     Notes
     -----
     The following equation is used for the site specific power curve wind
     speeds [1]_ [2]_ [3]_:
-
     .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}
                        {\rho_{site}}\right)^{p(v)}
-
     with:
         .. math:: p=\begin{cases}
                       \frac{1}{3} & v_{std} \leq 7.5\text{ m/s}\\
@@ -214,19 +208,15 @@ def power_curve_density_correction(
                       \text{ m/s}<v_{std}<12.5\text{ m/s}\\
                       \frac{2}{3} & \geq 12.5 \text{ m/s}
                     \end{cases},
-
         v: wind speed [m/s], :math:`\rho`: density [kg/m³]
-
     :math:`v_{std}` is the standard wind speed in the power curve
     (:math:`v_{std}`, :math:`P_{std}`),
     :math:`v_{site}` is the density corrected wind speed for the power curve
     (:math:`v_{site}`, :math:`P_{std}`),
     :math:`\rho_0` is the ambient density (1.225 kg/m³)
     and :math:`\rho_{site}` the density at site conditions (and hub height).
-
     It is assumed that the power output for wind speeds above the maximum
     and below the minimum wind speed given in the power curve is zero.
-
     References
     ----------
     .. [1] Svenningsen, L.: "Power Curve Air Density Correction And Other
@@ -238,7 +228,6 @@ def power_curve_density_correction(
             Variable Scale Simulation Model for Windpower based on the
             Georeferenced Installation Register of Germany". Master's Thesis
             at Reiner Lemoine Institute, 2014, p. 13
-
     """
     if density is None:
         raise TypeError(
@@ -246,6 +235,18 @@ def power_curve_density_correction(
             + "density corrected power curve density at hub "
             + "height is needed."
         )
+
+    # Convert pd.Series to a numpy array to speed up the interpolation below.
+    if isinstance(wind_speed, pd.Series):
+        # save the indexes for later conversion to pd.Series
+        wind_speed_indexes = wind_speed.index
+        # change the wind speed Series to numpy array
+        wind_speed = wind_speed.values
+        # Set the panda series flag True
+        panda_series = True
+    else:
+        panda_series = False
+
     power_output = [
         (
             np.interp(
@@ -265,11 +266,11 @@ def power_curve_density_correction(
         for i in range(len(wind_speed))
     ]
 
-    # Power_output as pd.Series if wind_speed is pd.Series (else: np.array)
-    if isinstance(wind_speed, pd.Series):
+    # Convert results to the data type of the input data
+    if panda_series:
         power_output = pd.Series(
             data=power_output,
-            index=wind_speed.index,
+            index=wind_speed_indexes,  # Use previously saved wind speed index
             name="feedin_power_plant",
         )
     else:
