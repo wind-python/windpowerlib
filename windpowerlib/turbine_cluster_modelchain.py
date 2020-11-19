@@ -8,7 +8,6 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 import logging
-import pandas as pd
 from windpowerlib import wake_losses
 from windpowerlib.modelchain import ModelChain, data
 
@@ -273,7 +272,7 @@ class TurbineClusterModelChain(ModelChain):
         ---------
         >>> import numpy as np
         >>> import pandas as pd
-        >>> weather_df=pd.DataFrame(np.random.rand(2,6),
+        >>> my_weather_df = pd.DataFrame(np.random.rand(2,6),
         ...                           index=pd.date_range('1/1/2012',
         ...                                               periods=2,
         ...                                               freq='H'),
@@ -285,7 +284,7 @@ class TurbineClusterModelChain(ModelChain):
         ...                                              'roughness_length']),
         ...                                    np.array([10, 80, 10, 80,
         ...                                             10, 0])])
-        >>> weather_df.columns.get_level_values(0)[0]
+        >>> my_weather_df.columns.get_level_values(0)[0]
         'wind_speed'
 
         """

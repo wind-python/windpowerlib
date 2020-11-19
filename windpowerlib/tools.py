@@ -6,8 +6,6 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 import numpy as np
-import warnings
-import pandas as pd
 
 
 class WindpowerlibUserWarning(UserWarning):
