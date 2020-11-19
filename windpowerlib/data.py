@@ -136,17 +136,17 @@ def fetch_turbine_data_from_oedb(
     """
     # url of OpenEnergy Platform that contains the oedb
     oep_url = "http://oep.iks.cs.ovgu.de/"
+    url = oep_url + "/api/v0/schema/{}/tables/{}/rows/?".format(schema, table)
 
     # load data
-    result = requests.get(
-        oep_url + "/api/v0/schema/{}/tables/{}/rows/?".format(schema, table),
-    )
+    result = requests.get(url)
     if not result.status_code == 200:
         raise ConnectionError(
-            "Database connection not successful. "
-            "Response: [{}]".format(result.status_code)
+            "Database (oep) connection not successful. \nURL: {2}\n"
+            "Response: [{0}] \n{1}".format(
+                result.status_code, result.text, url
+            )
         )
-    # extract data to dataframe
     return pd.DataFrame(result.json())
 
 
