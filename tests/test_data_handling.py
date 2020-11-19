@@ -10,8 +10,12 @@ from shutil import copyfile
 import pandas as pd
 import pytest
 from windpowerlib.data import (
-    check_data_integrity, check_turbine_data, get_turbine_types,
-    restore_default_turbine_data, store_turbine_data_from_oedb)
+    check_data_integrity,
+    check_turbine_data,
+    get_turbine_types,
+    restore_default_turbine_data,
+    store_turbine_data_from_oedb,
+)
 
 
 class TestDataCheck:
