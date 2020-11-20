@@ -246,12 +246,6 @@ def store_turbine_data_from_oedb(
     return turbine_data
 
 
-def remove_tmp_file(filename, time_stamp):
-    os.remove(filename.format("turbine_data_{0}".format(time_stamp)))
-    for curve_type in ["power_curve", "power_coefficient_curve"]:
-        os.remove(filename.format("{0}s_{1}".format(curve_type, time_stamp)))
-
-
 def check_turbine_data(filename):
     try:
         data = check_data_integrity(filename)
