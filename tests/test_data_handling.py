@@ -41,9 +41,11 @@ class TestDataCheck:
         restore_default_turbine_data()
 
     def test_normal_data_check(self):
+        """Check data which is fine."""
         check_turbine_data(self.filename.format("turbine_data"))
 
     def test_data_check_logging_warnings(self, caplog):
+        """Check logging warnings about the checked data."""
         self.df.loc["GE158/4800", "has_power_curve"] = True
         self.df.loc["GE100/2750", "has_cp_curve"] = True
         self.df.to_csv(self.tmp_fn.format("turbine_data"))
@@ -53,6 +55,7 @@ class TestDataCheck:
         assert "GE100/2750: No cp-curve but has_cp_curve" in caplog.text
 
     def test_global_error(self):
+        """Check Error message if turbine data is corrupt."""
         msg = r"could not convert string to*"
         name = "turbine_data"
         copyfile(self.orig_fn.format(name), self.backup_fn.format(name))
@@ -62,6 +65,7 @@ class TestDataCheck:
         copyfile(self.backup_fn.format(name), self.orig_fn.format(name))
 
     def test_broken_pwr_curve(self):
+        """Check Error message if power_curves data is corrupt."""
         name = "power_curves"
         copyfile(self.orig_fn.format(name), self.backup_fn.format(name))
         copyfile(self.broken_fn.format(name), self.orig_fn.format(name))
@@ -71,6 +75,7 @@ class TestDataCheck:
         copyfile(self.backup_fn.format(name), self.orig_fn.format(name))
 
     def test_get_turbine_types(self, capsys):
+        """Test the `get_turbine_types` function."""
         get_turbine_types()
         captured = capsys.readouterr()
         assert "Enercon" in captured.out
@@ -80,6 +85,7 @@ class TestDataCheck:
             get_turbine_types("wrong")
 
     def test_store_turbine_data_from_oedb(self):
+        """Test `store_turbine_data_from_oedb` function."""
         t = {}
         for fn in os.listdir(self.orig_path):
             t[fn] = os.path.getmtime(os.path.join(self.orig_path, fn))
@@ -88,7 +94,7 @@ class TestDataCheck:
             assert t[fn] < os.path.getmtime(os.path.join(self.orig_path, fn))
 
     def test_wrong_url_load_turbine_data(self):
-        """Load turbine data from oedb."""
+        """Load turbine data from oedb with a wrong schema."""
         with pytest.raises(
             ConnectionError,
             match=r"Database \(oep\) connection not successful*",
@@ -96,6 +102,7 @@ class TestDataCheck:
             store_turbine_data_from_oedb("wrong_schema")
 
     def test_restore_default_data(self):
+        """Test the clean recovery of the data files."""
         names = ["turbine_data", "power_curves", "power_coefficient_curves"]
         default_path = os.path.join(
             self.orig_path, os.pardir, "data", "default_turbine_data"
