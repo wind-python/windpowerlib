@@ -185,8 +185,7 @@ def store_turbine_data_from_oedb(
     # standard file name for saving data
     filename = os.path.join(os.path.dirname(__file__), "oedb", "{0}.csv")
 
-    # get all power (coefficient) curves and save to file
-    # for curve_type in ['power_curve', 'power_coefficient_curve']:
+    # get all power (coefficient) curves and save them to file
     for curve_type in ["power_curve", "power_coefficient_curve"]:
         curves_df = pd.DataFrame(columns=["wind_speed"])
         for index in turbine_data.index:
