@@ -67,8 +67,8 @@ power curve or power coefficient curve needed by the :py:class:`~.wind_turbine.W
    :toctree: temp/
 
    wind_turbine.get_turbine_data_from_file
-   wind_turbine.load_turbine_data_from_oedb
-   wind_turbine.get_turbine_types
+   data.store_turbine_data_from_oedb
+   data.get_turbine_types
 
 .. _create_input_types_label:
 
@@ -142,6 +142,7 @@ Functions for smoothing power curves or applying wake losses to a power curve.
 
    power_curves.smooth_power_curve
    power_curves.wake_losses_to_power_curve
+   power_curves.create_power_curve
 
 
 Wake losses

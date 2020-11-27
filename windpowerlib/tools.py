@@ -6,8 +6,6 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 import numpy as np
-import warnings
-import pandas as pd
 
 
 class WindpowerlibUserWarning(UserWarning):
@@ -227,30 +225,3 @@ def estimate_turbulence_intensity(height, roughness_length):
 
     """
     return 1 / (np.log(height / roughness_length))
-
-
-def check_weather_data(weather_df):
-    """
-    Check weather Data Frame.
-
-    - Raise warning if there are nan values.
-    - Convert columns if heights are string and not numeric.
-
-    """
-    # Convert data heights to integer. In some case they are strings.
-    weather_df.columns = pd.MultiIndex.from_arrays(
-        [
-            weather_df.columns.get_level_values(0),
-            pd.to_numeric(weather_df.columns.get_level_values(1)),
-        ]
-    )
-
-    # check for nan values
-    if weather_df.isnull().any().any():
-        nan_columns = list(weather_df.columns[weather_df.isnull().any()])
-        msg = (
-            "The following columns of the weather data contain invalid "
-            "values like 'nan': {0}"
-        )
-        warnings.warn(msg.format(nan_columns), WindpowerlibUserWarning)
-    return weather_df

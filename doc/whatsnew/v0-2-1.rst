@@ -14,6 +14,13 @@ Other changes
 * Data height in weather data DataFrame can be of type string and will be converted to numeric internally. This makes is easier to read a csv-file with a header using pandas read_csv function.
 * Code-style is now "black".
 * Licence changed from GPLv3 to MIT.
+* A new function `check_turbine_data(filename)` is added to check the turbine
+  data. If new data is downloaded from the oedb the data will be checked and
+  removed if an error occurs. Furthermore, it is always possible to restore the
+  original turbine data using the function `restore_default_turbine_data()`.
+  (`PR 101 <https://github.com/wind-python/windpowerlib/pull/101>`_)
+* Speed Improvement in "power_curve_density_correction"
+  (`PR 107 <https://github.com/wind-python/windpowerlib/pull/107>`_)
 
 
 Documentation
@@ -27,8 +34,7 @@ Contributors
 ############
 
 * Birgit Schachler
+* Kumar Shivam
 * Sabine Haas
 * Uwe Krien
-* @vezeli
-
-
+* Velibor Zeli

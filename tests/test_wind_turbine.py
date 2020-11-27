@@ -5,16 +5,15 @@ SPDX-FileCopyrightText: 2019 oemof developer group <contact@oemof.org>
 SPDX-License-Identifier: MIT
 """
 
-import pytest
 import os
-from windpowerlib.tools import WindpowerlibUserWarning
 
+import pytest
+
+from windpowerlib.tools import WindpowerlibUserWarning
 from windpowerlib.wind_turbine import (
-    get_turbine_data_from_file,
     WindTurbine,
-    get_turbine_types,
     WindTurbineGroup,
-    load_turbine_data_from_oedb,
+    get_turbine_data_from_file,
 )
 
 
@@ -38,23 +37,6 @@ class TestWindTurbine:
         # Raise FileNotFoundError due to missing
         with pytest.raises(FileNotFoundError):
             get_turbine_data_from_file(turbine_type="...", path="not_existent")
-
-    def test_get_turbine_types(self, capsys):
-        get_turbine_types()
-        captured = capsys.readouterr()
-        assert "Enercon" in captured.out
-        get_turbine_types("oedb", print_out=False, filter_=False)
-        msg = "`turbine_library` is 'wrong' but must be 'local' or 'oedb'."
-        with pytest.raises(ValueError, match=msg):
-            get_turbine_types("wrong")
-
-    def test_wrong_url_load_turbine_data(self):
-        """Load turbine data from oedb."""
-
-        with pytest.raises(
-            ConnectionError, match="Not found"
-        ):
-            load_turbine_data_from_oedb("wrong_schema")
 
     @pytest.mark.filterwarnings("ignore:The WindTurbine")
     def test_string_representation_of_wind_turbine(self):
