@@ -247,7 +247,8 @@ def power_curve_density_correction(
     else:
         panda_series = False
 
-    power_output = _get_power_output(wind_speed, power_curve_wind_speeds.to_numpy(), density.to_numpy(), power_curve_values.to_numpy())
+    power_output = _get_power_output(wind_speed, power_curve_wind_speeds.to_numpy(
+    ), density.to_numpy(), power_curve_values.to_numpy())
 
     # Convert results to the data type of the input data
     if panda_series:
@@ -276,7 +277,7 @@ def _get_power_output(wind_speed, power_curve_wind_speeds, density, power_curve_
         Density of air at hub height in kg/m³.
     Returns
     -------
-    :numpy: `numpy.array`
+    :numpy:`numpy.array`
         Electrical power output of the wind turbine in W.
     """
 
