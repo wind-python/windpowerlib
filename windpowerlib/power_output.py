@@ -247,8 +247,42 @@ def power_curve_density_correction(
     else:
         panda_series = False
 
-    power_output = [
-        (
+    power_output = _get_power_output(wind_speed, power_curve_wind_speeds.to_numpy(), density.to_numpy(), power_curve_values.to_numpy())
+
+    # Convert results to the data type of the input data
+    if panda_series:
+        power_output = pd.Series(
+            data=power_output,
+            index=wind_speed_indexes,  # Use previously saved wind speed index
+            name="feedin_power_plant",
+        )
+
+    return power_output
+
+
+def _get_power_output(wind_speed, power_curve_wind_speeds, density, power_curve_values):
+    """ Get the power output at each timestep using only numpy to speed up performance
+    Parameters
+    ----------
+    wind_speed : :pandas:`pandas.Series<series>` or numpy.array
+        Wind speed at hub height in m/s.
+    power_curve_wind_speeds : :pandas:`pandas.Series<series>` or numpy.array
+        Wind speeds in m/s for which the power curve values are provided in
+        `power_curve_values`.
+    power_curve_values : :pandas:`pandas.Series<series>` or numpy.array
+        Power curve values corresponding to wind speeds in
+        `power_curve_wind_speeds`.
+    density : :pandas:`pandas.Series<series>` or numpy.array
+        Density of air at hub height in kg/m³.
+    Returns
+    -------
+    :numpy: `numpy.array`
+        Electrical power output of the wind turbine in W.
+    """
+
+    power_output = np.empty(len(wind_speed), dtype=np.float)
+    for i in range(len(wind_speed)):
+        power_output[i] = (
             np.interp(
                 wind_speed[i],
                 power_curve_wind_speeds
@@ -263,16 +297,4 @@ def power_curve_density_correction(
                 right=0,
             )
         )
-        for i in range(len(wind_speed))
-    ]
-
-    # Convert results to the data type of the input data
-    if panda_series:
-        power_output = pd.Series(
-            data=power_output,
-            index=wind_speed_indexes,  # Use previously saved wind speed index
-            name="feedin_power_plant",
-        )
-    else:
-        power_output = np.array(power_output)
     return power_output
