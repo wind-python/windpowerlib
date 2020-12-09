@@ -247,8 +247,12 @@ def power_curve_density_correction(
     else:
         panda_series = False
 
-    power_output = _get_power_output(wind_speed, power_curve_wind_speeds.to_numpy(
-    ), density.to_numpy(), power_curve_values.to_numpy())
+    power_output = _get_power_output(
+        wind_speed,
+        power_curve_wind_speeds.to_numpy(),
+        density.to_numpy(),
+        power_curve_values.to_numpy(),
+    )
 
     # Convert results to the data type of the input data
     if panda_series:
@@ -261,8 +265,10 @@ def power_curve_density_correction(
     return power_output
 
 
-def _get_power_output(wind_speed, power_curve_wind_speeds, density, power_curve_values):
-    """ Get the power output at each timestep using only numpy to speed up performance
+def _get_power_output(
+    wind_speed, power_curve_wind_speeds, density, power_curve_values
+):
+    """Get the power output at each timestep using only numpy to speed up performance
     Parameters
     ----------
     wind_speed : :pandas:`pandas.Series<series>` or numpy.array
@@ -283,19 +289,15 @@ def _get_power_output(wind_speed, power_curve_wind_speeds, density, power_curve_
 
     power_output = np.empty(len(wind_speed), dtype=np.float)
     for i in range(len(wind_speed)):
-        power_output[i] = (
-            np.interp(
-                wind_speed[i],
-                power_curve_wind_speeds
-                * (1.225 / density[i])
-                ** (
-                    np.interp(
-                        power_curve_wind_speeds, [7.5, 12.5], [1 / 3, 2 / 3]
-                    )
-                ),
-                power_curve_values,
-                left=0,
-                right=0,
-            )
+        power_output[i] = np.interp(
+            wind_speed[i],
+            power_curve_wind_speeds
+            * (1.225 / density[i])
+            ** (
+                np.interp(power_curve_wind_speeds, [7.5, 12.5], [1 / 3, 2 / 3])
+            ),
+            power_curve_values,
+            left=0,
+            right=0,
         )
     return power_output
