@@ -249,9 +249,9 @@ def power_curve_density_correction(
 
     power_output = _get_power_output(
         wind_speed,
-        power_curve_wind_speeds.to_numpy(),
-        density.to_numpy(),
-        power_curve_values.to_numpy(),
+        np.array(power_curve_wind_speeds),
+        np.array(density),
+        np.array(power_curve_values),
     )
 
     # Convert results to the data type of the input data
@@ -271,23 +271,23 @@ def _get_power_output(
     """Get the power output at each timestep using only numpy to speed up performance
     Parameters
     ----------
-    wind_speed : :pandas:`pandas.Series<series>` or numpy.array
+    wind_speed : :numpy:`numpy.ndarray`
         Wind speed at hub height in m/s.
-    power_curve_wind_speeds : :pandas:`pandas.Series<series>` or numpy.array
+    power_curve_wind_speeds : :numpy:`numpy.ndarray`
         Wind speeds in m/s for which the power curve values are provided in
         `power_curve_values`.
-    power_curve_values : :pandas:`pandas.Series<series>` or numpy.array
+    density : :numpy:`numpy.ndarray`
+        Density of air at hub height in kg/m³.
+    power_curve_values : :numpy:`numpy.ndarray`
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
-    density : :pandas:`pandas.Series<series>` or numpy.array
-        Density of air at hub height in kg/m³.
     Returns
     -------
     :numpy:`numpy.array`
         Electrical power output of the wind turbine in W.
     """
-
     power_output = np.empty(len(wind_speed), dtype=np.float)
+
     for i in range(len(wind_speed)):
         power_output[i] = np.interp(
             wind_speed[i],
