@@ -215,10 +215,11 @@ class TestPowerOutput:
             power_curve(**self.parameters2), self.power_output_exp2
         )
 
-        # Raise TypeErrors due to wrong type of `density_correction`
-        with pytest.raises(TypeError):
-            parameters["density"] = "wrong_type"
-            power_curve(**parameters)
+    def test_power_curve_11(self):
+        """Raise IndexErrors due to wrong type of `density_correction`"""
+        with pytest.raises(IndexError, match="too many indices for array"):
+            self.parameters2["density"] = "wrong_type"
+            power_curve(**self.parameters2)
 
     def test_power_curve_density_correction(self):
         """TODO: Explain and split this test."""
