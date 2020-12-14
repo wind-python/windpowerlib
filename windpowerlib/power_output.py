@@ -247,24 +247,12 @@ def power_curve_density_correction(
     else:
         panda_series = False
 
-    power_output = [
-        (
-            np.interp(
-                wind_speed[i],
-                power_curve_wind_speeds
-                * (1.225 / density[i])
-                ** (
-                    np.interp(
-                        power_curve_wind_speeds, [7.5, 12.5], [1 / 3, 2 / 3]
-                    )
-                ),
-                power_curve_values,
-                left=0,
-                right=0,
-            )
-        )
-        for i in range(len(wind_speed))
-    ]
+    power_output = _get_power_output(
+        wind_speed,
+        np.array(power_curve_wind_speeds),
+        np.array(density),
+        np.array(power_curve_values),
+    )
 
     # Convert results to the data type of the input data
     if panda_series:
@@ -273,6 +261,43 @@ def power_curve_density_correction(
             index=wind_speed_indexes,  # Use previously saved wind speed index
             name="feedin_power_plant",
         )
-    else:
-        power_output = np.array(power_output)
+
+    return power_output
+
+
+def _get_power_output(
+    wind_speed, power_curve_wind_speeds, density, power_curve_values
+):
+    """Get the power output at each timestep using only numpy to speed up performance
+    Parameters
+    ----------
+    wind_speed : :numpy:`numpy.ndarray`
+        Wind speed at hub height in m/s.
+    power_curve_wind_speeds : :numpy:`numpy.ndarray`
+        Wind speeds in m/s for which the power curve values are provided in
+        `power_curve_values`.
+    density : :numpy:`numpy.ndarray`
+        Density of air at hub height in kg/m³.
+    power_curve_values : :numpy:`numpy.ndarray`
+        Power curve values corresponding to wind speeds in
+        `power_curve_wind_speeds`.
+    Returns
+    -------
+    :numpy:`numpy.array`
+        Electrical power output of the wind turbine in W.
+    """
+    power_output = np.empty(len(wind_speed), dtype=np.float)
+
+    for i in range(len(wind_speed)):
+        power_output[i] = np.interp(
+            wind_speed[i],
+            power_curve_wind_speeds
+            * (1.225 / density[i])
+            ** (
+                np.interp(power_curve_wind_speeds, [7.5, 12.5], [1 / 3, 2 / 3])
+            ),
+            power_curve_values,
+            left=0,
+            right=0,
+        )
     return power_output
