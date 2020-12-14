@@ -224,6 +224,7 @@ def store_turbine_data_from_oedb(
         if curve_type == "power_curve":
             curves_df *= 1000
         curves_df.index.name = "turbine_type"
+        curves_df.sort_index(inplace=True)
         curves_df.to_csv(filename.format("{}s".format(curve_type)))
 
     # get turbine data and save to file (excl. curves)
@@ -240,6 +241,7 @@ def store_turbine_data_from_oedb(
     ).set_index("turbine_type")
     # nominal power in W
     turbine_data_df["nominal_power"] *= 1000
+    turbine_data_df.sort_index(inplace=True)
     turbine_data_df.to_csv(filename.format("turbine_data"))
     check_turbine_data(filename)
     return turbine_data
