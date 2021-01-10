@@ -286,15 +286,11 @@ def _get_power_output(
     :numpy:`numpy.array`
         Electrical power output of the wind turbine in W.
     """
-    # Create a new empty power curves array which which can be used t
-    power_curve_exponent = np.interp(
-        power_curve_wind_speeds, [7.5, 12.5], [1 / 3, 2 / 3]
-    )
-
     # Calculate the power curves for each timestep using vectors
     # NOTE: power_curves_per_ts.shape = [len(wind_speed), len(density)]
     power_curves_per_ts = (
-        (1.225 / density).reshape(-1, 1) ** power_curve_exponent
+        (1.225 / density).reshape(-1, 1)
+        ** np.interp(power_curve_wind_speeds, [7.5, 12.5], [1 / 3, 2 / 3])
     ) * power_curve_wind_speeds
 
     # Create the interpolation function
