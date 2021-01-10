@@ -294,9 +294,11 @@ def _get_power_output(
     ) * power_curve_wind_speeds
 
     # Create the interpolation function
-    interp_func = lambda w_speed, p_curves: np.interp(
-        w_speed, p_curves, power_curve_values, left=0, right=0
-    )
+    def interp_func(w_speed, p_curves):
+        return np.interp(
+            w_speed, p_curves, power_curve_values, left=0, right=0
+        )
+
     # Calculate the power output by mapping the arrays to the interp function
     power_output = np.array(
         list(map(interp_func, wind_speed, power_curves_per_ts))
