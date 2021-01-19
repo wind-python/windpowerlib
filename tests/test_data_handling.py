@@ -9,6 +9,7 @@ from shutil import copyfile
 
 import pandas as pd
 import pytest
+import requests
 from windpowerlib.data import (
     check_data_integrity,
     check_turbine_data,
@@ -100,6 +101,23 @@ class TestDataCheck:
             match=r"Database \(oep\) connection not successful*",
         ):
             store_turbine_data_from_oedb("wrong_schema")
+
+    def test_wrong_ssl_connection(self):
+        """Test failing ssl connection. To avoid this error in data.py the in
+        the function fetch_turbine_data_from_oedb in data.py verify was set
+        to False to ignore the exception in the requests statement.
+
+        If this test fails you can set verify to True and remove this test if
+        all the other tests work fine.
+        """
+        schema = "supply"
+        table = "wind_turbine_library"
+        oep_url = "https://oep.iks.cs.ovgu.de/"
+        url = oep_url + "/api/v0/schema/{}/tables/{}/rows/?".format(
+            schema, table
+        )
+        with pytest.raises(requests.exceptions.SSLError):
+            requests.get(url, verify=True)
 
     def test_restore_default_data(self):
         """Test the clean recovery of the data files."""
