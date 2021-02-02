@@ -102,6 +102,7 @@ class TestDataCheck:
         ):
             store_turbine_data_from_oedb("wrong_schema")
 
+    @pytest.mark.skip(reason="Use it to check a persistent ssl error")
     def test_wrong_ssl_connection(self):
         """Test failing ssl connection. To avoid this error in data.py the in
         the function fetch_turbine_data_from_oedb in data.py verify was set

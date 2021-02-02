@@ -137,7 +137,7 @@ def fetch_turbine_data_from_oedb(
     url = oep_url + "/api/v0/schema/{}/tables/{}/rows/?".format(schema, table)
 
     # load data
-    result = requests.get(url, verify=False)
+    result = requests.get(url, verify=True)
     if not result.status_code == 200:
         raise ConnectionError(
             "Database (oep) connection not successful. \nURL: {2}\n"
