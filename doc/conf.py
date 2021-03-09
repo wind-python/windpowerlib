@@ -69,7 +69,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'windpowerlib'
-copyright = u'2016, oemof developer group'
+copyright = u'2016-2021, oemof developer group'
 author = u'oemof developer group'
 
 import windpowerlib
@@ -294,7 +294,7 @@ texinfo_documents = [
 epub_title = u'windpowerlib'
 epub_author = u'oemof developer group'
 epub_publisher = u'oemof developer group'
-epub_copyright = u'2016, oemof developer group'
+epub_copyright = u'2016-2021, oemof developer group'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'pahesmf'
