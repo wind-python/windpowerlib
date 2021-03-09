@@ -1,9 +1,5 @@
-v0.2.1 ()
+v0.2.1 (March 9, 2021)
 ++++++++++++++++++++++++++++++
-
-API changes
-#############
-
 
 Other changes
 #############
@@ -20,21 +16,15 @@ Other changes
   original turbine data using the function `restore_default_turbine_data()`.
   (`PR 101 <https://github.com/wind-python/windpowerlib/pull/101>`_)
 * Speed Improvement in "power_curve_density_correction"
-  (`PR 107 <https://github.com/wind-python/windpowerlib/pull/107>`_)
-
-
-Documentation
-#############
-
-Bug fixes 
-###########
-
+  (`PR 107 <https://github.com/wind-python/windpowerlib/pull/107>`_ and
+  `PR 114 <https://github.com/wind-python/windpowerlib/pull/114>`_ )
 
 Contributors
 ############
 
 * Birgit Schachler
 * Kumar Shivam
+* kyri-petrou
 * Sabine Haas
 * Uwe Krien
 * Velibor Zeli
