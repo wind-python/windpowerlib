@@ -89,7 +89,7 @@ Use internal data
 ~~~~~~~~~~~~~~~~~
 
 The windpowerlib provides `wind turbine data <https://github.com/wind-python/windpowerlib/tree/master/windpowerlib/oedb>`_
-(power curves, hub heights, etc.) for a large set of wind turbines. See `Initialize wind turbine` in :ref:`examples_section_label` on how
+(power curves, hub heights, etc.) for a large set of wind turbines. See `Initialize wind turbine` in `Examples section <http://windpowerlib.readthedocs.io/en/stable/examples.html>`_ on how
 to use this data in your simulations.
 
 The dataset is hosted and maintained on the `OpenEnergy database <https://openenergy-platform.org/dataedit/>`_ (oedb).
@@ -113,7 +113,7 @@ windpowerlib
     e126 = WindTurbine(**enercon_e126)
 
 We would like to encourage anyone to contribute to the turbine library by adding turbine data or reporting errors in the data.
-See `here <https://github.com/OpenEnergyPlatform/data-preprocessing/issues/28>`_ for more information on how to contribute.
+See `the OEP <https://github.com/OpenEnergyPlatform/data-preprocessing/issues/28>`_ for more information on how to contribute.
 
 Use your own turbine data
 ~~~~~~~~~~~~~~~~~~~~~~~~~
