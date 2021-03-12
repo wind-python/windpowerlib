@@ -158,7 +158,14 @@ See the `modelchain_example` for more information.
 Contributing
 ==============
 
-We are warmly welcoming all who want to contribute to the windpowerlib. If you are interested in wind models and want to help improving the existing model do not hesitate to contact us via github or email (windpowerlib@rl-institut.de).
+We are warmly welcoming all who want to contribute to the windpowerlib.
+If you are interested in wind models and want to help improve the existing
+models or add new functionality do not hesitate to contact us via github or
+email (windpowerlib@rl-institut.de).
+To get you inspired here is a list of features/changes we would like to add but
+momentarily do not have enough capacity to implement:
+
+* allow feed-in calculations for multiple locations in one step
 
 Clone: https://github.com/wind-python/windpowerlib and install the cloned repository using pip:
 
