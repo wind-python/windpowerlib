@@ -316,12 +316,7 @@ class WindTurbine(object):
 # This is working for Python >= 3.5.
 # There a cleaner solutions for Python >= 3.6, once the support of 3.5 is
 # dropped: https://stackoverflow.com/a/50038614
-class WindTurbineGroup(
-    NamedTuple(
-        "WindTurbineGroup",
-        [("wind_turbine", WindTurbine), ("number_of_turbines", float)],
-    )
-):
+class WindTurbineGroup:
     """
     A simple data container to define more than one turbine of the same type.
     Use the :func:`~windpowerlib.wind_turbine.WindTurbine.to_group` method to
@@ -336,15 +331,23 @@ class WindTurbineGroup(
         The number of turbines. The number is not restricted to integer values.
     """
 
-    __slots__ = ()
+    # __slots__ = ()
+
+    def __init__(self, wind_turbine, number_of_turbines):
+        self.wind_turbine = wind_turbine
+        self.number_of_turbines = number_of_turbines
+        self.hub_height = self.wind_turbine.hub_height
+        self.nominal_power = (
+            self.wind_turbine.nominal_power * self.number_of_turbines
+        )
 
 
-WindTurbineGroup.wind_turbine.__doc__ = (
-    "A :class:`~windpowerlib.wind_farm.WindTurbine` object."
-)
-WindTurbineGroup.number_of_turbines.__doc__ = (
-    "Number of turbines of type WindTurbine"
-)
+# WindTurbineGroup.wind_turbine.__doc__ = (
+#     "A :class:`~windpowerlib.wind_farm.WindTurbine` object."
+# )
+# WindTurbineGroup.number_of_turbines.__doc__ = (
+#     "Number of turbines of type WindTurbine"
+# )
 
 
 def get_turbine_data_from_file(turbine_type, path):
