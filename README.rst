@@ -97,8 +97,8 @@ To update your local files with the latest version of the `oedb turbine library 
 
 .. code:: python
 
-  from windpowerlib.wind_turbine import load_turbine_data_from_oedb
-  load_turbine_data_from_oedb()
+  from windpowerlib.data import store_turbine_data_from_oedb
+  store_turbine_data_from_oedb()
 
 If you find your turbine in the database it is very easy to use it in the
 windpowerlib
