@@ -17,7 +17,8 @@ setup(
     packages=["windpowerlib"],
     package_data={
         "windpowerlib": [
-            os.path.join("data", "*.csv"),
+            os.path.join("data", "**.csv"),
+            os.path.join("data", "default_turbine_data", "*.csv"),
             os.path.join("oedb", "*.csv"),
         ]
     },
