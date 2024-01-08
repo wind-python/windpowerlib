@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 import pandas as pd
 import numpy as np
 import pytest
-from pandas.util.testing import assert_series_equal
+from pandas.testing import assert_series_equal
 
 from windpowerlib.wake_losses import (
     reduce_wind_speed,
