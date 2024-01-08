@@ -140,18 +140,26 @@ def smooth_power_curve(
     # Append wind speeds to `power_curve_wind_speeds`
     maximum_value = power_curve_wind_speeds.iloc[-1] + wind_speed_range
     while power_curve_wind_speeds.values[-1] < maximum_value:
-        power_curve_wind_speeds = power_curve_wind_speeds.append(
-            pd.Series(
-                power_curve_wind_speeds.iloc[-1]
-                + (
-                    power_curve_wind_speeds.iloc[5]
-                    - power_curve_wind_speeds.iloc[4]
-                ),
-                index=[power_curve_wind_speeds.index[-1] + 1],
-            )
+        power_curve_wind_speeds = pd.concat(
+            [
+                power_curve_wind_speeds,
+                pd.Series(
+                    power_curve_wind_speeds.iloc[-1]
+                    + (
+                        power_curve_wind_speeds.iloc[5]
+                        - power_curve_wind_speeds.iloc[4]
+                    ),
+                    index=[power_curve_wind_speeds.index[-1] + 1],
+                )
+            ],
+            sort=True,
         )
-        power_curve_values = power_curve_values.append(
-            pd.Series(0.0, index=[power_curve_values.index[-1] + 1])
+        power_curve_values = pd.concat(
+            [
+                power_curve_values,
+                pd.Series(0.0, index=[power_curve_values.index[-1] + 1])
+            ],
+            sort=True,
         )
     for power_curve_wind_speed in power_curve_wind_speeds:
         # Create array of wind speeds for the sum
