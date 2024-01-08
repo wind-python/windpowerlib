@@ -257,6 +257,7 @@ def wake_losses_to_power_curve(
                 wind_farm_efficiency.set_index("wind_speed"),
             ],
             axis=1,
+            sort=True,
         )
         # Add column with reduced power (nan values of efficiency are
         # interpolated)
