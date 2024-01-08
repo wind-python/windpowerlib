@@ -79,8 +79,8 @@ def get_weather_data(filename="weather.csv", **kwargs):
         file,
         index_col=0,
         header=[0, 1],
-        date_parser=lambda idx: pd.to_datetime(idx, utc=True),
     )
+    weather_df.index = pd.to_datetime(weather_df.index, utc=True)
 
     # change time zone
     weather_df.index = weather_df.index.tz_convert("Europe/Berlin")
