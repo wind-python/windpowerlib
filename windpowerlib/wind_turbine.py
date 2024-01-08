@@ -170,9 +170,9 @@ class WindTurbine(object):
                     logging.debug(msg.format(self.turbine_type))
 
                 if self.nominal_power is None and turbine_data is not None:
-                    self.nominal_power = float(turbine_data["nominal_power"])
+                    self.nominal_power = float(turbine_data["nominal_power"].iloc[0])
                 if self.rotor_diameter is None and turbine_data is not None:
-                    self.rotor_diameter = float(turbine_data["rotor_diameter"])
+                    self.rotor_diameter = float(turbine_data["rotor_diameter"].iloc[0])
 
         if self.rotor_diameter:
             if self.hub_height <= 0.5 * self.rotor_diameter:
