@@ -216,9 +216,10 @@ def store_turbine_data_from_oedb(
                         }
                     )
                 )
-                curves_df = pd.merge(
-                    left=curves_df, right=df, how="outer", on="wind_speed"
-                )
+                if not df.wind_speed.duplicated().any():
+                    curves_df = pd.merge(
+                        left=curves_df, right=df, how="outer", on="wind_speed"
+                    )
         curves_df = curves_df.set_index("wind_speed").sort_index().transpose()
         # power curve values in W
         if curve_type == "power_curve":
