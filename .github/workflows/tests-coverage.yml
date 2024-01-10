@@ -48,7 +48,6 @@ jobs:
 
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
-        uses: conda-incubator/setup-miniconda@v2
         run:
           conda create -n testenv python=${{ matrix.python }}
           conda activate testenv
