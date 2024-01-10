@@ -20,16 +20,16 @@ jobs:
         include:
           - name-suffix: "coverage"
             os: ubuntu-latest
-            python-version: 3.11
+            python-version: "3.11"
           - name-suffix: "basic"
             os: ubuntu-latest
-            python-version: 3.10
+            python-version: "3.10"
           - name-suffix: "basic"
             os: ubuntu-latest
-            python-version: 3.12
+            python-version: "3.12"
           - name-suffix: "basic"
             os: windows-latest
-            python-version: 3.11
+            python-version: "3.11"
 
     steps:
       - name: Checkout repo
