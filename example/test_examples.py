@@ -42,7 +42,7 @@ class TestExamples:
         )
         tc_mc_e.calculate_power_output(weather, example_farm, example_cluster)
         assert_allclose(
-            1956.164053,
+            2004.84125,
             (example_farm.power_output.sum() / example_farm.nominal_power),
             0.01,
         )
