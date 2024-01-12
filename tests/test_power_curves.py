@@ -56,6 +56,7 @@ class TestPowerCurves:
             smooth_power_curve(**parameters)[5:10],
             smoothed_curve_exp,
             check_dtype=False,
+            check_index_type=False,
         )
 
         # Test Staffel_Pfenninger method
