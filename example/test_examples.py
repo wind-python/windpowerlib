@@ -62,7 +62,7 @@ class TestExamples:
         """
         dirname, __ = os.path.split(path)
         os.chdir(dirname)
-        with tempfile.NamedTemporaryFile(suffix=".ipynb") as fout:
+        with tempfile.NamedTemporaryFile(suffix=".ipynb", dir=dirname) as fout:
             args = [
                 "jupyter",
                 "nbconvert",
