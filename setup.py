@@ -30,9 +30,9 @@ setup(
             "pytest",
             "jupyter",
             "sphinx_rtd_theme",
+            "nbformat",
             "numpy",
             "matplotlib",
-            "pytest-notebook",
         ]
     },
 )
