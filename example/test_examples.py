@@ -56,7 +56,9 @@ class TestExamples:
         Execute a notebook and collect output.
         Returns (parsed nb object, execution errors)
         """
-        notebook = pytest_notebook.notebook.load_notebook(path=path)
+        dirname, nb_name = os.path.split(path)
+        os.chdir(dirname)
+        notebook = pytest_notebook.notebook.load_notebook(path=nb_name)
         result = pytest_notebook.execution.execute_notebook(
             notebook,
             with_coverage=False,
