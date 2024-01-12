@@ -7,11 +7,9 @@ import os
 import subprocess
 import tempfile
 import nbformat
-import sys
 from example import modelchain_example as mc_e
 from example import turbine_cluster_modelchain_example as tc_mc_e
 from numpy.testing import assert_allclose
-import pytest
 
 
 class TestExamples:
