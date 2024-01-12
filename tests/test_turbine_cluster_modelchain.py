@@ -373,7 +373,7 @@ class TestTurbineClusterModelChain:
 
         # Heights in the original DataFrame are of type np.int64
         assert isinstance(
-            self.weather_df.columns.get_level_values(1)[0], np.int64
+            self.weather_df.columns.get_level_values(1)[0], np.int_
         )
         assert isinstance(string_weather.columns.get_level_values(1)[0], str)
 
