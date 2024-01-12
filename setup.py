@@ -24,15 +24,15 @@ setup(
     long_description=read("README.rst"),
     long_description_content_type="text/x-rst",
     zip_safe=False,
-    install_requires=["pandas >= 0.20.0", "requests"],
+    install_requires=["pandas >= 0.20.0", "requests"], # check
     extras_require={
         "dev": [
             "pytest",
             "jupyter",
             "sphinx_rtd_theme",
-            "nbformat",
             "numpy",
             "matplotlib",
+            "pytest-notebook",
         ]
     },
 )

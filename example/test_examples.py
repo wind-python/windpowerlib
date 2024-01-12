@@ -4,12 +4,10 @@ SPDX-License-Identifier: MIT
 """
 
 import os
-import subprocess
-import tempfile
-import nbformat
 from example import modelchain_example as mc_e
 from example import turbine_cluster_modelchain_example as tc_mc_e
 from numpy.testing import assert_allclose
+import pytest_notebook
 
 
 class TestExamples:
@@ -55,48 +53,27 @@ class TestExamples:
 
     def _notebook_run(self, path):
         """
-        Execute a notebook via nbconvert and collect output.
-        Returns (parsed nb object, execution errors)
+        Execute a notebook and collect output.
+        Returns execution errors.
         """
-        dirname, __ = os.path.split(path)
-        os.chdir(dirname)
-        with tempfile.NamedTemporaryFile(suffix=".ipynb", dir=dirname) as fout:
-            args = [
-                "jupyter",
-                "nbconvert",
-                "--to",
-                "notebook",
-                "--execute",
-                "--ExecutePreprocessor.timeout=600",
-                "--output",
-                fout.name,
-                path,
-            ]
-            subprocess.check_call(args)
-
-            fout.seek(0)
-            nb = nbformat.read(fout, nbformat.current_nbformat)
-
-        errors = [
-            output
-            for cell in nb.cells
-            if "outputs" in cell
-            for output in cell["outputs"]
-            if output.output_type == "error"
-        ]
-
-        return nb, errors
+        notebook = pytest_notebook.notebook.load_notebook(path=path)
+        result = pytest_notebook.execution.execute_notebook(
+            notebook,
+            with_coverage=False,
+            timeout=600,
+        )
+        return result.exec_error
 
     def test_modelchain_example_ipynb(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        nb, errors = self._notebook_run(
+        errors = self._notebook_run(
             os.path.join(dir_path, "modelchain_example.ipynb")
         )
-        assert errors == []
+        assert errors is None
 
     def test_turbine_cluster_modelchain_example_ipynb(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        nb, errors = self._notebook_run(
+        errors = self._notebook_run(
             os.path.join(dir_path, "turbine_cluster_modelchain_example.ipynb")
         )
-        assert errors == []
+        assert errors is None
