@@ -56,7 +56,7 @@ jobs:
       - name: Fix permission
         if: runner.os == 'Windows'
         run: |
-          sudo chmod -R 777 $GITHUB_WORKSPACE/public
+          icacls $GITHUB_WORKSPACE /grant:w User:F
 
       - name: Run tests
         if: ${{ !(runner.os == 'Linux' && matrix.python-version == 3.9 && matrix.name-suffix == 'coverage') }}
