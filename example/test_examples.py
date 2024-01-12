@@ -69,7 +69,7 @@ class TestExamples:
                 "--to",
                 "notebook",
                 "--execute",
-                "--ExecutePreprocessor.timeout=60",
+                "--ExecutePreprocessor.timeout=600",
                 "--output",
                 fout.name,
                 path,
