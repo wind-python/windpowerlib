@@ -89,7 +89,6 @@ class TestExamples:
 
         return nb, errors
 
-    @pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6")
     def test_modelchain_example_ipynb(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         nb, errors = self._notebook_run(
@@ -97,7 +96,6 @@ class TestExamples:
         )
         assert errors == []
 
-    @pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6")
     def test_turbine_cluster_modelchain_example_ipynb(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         nb, errors = self._notebook_run(
