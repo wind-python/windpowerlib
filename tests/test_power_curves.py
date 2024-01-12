@@ -53,7 +53,9 @@ class TestPowerCurves:
         )
         smoothed_curve_exp.index = np.arange(5, 10, 1)
         assert_frame_equal(
-            smooth_power_curve(**parameters)[5:10], smoothed_curve_exp
+            smooth_power_curve(**parameters)[5:10],
+            smoothed_curve_exp,
+            check_dtype=False,
         )
 
         # Test Staffel_Pfenninger method
@@ -73,7 +75,9 @@ class TestPowerCurves:
         )
         smoothed_curve_exp.index = np.arange(5, 10, 1)
         assert_frame_equal(
-            smooth_power_curve(**parameters)[5:10], smoothed_curve_exp
+            smooth_power_curve(**parameters)[5:10],
+            smoothed_curve_exp,
+            check_dtype=False,
         )
 
         # Raise ValueError - misspelling

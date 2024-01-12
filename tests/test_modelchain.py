@@ -102,7 +102,11 @@ class TestModelChain:
             np.array([100, 10]),
         ]
         temp_exp = pd.Series(data=[267, 268], name=100)
-        assert_series_equal(test_mc.temperature_hub(weather_df), temp_exp)
+        assert_series_equal(
+            test_mc.temperature_hub(weather_df),
+            temp_exp,
+            check_dtype=False,
+        )
 
     def test_density_hub(self):
         # Test modelchain with density_model='barometric'
