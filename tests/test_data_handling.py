@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT
 """
 
 import filecmp
+import logging
 import os
 from shutil import copyfile
 
@@ -85,14 +86,18 @@ class TestDataCheck:
         with pytest.raises(ValueError, match=msg):
             get_turbine_types("wrong")
 
-    def test_store_turbine_data_from_oedb(self):
+    def test_store_turbine_data_from_oedb(self, caplog):
         """Test `store_turbine_data_from_oedb` function."""
         t = {}
         for fn in os.listdir(self.orig_path):
             t[fn] = os.path.getmtime(os.path.join(self.orig_path, fn))
-        store_turbine_data_from_oedb()
+        with caplog.at_level(logging.WARNING):
+            store_turbine_data_from_oedb()
         for fn in os.listdir(self.orig_path):
             assert t[fn] < os.path.getmtime(os.path.join(self.orig_path, fn))
+        assert "The turbine library data contains too many faulty" not in caplog.text
+        assert "No cp-curve but has_cp_curve=True" not in caplog.text
+        assert "No power curve but has_power_curve=True" not in caplog.text
 
     def test_wrong_url_load_turbine_data(self):
         """Load turbine data from oedb with a wrong schema."""

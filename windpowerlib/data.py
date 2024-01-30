@@ -187,46 +187,84 @@ def store_turbine_data_from_oedb(
 
     # get all power (coefficient) curves and save them to file
     for curve_type in ["power_curve", "power_coefficient_curve"]:
+        broken_turbine_data = []
         curves_df = pd.DataFrame(columns=["wind_speed"])
         for index in turbine_data.index:
             if (
                 turbine_data["{}_wind_speeds".format(curve_type)][index]
                 and turbine_data["{}_values".format(curve_type)][index]
             ):
-                df = (
-                    pd.DataFrame(
-                        data=[
-                            eval(
-                                turbine_data[
-                                    "{}_wind_speeds".format(curve_type)
-                                ][index]
-                            ),
-                            eval(
-                                turbine_data["{}_values".format(curve_type)][
-                                    index
-                                ]
-                            ),
-                        ]
+                try:
+                    df = (
+                        pd.DataFrame(
+                            data=[
+                                eval(
+                                    turbine_data[
+                                        "{}_wind_speeds".format(curve_type)
+                                    ][index]
+                                ),
+                                eval(
+                                    turbine_data["{}_values".format(curve_type)][
+                                        index
+                                    ]
+                                ),
+                            ]
+                        )
+                        .transpose()
+                        .rename(
+                            columns={
+                                0: "wind_speed",
+                                1: turbine_data["turbine_type"][index],
+                            }
+                        )
                     )
-                    .transpose()
-                    .rename(
-                        columns={
-                            0: "wind_speed",
-                            1: turbine_data["turbine_type"][index],
-                        }
-                    )
+                    if not df.wind_speed.duplicated().any():
+                        curves_df = pd.merge(
+                            left=curves_df, right=df, how="outer", on="wind_speed"
+                        )
+                except:
+                    broken_turbine_data.append(turbine_data.loc[index, "turbine_type"])
+
+        # warning in case of broken turbine data
+        if len(broken_turbine_data) > 0:
+            issue_link = ("https://github.com/OpenEnergyPlatform/data-preprocessing"
+                          "/issues/28")
+            # in case only some data is faulty, only give out warning
+            if len(broken_turbine_data) < 0.2 * len(turbine_data):
+                logging.warning(
+                    f"The turbine library data contains faulty {curve_type}s. The "
+                    f"{curve_type} data can therefore not be loaded for the following "
+                    f"turbines: {broken_turbine_data}. "
+                    f"Please report this in the following issue, in case it hasn't "
+                    f"already been reported: {issue_link}"
                 )
-                if not df.wind_speed.duplicated().any():
-                    curves_df = pd.merge(
-                        left=curves_df, right=df, how="outer", on="wind_speed"
-                    )
-        curves_df = curves_df.set_index("wind_speed").sort_index().transpose()
-        # power curve values in W
-        if curve_type == "power_curve":
-            curves_df *= 1000
-        curves_df.index.name = "turbine_type"
-        curves_df.sort_index(inplace=True)
-        curves_df.to_csv(filename.format("{}s".format(curve_type)))
+                save_turbine_data = True
+                # set has_power_(coefficient)_curve to False for faulty turbines
+                for turb in broken_turbine_data:
+                    ind = turbine_data[turbine_data.turbine_type == turb].index[0]
+                    col = ("has_power_curve" if curve_type == "power_curve"
+                           else "has_cp_curve")
+                    turbine_data.at[ind, col] = False
+            # in case most data is faulty, do not store downloaded data
+            else:
+                logging.warning(
+                    f"The turbine library data contains too many faulty {curve_type}s,"
+                    f"wherefore {curve_type} data is not loaded from the oedb. "
+                    f"Please report this in the following issue, in case it hasn't "
+                    f"already been reported: {issue_link}"
+                )
+                save_turbine_data = False
+        else:
+            save_turbine_data = True
+
+        if save_turbine_data:
+            curves_df = curves_df.set_index("wind_speed").sort_index().transpose()
+            # power curve values in W
+            if curve_type == "power_curve":
+                curves_df *= 1000
+            curves_df.index.name = "turbine_type"
+            curves_df.sort_index(inplace=True)
+            curves_df.to_csv(filename.format("{}s".format(curve_type)))
 
     # get turbine data and save to file (excl. curves)
     turbine_data_df = turbine_data.drop(
