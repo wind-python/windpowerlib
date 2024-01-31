@@ -274,7 +274,7 @@ def plot_or_print(my_turbine, e126, my_turbine2):
                 title="Enercon E126 power curve",
             )
             plt.xlabel("Wind speed in m/s")
-            plt.ylabel("Power in W")
+            plt.ylabel("Power coefficient $\mathrm{C}_\mathrm{P}$")
             plt.show()
         if my_turbine.power_curve is not False:
             my_turbine.power_curve.plot(

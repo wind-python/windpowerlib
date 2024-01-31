@@ -78,7 +78,7 @@ class WindTurbine(object):
         corresponding power curve value in W. Default: None.
     nominal_power : None or float
         The nominal output of the wind turbine in W. Default: None.
-   
+
     Notes
     ------
     Your wind turbine object needs to have a power coefficient or power curve.
