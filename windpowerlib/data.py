@@ -92,10 +92,10 @@ def get_turbine_types(turbine_library="local", print_out=True, filter_=True):
             + "but must be 'local' or 'oedb'."
         )
     if filter_:
-        cp_curves_df = df.loc[df["has_cp_curve"]][
+        cp_curves_df = df.loc[df["has_cp_curve"].fillna(False)][
             ["manufacturer", "turbine_type", "has_cp_curve"]
         ]
-        p_curves_df = df.loc[df["has_power_curve"]][
+        p_curves_df = df.loc[df["has_power_curve"].fillna(False)][
             ["manufacturer", "turbine_type", "has_power_curve"]
         ]
         curves_df = pd.merge(
