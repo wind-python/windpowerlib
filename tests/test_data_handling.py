@@ -78,7 +78,7 @@ class TestDataCheck:
 
     def test_get_turbine_types(self, capsys):
         """Test the `get_turbine_types` function."""
-        get_turbine_types()
+        get_turbine_types(turbine_library="oedb")
         captured = capsys.readouterr()
         assert "Enercon" in captured.out
         get_turbine_types("oedb", print_out=False, filter_=False)
