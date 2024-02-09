@@ -17,6 +17,7 @@ from windpowerlib.data import (
     get_turbine_types,
     restore_default_turbine_data,
     store_turbine_data_from_oedb,
+    _process_and_save_oedb_data,
 )
 
 
@@ -98,6 +99,51 @@ class TestDataCheck:
         assert "The turbine library data contains too many faulty" not in caplog.text
         assert "No cp-curve but has_cp_curve=True" not in caplog.text
         assert "No power curve but has_power_curve=True" not in caplog.text
+
+    def test__prepare_and_save_oedb_turbine_curve_data(self, caplog):
+        """Test `_prepare_and_save_oedb_turbine_curve_data` function."""
+        # prepare dummy turbine data
+        # turbine 0 everything okay, turbine 1 duplicated wind speeds, turbine 2
+        # power curve values broken
+        turbine_data = pd.DataFrame(
+            data={
+                "id": [0, 1, 2],
+                "turbine_type": ["turbine 0", "turbine 1", "turbine 2"],
+                "has_power_curve": [True, True, True],
+                "has_cp_curve": [True, True, True],
+                "power_curve_wind_speeds": ["[15, 20, 25]", "[15, 15, 25]", "[15, 20, 25]"],
+                "power_curve_values": ["[15, 20, 25]", "[15, 20, 25]", "[15, 20, [25]"],
+                "power_coefficient_curve_wind_speeds": ["[15, 20, 25]", "[15, 20, 25]", "[15, 20, 25]"],
+                "power_coefficient_curve_values": ["[15, 20, 25]", "[15, 20, 25]", "[15, 20, 25]"],
+                "thrust_coefficient_curve_wind_speeds": [0, 1, 2],
+                "thrust_coefficient_curve_values": [0, 1, 2],
+                "nominal_power": [0, 1, 2],
+            },
+            index=[0, 1, 2]
+        )
+
+        # run test with low / default threshold - data is not overwritten
+        t = {}
+        for fn in os.listdir(self.orig_path):
+            t[fn] = os.path.getmtime(os.path.join(self.orig_path, fn))
+        with caplog.at_level(logging.WARNING):
+            _process_and_save_oedb_data(turbine_data)
+        for fn in os.listdir(self.orig_path):
+            assert t[fn] == os.path.getmtime(os.path.join(self.orig_path, fn))
+        assert "The turbine library data contains too many faulty " in caplog.text
+
+        # run test with high threshold
+        for fn in os.listdir(self.orig_path):
+            t[fn] = os.path.getmtime(os.path.join(self.orig_path, fn))
+        with caplog.at_level(logging.WARNING):
+            _process_and_save_oedb_data(turbine_data, threshold=0.95)
+        for fn in os.listdir(self.orig_path):
+            assert t[fn] < os.path.getmtime(os.path.join(self.orig_path, fn))
+        assert "The turbine library data contains faulty power_curves" in caplog.text
+        assert not turbine_data.at[2, "has_power_curve"]
+        assert not turbine_data.at[1, "has_power_curve"]
+        assert turbine_data.at[1, "has_cp_curve"]
+        assert turbine_data.at[0, "has_power_curve"]
 
     def test_wrong_url_load_turbine_data(self):
         """Load turbine data from oedb with a wrong schema."""

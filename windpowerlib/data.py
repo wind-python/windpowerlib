@@ -158,7 +158,7 @@ def load_turbine_data_from_oedb(schema="supply", table="wind_turbine_library"):
 
 
 def store_turbine_data_from_oedb(
-    schema="supply", table="wind_turbine_library"
+    schema="supply", table="wind_turbine_library", threshold=0.2
 ):
     r"""
     Loads turbine library from the OpenEnergy database (oedb).
@@ -166,6 +166,9 @@ def store_turbine_data_from_oedb(
     Turbine data is saved to csv files ('oedb_power_curves.csv',
     'oedb_power_coefficient_curves.csv' and 'oedb_nominal_power') for offline
     usage of the windpowerlib. If the files already exist they are overwritten.
+    In case the turbine library on the oedb contains too many faulty turbines,
+    the already existing files are not overwritten. The accepted percentage of faulty
+    turbines can be set through the parameter `threshold`.
 
     Parameters
     ----------
@@ -173,6 +176,16 @@ def store_turbine_data_from_oedb(
         Database schema of the turbine library.
     table : str
         Table name of the turbine library.
+    threshold : float
+        In case there are turbines in the turbine library with faulty data (e.g.
+        duplicate wind speed entries in the power (coefficient) curve data), the
+        threshold defines the share of accepted faulty turbine ata up to which the
+        existing turbine data is overwritten by the newly downloaded data.
+        For example, a threshold of 0.1 means that more than 10% of the
+        turbines would need to have invalid data in order to discard the downloaded
+        data. This is to make sure that in the rare case the oedb data is too buggy,
+        the turbine data that is by default provided with the windpowerlib is not
+        overwritten by poor data.
 
     Returns
     -------
@@ -182,11 +195,40 @@ def store_turbine_data_from_oedb(
 
     """
     turbine_data = fetch_turbine_data_from_oedb(schema=schema, table=table)
-    # standard file name for saving data
-    filename = os.path.join(os.path.dirname(__file__), "oedb", "{0}.csv")
+    turbine_data = _process_and_save_oedb_data(
+        turbine_data, threshold=threshold
+    )
+    check_turbine_data(
+        filename = os.path.join(os.path.dirname(__file__), "oedb", "{0}.csv")
+    )
+    return turbine_data
 
-    # get all power (coefficient) curves and save them to file
-    for curve_type in ["power_curve", "power_coefficient_curve"]:
+
+def _process_and_save_oedb_data(turbine_data, threshold=0.2):
+    """
+    Helper function to extract power (coefficient) curve data from the turbine library.
+
+    Parameters
+    -----------
+    turbine_data : :pandas:`pandas.DataFrame<frame>`
+        Raw turbine data downloaded from the oedb with
+        :func:`fetch_turbine_data_from_oedb`.
+    threshold : float
+        See parameter `threshold` in func:`store_turbine_data_from_oedb`
+        for more information.
+
+    Returns
+    --------
+    :pandas:`pandas.DataFrame<frame>`
+        Turbine data of different turbines such as 'manufacturer',
+        'turbine_type', 'nominal_power'.
+
+    """
+    curve_types = ["power_curve", "power_coefficient_curve"]
+    # get all power (coefficient) curves
+    curve_dict = {}
+    broken_turbines_dict = {}
+    for curve_type in curve_types:
         broken_turbine_data = []
         curves_df = pd.DataFrame(columns=["wind_speed"])
         for index in turbine_data.index:
@@ -222,43 +264,59 @@ def store_turbine_data_from_oedb(
                         curves_df = pd.merge(
                             left=curves_df, right=df, how="outer", on="wind_speed"
                         )
+                    else:
+                        broken_turbine_data.append(
+                            turbine_data.loc[index, "turbine_type"])
                 except:
                     broken_turbine_data.append(turbine_data.loc[index, "turbine_type"])
+        curve_dict[curve_type] = curves_df
+        broken_turbines_dict[curve_type] = broken_turbine_data
 
-        # warning in case of broken turbine data
-        if len(broken_turbine_data) > 0:
-            issue_link = ("https://github.com/OpenEnergyPlatform/data-preprocessing"
-                          "/issues/28")
-            # in case only some data is faulty, only give out warning
-            if len(broken_turbine_data) < 0.2 * len(turbine_data):
-                logging.warning(
-                    f"The turbine library data contains faulty {curve_type}s. The "
-                    f"{curve_type} data can therefore not be loaded for the following "
-                    f"turbines: {broken_turbine_data}. "
-                    f"Please report this in the following issue, in case it hasn't "
-                    f"already been reported: {issue_link}"
-                )
-                save_turbine_data = True
+    # check if there are faulty turbines and if so, raise warning
+    # if there are too many, don't save downloaded data to disk but keep existing data
+    if any(len(_) > 0 for _ in broken_turbines_dict.values()):
+        issue_link = ("https://github.com/OpenEnergyPlatform/data-preprocessing"
+                      "/issues/28")
+        # in case only some data is faulty, only give out warning
+        if all(len(_) < threshold * len(turbine_data)
+               for _ in broken_turbines_dict.values()):
+            save_turbine_data = True
+            for curve_type in curve_types:
+                if len(broken_turbines_dict[curve_type]) > 0:
+                    logging.warning(
+                        f"The turbine library data contains faulty {curve_type}s. The "
+                        f"{curve_type} data can therefore not be loaded for the  "
+                        f"following turbines: {broken_turbine_data}. "
+                        f"Please report this in the following issue, in case it hasn't "
+                        f"already been reported: {issue_link}"
+                    )
                 # set has_power_(coefficient)_curve to False for faulty turbines
-                for turb in broken_turbine_data:
+                for turb in broken_turbines_dict[curve_type]:
                     ind = turbine_data[turbine_data.turbine_type == turb].index[0]
                     col = ("has_power_curve" if curve_type == "power_curve"
                            else "has_cp_curve")
                     turbine_data.at[ind, col] = False
-            # in case most data is faulty, do not store downloaded data
-            else:
-                logging.warning(
-                    f"The turbine library data contains too many faulty {curve_type}s,"
-                    f"wherefore {curve_type} data is not loaded from the oedb. "
-                    f"Please report this in the following issue, in case it hasn't "
-                    f"already been reported: {issue_link}"
-                )
-                save_turbine_data = False
+        # in case most data is faulty, do not store downloaded data
         else:
-            save_turbine_data = True
+            logging.warning(
+                f"The turbine library data contains too many faulty turbine datasets "
+                f"wherefore it is not loaded from the oedb. "
+                f"In case you want to circumvent this behaviour, you can specify a "
+                f"higher tolerance through the parameter 'threshold'."
+                f"Please report this in the following issue, in case it hasn't "
+                f"already been reported: {issue_link}"
+            )
+            save_turbine_data = False
+    else:
+        save_turbine_data = True
 
-        if save_turbine_data:
-            curves_df = curves_df.set_index("wind_speed").sort_index().transpose()
+    if save_turbine_data:
+        # standard file name for saving data
+        filename = os.path.join(os.path.dirname(__file__), "oedb", "{0}.csv")
+        # save curve data to csv
+        for curve_type in curve_types:
+            curves_df = curve_dict[curve_type].set_index(
+                "wind_speed").sort_index().transpose()
             # power curve values in W
             if curve_type == "power_curve":
                 curves_df *= 1000
@@ -266,23 +324,22 @@ def store_turbine_data_from_oedb(
             curves_df.sort_index(inplace=True)
             curves_df.to_csv(filename.format("{}s".format(curve_type)))
 
-    # get turbine data and save to file (excl. curves)
-    turbine_data_df = turbine_data.drop(
-        [
-            "power_curve_wind_speeds",
-            "power_curve_values",
-            "power_coefficient_curve_wind_speeds",
-            "power_coefficient_curve_values",
-            "thrust_coefficient_curve_wind_speeds",
-            "thrust_coefficient_curve_values",
-        ],
-        axis=1,
-    ).set_index("turbine_type")
-    # nominal power in W
-    turbine_data_df["nominal_power"] *= 1000
-    turbine_data_df.sort_index(inplace=True)
-    turbine_data_df.to_csv(filename.format("turbine_data"))
-    check_turbine_data(filename)
+        # save turbine data to file (excl. curves)
+        turbine_data_df = turbine_data.drop(
+            [
+                "power_curve_wind_speeds",
+                "power_curve_values",
+                "power_coefficient_curve_wind_speeds",
+                "power_coefficient_curve_values",
+                "thrust_coefficient_curve_wind_speeds",
+                "thrust_coefficient_curve_values",
+            ],
+            axis=1,
+        ).set_index("turbine_type")
+        # nominal power in W
+        turbine_data_df["nominal_power"] *= 1000
+        turbine_data_df.sort_index(inplace=True)
+        turbine_data_df.to_csv(filename.format("turbine_data"))
     return turbine_data
 
 
