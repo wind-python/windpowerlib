@@ -165,12 +165,12 @@ def hellman(
     References
     ----------
     .. [1] Sharp, E.: "Spatiotemporal disaggregation of GB scenarios depicting
-            increased wind capacity and electrified heat demand in dwellings".
-            UCL, Energy Institute, 2015, p. 83
+           increased wind capacity and electrified heat demand in dwellings".
+           UCL, Energy Institute, 2015, p. 83
     .. [2] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
-            Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 517
+           Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 517
     .. [3] Quaschning V.: "Regenerative Energiesysteme". München, Hanser
-            Verlag, 2011, p. 279
+           Verlag, 2011, p. 279
 
     """
     if hellman_exponent is None:
