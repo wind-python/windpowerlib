@@ -204,6 +204,7 @@ def power_curve_density_correction(
     speeds [1]_ [2]_ [3]_:
 
     .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}{\rho_{site}}\right)^{p(v)}
+
     with:
         .. math:: p=\begin{cases}
                       \frac{1}{3} & v_{std} \leq 7.5\text{ m/s}\\
