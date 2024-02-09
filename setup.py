@@ -17,7 +17,7 @@ setup(
     packages=["windpowerlib"],
     package_data={
         "windpowerlib": [
-            os.path.join("data", "**.csv"),
+            os.path.join("data", "*.csv"),
             os.path.join("data", "default_turbine_data", "*.csv"),
             os.path.join("oedb", "*.csv"),
         ]
@@ -25,15 +25,15 @@ setup(
     long_description=read("README.rst"),
     long_description_content_type="text/x-rst",
     zip_safe=False,
-    install_requires=["pandas >= 0.20.0", "requests"],
+    install_requires=["pandas", "requests"],
     extras_require={
         "dev": [
             "pytest",
             "jupyter",
             "sphinx_rtd_theme",
-            "nbformat",
             "numpy",
             "matplotlib",
+            "pytest-notebook",
         ]
     },
 )

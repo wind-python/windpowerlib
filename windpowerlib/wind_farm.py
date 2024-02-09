@@ -446,6 +446,7 @@ class WindFarm(object):
                     ),
                 ],
                 axis=1,
+                sort=True,
             )
         # Aggregate all power curves
         wind_farm_power_curve = pd.DataFrame(

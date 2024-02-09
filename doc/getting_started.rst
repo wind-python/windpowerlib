@@ -43,7 +43,7 @@ If you have a working Python 3 environment, use pypi to install the latest windp
 
     pip install windpowerlib
 
-The windpowerlib is designed for Python 3 and tested on Python >= 3.5. We highly recommend to use virtual environments.
+The windpowerlib is designed for Python 3 and tested on Python >= 3.10. We highly recommend to use virtual environments.
 Please see the `installation page <http://oemof.readthedocs.io/en/stable/installation_and_setup.html>`_ of the oemof documentation for complete instructions on how to install python and a virtual environment on your operating system.
 
 Optional Packages
