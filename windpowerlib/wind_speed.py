@@ -36,7 +36,7 @@ def logarithmic_profile(
         Roughness length.
     obstacle_height : float
         Height of obstacles in the surrounding area of the wind turbine. Set
-        `obstacle_height` to zero for wide spread obstacles. Default: 0.
+        `obstacle_height` to zero for widespread obstacles. Default: 0.
 
     Returns
     -------
