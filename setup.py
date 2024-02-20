@@ -28,12 +28,14 @@ setup(
     install_requires=["pandas", "requests"],
     extras_require={
         "dev": [
-            "pytest",
             "jupyter",
-            "sphinx_rtd_theme",
-            "numpy",
             "matplotlib",
+            "nbsphinx",
+            "numpy",
+            "pytest",
             "pytest-notebook",
+            "sphinx >= 1.4",
+            "sphinx_rtd_theme",
         ]
     },
 )
