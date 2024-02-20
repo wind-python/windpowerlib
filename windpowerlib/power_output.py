@@ -178,6 +178,7 @@ def power_curve_density_correction(
     Calculates the turbine power output using a density corrected power curve.
     This function is carried out when the parameter `density_correction` of an
     instance of the :class:`~.modelchain.ModelChain` class is True.
+
     Parameters
     ----------
     wind_speed : :pandas:`pandas.Series<series>` or numpy.array
@@ -190,17 +191,20 @@ def power_curve_density_correction(
         `power_curve_wind_speeds`.
     density : :pandas:`pandas.Series<series>` or numpy.array
         Density of air at hub height in kg/m³.
+
     Returns
     -------
     :pandas:`pandas.Series<series>` or numpy.array
         Electrical power output of the wind turbine in W.
         Data type depends on type of `wind_speed`.
+
     Notes
     -----
     The following equation is used for the site specific power curve wind
     speeds [1]_ [2]_ [3]_:
-    .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}
-                       {\rho_{site}}\right)^{p(v)}
+
+    .. math:: v_{site}=v_{std}\cdot\left(\frac{\rho_0}{\rho_{site}}\right)^{p(v)}
+
     with:
         .. math:: p=\begin{cases}
                       \frac{1}{3} & v_{std} \leq 7.5\text{ m/s}\\
@@ -208,7 +212,9 @@ def power_curve_density_correction(
                       \text{ m/s}<v_{std}<12.5\text{ m/s}\\
                       \frac{2}{3} & \geq 12.5 \text{ m/s}
                     \end{cases},
+
         v: wind speed [m/s], :math:`\rho`: density [kg/m³]
+
     :math:`v_{std}` is the standard wind speed in the power curve
     (:math:`v_{std}`, :math:`P_{std}`),
     :math:`v_{site}` is the density corrected wind speed for the power curve
@@ -217,17 +223,19 @@ def power_curve_density_correction(
     and :math:`\rho_{site}` the density at site conditions (and hub height).
     It is assumed that the power output for wind speeds above the maximum
     and below the minimum wind speed given in the power curve is zero.
+
     References
     ----------
     .. [1] Svenningsen, L.: "Power Curve Air Density Correction And Other
-            Power Curve Options in WindPRO". 1st edition, Aalborg,
-            EMD International A/S , 2010, p. 4
+           Power Curve Options in WindPRO". 1st edition, Aalborg,
+           EMD International A/S , 2010, p. 4
     .. [2] Svenningsen, L.: "Proposal of an Improved Power Curve Correction".
-            EMD International A/S , 2010
+           EMD International A/S , 2010
     .. [3] Biank, M.: "Methodology, Implementation and Validation of a
-            Variable Scale Simulation Model for Windpower based on the
-            Georeferenced Installation Register of Germany". Master's Thesis
-            at Reiner Lemoine Institute, 2014, p. 13
+           Variable Scale Simulation Model for Windpower based on the
+           Georeferenced Installation Register of Germany". Master's Thesis
+           at Reiner Lemoine Institute, 2014, p. 13
+
     """
     if density is None:
         raise TypeError(
@@ -269,6 +277,7 @@ def _get_power_output(
     wind_speed, power_curve_wind_speeds, density, power_curve_values
 ):
     """Get the power output at each timestep using only numpy to speed up performance
+
     Parameters
     ----------
     wind_speed : :numpy:`numpy.ndarray`
@@ -281,10 +290,12 @@ def _get_power_output(
     power_curve_values : :numpy:`numpy.ndarray`
         Power curve values corresponding to wind speeds in
         `power_curve_wind_speeds`.
+
     Returns
     -------
     :numpy:`numpy.array`
         Electrical power output of the wind turbine in W.
+
     """
     # Calculate the power curves for each timestep using vectors
     # NOTE: power_curves_per_ts.shape = [len(wind_speed), len(density)]

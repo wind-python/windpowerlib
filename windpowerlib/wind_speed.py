@@ -36,7 +36,7 @@ def logarithmic_profile(
         Roughness length.
     obstacle_height : float
         Height of obstacles in the surrounding area of the wind turbine. Set
-        `obstacle_height` to zero for wide spread obstacles. Default: 0.
+        `obstacle_height` to zero for widespread obstacles. Default: 0.
 
     Returns
     -------
@@ -122,14 +122,14 @@ def hellman(
         Hub height of wind turbine.
     roughness_length : :pandas:`pandas.Series<series>` or numpy.array or float
         Roughness length. If given and `hellman_exponent` is None:
-        `hellman_exponent`=1 / ln(hub_height/roughness_length),
-        otherwise `hellman_exponent`=1/7. Default: None.
+        `hellman_exponent` = 1 / ln(hub_height/roughness_length),
+        otherwise `hellman_exponent` = 1/7. Default: None.
     hellman_exponent : None or float
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
         constant. If None and roughness length is given
-        `hellman_exponent`=1 / ln(hub_height/roughness_length),
-        otherwise `hellman_exponent`=1/7. Default: None.
+        `hellman_exponent` = 1 / ln(hub_height/roughness_length),
+        otherwise `hellman_exponent` = 1/7. Default: None.
 
     Returns
     -------
@@ -152,7 +152,7 @@ def hellman(
 
     For the Hellman exponent :math:`\alpha` many studies use a value of 1/7 for
     onshore and a value of 1/9 for offshore. The Hellman exponent can also
-    be calulated by the following equation [2]_ [3]_:
+    be calculated by the following equation [2]_ [3]_:
 
     .. math:: \alpha=\frac{1}{\ln\left(\frac{h_{hub}}{z_0} \right)}
 
@@ -165,12 +165,12 @@ def hellman(
     References
     ----------
     .. [1] Sharp, E.: "Spatiotemporal disaggregation of GB scenarios depicting
-            increased wind capacity and electrified heat demand in dwellings".
-            UCL, Energy Institute, 2015, p. 83
+           increased wind capacity and electrified heat demand in dwellings".
+           UCL, Energy Institute, 2015, p. 83
     .. [2] Hau, E.: "Windkraftanlagen - Grundlagen, Technik, Einsatz,
-            Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 517
+           Wirtschaftlichkeit". 4. Auflage, Springer-Verlag, 2008, p. 517
     .. [3] Quaschning V.: "Regenerative Energiesysteme". München, Hanser
-            Verlag, 2011, p. 279
+           Verlag, 2011, p. 279
 
     """
     if hellman_exponent is None:

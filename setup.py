@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name="windpowerlib",
-    version="0.2.2dev0",
+    version="0.2.2",
     description="Creating time series of wind power plants.",
     url="http://github.com/wind-python/windpowerlib",
     author="oemof developer group",
@@ -28,12 +28,14 @@ setup(
     install_requires=["pandas", "requests"],
     extras_require={
         "dev": [
-            "pytest",
             "jupyter",
-            "sphinx_rtd_theme",
-            "numpy",
             "matplotlib",
+            "nbsphinx",
+            "numpy",
+            "pytest",
             "pytest-notebook",
+            "sphinx >= 1.4",
+            "sphinx_rtd_theme",
         ]
     },
 )

@@ -1,4 +1,4 @@
-v0.2.2 ()
+v0.2.2 (February 20, 2024)
 ++++++++++++++++++++++++++++++
 
 * Updated the code basis to work for newer versions of python (support for python 3.6 to
@@ -9,3 +9,4 @@ v0.2.2 ()
 Contributors
 ############
  * Birgit Schachler
+ * Florian Maurer
