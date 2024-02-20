@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name="windpowerlib",
-    version="0.2.2",
+    version="0.2.3dev",
     description="Creating time series of wind power plants.",
     url="http://github.com/wind-python/windpowerlib",
     author="oemof developer group",
