@@ -69,7 +69,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'windpowerlib'
-copyright = u'2016-2021, oemof developer group'
+copyright = u'2016-2023, oemof developer group'
 author = u'oemof developer group'
 
 import windpowerlib

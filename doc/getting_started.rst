@@ -43,7 +43,7 @@ If you have a working Python 3 environment, use pypi to install the latest windp
 
     pip install windpowerlib
 
-The windpowerlib is designed for Python 3 and tested on Python >= 3.5. We highly recommend to use virtual environments.
+The windpowerlib is designed for Python 3 and tested on Python >= 3.10. We highly recommend to use virtual environments.
 Please see the `installation page <http://oemof.readthedocs.io/en/stable/installation_and_setup.html>`_ of the oemof documentation for complete instructions on how to install python and a virtual environment on your operating system.
 
 Optional Packages
@@ -69,9 +69,9 @@ The basic usage of the windpowerlib is shown in the ModelChain example that is a
 To run the example you need the example weather and turbine data used:
 
  * :download:`Example weather data file <../example/weather.csv>`
- * :download:`Example power curve data file <../example/data/power_curves.csv>`
- * :download:`Example power coefficient curve data file <../example/data/power_coefficient_curves.csv>`
- * :download:`Example nominal power data file <../example/data/turbine_data.csv>`
+ * :download:`Example power curve data file <../windpowerlib/data/default_turbine_data/power_curves.csv>`
+ * :download:`Example power coefficient curve data file <../windpowerlib/data/default_turbine_data/power_coefficient_curves.csv>`
+ * :download:`Example nominal power data file <../windpowerlib/data/default_turbine_data/turbine_data.csv>`
 
 Furthermore, you have to install the windpowerlib and to run the notebook you also need to install `notebook` using pip3. To launch jupyter notebook type ``jupyter notebook`` in the terminal.
 This will open a browser window. Navigate to the directory containing the notebook to open it. See the jupyter notebook quick start guide for more information on `how to install <http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/install.html>`_ and
@@ -102,8 +102,8 @@ To update your local files with the latest version of the `oedb turbine library 
 
 .. code:: python
 
-  from windpowerlib.wind_turbine import load_turbine_data_from_oedb
-  load_turbine_data_from_oedb()
+  from windpowerlib.data import store_turbine_data_from_oedb
+  store_turbine_data_from_oedb()
 
 If you find your turbine in the database it is very easy to use it in the
 windpowerlib

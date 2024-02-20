@@ -1,0 +1,12 @@
+v0.2.2 (February 20, 2024)
+++++++++++++++++++++++++++++++
+
+* Updated the code basis to work for newer versions of python (support for python 3.6 to
+  python 3.9 is discontinued, supported python versions are now >= python 3.9) and added
+  github actions to run tests automatically when changes are pushed to github
+  (`PR 136 <https://github.com/wind-python/windpowerlib/pull/136>`_).
+
+Contributors
+############
+ * Birgit Schachler
+ * Florian Maurer

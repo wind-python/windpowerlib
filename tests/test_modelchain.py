@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 import pandas as pd
 import numpy as np
 import pytest
-from pandas.util.testing import assert_series_equal
+from pandas.testing import assert_series_equal
 
 import windpowerlib.wind_turbine as wt
 import windpowerlib.modelchain as mc
@@ -102,7 +102,11 @@ class TestModelChain:
             np.array([100, 10]),
         ]
         temp_exp = pd.Series(data=[267, 268], name=100)
-        assert_series_equal(test_mc.temperature_hub(weather_df), temp_exp)
+        assert_series_equal(
+            test_mc.temperature_hub(weather_df),
+            temp_exp,
+            check_dtype=False,
+        )
 
     def test_density_hub(self):
         # Test modelchain with density_model='barometric'
@@ -452,7 +456,7 @@ class TestModelChain:
 
         # Heights in the original DataFrame are of type np.int64
         assert isinstance(
-            self.weather_df.columns.get_level_values(1)[0], np.int64
+            self.weather_df.columns.get_level_values(1)[0], np.int_
         )
         assert isinstance(string_weather.columns.get_level_values(1)[0], str)
 

@@ -211,6 +211,7 @@ class WindTurbineCluster(object):
                 )
             ],
             axis=1,
+            sort=True
         )
         # Sum up power curves
         cluster_power_curve = pd.DataFrame(

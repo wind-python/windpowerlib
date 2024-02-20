@@ -85,8 +85,8 @@ def get_weather_data(filename="weather.csv", **kwargs):
         file,
         index_col=0,
         header=[0, 1],
-        date_parser=lambda idx: pd.to_datetime(idx, utc=True),
     )
+    weather_df.index = pd.to_datetime(weather_df.index, utc=True)
 
     # change time zone
     weather_df.index = weather_df.index.tz_convert("Europe/Berlin")
@@ -274,7 +274,7 @@ def plot_or_print(my_turbine, e126, my_turbine2):
                 title="Enercon E126 power curve",
             )
             plt.xlabel("Wind speed in m/s")
-            plt.ylabel("Power in W")
+            plt.ylabel("Power coefficient $\mathrm{C}_\mathrm{P}$")
             plt.show()
         if my_turbine.power_curve is not False:
             my_turbine.power_curve.plot(

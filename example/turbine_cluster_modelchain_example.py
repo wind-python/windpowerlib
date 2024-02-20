@@ -26,7 +26,7 @@ from windpowerlib import TurbineClusterModelChain
 # Change the logging level if you want more or less messages
 import logging
 
-logging.getLogger().setLevel(logging.DEBUG)
+# logging.getLogger().setLevel(logging.DEBUG)
 
 
 def initialize_wind_farms(my_turbine, e126):
@@ -145,14 +145,15 @@ def calculate_power_output(weather, example_farm, example_cluster):
     # power output calculation for example_farm
     # initialize TurbineClusterModelChain with default parameters and use
     # run_model method to calculate power output
-    mc_example_farm = TurbineClusterModelChain(example_farm).run_model(weather)
+    mc_example_farm = TurbineClusterModelChain(example_farm, wake_losses_model="wind_farm_efficiency").run_model(weather)
     # write power output time series to WindFarm object
     example_farm.power_output = mc_example_farm.power_output
 
     # power output calculation for turbine_cluster
     # own specifications for TurbineClusterModelChain setup
     modelchain_data = {
-        "wake_losses_model": "wind_farm_efficiency",  # 'dena_mean' (default), None,
+        "wake_losses_model": "wind_farm_efficiency",
+        # 'dena_mean' (default), None,
         # 'wind_farm_efficiency' or name
         #  of another wind efficiency curve
         #  see :py:func:`~.wake_losses.get_wind_efficiency_curve`
@@ -164,15 +165,14 @@ def calculate_power_output(weather, example_farm, example_cluster):
         "smoothing_order": "wind_farm_power_curves",  #
         # 'wind_farm_power_curves' (default) or
         # 'turbine_power_curves'
-        "wind_speed_model": "logarithmic",  # 'logarithmic' (default),
-        # 'hellman' or
-        # 'interpolation_extrapolation'
-        "density_model": "ideal_gas",  # 'barometric' (default), 'ideal_gas' or
-        # 'interpolation_extrapolation'
-        "temperature_model": "linear_gradient",  # 'linear_gradient' (def.) or
-        # 'interpolation_extrapolation'
-        "power_output_model": "power_curve",  # 'power_curve' (default) or
-        # 'power_coefficient_curve'
+        "wind_speed_model": "logarithmic",
+        # 'logarithmic' (default), 'hellman' or 'interpolation_extrapolation'
+        "density_model": "ideal_gas",  #
+        # 'barometric' (default), 'ideal_gas' or 'interpolation_extrapolation'
+        "temperature_model": "linear_gradient",
+        # 'linear_gradient' (def.) or 'interpolation_extrapolation'
+        "power_output_model": "power_curve",
+        # 'power_curve' (default) or 'power_coefficient_curve'
         "density_correction": True,  # False (default) or True
         "obstacle_height": 0,  # default: 0
         "hellman_exp": None,

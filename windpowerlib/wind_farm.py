@@ -379,9 +379,11 @@ class WindFarm(object):
                         and kwargs["roughness_length"] is not None
                     ):
                         # Calculate turbulence intensity and write to kwargs
-                        turbulence_intensity = tools.estimate_turbulence_intensity(
-                            row["wind_turbine"].hub_height,
-                            kwargs["roughness_length"],
+                        turbulence_intensity = (
+                            tools.estimate_turbulence_intensity(
+                                row["wind_turbine"].hub_height,
+                                kwargs["roughness_length"],
+                            )
                         )
                         kwargs["turbulence_intensity"] = turbulence_intensity
                     else:
@@ -444,6 +446,7 @@ class WindFarm(object):
                     ),
                 ],
                 axis=1,
+                sort=True,
             )
         # Aggregate all power curves
         wind_farm_power_curve = pd.DataFrame(
@@ -463,10 +466,12 @@ class WindFarm(object):
             )
         if wake_losses_model == "wind_farm_efficiency":
             if self.efficiency is not None:
-                wind_farm_power_curve = power_curves.wake_losses_to_power_curve(
-                    wind_farm_power_curve["wind_speed"].values,
-                    wind_farm_power_curve["value"].values,
-                    wind_farm_efficiency=self.efficiency,
+                wind_farm_power_curve = (
+                    power_curves.wake_losses_to_power_curve(
+                        wind_farm_power_curve["wind_speed"].values,
+                        wind_farm_power_curve["value"].values,
+                        wind_farm_efficiency=self.efficiency,
+                    )
                 )
             else:
                 msg = (
