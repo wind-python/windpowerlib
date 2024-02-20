@@ -122,14 +122,14 @@ def hellman(
         Hub height of wind turbine.
     roughness_length : :pandas:`pandas.Series<series>` or numpy.array or float
         Roughness length. If given and `hellman_exponent` is None:
-        `hellman_exponent`=1 / ln(hub_height/roughness_length),
-        otherwise `hellman_exponent`=1/7. Default: None.
+        `hellman_exponent` = 1 / ln(hub_height/roughness_length),
+        otherwise `hellman_exponent` = 1/7. Default: None.
     hellman_exponent : None or float
         The Hellman exponent, which combines the increase in wind speed due to
         stability of atmospheric conditions and surface roughness into one
         constant. If None and roughness length is given
-        `hellman_exponent`=1 / ln(hub_height/roughness_length),
-        otherwise `hellman_exponent`=1/7. Default: None.
+        `hellman_exponent` = 1 / ln(hub_height/roughness_length),
+        otherwise `hellman_exponent` = 1/7. Default: None.
 
     Returns
     -------

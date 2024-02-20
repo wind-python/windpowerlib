@@ -295,7 +295,7 @@ def _get_power_output(
     -------
     :numpy:`numpy.array`
         Electrical power output of the wind turbine in W.
-        
+
     """
     # Calculate the power curves for each timestep using vectors
     # NOTE: power_curves_per_ts.shape = [len(wind_speed), len(density)]
