@@ -93,7 +93,7 @@ class TestDataCheck:
         for fn in os.listdir(self.orig_path):
             t[fn] = os.path.getmtime(os.path.join(self.orig_path, fn))
         with caplog.at_level(logging.WARNING):
-            store_turbine_data_from_oedb()
+            store_turbine_data_from_oedb(threshold=1.0)
         for fn in os.listdir(self.orig_path):
             assert t[fn] < os.path.getmtime(os.path.join(self.orig_path, fn))
         assert "The turbine library data contains too many faulty" not in caplog.text
@@ -151,7 +151,7 @@ class TestDataCheck:
             ConnectionError,
             match=r"Database \(oep\) connection not successful*",
         ):
-            store_turbine_data_from_oedb("wrong_schema")
+            store_turbine_data_from_oedb(table="wrong_table")
 
     @pytest.mark.skip(reason="Use it to check a persistent ssl error")
     def test_wrong_ssl_connection(self):

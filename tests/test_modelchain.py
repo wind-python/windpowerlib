@@ -59,6 +59,17 @@ class TestModelChain:
             ],
         )
 
+    def test_get_closest_height(self):
+        """Test the _get_closest_height helper method."""
+        test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine))
+        # Hub height is 100, so 110 is the closest height
+        heights = np.array([10, 80, 110, 150])
+        assert test_mc._get_closest_height(heights) == 110
+        
+        # Test when there is an exact match
+        heights = np.array([10, 100, 150])
+        assert test_mc._get_closest_height(heights) == 100
+
     def test_temperature_hub(self):
         # Test modelchain with temperature_model='linear_gradient'
         test_mc = mc.ModelChain(wt.WindTurbine(**self.test_turbine))

@@ -14,7 +14,7 @@ from windpowerlib.tools import WindpowerlibUserWarning
 from typing import NamedTuple
 
 
-class WindTurbine(object):
+class WindTurbine:
     r"""
     Defines a standard set of wind turbine attributes.
 

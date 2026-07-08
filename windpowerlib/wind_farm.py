@@ -12,7 +12,7 @@ import pandas as pd
 import warnings
 
 
-class WindFarm(object):
+class WindFarm:
     r"""
     Defines a standard set of wind farm attributes.
 

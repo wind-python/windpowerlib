@@ -275,7 +275,7 @@ class TurbineClusterModelChain(ModelChain):
         >>> my_weather_df = pd.DataFrame(np.random.rand(2,6),
         ...                           index=pd.date_range('1/1/2012',
         ...                                               periods=2,
-        ...                                               freq='H'),
+        ...                                               freq='h'),
         ...                           columns=[np.array(['wind_speed',
         ...                                              'wind_speed',
         ...                                              'temperature',

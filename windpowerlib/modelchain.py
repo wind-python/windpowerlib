@@ -17,7 +17,7 @@ from windpowerlib import (
 )
 
 
-class ModelChain(object):
+class ModelChain:
     r"""Model to determine the output of a wind turbine
 
     The ModelChain class provides a standardized, high-level
@@ -163,6 +163,14 @@ class ModelChain(object):
         self.hellman_exp = hellman_exp
         self.power_output = None
 
+    def _get_closest_height(self, heights):
+        return heights[
+            min(
+                range(len(heights)),
+                key=lambda i: abs(heights[i] - self.power_plant.hub_height),
+            )
+        ]
+
     def temperature_hub(self, weather_df):
         r"""
         Calculates the temperature of air at hub height.
@@ -200,15 +208,9 @@ class ModelChain(object):
             logging.debug(
                 "Calculating temperature using temperature " "gradient."
             )
-            closest_height = weather_df["temperature"].columns[
-                min(
-                    range(len(weather_df["temperature"].columns)),
-                    key=lambda i: abs(
-                        weather_df["temperature"].columns[i]
-                        - self.power_plant.hub_height
-                    ),
-                )
-            ]
+            closest_height = self._get_closest_height(
+                weather_df["temperature"].columns
+            )
             temperature_hub = temperature.linear_gradient(
                 weather_df["temperature"][closest_height],
                 closest_height,
@@ -273,15 +275,9 @@ class ModelChain(object):
             logging.debug(
                 "Calculating density using barometric height " "equation."
             )
-            closest_height = weather_df["pressure"].columns[
-                min(
-                    range(len(weather_df["pressure"].columns)),
-                    key=lambda i: abs(
-                        weather_df["pressure"].columns[i]
-                        - self.power_plant.hub_height
-                    ),
-                )
-            ]
+            closest_height = self._get_closest_height(
+                weather_df["pressure"].columns
+            )
             density_hub = density.barometric(
                 weather_df["pressure"][closest_height],
                 closest_height,
@@ -290,15 +286,9 @@ class ModelChain(object):
             )
         elif self.density_model == "ideal_gas":
             logging.debug("Calculating density using ideal gas equation.")
-            closest_height = weather_df["pressure"].columns[
-                min(
-                    range(len(weather_df["pressure"].columns)),
-                    key=lambda i: abs(
-                        weather_df["pressure"].columns[i]
-                        - self.power_plant.hub_height
-                    ),
-                )
-            ]
+            closest_height = self._get_closest_height(
+                weather_df["pressure"].columns
+            )
             density_hub = density.ideal_gas(
                 weather_df["pressure"][closest_height],
                 closest_height,
@@ -358,15 +348,9 @@ class ModelChain(object):
             logging.debug(
                 "Calculating wind speed using logarithmic wind " "profile."
             )
-            closest_height = weather_df["wind_speed"].columns[
-                min(
-                    range(len(weather_df["wind_speed"].columns)),
-                    key=lambda i: abs(
-                        weather_df["wind_speed"].columns[i]
-                        - self.power_plant.hub_height
-                    ),
-                )
-            ]
+            closest_height = self._get_closest_height(
+                weather_df["wind_speed"].columns
+            )
             wind_speed_hub = wind_speed.logarithmic_profile(
                 weather_df["wind_speed"][closest_height],
                 closest_height,
@@ -376,15 +360,9 @@ class ModelChain(object):
             )
         elif self.wind_speed_model == "hellman":
             logging.debug("Calculating wind speed using hellman equation.")
-            closest_height = weather_df["wind_speed"].columns[
-                min(
-                    range(len(weather_df["wind_speed"].columns)),
-                    key=lambda i: abs(
-                        weather_df["wind_speed"].columns[i]
-                        - self.power_plant.hub_height
-                    ),
-                )
-            ]
+            closest_height = self._get_closest_height(
+                weather_df["wind_speed"].columns
+            )
             wind_speed_hub = wind_speed.hellman(
                 weather_df["wind_speed"][closest_height],
                 closest_height,
@@ -503,7 +481,7 @@ class ModelChain(object):
         >>> my_weather_df = pd.DataFrame(np.random.rand(2,6),
         ...                           index=pd.date_range('1/1/2012',
         ...                                               periods=2,
-        ...                                               freq='H'),
+        ...                                               freq='h'),
         ...                           columns=[np.array(['wind_speed',
         ...                                              'wind_speed',
         ...                                              'temperature',

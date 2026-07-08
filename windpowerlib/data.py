@@ -133,7 +133,7 @@ def fetch_turbine_data_from_oedb(
 
     """
     # url of OpenEnergy Platform that contains the oedb
-    oep_url = "https://oep.iks.cs.ovgu.de/"
+    oep_url = "https://openenergyplatform.org/"
     url = oep_url + "/api/v0/schema/{}/tables/{}/rows/?".format(schema, table)
 
     # load data

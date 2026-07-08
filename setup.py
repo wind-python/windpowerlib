@@ -33,7 +33,6 @@ setup(
             "nbsphinx",
             "numpy",
             "pytest",
-            "pytest-notebook",
             "sphinx >= 1.4",
             "sphinx_rtd_theme",
         ]

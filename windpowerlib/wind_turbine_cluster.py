@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 
-class WindTurbineCluster(object):
+class WindTurbineCluster:
     r"""
     Defines a standard set of wind turbine cluster attributes.
 
