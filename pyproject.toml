@@ -1,3 +1,45 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "windpowerlib"
+version = "0.2.3dev"
+description = "Creating time series of wind power plants."
+readme = "README.rst"
+license = { text = "MIT" }
+authors = [
+    { name = "oemof developer group", email = "windpowerlib@rl-institut.de" },
+]
+urls = { Homepage = "http://github.com/wind-python/windpowerlib" }
+requires-python = ">=3.9"
+dependencies = [
+    "pandas",
+    "requests",
+]
+
+[project.optional-dependencies]
+dev = [
+    "jupyter",
+    "matplotlib",
+    "nbsphinx",
+    "numpy",
+    "pytest",
+    "sphinx >= 1.4",
+    "sphinx_rtd_theme",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["windpowerlib*"]
+
+[tool.setuptools.package-data]
+windpowerlib = [
+    "data/*.csv",
+    "data/default_turbine_data/*.csv",
+    "oedb/*.csv",
+]
+
 [tool.black]
 line-length = 79
 target-version = ['py310', 'py311', 'py312']
